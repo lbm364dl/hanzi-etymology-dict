@@ -722,11 +722,52 @@ def parse_frequency():
 
 
 # ---------------------------------------------------------------------------
-# 15. Unihan kPhonetic classes
+# 15. AnimCJK (HSK 3.0 levels + frequency tier)
+# ---------------------------------------------------------------------------
+def parse_animcjk():
+    """Parse AnimCJK dictionary for HSK 3.0 levels and frequency tiers."""
+    print("[15/17] Parsing AnimCJK data...")
+    chars = {}
+    fpath = SOURCES_DIR / "animcjk" / "dictionaryZhHans.txt"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found")
+        return chars
+
+    with open(fpath, "r", encoding="utf-8") as f:
+        for line in f:
+            d = json.loads(line)
+            ch = d.get("character", "")
+            if len(ch) != 1:
+                continue
+            entry = {}
+            sets = d.get("set", [])
+            # Extract HSK 3.0 level
+            for s in sets:
+                if s.startswith("hsk3"):
+                    try:
+                        entry["hsk3_level"] = int(s[3:])
+                    except ValueError:
+                        pass
+            # Extract frequency tier
+            if "frequent2500" in sets:
+                entry["frequency_tier"] = "top_2500"
+            elif "lessFrequent1000" in sets:
+                entry["frequency_tier"] = "3500_plus"
+            elif "commonNotFrequent" in sets or "commonNotHsk3NorFrequent" in sets:
+                entry["frequency_tier"] = "common"
+            if entry:
+                chars[ch] = entry
+
+    print(f"  Parsed {len(chars)} characters from AnimCJK")
+    return chars
+
+
+# ---------------------------------------------------------------------------
+# 16. Unihan kPhonetic classes
 # ---------------------------------------------------------------------------
 def parse_phonetic_classes():
     """Parse Unihan kPhonetic field into phonetic family groupings."""
-    print("[15/16] Parsing Unihan kPhonetic classes...")
+    print("[16/17] Parsing Unihan kPhonetic classes...")
     char_to_classes = {}
     class_to_chars = defaultdict(list)
     fpath = SOURCES_DIR / "unihan" / "Unihan_DictionaryLikeData.txt"
@@ -757,7 +798,7 @@ def parse_phonetic_classes():
 # ---------------------------------------------------------------------------
 def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
               kangxi, baxter_sagart, wiktionary, cedict, evobc,
-              guangyun, ytenx_oc, frequency, phonetic_classes, class_to_chars):
+              guangyun, ytenx_oc, frequency, animcjk, phonetic_classes, class_to_chars):
     """Merge all parsed sources into a single dict keyed by character."""
     print("\nMerging all sources...")
 
@@ -766,7 +807,7 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
     # Add characters from other sources too
     for source in [mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                    kangxi, baxter_sagart, wiktionary, cedict, evobc,
-                   guangyun, ytenx_oc, frequency]:
+                   guangyun, ytenx_oc, frequency, animcjk]:
         all_chars.update(source.keys())
 
     print(f"  Total unique characters across all sources: {len(all_chars)}")
@@ -1072,6 +1113,14 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
             record["frequency_rank"] = freq["frequency_rank"]
             if freq.get("hsk_level"):
                 record["hsk_level"] = freq["hsk_level"]
+
+        # --- AnimCJK HSK 3.0 + frequency tier ---
+        acjk = animcjk.get(ch)
+        if acjk:
+            if acjk.get("hsk3_level"):
+                record["hsk3_level"] = acjk["hsk3_level"]
+            if acjk.get("frequency_tier"):
+                record["frequency_tier"] = acjk["frequency_tier"]
 
         # --- Phonetic classes (Unihan kPhonetic) ---
         ph_classes = phonetic_classes.get(ch)
@@ -1623,13 +1672,14 @@ def main():
     guangyun = parse_guangyun()
     ytenx_oc = parse_ytenx_oc()
     frequency = parse_frequency()
+    animcjk = parse_animcjk()
     phonetic_classes, class_to_chars = parse_phonetic_classes()
 
     # Merge
     merged = merge_all(
         unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
         kangxi, baxter_sagart, wiktionary, cedict, evobc,
-        guangyun, ytenx_oc, frequency, phonetic_classes, class_to_chars,
+        guangyun, ytenx_oc, frequency, animcjk, phonetic_classes, class_to_chars,
     )
 
     # Output
