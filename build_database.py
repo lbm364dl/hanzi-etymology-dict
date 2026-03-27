@@ -1,0 +1,1316 @@
+#!/usr/bin/env python3
+"""
+Build a unified Chinese character etymology database from multiple open sources.
+
+Sources integrated:
+  1. Make Me a Hanzi (LGPL v3) -- etymology types, IDS decomposition
+  2. Dong Chinese / chinese-lexicon (CC BY-SA 4.0) -- component function tags
+  3. Unicode Unihan (Unicode ToS) -- readings, definitions, radical-stroke
+  4. CJKVI-IDS (GPLv2) -- Ideographic Description Sequences
+  5. CJK Decomposition Data (MIT) -- structural decomposition
+  6. Shuowen Jiezi digitized (Apache 2.0) -- classical etymology
+  7. Kangxi Dictionary (MIT) -- definitions
+  8. Baxter-Sagart (free academic) -- Old/Middle Chinese reconstructions
+  9. Wiktionary/kaikki.org (CC BY-SA 3.0) -- etymology narratives
+ 10. CC-CEDICT (CC BY-SA 4.0) -- definitions
+ 11. EVOBC metadata -- historical glyph availability
+"""
+
+import json
+import csv
+import os
+import re
+import sys
+import sqlite3
+from collections import defaultdict
+from pathlib import Path
+
+SOURCES_DIR = Path("sources")
+OUTPUT_DIR = Path("output")
+OUTPUT_DIR.mkdir(exist_ok=True)
+
+# ---------------------------------------------------------------------------
+# Formation type normalization & extraction
+# ---------------------------------------------------------------------------
+FORMATION_TYPE_CANONICAL = {
+    "pictophonetic": "phono-semantic",
+    "pictographic": "pictographic",
+    "ideographic": "ideographic",
+    "phono-semantic": "phono-semantic",
+    "pictographic/ideographic": "pictographic",
+    "compound-ideographic": "ideographic",
+    "mixed-iconic": "ideographic",
+}
+
+# Patterns to extract formation type from Wiktionary etymology text
+WIKTIONARY_FORMATION_PATTERNS = [
+    (r"[Pp]hono-semantic compound\b|形聲|形声", "phono-semantic"),
+    (r"[Pp]ictogram\b|象形", "pictographic"),
+    (r"[Ii]deogrammic compound\b|會意|会意", "ideographic"),
+    (r"[Ss]imple ideograph|指事", "indicative"),
+    (r"[Pp]honetic loan\b|假借", "phonetic-loan"),
+    (r"[Dd]erivative cognate|轉注|转注", "derivative-cognate"),
+]
+
+def extract_wiktionary_formation_type(etym_text):
+    """Extract formation type from Wiktionary etymology text using known patterns."""
+    if not etym_text:
+        return None
+    for pattern, ftype in WIKTIONARY_FORMATION_PATTERNS:
+        if re.search(pattern, etym_text):
+            return ftype
+    return None
+
+def extract_shuowen_formation_type(explanation):
+    """Extract formation type hints from Shuowen explanation text."""
+    if not explanation:
+        return None
+    # 从X, Y声 = phono-semantic compound (形聲)
+    if re.search(r'聲[。，]|聲$', explanation) and '从' in explanation:
+        return "phono-semantic"
+    # 象形 = pictographic
+    if '象形' in explanation or '象.*之形' in explanation:
+        return "pictographic"
+    # 从X从Y (no 聲) = ideographic compound
+    if explanation.count('从') >= 2 and '聲' not in explanation:
+        return "ideographic"
+    # 从X = simple semantic derivation (could be various)
+    if '从' in explanation and '聲' not in explanation:
+        return "ideographic"  # conservative classification
+    # 指事 = indicative
+    if '指事' in explanation:
+        return "indicative"
+    return None
+
+def normalize_formation_type(ftype):
+    """Normalize formation type to canonical form."""
+    if not ftype:
+        return None
+    return FORMATION_TYPE_CANONICAL.get(ftype, ftype)
+
+def compute_confidence(record):
+    """Compute a confidence score (0-100) for the etymology of a character."""
+    score = 0
+
+    # Number of etymology sources (max 30 points)
+    etym_sources = set()
+    for note in record.get("etymology_notes", []):
+        etym_sources.add(note.get("source", ""))
+    score += min(len(etym_sources) * 10, 30)
+
+    # Formation type agreement across sources (max 25 points)
+    formation_claims = record.get("_formation_claims", {})
+    if formation_claims:
+        normalized = [normalize_formation_type(v) for v in formation_claims.values() if v]
+        normalized = [n for n in normalized if n]
+        if normalized:
+            most_common = max(set(normalized), key=normalized.count)
+            agreement_ratio = normalized.count(most_common) / len(normalized)
+            score += int(agreement_ratio * 25)
+
+    # Shuowen entry exists (10 points)
+    if record.get("shuowen"):
+        score += 10
+
+    # Baxter-Sagart exists (10 points)
+    if record.get("historical_phonology"):
+        score += 10
+
+    # Historical glyphs exist (10 points)
+    glyphs = record.get("historical_glyphs", {})
+    if glyphs.get("image_count", 0) > 0:
+        era_count = len(glyphs.get("eras_available", []))
+        score += min(era_count * 2, 10)
+
+    # Has decomposition (5 points)
+    if record.get("ids") or record.get("decomposition_ids"):
+        score += 5
+
+    # Has definitions (5 points)
+    if record.get("definitions"):
+        score += 5
+
+    # Has readings (5 points)
+    if record.get("readings"):
+        score += 5
+
+    return min(score, 100)
+
+# ---------------------------------------------------------------------------
+# 1. Unihan
+# ---------------------------------------------------------------------------
+def parse_unihan():
+    """Parse Unihan database files into per-character dicts."""
+    print("[1/11] Parsing Unihan database...")
+    chars = defaultdict(dict)
+    unihan_dir = SOURCES_DIR / "unihan"
+
+    files_to_parse = [
+        "Unihan_Readings.txt",
+        "Unihan_RadicalStrokeCounts.txt",
+        "Unihan_Variants.txt",
+        "Unihan_DictionaryLikeData.txt",
+        "Unihan_IRGSources.txt",
+    ]
+
+    fields_we_want = {
+        "kDefinition", "kMandarin", "kCantonese", "kJapaneseOn", "kJapaneseKun",
+        "kKorean", "kVietnamese", "kHanyuPinyin", "kTang",
+        "kRSUnicode", "kTotalStrokes", "kPhonetic",
+        "kSemanticVariant", "kTraditionalVariant", "kSimplifiedVariant",
+        "kSpecializedSemanticVariant", "kCompatibilityVariant",
+        "kIICore",
+    }
+
+    for fname in files_to_parse:
+        fpath = unihan_dir / fname
+        if not fpath.exists():
+            print(f"  Warning: {fpath} not found, skipping")
+            continue
+        with open(fpath, "r", encoding="utf-8") as f:
+            for line in f:
+                if line.startswith("#") or not line.strip():
+                    continue
+                parts = line.strip().split("\t", 2)
+                if len(parts) < 3:
+                    continue
+                codepoint, prop, value = parts
+                if prop not in fields_we_want:
+                    continue
+                # Convert U+XXXX to character
+                cp = int(codepoint[2:], 16)
+                ch = chr(cp)
+                chars[ch][prop] = value
+
+    print(f"  Parsed {len(chars)} unique characters from Unihan")
+    return dict(chars)
+
+
+# ---------------------------------------------------------------------------
+# 2. Make Me a Hanzi
+# ---------------------------------------------------------------------------
+def parse_makemeahanzi():
+    """Parse Make Me a Hanzi dictionary.txt."""
+    print("[2/11] Parsing Make Me a Hanzi...")
+    chars = {}
+    fpath = SOURCES_DIR / "makemeahanzi" / "dictionary.txt"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found")
+        return chars
+    with open(fpath, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            entry = json.loads(line)
+            ch = entry.get("character", "")
+            if ch:
+                chars[ch] = {
+                    "definition": entry.get("definition", ""),
+                    "pinyin": entry.get("pinyin", []),
+                    "decomposition": entry.get("decomposition", ""),
+                    "radical": entry.get("radical", ""),
+                    "etymology": entry.get("etymology"),  # may be None
+                }
+    print(f"  Parsed {len(chars)} characters from Make Me a Hanzi")
+    return chars
+
+
+# ---------------------------------------------------------------------------
+# 3. Dong Chinese etymology (from pre-extracted JSON via Node.js)
+# ---------------------------------------------------------------------------
+def parse_dong_chinese():
+    """Parse Dong Chinese etymology from pre-extracted JSON (via extract_dong_chinese.mjs)."""
+    print("[3/11] Parsing Dong Chinese etymology...")
+    chars = {}
+    fpath = SOURCES_DIR / "chinese-lexicon" / "dong_etymologies.json"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found. Run: node extract_dong_chinese.mjs")
+        return chars
+
+    with open(fpath, "r", encoding="utf-8") as f:
+        raw = json.load(f)
+
+    for ch, etym in raw.items():
+        components = etym.get("components", [])
+        comp_types = [c.get("type", "") for c in components]
+        has_sound = "sound" in comp_types
+        has_meaning = "meaning" in comp_types
+        has_iconic = "iconic" in comp_types
+
+        entry = {
+            "notes": etym.get("notes", ""),
+            "definition": etym.get("definition", ""),
+            "components": components,
+        }
+
+        if has_sound and has_meaning:
+            entry["type"] = "phono-semantic"
+            for c in components:
+                if c.get("type") == "meaning":
+                    entry["semantic"] = c.get("char", "")
+                elif c.get("type") == "sound":
+                    entry["phonetic"] = c.get("char", "")
+        elif has_meaning and not has_sound and not has_iconic:
+            entry["type"] = "compound-ideographic"
+        elif has_iconic and not has_sound and not has_meaning:
+            entry["type"] = "pictographic/ideographic"
+        elif has_iconic:
+            entry["type"] = "mixed-iconic"
+        else:
+            entry["type"] = "other"
+
+        chars[ch] = entry
+
+    print(f"  Parsed {len(chars)} characters from Dong Chinese")
+    return chars
+
+
+# ---------------------------------------------------------------------------
+# 4. CJKVI-IDS
+# ---------------------------------------------------------------------------
+def parse_cjkvi_ids():
+    """Parse CJKVI-IDS ids.txt for Ideographic Description Sequences."""
+    print("[4/11] Parsing CJKVI-IDS...")
+    chars = {}
+    fpath = SOURCES_DIR / "cjkvi-ids" / "ids.txt"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found")
+        return chars
+    with open(fpath, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("#") or not line.strip():
+                continue
+            parts = line.strip().split("\t")
+            if len(parts) >= 3:
+                ch = parts[1]
+                ids = parts[2]
+                # Some entries have multiple IDS variants separated by tab
+                chars[ch] = ids
+    print(f"  Parsed {len(chars)} IDS entries from CJKVI-IDS")
+    return chars
+
+
+# ---------------------------------------------------------------------------
+# 5. CJK Decomposition Data
+# ---------------------------------------------------------------------------
+def parse_cjk_decomp():
+    """Parse cjk-decomp.txt."""
+    print("[5/11] Parsing CJK Decomposition Data...")
+    chars = {}
+    fpath = SOURCES_DIR / "cjk-decomp" / "cjk-decomp.txt"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found")
+        return chars
+    with open(fpath, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            # Format: char:type(components) or codepoint:type(components)
+            colon_idx = line.index(":")
+            char_part = line[:colon_idx]
+            decomp = line[colon_idx + 1:]
+            # Only include actual Unicode characters (not numeric codepoints)
+            if len(char_part) == 1:
+                chars[char_part] = decomp
+    print(f"  Parsed {len(chars)} entries from CJK Decomposition Data")
+    return chars
+
+
+# ---------------------------------------------------------------------------
+# 6. Shuowen Jiezi
+# ---------------------------------------------------------------------------
+def parse_shuowen():
+    """Parse digitized Shuowen Jiezi JSON files."""
+    print("[6/11] Parsing Shuowen Jiezi...")
+    chars = {}
+    shuowen_dir = SOURCES_DIR / "shuowen" / "data"
+    if not shuowen_dir.exists():
+        print(f"  Warning: {shuowen_dir} not found")
+        return chars
+
+    for fpath in sorted(shuowen_dir.glob("*.json"), key=lambda p: int(p.stem)):
+        with open(fpath, "r", encoding="utf-8") as f:
+            try:
+                entry = json.load(f)
+            except json.JSONDecodeError:
+                continue
+        ch = entry.get("wordhead", "")
+        if not ch:
+            continue
+        chars[ch] = {
+            "explanation": entry.get("explanation", ""),
+            "radical": entry.get("radical", ""),
+            "pronunciation": entry.get("pronunciation", ""),
+            "pinyin": entry.get("pinyin_full", ""),
+            "seal_character": entry.get("seal_character", ""),
+            "components": entry.get("components", []),
+            "xuan_note": entry.get("xuan_note", ""),
+            "kai_note": entry.get("kai_note", ""),
+            "duan_notes": entry.get("duan_notes", []),
+            "variants": [
+                {"wordhead": v.get("wordhead", ""), "explanation": v.get("explanation", "")}
+                for v in entry.get("variants", [])
+            ],
+        }
+
+    print(f"  Parsed {len(chars)} characters from Shuowen Jiezi")
+    return chars
+
+
+# ---------------------------------------------------------------------------
+# 7. Kangxi Dictionary
+# ---------------------------------------------------------------------------
+def parse_kangxi():
+    """Parse Kangxi Dictionary XLSX file."""
+    print("[7/11] Parsing Kangxi Dictionary...")
+    chars = {}
+    fpath = SOURCES_DIR / "kangxi-dictionary" / "kx_full.xlsx"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found")
+        return chars
+
+    try:
+        import openpyxl
+    except ImportError:
+        print("  Warning: openpyxl not installed, skipping Kangxi. Install with: pip install openpyxl")
+        return chars
+
+    wb = openpyxl.load_workbook(fpath, read_only=True)
+    ws = wb.active
+    rows = list(ws.iter_rows(values_only=True))
+    if not rows:
+        return chars
+
+    # Try to identify header row
+    header = rows[0]
+    for i, row in enumerate(rows[1:], 1):
+        if row and row[0] and isinstance(row[0], str) and len(row[0]) == 1:
+            ch = row[0]
+            # Build entry from available columns
+            entry = {}
+            if len(row) > 1 and row[1]:
+                entry["simplified"] = str(row[1])
+            if len(row) > 3 and row[3]:
+                entry["radical"] = str(row[3])
+            if len(row) > 4 and row[4]:
+                entry["stroke_count"] = row[4]
+            if len(row) > 5 and row[5]:
+                entry["explanation"] = str(row[5])
+            chars[ch] = entry
+
+    wb.close()
+    print(f"  Parsed {len(chars)} characters from Kangxi Dictionary")
+    return chars
+
+
+# ---------------------------------------------------------------------------
+# 8. Baxter-Sagart Old Chinese
+# ---------------------------------------------------------------------------
+def parse_baxter_sagart():
+    """Parse Baxter-Sagart Old Chinese reconstruction TSV."""
+    print("[8/11] Parsing Baxter-Sagart...")
+    chars = defaultdict(list)
+    fpath = SOURCES_DIR / "baxter-sagart" / "baxtersagart.tsv"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found")
+        return dict(chars)
+
+    with open(fpath, "r", encoding="utf-8") as f:
+        reader = csv.reader(f, delimiter="\t")
+        header = next(reader, None)
+        if not header:
+            return dict(chars)
+        for row in reader:
+            if len(row) < 6:
+                continue
+            ch = row[0].strip()
+            if not ch or len(ch) != 1:
+                continue
+            entry = {
+                "pinyin": row[1].strip() if len(row) > 1 else "",
+                "middle_chinese": row[2].strip() if len(row) > 2 else "",
+                "old_chinese": row[4].strip() if len(row) > 4 else "",
+                "gloss": row[5].strip() if len(row) > 5 else "",
+                "gsr": row[6].strip() if len(row) > 6 else "",
+            }
+            chars[ch].append(entry)
+
+    print(f"  Parsed {len(chars)} unique characters ({sum(len(v) for v in chars.values())} entries) from Baxter-Sagart")
+    return dict(chars)
+
+
+# ---------------------------------------------------------------------------
+# 9. Wiktionary (kaikki.org)
+# ---------------------------------------------------------------------------
+def parse_wiktionary():
+    """Parse Wiktionary Chinese JSONL for etymology data on single characters."""
+    print("[9/11] Parsing Wiktionary etymology data...")
+    chars = defaultdict(list)
+    fpath = SOURCES_DIR / "wiktionary" / "kaikki.org-dictionary-Chinese.jsonl"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found")
+        return dict(chars)
+
+    with open(fpath, "r", encoding="utf-8") as f:
+        for line in f:
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            word = entry.get("word", "")
+            # Only single CJK characters
+            if len(word) != 1:
+                continue
+            cp = ord(word)
+            if not (0x4E00 <= cp <= 0x9FFF or 0x3400 <= cp <= 0x4DBF or
+                    0x20000 <= cp <= 0x2A6DF or 0xF900 <= cp <= 0xFAFF):
+                continue
+
+            etym_text = entry.get("etymology_text", "")
+            pos = entry.get("pos", "")
+
+            # Collect glosses
+            glosses = []
+            for sense in entry.get("senses", []):
+                for g in sense.get("glosses", []):
+                    glosses.append(g)
+
+            record = {}
+            if etym_text:
+                record["etymology_text"] = etym_text
+            if glosses:
+                record["glosses"] = glosses
+            if pos:
+                record["pos"] = pos
+
+            if record:
+                chars[word].append(record)
+
+    print(f"  Parsed {len(chars)} unique characters from Wiktionary")
+    return dict(chars)
+
+
+# ---------------------------------------------------------------------------
+# 10. CC-CEDICT
+# ---------------------------------------------------------------------------
+def parse_cedict():
+    """Parse CC-CEDICT for definitions."""
+    print("[10/11] Parsing CC-CEDICT...")
+    chars = defaultdict(list)
+    fpath = SOURCES_DIR / "cedict" / "cedict_1_0_ts_utf-8_mdbg.txt"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found")
+        return dict(chars)
+
+    with open(fpath, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("#") or not line.strip():
+                continue
+            # Format: Traditional Simplified [pinyin] /def1/def2/
+            m = re.match(r'^(\S+)\s+(\S+)\s+\[([^\]]+)\]\s+/(.+)/$', line.strip())
+            if not m:
+                continue
+            trad, simp, pinyin, defs = m.groups()
+            # Only single characters
+            if len(trad) == 1:
+                chars[trad].append({
+                    "traditional": trad,
+                    "simplified": simp,
+                    "pinyin": pinyin,
+                    "definitions": defs.split("/"),
+                })
+            if len(simp) == 1 and simp != trad:
+                chars[simp].append({
+                    "traditional": trad,
+                    "simplified": simp,
+                    "pinyin": pinyin,
+                    "definitions": defs.split("/"),
+                })
+
+    print(f"  Parsed {len(chars)} unique single characters from CC-CEDICT")
+    return dict(chars)
+
+
+# ---------------------------------------------------------------------------
+# 11. EVOBC metadata
+# ---------------------------------------------------------------------------
+def parse_evobc():
+    """Parse EVOBC metadata for historical glyph availability."""
+    print("[11/11] Parsing EVOBC metadata...")
+    chars = {}
+    kv_path = SOURCES_DIR / "evobc" / "Key&Value.json"
+    list_path = SOURCES_DIR / "evobc" / "List_of_EVOBC.json"
+
+    if not kv_path.exists():
+        print(f"  Warning: {kv_path} not found")
+        return chars
+
+    with open(kv_path, "r", encoding="utf-8") as f:
+        key_value = json.load(f)
+
+    era_names = {
+        0: "oracle_bone",
+        1: "bronze_inscription",
+        2: "spring_autumn",
+        3: "warring_states",
+        4: "seal_script",
+        5: "clerical_script",
+    }
+
+    if list_path.exists():
+        with open(list_path, "r", encoding="utf-8") as f:
+            evobc_list = json.load(f)
+        for entry in evobc_list:
+            ch = entry.get("Character", "")
+            if not ch:
+                continue
+            images = entry.get("images", [])
+            eras_present = set()
+            for img in images:
+                era = img.get("era")
+                if era is not None:
+                    eras_present.add(era_names.get(era, f"era_{era}"))
+            chars[ch] = {
+                "evobc_id": entry.get("ID", ""),
+                "image_count": len(images),
+                "eras": sorted(eras_present),
+            }
+    else:
+        # Fallback: just use Key&Value.json
+        for evobc_id, ch in key_value.items():
+            chars[ch] = {"evobc_id": evobc_id, "image_count": 0, "eras": []}
+
+    print(f"  Parsed {len(chars)} characters from EVOBC metadata")
+    return chars
+
+
+# ---------------------------------------------------------------------------
+# Merge all sources into unified records
+# ---------------------------------------------------------------------------
+def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
+              kangxi, baxter_sagart, wiktionary, cedict, evobc):
+    """Merge all parsed sources into a single dict keyed by character."""
+    print("\nMerging all sources...")
+
+    # Start with the Unihan universe -- every character known to Unicode
+    all_chars = set(unihan.keys())
+    # Add characters from other sources too
+    for source in [mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
+                   kangxi, baxter_sagart, wiktionary, cedict, evobc]:
+        all_chars.update(source.keys())
+
+    print(f"  Total unique characters across all sources: {len(all_chars)}")
+
+    # Pre-compute: Kangxi radical number -> radical character mapping
+    kangxi_radical_chars = "一丨丶丿乙亅二亠人儿入八冂冖冫几凵刀力勹匕匚匸十卜卩厂厶又口囗土士夂夊夕大女子宀寸小尢尸屮山巛工己巾干幺广廴廾弋弓彐彡彳心戈戶手支攴文斗斤方无日曰月木欠止歹殳毋比毛氏气水火爪父爻爿片牙牛犬玄玉瓜瓦甘生用田疋疒癶白皮皿目矛矢石示禸禾穴立竹米糸缶网羊羽老而耒耳聿肉臣自至臼舌舛舟艮色艸虍虫血行衣襾見角言谷豆豕豸貝赤走足身車辛辰辵邑酉釆里金長門阜隶隹雨靑非面革韋韭音頁風飛食首香馬骨高髟鬥鬯鬲鬼魚鳥鹵鹿麥麻黃黍黑黹黽鼎鼓鼠鼻齊齒龍龜龠"
+    kangxi_num_to_char = {}
+    for i, rc in enumerate(kangxi_radical_chars):
+        kangxi_num_to_char[i + 1] = rc
+    # Also build reverse: radical char -> number
+    kangxi_char_to_num = {v: k for k, v in kangxi_num_to_char.items()}
+    # Common radical variants -> canonical radical
+    radical_variants = {
+        "亻": "人", "氵": "水", "扌": "手", "忄": "心", "犭": "犬",
+        "礻": "示", "衤": "衣", "饣": "食", "钅": "金", "纟": "糸",
+        "讠": "言", "贝": "貝", "车": "車", "鱼": "魚", "齿": "齒",
+        "飠": "食", "灬": "火", "攵": "攴", "辶": "辵", "阝": "邑",
+        "刂": "刀", "卩": "卩", "⺮": "竹", "⺾": "艸", "⺼": "肉",
+        "罒": "网", "⻊": "足", "月": "肉",  # 月 is often 肉 as component
+    }
+
+    # Pre-compute radical numbers from Unihan for phonetic inference
+    char_to_radical_num = {}
+    for ch_key, u_data in unihan.items():
+        rs = u_data.get("kRSUnicode", "")
+        if rs:
+            try:
+                char_to_radical_num[ch_key] = int(rs.split(".")[0])
+            except ValueError:
+                pass
+
+    merged = {}
+    inferred_phonetic_count = 0
+    for ch in sorted(all_chars):
+        record = {"character": ch, "codepoint": f"U+{ord(ch):04X}"}
+
+        # --- Unihan data ---
+        u = unihan.get(ch, {})
+        if u:
+            record["definitions"] = u.get("kDefinition", "")
+            record["readings"] = {}
+            if "kMandarin" in u:
+                record["readings"]["mandarin"] = u["kMandarin"]
+            if "kCantonese" in u:
+                record["readings"]["cantonese"] = u["kCantonese"]
+            if "kJapaneseOn" in u:
+                record["readings"]["japanese_on"] = u["kJapaneseOn"]
+            if "kJapaneseKun" in u:
+                record["readings"]["japanese_kun"] = u["kJapaneseKun"]
+            if "kKorean" in u:
+                record["readings"]["korean"] = u["kKorean"]
+            if "kVietnamese" in u:
+                record["readings"]["vietnamese"] = u["kVietnamese"]
+            if "kTang" in u:
+                record["readings"]["tang"] = u["kTang"]
+            if "kRSUnicode" in u:
+                record["radical_stroke"] = u["kRSUnicode"]
+            if "kTotalStrokes" in u:
+                record["total_strokes"] = u["kTotalStrokes"]
+            if "kPhonetic" in u:
+                record["phonetic_class"] = u["kPhonetic"]
+            # Variants
+            variants = {}
+            if "kTraditionalVariant" in u:
+                variants["traditional"] = u["kTraditionalVariant"]
+            if "kSimplifiedVariant" in u:
+                variants["simplified"] = u["kSimplifiedVariant"]
+            if "kSemanticVariant" in u:
+                variants["semantic"] = u["kSemanticVariant"]
+            if variants:
+                record["variants"] = variants
+
+        # Track formation type claims from each source for conflict detection
+        formation_claims = {}
+
+        # --- Make Me a Hanzi ---
+        m = mmah.get(ch)
+        if m:
+            if not record.get("definitions") and m.get("definition"):
+                record["definitions"] = m["definition"]
+            record["decomposition_ids"] = m.get("decomposition", "")
+            if m.get("etymology"):
+                etym = m["etymology"]
+                mmah_type = etym.get("type", "")
+                if mmah_type:
+                    formation_claims["makemeahanzi"] = mmah_type
+                if etym.get("type") == "pictophonetic":
+                    record["formation_details"] = {
+                        "semantic": etym.get("semantic", ""),
+                        "phonetic": etym.get("phonetic", ""),
+                    }
+                if etym.get("hint"):
+                    record.setdefault("etymology_notes", []).append({
+                        "source": "makemeahanzi",
+                        "text": etym["hint"],
+                    })
+
+        # --- Dong Chinese ---
+        d = dong.get(ch)
+        if d:
+            if d.get("type"):
+                formation_claims["dong_chinese"] = d["type"]
+            if d.get("semantic"):
+                if "formation_details" not in record:
+                    record["formation_details"] = {}
+                record["formation_details"]["semantic"] = d["semantic"]
+            if d.get("phonetic"):
+                if "formation_details" not in record:
+                    record["formation_details"] = {}
+                record["formation_details"]["phonetic"] = d["phonetic"]
+            if d.get("notes"):
+                record.setdefault("etymology_notes", []).append({
+                    "source": "dong_chinese",
+                    "text": d["notes"],
+                })
+            if d.get("definition") and not record.get("definitions"):
+                record["definitions"] = d["definition"]
+
+        # --- CJKVI-IDS ---
+        ids = cjkvi_ids.get(ch)
+        if ids:
+            record["ids"] = ids
+            if "decomposition_ids" not in record:
+                record["decomposition_ids"] = ids
+
+        # --- CJK Decomposition ---
+        decomp = cjk_decomp.get(ch)
+        if decomp:
+            record["cjk_decomp"] = decomp
+
+        # --- Shuowen Jiezi ---
+        sw = shuowen.get(ch)
+        if sw:
+            record["shuowen"] = {
+                "explanation": sw.get("explanation", ""),
+                "radical": sw.get("radical", ""),
+                "pronunciation_fanqie": sw.get("pronunciation", ""),
+                "seal_character": sw.get("seal_character", ""),
+                "components": sw.get("components", []),
+            }
+            if sw.get("xuan_note"):
+                record["shuowen"]["xuan_note"] = sw["xuan_note"]
+            if sw.get("kai_note"):
+                record["shuowen"]["kai_note"] = sw["kai_note"]
+            if sw.get("duan_notes"):
+                record["shuowen"]["duan_notes"] = sw["duan_notes"]
+            if sw.get("variants"):
+                record["shuowen"]["variants"] = sw["variants"]
+            # Extract formation type from Shuowen explanation
+            sw_ftype = extract_shuowen_formation_type(sw.get("explanation", ""))
+            if sw_ftype:
+                formation_claims["shuowen_jiezi"] = sw_ftype
+            # Add Shuowen explanation as an etymology note
+            if sw.get("explanation"):
+                record.setdefault("etymology_notes", []).append({
+                    "source": "shuowen_jiezi",
+                    "text": sw["explanation"],
+                    "caveat": "Classical source (~100 AD). Some etymologies may be incorrect by modern scholarship.",
+                })
+
+        # --- Kangxi ---
+        kx = kangxi.get(ch)
+        if kx:
+            record["kangxi"] = {}
+            if kx.get("explanation"):
+                record["kangxi"]["explanation"] = kx["explanation"]
+            if kx.get("radical"):
+                record["kangxi"]["radical"] = kx["radical"]
+
+        # --- Baxter-Sagart ---
+        bs = baxter_sagart.get(ch)
+        if bs:
+            record["historical_phonology"] = []
+            for entry in bs:
+                rec = {}
+                if entry.get("old_chinese"):
+                    rec["old_chinese"] = entry["old_chinese"]
+                if entry.get("middle_chinese"):
+                    rec["middle_chinese"] = entry["middle_chinese"]
+                if entry.get("gloss"):
+                    rec["gloss"] = entry["gloss"]
+                if entry.get("gsr"):
+                    rec["gsr"] = entry["gsr"]
+                if rec:
+                    record["historical_phonology"].append(rec)
+
+        # --- Wiktionary ---
+        wikt = wiktionary.get(ch)
+        if wikt:
+            # Collect unique etymology texts
+            seen_etyms = set()
+            wikt_ftype_found = False
+            for entry in wikt:
+                etym = entry.get("etymology_text", "")
+                if etym and etym not in seen_etyms:
+                    seen_etyms.add(etym)
+                    record.setdefault("etymology_notes", []).append({
+                        "source": "wiktionary",
+                        "text": etym,
+                    })
+                    # Extract formation type from Wiktionary text
+                    if not wikt_ftype_found:
+                        wikt_ftype = extract_wiktionary_formation_type(etym)
+                        if wikt_ftype:
+                            formation_claims["wiktionary"] = wikt_ftype
+                            wikt_ftype_found = True
+                # Collect glosses we don't already have
+                for g in entry.get("glosses", []):
+                    if not record.get("definitions"):
+                        record["definitions"] = g
+
+        # --- CC-CEDICT ---
+        ce = cedict.get(ch)
+        if ce:
+            cedict_defs = []
+            for entry in ce:
+                for d_text in entry.get("definitions", []):
+                    if d_text not in cedict_defs:
+                        cedict_defs.append(d_text)
+            if cedict_defs:
+                record["cedict_definitions"] = cedict_defs
+                if not record.get("definitions"):
+                    record["definitions"] = "; ".join(cedict_defs[:3])
+            # Get trad/simp mapping
+            if ce[0].get("traditional") and ce[0].get("simplified"):
+                if ce[0]["traditional"] != ce[0]["simplified"]:
+                    if "variants" not in record:
+                        record["variants"] = {}
+                    if ch == ce[0]["traditional"]:
+                        record["variants"].setdefault("simplified", ce[0]["simplified"])
+                    elif ch == ce[0]["simplified"]:
+                        record["variants"].setdefault("traditional", ce[0]["traditional"])
+
+        # --- EVOBC ---
+        ev = evobc.get(ch)
+        if ev:
+            record["historical_glyphs"] = {
+                "evobc_id": ev.get("evobc_id", ""),
+                "image_count": ev.get("image_count", 0),
+                "eras_available": ev.get("eras", []),
+            }
+
+        # --- Infer phonetic/semantic components from IDS + radical ---
+        # Only infer for characters already classified as phono-semantic,
+        # or characters with enough strokes to plausibly be compounds (>= 5 strokes)
+        details = record.get("formation_details", {})
+        is_phono_semantic = any(
+            normalize_formation_type(fc) == "phono-semantic"
+            for fc in formation_claims.values()
+        ) if formation_claims else False
+        total_strokes_val = 0
+        try:
+            total_strokes_val = int(record.get("total_strokes", "0").split()[0])
+        except (ValueError, IndexError):
+            pass
+        should_infer = (not details.get("phonetic") and
+                        (is_phono_semantic or total_strokes_val >= 6))
+        if should_infer:
+            ids_str = record.get("ids", "") or record.get("decomposition_ids", "")
+            # Binary decomposition: ⿰AB, ⿱AB, ⿸AB, ⿹AB, ⿺AB, ⿵AB
+            if len(ids_str) == 3 and ids_str[0] in "⿰⿱⿸⿹⿺⿵":
+                comp_a, comp_b = ids_str[1], ids_str[2]
+                rad_num = char_to_radical_num.get(ch)
+                if rad_num:
+                    rad_char = kangxi_num_to_char.get(rad_num, "")
+                    # Check if either component is the radical (or its variant)
+                    a_is_radical = (comp_a == rad_char or
+                                   radical_variants.get(comp_a) == rad_char or
+                                   comp_a in radical_variants and kangxi_char_to_num.get(radical_variants[comp_a]) == rad_num)
+                    b_is_radical = (comp_b == rad_char or
+                                   radical_variants.get(comp_b) == rad_char or
+                                   comp_b in radical_variants and kangxi_char_to_num.get(radical_variants[comp_b]) == rad_num)
+
+                    if a_is_radical and not b_is_radical:
+                        if "formation_details" not in record:
+                            record["formation_details"] = {}
+                        record["formation_details"]["semantic"] = comp_a
+                        record["formation_details"]["phonetic"] = comp_b
+                        record["formation_details"]["inferred"] = True
+                        inferred_phonetic_count += 1
+                    elif b_is_radical and not a_is_radical:
+                        if "formation_details" not in record:
+                            record["formation_details"] = {}
+                        record["formation_details"]["semantic"] = comp_b
+                        record["formation_details"]["phonetic"] = comp_a
+                        record["formation_details"]["inferred"] = True
+                        inferred_phonetic_count += 1
+
+        # --- Formation type resolution with conflict detection ---
+        record["_formation_claims"] = formation_claims  # temp for confidence calc
+        if formation_claims:
+            # Normalize all claims
+            normalized_claims = {}
+            for src, ftype in formation_claims.items():
+                n = normalize_formation_type(ftype)
+                if n:
+                    normalized_claims[src] = n
+
+            # Determine consensus
+            if normalized_claims:
+                type_counts = defaultdict(list)
+                for src, n in normalized_claims.items():
+                    type_counts[n].append(src)
+
+                # Pick the type with most support; prefer modern sources
+                # "other" should lose to any definitive classification
+                SOURCE_PRIORITY = {
+                    "dong_chinese": 4,     # most carefully curated
+                    "wiktionary": 3,       # community-reviewed
+                    "makemeahanzi": 2,      # good but less detailed
+                    "shuowen_jiezi": 1,    # classical, often wrong
+                }
+                best_type = None
+                best_score = -1
+                for ftype, src_list in type_counts.items():
+                    score = len(src_list) * 10  # count matters
+                    score += sum(SOURCE_PRIORITY.get(s, 0) for s in src_list)
+                    # Penalize "other" and "mixed-iconic" heavily
+                    if ftype in ("other", "mixed-iconic"):
+                        score -= 50
+                    if score > best_score:
+                        best_score = score
+                        best_type = ftype
+
+                record["formation_type"] = best_type
+
+                # Detect conflicts -- only between definitive claims
+                # "other" means uncertain, not a real classification
+                definitive_claims = {
+                    src: t for src, t in normalized_claims.items()
+                    if t not in ("other", "mixed-iconic")
+                }
+                if definitive_claims:
+                    unique_types = set(definitive_claims.values())
+                    # Collapse "indicative" and "ideographic" (both are non-phonetic)
+                    collapsed = set()
+                    for t in unique_types:
+                        if t in ("indicative", "ideographic"):
+                            collapsed.add("ideographic")
+                        elif t in ("phonetic-loan", "derivative-cognate"):
+                            collapsed.add(t)
+                        else:
+                            collapsed.add(t)
+
+                    if len(collapsed) > 1:
+                        record["formation_type_conflict"] = {
+                            src: normalize_formation_type(ft)
+                            for src, ft in formation_claims.items()
+                        }
+
+        # --- Source tracking ---
+        sources = []
+        if ch in unihan:
+            sources.append("unihan")
+        if ch in mmah:
+            sources.append("makemeahanzi")
+        if ch in dong:
+            sources.append("dong_chinese")
+        if ch in cjkvi_ids:
+            sources.append("cjkvi_ids")
+        if ch in cjk_decomp:
+            sources.append("cjk_decomp")
+        if ch in shuowen:
+            sources.append("shuowen_jiezi")
+        if ch in kangxi:
+            sources.append("kangxi")
+        if ch in baxter_sagart:
+            sources.append("baxter_sagart")
+        if ch in wiktionary:
+            sources.append("wiktionary")
+        if ch in cedict:
+            sources.append("cedict")
+        if ch in evobc:
+            sources.append("evobc")
+        record["sources"] = sources
+        record["source_count"] = len(sources)
+
+        # --- Confidence score ---
+        record["confidence"] = compute_confidence(record)
+
+        # Remove temporary field
+        del record["_formation_claims"]
+
+        merged[ch] = record
+
+    print(f"  Inferred phonetic components from IDS+radical: {inferred_phonetic_count}")
+    return merged
+
+
+# ---------------------------------------------------------------------------
+# Output
+# ---------------------------------------------------------------------------
+def write_jsonl(merged, path):
+    """Write merged data as JSONL."""
+    print(f"\nWriting JSONL to {path}...")
+    with open(path, "w", encoding="utf-8") as f:
+        for ch in sorted(merged.keys()):
+            f.write(json.dumps(merged[ch], ensure_ascii=False) + "\n")
+    print(f"  Written {len(merged)} records")
+
+
+def write_sqlite(merged, path):
+    """Write merged data to SQLite database."""
+    print(f"Writing SQLite database to {path}...")
+    if path.exists():
+        path.unlink()
+
+    conn = sqlite3.connect(str(path))
+    c = conn.cursor()
+
+    # Main characters table
+    c.execute("""
+        CREATE TABLE characters (
+            character TEXT PRIMARY KEY,
+            codepoint TEXT,
+            definitions TEXT,
+            formation_type TEXT,
+            formation_type_conflict TEXT,
+            confidence INTEGER,
+            decomposition_ids TEXT,
+            ids TEXT,
+            radical_stroke TEXT,
+            total_strokes TEXT,
+            source_count INTEGER,
+            sources TEXT,
+            data JSON
+        )
+    """)
+
+    # Etymology notes table
+    c.execute("""
+        CREATE TABLE etymology_notes (
+            character TEXT,
+            source TEXT,
+            note_text TEXT,
+            caveat TEXT,
+            FOREIGN KEY (character) REFERENCES characters(character)
+        )
+    """)
+
+    # Historical phonology table
+    c.execute("""
+        CREATE TABLE historical_phonology (
+            character TEXT,
+            old_chinese TEXT,
+            middle_chinese TEXT,
+            gloss TEXT,
+            gsr TEXT,
+            FOREIGN KEY (character) REFERENCES characters(character)
+        )
+    """)
+
+    # Shuowen table
+    c.execute("""
+        CREATE TABLE shuowen (
+            character TEXT PRIMARY KEY,
+            explanation TEXT,
+            radical TEXT,
+            pronunciation_fanqie TEXT,
+            seal_character TEXT,
+            duan_notes JSON,
+            FOREIGN KEY (character) REFERENCES characters(character)
+        )
+    """)
+
+    # Readings table
+    c.execute("""
+        CREATE TABLE readings (
+            character TEXT,
+            reading_type TEXT,
+            reading_value TEXT,
+            FOREIGN KEY (character) REFERENCES characters(character)
+        )
+    """)
+
+    # Insert data
+    for ch, record in merged.items():
+        conflict = record.get("formation_type_conflict")
+        c.execute(
+            "INSERT INTO characters VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                record.get("character", ""),
+                record.get("codepoint", ""),
+                record.get("definitions", ""),
+                record.get("formation_type", ""),
+                json.dumps(conflict, ensure_ascii=False) if conflict else None,
+                record.get("confidence", 0),
+                record.get("decomposition_ids", ""),
+                record.get("ids", ""),
+                record.get("radical_stroke", ""),
+                record.get("total_strokes", ""),
+                record.get("source_count", 0),
+                ",".join(record.get("sources", [])),
+                json.dumps(record, ensure_ascii=False),
+            ),
+        )
+
+        for note in record.get("etymology_notes", []):
+            c.execute(
+                "INSERT INTO etymology_notes VALUES (?, ?, ?, ?)",
+                (ch, note.get("source", ""), note.get("text", ""), note.get("caveat", "")),
+            )
+
+        for phon in record.get("historical_phonology", []):
+            c.execute(
+                "INSERT INTO historical_phonology VALUES (?, ?, ?, ?, ?)",
+                (ch, phon.get("old_chinese", ""), phon.get("middle_chinese", ""),
+                 phon.get("gloss", ""), phon.get("gsr", "")),
+            )
+
+        sw = record.get("shuowen")
+        if sw:
+            c.execute(
+                "INSERT INTO shuowen VALUES (?, ?, ?, ?, ?, ?)",
+                (ch, sw.get("explanation", ""), sw.get("radical", ""),
+                 sw.get("pronunciation_fanqie", ""), sw.get("seal_character", ""),
+                 json.dumps(sw.get("duan_notes", []), ensure_ascii=False)),
+            )
+
+        for rtype, rval in record.get("readings", {}).items():
+            c.execute(
+                "INSERT INTO readings VALUES (?, ?, ?)",
+                (ch, rtype, rval),
+            )
+
+    # Create indexes
+    c.execute("CREATE INDEX idx_etym_char ON etymology_notes(character)")
+    c.execute("CREATE INDEX idx_etym_source ON etymology_notes(source)")
+    c.execute("CREATE INDEX idx_phon_char ON historical_phonology(character)")
+    c.execute("CREATE INDEX idx_read_char ON readings(character)")
+    c.execute("CREATE INDEX idx_char_formation ON characters(formation_type)")
+    c.execute("CREATE INDEX idx_char_sources ON characters(source_count)")
+    c.execute("CREATE INDEX idx_char_confidence ON characters(confidence)")
+    c.execute("CREATE INDEX idx_char_conflict ON characters(formation_type_conflict) WHERE formation_type_conflict IS NOT NULL")
+
+    conn.commit()
+    conn.close()
+    print(f"  Written {len(merged)} character records to SQLite")
+
+
+def compute_statistics(merged):
+    """Compute and print database statistics."""
+    total = len(merged)
+    has_definitions = sum(1 for r in merged.values() if r.get("definitions"))
+    has_etymology = sum(1 for r in merged.values() if r.get("etymology_notes"))
+    has_formation = sum(1 for r in merged.values() if r.get("formation_type"))
+    has_shuowen = sum(1 for r in merged.values() if r.get("shuowen"))
+    has_phonology = sum(1 for r in merged.values() if r.get("historical_phonology"))
+    has_ids = sum(1 for r in merged.values() if r.get("ids") or r.get("decomposition_ids"))
+    has_phonetic = sum(1 for r in merged.values() if r.get("formation_details", {}).get("phonetic"))
+    has_inferred = sum(1 for r in merged.values() if r.get("formation_details", {}).get("inferred"))
+    has_glyphs = sum(1 for r in merged.values() if r.get("historical_glyphs"))
+    has_readings = sum(1 for r in merged.values() if r.get("readings"))
+
+    formation_types = defaultdict(int)
+    for r in merged.values():
+        ft = r.get("formation_type", "")
+        if ft:
+            formation_types[ft] += 1
+
+    source_counts = defaultdict(int)
+    for r in merged.values():
+        for s in r.get("sources", []):
+            source_counts[s] += 1
+
+    multi_source_etym = sum(
+        1 for r in merged.values()
+        if len(r.get("etymology_notes", [])) > 1
+    )
+
+    # Characters in common CJK Unified Ideographs block
+    cjk_basic = sum(1 for ch in merged if 0x4E00 <= ord(ch) <= 0x9FFF)
+
+    # Conflict analysis
+    has_conflict = sum(1 for r in merged.values() if r.get("formation_type_conflict"))
+    conflict_details = defaultdict(int)
+    for r in merged.values():
+        c = r.get("formation_type_conflict")
+        if c:
+            types_involved = tuple(sorted(set(c.values())))
+            conflict_details[types_involved] += 1
+
+    # Confidence distribution
+    confidence_buckets = defaultdict(int)
+    for r in merged.values():
+        conf = r.get("confidence", 0)
+        if conf >= 80:
+            confidence_buckets["80-100 (high)"] += 1
+        elif conf >= 50:
+            confidence_buckets["50-79 (medium)"] += 1
+        elif conf >= 20:
+            confidence_buckets["20-49 (low)"] += 1
+        else:
+            confidence_buckets["0-19 (minimal)"] += 1
+
+    # Average confidence for chars with any etymology
+    etym_confidences = [r.get("confidence", 0) for r in merged.values() if r.get("etymology_notes")]
+    avg_confidence = sum(etym_confidences) / len(etym_confidences) if etym_confidences else 0
+
+    stats = {
+        "total_characters": total,
+        "cjk_unified_basic": cjk_basic,
+        "has_definitions": has_definitions,
+        "has_any_etymology": has_etymology,
+        "has_formation_type": has_formation,
+        "has_shuowen_entry": has_shuowen,
+        "has_historical_phonology": has_phonology,
+        "has_decomposition": has_ids,
+        "has_historical_glyphs": has_glyphs,
+        "has_readings": has_readings,
+        "has_multi_source_etymology": multi_source_etym,
+        "formation_type_breakdown": dict(formation_types),
+        "characters_per_source": dict(source_counts),
+        "formation_type_conflicts": has_conflict,
+        "conflict_type_pairs": {str(k): v for k, v in conflict_details.items()},
+        "confidence_distribution": dict(confidence_buckets),
+        "avg_confidence_etymology_chars": round(avg_confidence, 1),
+    }
+
+    print("\n" + "=" * 60)
+    print("DATABASE STATISTICS")
+    print("=" * 60)
+    print(f"  Total unique characters:        {total:>8,}")
+    print(f"  CJK Unified Basic (U+4E00-9FFF):{cjk_basic:>8,}")
+    print(f"  With definitions:               {has_definitions:>8,}")
+    print(f"  With any etymology note:        {has_etymology:>8,}")
+    print(f"  With formation type:            {has_formation:>8,}")
+    print(f"  With Shuowen entry:             {has_shuowen:>8,}")
+    print(f"  With OC/MC phonology:           {has_phonology:>8,}")
+    print(f"  With decomposition (IDS):       {has_ids:>8,}")
+    print(f"  With historical glyph images:   {has_glyphs:>8,}")
+    print(f"  With readings (any language):   {has_readings:>8,}")
+    print(f"  With multi-source etymology:    {multi_source_etym:>8,}")
+    print(f"  With phonetic component ID'd:   {has_phonetic:>8,}")
+    print(f"    (of which inferred from IDS): {has_inferred:>8,}")
+    print()
+    print("  Formation type breakdown:")
+    for ft, count in sorted(formation_types.items(), key=lambda x: -x[1]):
+        print(f"    {ft:30s} {count:>6,}")
+    print()
+    print("  RIGOR METRICS:")
+    print(f"  Formation type conflicts:       {has_conflict:>8,}")
+    if conflict_details:
+        print("  Conflict type pairs:")
+        for types, count in sorted(conflict_details.items(), key=lambda x: -x[1])[:10]:
+            print(f"    {' vs '.join(types):40s} {count:>5,}")
+    print(f"  Avg confidence (etym chars):    {avg_confidence:>8.1f}")
+    print("  Confidence distribution:")
+    for bucket in ["80-100 (high)", "50-79 (medium)", "20-49 (low)", "0-19 (minimal)"]:
+        print(f"    {bucket:30s} {confidence_buckets.get(bucket, 0):>8,}")
+    print()
+    print("  Characters per source:")
+    for src, count in sorted(source_counts.items(), key=lambda x: -x[1]):
+        print(f"    {src:30s} {count:>8,}")
+    print("=" * 60)
+
+    return stats
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+def main():
+    print("=" * 60)
+    print("Chinese Character Etymology Database Builder")
+    print("=" * 60)
+    print()
+
+    # Parse all sources
+    unihan = parse_unihan()
+    mmah = parse_makemeahanzi()
+    dong = parse_dong_chinese()
+    cjkvi_ids = parse_cjkvi_ids()
+    cjk_decomp = parse_cjk_decomp()
+    shuowen = parse_shuowen()
+    kangxi = parse_kangxi()
+    baxter_sagart = parse_baxter_sagart()
+    wiktionary = parse_wiktionary()
+    cedict = parse_cedict()
+    evobc = parse_evobc()
+
+    # Merge
+    merged = merge_all(
+        unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
+        kangxi, baxter_sagart, wiktionary, cedict, evobc,
+    )
+
+    # Output
+    write_jsonl(merged, OUTPUT_DIR / "hanzi_etymology.jsonl")
+    write_sqlite(merged, OUTPUT_DIR / "hanzi_etymology.db")
+
+    # Statistics
+    stats = compute_statistics(merged)
+    with open(OUTPUT_DIR / "statistics.json", "w", encoding="utf-8") as f:
+        json.dump(stats, ensure_ascii=False, indent=2, fp=f)
+
+    # Write a sample record for verification
+    sample_chars = ["一", "人", "水", "木", "馬", "好", "的", "我", "愛", "龍"]
+    samples = {}
+    for ch in sample_chars:
+        if ch in merged:
+            samples[ch] = merged[ch]
+    with open(OUTPUT_DIR / "sample_records.json", "w", encoding="utf-8") as f:
+        json.dump(samples, ensure_ascii=False, indent=2, fp=f)
+    print(f"\nSample records written for: {', '.join(samples.keys())}")
+
+    print("\nDone! Output files:")
+    print(f"  {OUTPUT_DIR / 'hanzi_etymology.jsonl'}")
+    print(f"  {OUTPUT_DIR / 'hanzi_etymology.db'}")
+    print(f"  {OUTPUT_DIR / 'statistics.json'}")
+    print(f"  {OUTPUT_DIR / 'sample_records.json'}")
+
+
+if __name__ == "__main__":
+    main()
