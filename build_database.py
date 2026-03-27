@@ -1348,6 +1348,29 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
             record["verification_status"] = "unverified"
         # else: no verification_status field (no etymology at all)
 
+        # --- Classical-only phonetic validation via OC rhyme ---
+        if (record.get("verification_status") == "classical-only" and
+                record.get("shuowen")):
+            sw_expl = record["shuowen"].get("explanation", "")
+            if "聲" in sw_expl:
+                char_rhymes = set()
+                for p in record.get("historical_phonology", []):
+                    rg = p.get("rhyme_group", "")
+                    if rg:
+                        char_rhymes.add(rg)
+                phon_comp = record.get("formation_details", {}).get("phonetic_component_ytenx", "")
+                if char_rhymes and phon_comp and phon_comp in ytenx_oc:
+                    comp_rhymes = set()
+                    for p in ytenx_oc[phon_comp]:
+                        rg = p.get("rhyme_group", "")
+                        if rg:
+                            comp_rhymes.add(rg)
+                    if comp_rhymes:
+                        if char_rhymes & comp_rhymes:
+                            record["shuowen_phonetic_validated"] = True
+                        else:
+                            record["shuowen_phonetic_validated"] = False
+
         # --- Confidence score ---
         record["confidence"] = compute_confidence(record)
 
