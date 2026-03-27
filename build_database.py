@@ -672,7 +672,7 @@ def parse_ytenx_oc():
 # ---------------------------------------------------------------------------
 def parse_frequency():
     """Parse character frequency ranking from hanziDB."""
-    print("[14/15] Parsing character frequency data...")
+    print("[14/16] Parsing character frequency data...")
     chars = {}
     fpath = SOURCES_DIR / "frequency" / "hanziDB.csv"
     if not fpath.exists():
@@ -700,11 +700,42 @@ def parse_frequency():
 
 
 # ---------------------------------------------------------------------------
+# 15. Unihan kPhonetic classes
+# ---------------------------------------------------------------------------
+def parse_phonetic_classes():
+    """Parse Unihan kPhonetic field into phonetic family groupings."""
+    print("[15/16] Parsing Unihan kPhonetic classes...")
+    char_to_classes = {}
+    class_to_chars = defaultdict(list)
+    fpath = SOURCES_DIR / "unihan" / "Unihan_DictionaryLikeData.txt"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found")
+        return char_to_classes, class_to_chars
+
+    with open(fpath, "r", encoding="utf-8") as f:
+        for line in f:
+            if "kPhonetic" not in line or line.startswith("#"):
+                continue
+            parts = line.strip().split("\t")
+            if len(parts) < 3 or parts[1] != "kPhonetic":
+                continue
+            cp = int(parts[0][2:], 16)
+            ch = chr(cp)
+            classes = [c.rstrip("*") for c in parts[2].split()]
+            char_to_classes[ch] = classes
+            for cls in classes:
+                class_to_chars[cls].append(ch)
+
+    print(f"  Parsed {len(char_to_classes)} characters in {len(class_to_chars)} phonetic classes")
+    return char_to_classes, class_to_chars
+
+
+# ---------------------------------------------------------------------------
 # Merge all sources into unified records
 # ---------------------------------------------------------------------------
 def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
               kangxi, baxter_sagart, wiktionary, cedict, evobc,
-              guangyun, ytenx_oc, frequency):
+              guangyun, ytenx_oc, frequency, phonetic_classes, class_to_chars):
     """Merge all parsed sources into a single dict keyed by character."""
     print("\nMerging all sources...")
 
@@ -995,6 +1026,20 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
             if freq.get("hsk_level"):
                 record["hsk_level"] = freq["hsk_level"]
 
+        # --- Phonetic classes (Unihan kPhonetic) ---
+        ph_classes = phonetic_classes.get(ch)
+        if ph_classes:
+            record["phonetic_series"] = ph_classes
+            # For each class, list sibling characters (same phonetic family)
+            siblings = set()
+            for cls in ph_classes:
+                for sibling in class_to_chars.get(cls, []):
+                    if sibling != ch:
+                        siblings.add(sibling)
+            if siblings:
+                # Limit to 30 most relevant siblings
+                record["phonetic_family"] = sorted(siblings)[:30]
+
         # --- Infer phonetic/semantic components from IDS + radical ---
         # Only infer for characters already classified as phono-semantic,
         # or characters with enough strokes to plausibly be compounds (>= 5 strokes)
@@ -1134,6 +1179,59 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
         record["sources"] = sources
         record["source_count"] = len(sources)
 
+        # --- Fill formation type gaps for common characters ---
+        # If a character has no formation type but has IDS decomposition with
+        # 2 components and a Kangxi radical, try to classify it
+        if not record.get("formation_type"):
+            ids_str = record.get("ids", "") or record.get("decomposition_ids", "")
+            if len(ids_str) == 3 and ids_str[0] in "⿰⿱⿸⿹⿺⿵":
+                comp_a, comp_b = ids_str[1], ids_str[2]
+                rad_num = char_to_radical_num.get(ch)
+                if rad_num:
+                    rad_char = kangxi_num_to_char.get(rad_num, "")
+                    a_is_rad = (comp_a == rad_char or
+                                radical_variants.get(comp_a) == rad_char)
+                    b_is_rad = (comp_b == rad_char or
+                                radical_variants.get(comp_b) == rad_char)
+                    # If one component is the radical and the other isn't,
+                    # and the char has a phonetic class, likely phono-semantic
+                    non_rad = comp_b if a_is_rad else (comp_a if b_is_rad else None)
+                    if non_rad and (a_is_rad != b_is_rad):
+                        if ch in phonetic_classes:
+                            record["formation_type"] = "phono-semantic"
+                            record["formation_type_inferred"] = True
+                        else:
+                            # Could be ideographic compound
+                            total_strokes_val = 0
+                            try:
+                                total_strokes_val = int(
+                                    record.get("total_strokes", "0").split()[0])
+                            except (ValueError, IndexError):
+                                pass
+                            if total_strokes_val >= 6:
+                                record["formation_type"] = "ideographic"
+                                record["formation_type_inferred"] = True
+
+        # --- Verification status ---
+        # A character is "verified" if multiple independent sources agree on
+        # its etymology, or if it has high confidence from diverse sources
+        etym_sources = set(n.get("source", "") for n in record.get("etymology_notes", []))
+        modern_etym_sources = etym_sources - {"shuowen_jiezi"}
+        has_formation_consensus = (
+            record.get("formation_type") and
+            not record.get("formation_type_conflict")
+        )
+
+        if len(modern_etym_sources) >= 2 and has_formation_consensus:
+            record["verification_status"] = "cross-verified"
+        elif len(modern_etym_sources) >= 1 and record.get("formation_type"):
+            record["verification_status"] = "single-source"
+        elif record.get("shuowen") and not modern_etym_sources:
+            record["verification_status"] = "classical-only"
+        elif record.get("etymology_notes"):
+            record["verification_status"] = "unverified"
+        # else: no verification_status field (no etymology at all)
+
         # --- Confidence score ---
         record["confidence"] = compute_confidence(record)
 
@@ -1176,6 +1274,8 @@ def write_sqlite(merged, path):
             formation_type TEXT,
             formation_type_conflict TEXT,
             confidence INTEGER,
+            verification_status TEXT,
+            frequency_rank INTEGER,
             decomposition_ids TEXT,
             ids TEXT,
             radical_stroke TEXT,
@@ -1236,7 +1336,7 @@ def write_sqlite(merged, path):
     for ch, record in merged.items():
         conflict = record.get("formation_type_conflict")
         c.execute(
-            "INSERT INTO characters VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO characters VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 record.get("character", ""),
                 record.get("codepoint", ""),
@@ -1244,6 +1344,8 @@ def write_sqlite(merged, path):
                 record.get("formation_type", ""),
                 json.dumps(conflict, ensure_ascii=False) if conflict else None,
                 record.get("confidence", 0),
+                record.get("verification_status", ""),
+                record.get("frequency_rank"),
                 record.get("decomposition_ids", ""),
                 record.get("ids", ""),
                 record.get("radical_stroke", ""),
@@ -1291,6 +1393,8 @@ def write_sqlite(merged, path):
     c.execute("CREATE INDEX idx_char_sources ON characters(source_count)")
     c.execute("CREATE INDEX idx_char_confidence ON characters(confidence)")
     c.execute("CREATE INDEX idx_char_conflict ON characters(formation_type_conflict) WHERE formation_type_conflict IS NOT NULL")
+    c.execute("CREATE INDEX idx_char_verification ON characters(verification_status)")
+    c.execute("CREATE INDEX idx_char_frequency ON characters(frequency_rank) WHERE frequency_rank IS NOT NULL")
 
     conn.commit()
     conn.close()
@@ -1308,6 +1412,13 @@ def compute_statistics(merged):
     has_ids = sum(1 for r in merged.values() if r.get("ids") or r.get("decomposition_ids"))
     has_phonetic = sum(1 for r in merged.values() if r.get("formation_details", {}).get("phonetic"))
     has_inferred = sum(1 for r in merged.values() if r.get("formation_details", {}).get("inferred"))
+    has_phonetic_series = sum(1 for r in merged.values() if r.get("phonetic_series"))
+
+    # Verification status
+    verification_counts = defaultdict(int)
+    for r in merged.values():
+        vs = r.get("verification_status", "no-etymology")
+        verification_counts[vs] += 1
     has_glyphs = sum(1 for r in merged.values() if r.get("historical_glyphs"))
     has_readings = sum(1 for r in merged.values() if r.get("readings"))
 
@@ -1392,6 +1503,11 @@ def compute_statistics(merged):
     print(f"  With multi-source etymology:    {multi_source_etym:>8,}")
     print(f"  With phonetic component ID'd:   {has_phonetic:>8,}")
     print(f"    (of which inferred from IDS): {has_inferred:>8,}")
+    print(f"  With phonetic series (kPhon):   {has_phonetic_series:>8,}")
+    print()
+    print("  Verification status:")
+    for vs in ["cross-verified", "single-source", "classical-only", "unverified", "no-etymology"]:
+        print(f"    {vs:30s} {verification_counts.get(vs, 0):>8,}")
     print()
     print("  Formation type breakdown:")
     for ft, count in sorted(formation_types.items(), key=lambda x: -x[1]):
@@ -1440,12 +1556,13 @@ def main():
     guangyun = parse_guangyun()
     ytenx_oc = parse_ytenx_oc()
     frequency = parse_frequency()
+    phonetic_classes, class_to_chars = parse_phonetic_classes()
 
     # Merge
     merged = merge_all(
         unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
         kangxi, baxter_sagart, wiktionary, cedict, evobc,
-        guangyun, ytenx_oc, frequency,
+        guangyun, ytenx_oc, frequency, phonetic_classes, class_to_chars,
     )
 
     # Output
