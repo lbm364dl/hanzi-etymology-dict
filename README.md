@@ -1,6 +1,6 @@
 # Hanzi Etymology Dictionary
 
-A comprehensive open-source database of Chinese character (汉字) etymologies, compiled from 11 authoritative sources.
+A comprehensive open-source database of Chinese character (汉字) etymologies, compiled from 16 parsers across 13+ authoritative sources, with cross-source validation, confidence scoring, and scholarly rigor analysis.
 
 ## Database Statistics
 
@@ -21,6 +21,8 @@ A comprehensive open-source database of Chinese character (汉字) etymologies, 
 | With phonetic component identified | 59,575 |
 | With phonetic series (kPhonetic) | 22,456 |
 | Cross-verified etymology | 5,427 |
+| Shuowen confirmed by modern sources | 9,204 |
+| Shuowen corrected by modern sources | 551 |
 | Historical glyph SVGs (Dong Chinese) | 578 chars |
 | Historical glyph SVGs (Wikimedia seals) | 3,638 available |
 
@@ -182,26 +184,49 @@ python3 build_database.py
 ## Project Files
 
 ```
-├── README.md                  # This file
-├── RESEARCH.md                # Detailed source research & evaluation
-├── BOOKS.md                   # Bibliography of 73 authoritative references
-├── INACCESSIBLE_RESOURCES.md  # Resources we couldn't integrate (yet)
-├── build_database.py          # ETL pipeline (16 parsers, cross-validation)
-├── extract_dong_chinese.mjs   # Dong Chinese etymology extraction
-├── extract_dong_svgs.mjs      # Historical glyph SVG extraction
-├── download_wikimedia_seals.py # Wikimedia seal script SVG downloader
-├── analyze_quality.py         # Cross-source quality analysis
-├── output/
-│   ├── hanzi_etymology.jsonl  # Full database (JSONL)
-│   ├── hanzi_etymology.db     # Full database (SQLite)
-│   ├── sample_records.json    # Example records
-│   ├── statistics.json        # Build statistics
-│   ├── priority_gaps.json     # High-frequency chars needing work
-│   └── glyphs/                # Historical character form SVGs
-│       ├── dong_chinese/      # 578 chars (oracle, bronze, seal, cursive)
-│       └── wikimedia_seal/    # 3,638 Shuowen seal script SVGs
-└── sources/                   # Raw source data (not committed)
+├── README.md                    # This file
+├── RESEARCH.md                  # Detailed source research & evaluation
+├── BOOKS.md                     # Bibliography of 73 authoritative references
+├── INACCESSIBLE_RESOURCES.md    # Resources we couldn't integrate (yet)
+├── GLYPH_DATA_SOURCES.md        # Historical glyph image source research
+│
+├── build_database.py            # ETL pipeline (16 parsers, cross-validation)
+├── extract_dong_chinese.mjs     # Dong Chinese etymology data extraction
+├── extract_dong_svgs.mjs        # Historical glyph SVG extraction
+├── download_wikimedia_seals.py  # Wikimedia seal script SVG downloader
+├── search.py                    # Command-line search interface
+│
+├── analyze_quality.py           # Cross-source quality analysis
+├── analyze_phonetic_series.py   # Phonetic series reliability testing
+├── validate_reconstructions.py  # OC cross-validation & Shuowen error detection
+│
+├── output/                      # Generated (rebuild with: python3 build_database.py)
+│   ├── hanzi_etymology.jsonl    # Full database (JSONL, ~56 MB)
+│   ├── hanzi_etymology.db       # Full database (SQLite, ~98 MB)
+│   ├── sample_records.json      # Example records for 10 common characters
+│   ├── statistics.json          # Build statistics
+│   ├── priority_gaps.json       # High-frequency chars needing work
+│   ├── shuowen_errors.json      # 551 Shuowen entries corrected by modern scholarship
+│   ├── phonetic_analysis.json   # Phonetic series reliability analysis results
+│   ├── validation_report.json   # Cross-validation results (BS vs ZZ, etc.)
+│   └── glyphs/                  # Historical character form SVGs
+│       ├── dong_chinese/        # 578 chars (oracle, bronze, seal, cursive)
+│       └── wikimedia_seal/      # 3,638 Shuowen seal script SVGs
+└── sources/                     # Raw source data (not committed)
 ```
+
+### Validation Results
+
+| Test | What it measures | Result |
+|------|-----------------|--------|
+| Shuowen vs modern sources | Classical accuracy | 94.4% confirmed |
+| Phonetic series (Mandarin) | Do families sound alike? | 91.4% rhyme match |
+| Phonetic series (Old Chinese) | Ancient rhyme consistency | 82.8% (Zhengzhang) |
+| Baxter-Sagart vs Zhengzhang | Two OC systems agree? | 81.4% tone, 72.7% vowel |
+| Shuowen OC rhyme test | Shuowen phonetics valid? | 66.6% validated |
+| Inferred formation type | IDS+radical inference quality | 98.1% vs Shuowen |
+| Top 1000 chars | Missing etymology | 0 |
+| Top 3000 chars | Average confidence | 80.2 |
 
 ## Cross-Source Validation
 
@@ -240,9 +265,10 @@ The database extracts formation types from 4 independent sources and detects dis
 
 ## Documentation
 
-- **[RESEARCH.md](RESEARCH.md)** -- Detailed evaluation of all 30+ sources considered
+- **[RESEARCH.md](RESEARCH.md)** -- Detailed evaluation of all 30+ data sources considered
 - **[BOOKS.md](BOOKS.md)** -- Comprehensive bibliography of 73 books, papers, and digital resources
-- **[INACCESSIBLE_RESOURCES.md](INACCESSIBLE_RESOURCES.md)** -- Resources that could improve the database but aren't currently available as open data
+- **[INACCESSIBLE_RESOURCES.md](INACCESSIBLE_RESOURCES.md)** -- Resources not yet integrated (paywalled, web-only, un-digitized)
+- **[GLYPH_DATA_SOURCES.md](GLYPH_DATA_SOURCES.md)** -- Historical glyph image sources and integration strategy
 
 ## License
 
