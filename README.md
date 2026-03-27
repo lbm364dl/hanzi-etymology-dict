@@ -6,17 +6,19 @@ A comprehensive open-source database of Chinese character (汉字) etymologies, 
 
 | Metric | Count |
 |--------|-------|
-| Total unique characters | 103,200 |
+| Total unique characters | 103,207 |
 | CJK Unified Basic block | 20,992 |
 | With definitions | 28,073 |
 | With etymology notes | 16,480 |
 | With formation type classified | 15,722 |
 | With Shuowen Jiezi entry | 9,815 |
-| With Old/Middle Chinese reconstruction | 4,056 |
+| With Old/Middle Chinese reconstruction | 13,309 |
+| With Guangyun MC phonology | 19,337 |
 | With IDS decomposition | 88,942 |
 | With historical glyph images | 13,714 |
 | With readings (any language) | 50,896 |
 | With multi-source etymology | 8,710 |
+| With phonetic component identified | 59,575 |
 
 ### Formation Type Breakdown (cross-source consensus)
 
@@ -33,9 +35,9 @@ A comprehensive open-source database of Chinese character (汉字) etymologies, 
 | Metric | Value |
 |--------|-------|
 | Formation type conflicts (sources disagree) | 1,636 |
-| High confidence characters (80-100) | 4,116 |
-| Medium confidence (50-79) | 11,376 |
-| Average confidence (chars with etymology) | 66.2 |
+| High confidence characters (80-100) | 5,728 |
+| Medium confidence (50-79) | 9,871 |
+| Average confidence (chars with etymology) | 70.0 |
 | CJK basic: ideographic vs phono-semantic conflicts | 1,037 |
 
 ## Output Files
@@ -116,6 +118,8 @@ Each character record contains:
 | 9 | [Make Me a Hanzi](https://github.com/skishore/makemeahanzi) | 9,574 | LGPL v3 | Formation type, decomposition, etymology hints |
 | 10 | [Dong Chinese](https://github.com/peterolson/chinese-lexicon) | 5,067 | CC BY-SA 4.0 | Component function tags, etymology explanations |
 | 11 | [Baxter-Sagart](https://sites.lsa.umich.edu/ocbaxtersagart/) | 4,056 | Free academic | Old Chinese & Middle Chinese reconstructions |
+| 12 | [NK2028 Guangyun](https://github.com/nk2028/tshet-uinh-data) | 19,337 | CC0 | Middle Chinese phonology (音韻地位, fanqie) |
+| 13 | [ytenx Old Chinese](https://github.com/BYVoid/ytenx) | 13,118 | Unlicensed | Zhengzhang OC reconstruction, phonetic components |
 
 ## SQLite Database
 
