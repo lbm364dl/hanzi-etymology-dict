@@ -10,7 +10,7 @@ A comprehensive open-source database of Chinese character (汉字) etymologies, 
 | CJK Unified Basic block | 20,992 |
 | With definitions | 28,073 |
 | With etymology notes | 16,480 |
-| With formation type classified | 15,722 |
+| With formation type classified | 62,556 |
 | With Shuowen Jiezi entry | 9,815 |
 | With Old/Middle Chinese reconstruction | 13,309 |
 | With Guangyun MC phonology | 19,337 |
@@ -19,16 +19,29 @@ A comprehensive open-source database of Chinese character (汉字) etymologies, 
 | With readings (any language) | 50,896 |
 | With multi-source etymology | 8,710 |
 | With phonetic component identified | 59,575 |
+| With phonetic series (kPhonetic) | 22,456 |
+| Cross-verified etymology | 5,427 |
+| Historical glyph SVGs (Dong Chinese) | 578 chars |
+| Historical glyph SVGs (Wikimedia seals) | 3,638 available |
 
-### Formation Type Breakdown (cross-source consensus)
+### Formation Type Breakdown (cross-source consensus + inference)
 
 | Type | Count |
 |------|-------|
-| Phono-semantic (形聲) | 13,501 |
-| Ideographic (會意) | 1,712 |
+| Ideographic (會意) | 40,353 |
+| Phono-semantic (形聲) | 21,694 |
 | Pictographic (象形) | 486 |
 | Indicative (指事) | 20 |
 | Phonetic loan (假借) | 3 |
+
+### Verification Status
+
+| Status | Count | Meaning |
+|--------|-------|---------|
+| Cross-verified | 5,427 | 2+ modern sources agree on etymology |
+| Single-source | 6,350 | 1 modern source provides etymology |
+| Classical-only | 4,367 | Only Shuowen Jiezi (needs modern corroboration) |
+| Unverified | 336 | Has notes but unclear classification |
 
 ### Rigor Metrics
 
@@ -98,6 +111,11 @@ Each character record contains:
     "wiktionary": "phono-semantic"
   },
   "confidence": 93,
+  "verification_status": "cross-verified",
+  "frequency_rank": 7059,
+  "hsk_level": null,
+  "phonetic_series": ["863"],
+  "phonetic_family": ["驱", "驻", "骂", ...],
   "sources": ["unihan", "makemeahanzi", "dong_chinese", ...],
   "source_count": 11
 }
@@ -166,15 +184,22 @@ python3 build_database.py
 ```
 ├── README.md                  # This file
 ├── RESEARCH.md                # Detailed source research & evaluation
-├── BOOKS.md                   # Bibliography of 59 authoritative references
+├── BOOKS.md                   # Bibliography of 73 authoritative references
 ├── INACCESSIBLE_RESOURCES.md  # Resources we couldn't integrate (yet)
-├── build_database.py          # ETL pipeline
-├── extract_dong_chinese.mjs   # Dong Chinese data extraction
+├── build_database.py          # ETL pipeline (16 parsers, cross-validation)
+├── extract_dong_chinese.mjs   # Dong Chinese etymology extraction
+├── extract_dong_svgs.mjs      # Historical glyph SVG extraction
+├── download_wikimedia_seals.py # Wikimedia seal script SVG downloader
+├── analyze_quality.py         # Cross-source quality analysis
 ├── output/
 │   ├── hanzi_etymology.jsonl  # Full database (JSONL)
 │   ├── hanzi_etymology.db     # Full database (SQLite)
 │   ├── sample_records.json    # Example records
-│   └── statistics.json        # Build statistics
+│   ├── statistics.json        # Build statistics
+│   ├── priority_gaps.json     # High-frequency chars needing work
+│   └── glyphs/                # Historical character form SVGs
+│       ├── dong_chinese/      # 578 chars (oracle, bronze, seal, cursive)
+│       └── wikimedia_seal/    # 3,638 Shuowen seal script SVGs
 └── sources/                   # Raw source data (not committed)
 ```
 
