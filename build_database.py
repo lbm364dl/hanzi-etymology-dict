@@ -1283,20 +1283,17 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                         }
 
         # --- Verification status ---
-        # A character is "verified" if multiple independent sources agree on
-        # its etymology, or if it has high confidence from diverse sources
+        # Based on how many independent modern sources provide etymology data.
+        # A conflict doesn't disqualify -- it just means sources disagree on type,
+        # not that the etymology is unverified.
         etym_sources = set(n.get("source", "") for n in record.get("etymology_notes", []))
         modern_etym_sources = etym_sources - {"shuowen_jiezi"}
-        has_formation_consensus = (
-            record.get("formation_type") and
-            not record.get("formation_type_conflict")
-        )
 
-        if len(modern_etym_sources) >= 2 and has_formation_consensus:
+        if len(modern_etym_sources) >= 2:
             record["verification_status"] = "cross-verified"
-        elif len(modern_etym_sources) >= 1 and record.get("formation_type"):
+        elif len(modern_etym_sources) == 1:
             record["verification_status"] = "single-source"
-        elif record.get("shuowen") and not modern_etym_sources:
+        elif "shuowen_jiezi" in etym_sources:
             record["verification_status"] = "classical-only"
         elif record.get("etymology_notes"):
             record["verification_status"] = "unverified"
