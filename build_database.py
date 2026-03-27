@@ -587,10 +587,92 @@ def parse_evobc():
 
 
 # ---------------------------------------------------------------------------
+# 12. NK2028 Guangyun (Middle Chinese phonology)
+# ---------------------------------------------------------------------------
+def parse_guangyun():
+    """Parse NK2028 Guangyun CSV for Middle Chinese phonological data."""
+    print("[12/13] Parsing NK2028 Guangyun...")
+    chars = defaultdict(list)
+    fpath = SOURCES_DIR / "nk2028" / "tshet-uinh-data" / "韻書" / "廣韻.csv"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found")
+        return dict(chars)
+
+    with open(fpath, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            ch = row.get("字頭", "").strip()
+            if not ch or len(ch) != 1:
+                continue
+            entry = {
+                "phonological_position": row.get("音韻地位", ""),
+                "fanqie": row.get("反切", ""),
+                "gloss": row.get("釋義", "")[:200],  # truncate long glosses
+            }
+            chars[ch].append(entry)
+
+    # Deduplicate: keep unique phonological positions per character
+    deduped = {}
+    for ch, entries in chars.items():
+        seen = set()
+        unique = []
+        for e in entries:
+            pos = e["phonological_position"]
+            if pos not in seen:
+                seen.add(pos)
+                unique.append(e)
+        deduped[ch] = unique
+
+    print(f"  Parsed {len(deduped)} unique characters from Guangyun")
+    return deduped
+
+
+# ---------------------------------------------------------------------------
+# 13. ytenx Old Chinese reconstruction (Zhengzhang Shangfang system)
+# ---------------------------------------------------------------------------
+def parse_ytenx_oc():
+    """Parse ytenx Old Chinese reconstruction data."""
+    print("[13/13] Parsing ytenx Old Chinese reconstructions...")
+    chars = defaultdict(list)
+    fpath = SOURCES_DIR / "ytenx" / "ytenx" / "sync" / "dciangx" / "DrienghTriang.txt"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found")
+        return dict(chars)
+
+    with open(fpath, "r", encoding="utf-8") as f:
+        header_line = f.readline()
+        # Fields: 字 廣韻聲 廣韻韻 聲調 等 重紐 開合 上字 下字 聲符 韻部 韻部細分 擬音 ...
+        for line in f:
+            parts = line.strip().split(" ")
+            if len(parts) < 13:
+                continue
+            ch = parts[0]
+            if len(ch) != 1:
+                continue
+            entry = {
+                "guangyun_initial": parts[1],
+                "guangyun_rhyme": parts[2],
+                "tone": parts[3],
+                "division": parts[4],
+                "open_closed": parts[6] if len(parts) > 6 else "",
+                "phonetic_component": parts[9] if len(parts) > 9 else "",
+                "rhyme_group": parts[10] if len(parts) > 10 else "",
+                "old_chinese_zhengzhang": parts[12] if len(parts) > 12 else "",
+            }
+            # Only add if there's a reconstruction
+            if entry["old_chinese_zhengzhang"]:
+                chars[ch].append(entry)
+
+    print(f"  Parsed {len(chars)} unique characters from ytenx Old Chinese")
+    return dict(chars)
+
+
+# ---------------------------------------------------------------------------
 # Merge all sources into unified records
 # ---------------------------------------------------------------------------
 def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
-              kangxi, baxter_sagart, wiktionary, cedict, evobc):
+              kangxi, baxter_sagart, wiktionary, cedict, evobc,
+              guangyun, ytenx_oc):
     """Merge all parsed sources into a single dict keyed by character."""
     print("\nMerging all sources...")
 
@@ -598,7 +680,8 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
     all_chars = set(unihan.keys())
     # Add characters from other sources too
     for source in [mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
-                   kangxi, baxter_sagart, wiktionary, cedict, evobc]:
+                   kangxi, baxter_sagart, wiktionary, cedict, evobc,
+                   guangyun, ytenx_oc]:
         all_chars.update(source.keys())
 
     print(f"  Total unique characters across all sources: {len(all_chars)}")
@@ -841,6 +924,38 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                 "eras_available": ev.get("eras", []),
             }
 
+        # --- Guangyun Middle Chinese ---
+        gy = guangyun.get(ch)
+        if gy:
+            if "guangyun" not in record:
+                record["guangyun"] = []
+            for entry in gy:
+                record["guangyun"].append({
+                    "phonological_position": entry.get("phonological_position", ""),
+                    "fanqie": entry.get("fanqie", ""),
+                })
+
+        # --- ytenx Old Chinese (Zhengzhang Shangfang) ---
+        yt = ytenx_oc.get(ch)
+        if yt:
+            if "historical_phonology" not in record:
+                record["historical_phonology"] = []
+            for entry in yt:
+                oc_zz = entry.get("old_chinese_zhengzhang", "")
+                if oc_zz:
+                    record["historical_phonology"].append({
+                        "old_chinese_zhengzhang": oc_zz,
+                        "rhyme_group": entry.get("rhyme_group", ""),
+                        "source": "zhengzhang",
+                    })
+                # Use phonetic component from ytenx if we don't already have one
+                phon_comp = entry.get("phonetic_component", "")
+                if phon_comp and len(phon_comp) == 1 and phon_comp != ch:
+                    if "formation_details" not in record:
+                        record["formation_details"] = {}
+                    if not record["formation_details"].get("phonetic_component_ytenx"):
+                        record["formation_details"]["phonetic_component_ytenx"] = phon_comp
+
         # --- Infer phonetic/semantic components from IDS + radical ---
         # Only infer for characters already classified as phono-semantic,
         # or characters with enough strokes to plausibly be compounds (>= 5 strokes)
@@ -973,6 +1088,10 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
             sources.append("cedict")
         if ch in evobc:
             sources.append("evobc")
+        if ch in guangyun:
+            sources.append("guangyun")
+        if ch in ytenx_oc:
+            sources.append("ytenx_oc")
         record["sources"] = sources
         record["source_count"] = len(sources)
 
@@ -1279,11 +1398,14 @@ def main():
     wiktionary = parse_wiktionary()
     cedict = parse_cedict()
     evobc = parse_evobc()
+    guangyun = parse_guangyun()
+    ytenx_oc = parse_ytenx_oc()
 
     # Merge
     merged = merge_all(
         unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
         kangxi, baxter_sagart, wiktionary, cedict, evobc,
+        guangyun, ytenx_oc,
     )
 
     # Output
