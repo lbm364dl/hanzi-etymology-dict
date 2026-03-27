@@ -477,6 +477,22 @@ def parse_wiktionary():
                 for g in sense.get("glosses", []):
                     glosses.append(g)
 
+            # Extract OC/MC pronunciations from sounds field
+            oc_zhengzhang = None
+            oc_baxter_sagart = None
+            mc_baxter_sagart = None
+            for s in entry.get("sounds", []):
+                tags = s.get("tags", [])
+                zh_pron = s.get("zh_pron", "")
+                if not zh_pron:
+                    continue
+                if "Old-Chinese" in tags and "Zhengzhang" in tags:
+                    oc_zhengzhang = zh_pron.strip("/ ")
+                elif "Old-Chinese" in tags and "Baxter-Sagart" in tags:
+                    oc_baxter_sagart = zh_pron.strip("/ ")
+                elif "Middle-Chinese" in tags and "Baxter-Sagart" in tags:
+                    mc_baxter_sagart = zh_pron.strip("/ ")
+
             record = {}
             if etym_text:
                 record["etymology_text"] = etym_text
@@ -484,6 +500,12 @@ def parse_wiktionary():
                 record["glosses"] = glosses
             if pos:
                 record["pos"] = pos
+            if oc_zhengzhang:
+                record["oc_zhengzhang"] = oc_zhengzhang
+            if oc_baxter_sagart:
+                record["oc_baxter_sagart"] = oc_baxter_sagart
+            if mc_baxter_sagart:
+                record["mc_baxter_sagart"] = mc_baxter_sagart
 
             if record:
                 chars[word].append(record)
@@ -955,6 +977,31 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                 for g in entry.get("glosses", []):
                     if not record.get("definitions"):
                         record["definitions"] = g
+
+                # Collect OC/MC pronunciations from Wiktionary sounds
+                if entry.get("oc_zhengzhang"):
+                    if "historical_phonology" not in record:
+                        record["historical_phonology"] = []
+                    # Avoid duplicates
+                    existing_zz = {p.get("old_chinese_zhengzhang")
+                                   for p in record["historical_phonology"]
+                                   if p.get("source") == "zhengzhang"}
+                    if entry["oc_zhengzhang"] not in existing_zz:
+                        record["historical_phonology"].append({
+                            "old_chinese_zhengzhang": entry["oc_zhengzhang"],
+                            "source": "zhengzhang_wikt",
+                        })
+                if entry.get("oc_baxter_sagart"):
+                    if "historical_phonology" not in record:
+                        record["historical_phonology"] = []
+                    existing_bs = {p.get("old_chinese")
+                                   for p in record["historical_phonology"]
+                                   if p.get("old_chinese")}
+                    if entry["oc_baxter_sagart"] not in existing_bs:
+                        record["historical_phonology"].append({
+                            "old_chinese": entry["oc_baxter_sagart"],
+                            "source": "baxter_sagart_wikt",
+                        })
 
         # --- CC-CEDICT ---
         ce = cedict.get(ch)
