@@ -57,8 +57,12 @@ CATEGORIES = [
 ]
 
 # Delay between API / download requests (seconds) to be respectful
-API_DELAY = 0.2
-DOWNLOAD_DELAY = 0.15
+API_DELAY = 0.5
+DOWNLOAD_DELAY = 1.0
+
+# Retry settings for rate-limited downloads
+MAX_RETRIES = 5
+RETRY_BACKOFF_BASE = 5.0  # seconds; doubles each retry
 
 # How many titles to batch in a single imageinfo request (API max is 50)
 IMAGEINFO_BATCH = 50
@@ -248,16 +252,33 @@ def fetch_imageinfo_batch(
 
 
 def download_file(session: requests.Session, url: str, dest: Path) -> bool:
-    """Download a single file. Return True on success."""
-    try:
-        time.sleep(DOWNLOAD_DELAY)
-        r = session.get(url, timeout=30)
-        r.raise_for_status()
-        dest.write_bytes(r.content)
-        return True
-    except Exception as e:
-        print(f"  ERROR downloading {url}: {e}", file=sys.stderr)
-        return False
+    """Download a single file with retry on rate-limit (429). Return True on success."""
+    for attempt in range(MAX_RETRIES + 1):
+        try:
+            time.sleep(DOWNLOAD_DELAY)
+            r = session.get(url, timeout=30)
+            if r.status_code == 429:
+                if attempt < MAX_RETRIES:
+                    wait = RETRY_BACKOFF_BASE * (2 ** attempt)
+                    print(f"  Rate limited, waiting {wait:.0f}s (attempt {attempt+1}/{MAX_RETRIES})...")
+                    time.sleep(wait)
+                    continue
+                else:
+                    print(f"  ERROR: still rate-limited after {MAX_RETRIES} retries: {url}", file=sys.stderr)
+                    return False
+            r.raise_for_status()
+            dest.write_bytes(r.content)
+            return True
+        except requests.exceptions.HTTPError:
+            # Already handled 429 above; other HTTP errors are fatal
+            if attempt < MAX_RETRIES and r.status_code == 429:
+                continue
+            print(f"  ERROR downloading {url}: HTTP {r.status_code}", file=sys.stderr)
+            return False
+        except Exception as e:
+            print(f"  ERROR downloading {url}: {e}", file=sys.stderr)
+            return False
+    return False
 
 
 # ---------------------------------------------------------------------------

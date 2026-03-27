@@ -62,8 +62,11 @@ def classify_initial(form: str) -> str:
     # Collect the initial consonant cluster (everything before the first vowel-like char)
     # Vowels in OC notation: a e i o u ə ɑ ɐ ɨ ʉ ɯ ɤ æ ɛ ɔ ʊ ɪ
     vowels = set("aeioəuɑɐɨʉɯɤæɛɔʊɪɒʌyøœ")
-    # Also treat ː ˤ ˀ ʰ ʷ as modifiers, not initials themselves
-    modifiers = set("ːˤˀʰʷʲˠˁ̥̊ˀ̃")
+    # Also treat ː ˤ ˀ ʰ ʷ and combining diacritics as modifiers, not initials
+    modifiers = set("ːˤˀʰʷʲˠˁ'·")
+    # Add Unicode combining characters (ring below, ring above, tilde, etc.)
+    combining_range = set(chr(c) for c in range(0x0300, 0x0370))
+    modifiers |= combining_range
 
     initial_chars = []
     for ch in s:
@@ -127,23 +130,39 @@ def classify_tone(form: str) -> str:
       - Final -s or -h   → departing (去 qù)
       - Final stop -p -t -k  → entering (入 rù)
       - Otherwise → level (平 píng)
+
+    BS notation quirks:
+      - *X-s  means departing tone suffix (hyphen before s)
+      - *X[t] means uncertain coda [t]  → entering
+      - Parenthesized material (dialect:...) should be ignored
     """
-    s = form.strip().rstrip(")")
-    # Remove trailing parenthesized glosses
-    s = re.sub(r"\(.*", "", s).strip()
+    s = form.strip().lstrip("*")
+    # Remove parenthesized glosses
+    s = re.sub(r"\(.*?\)", "", s).strip()
+    # Strip BS bracket notation to reveal actual segments
+    s = re.sub(r"\[([^\]]*)\]", r"\1", s)
+    # Remove angle brackets <r> etc.
+    s = re.sub(r"<[^>]*>", "", s)
     if not s:
         return "unknown"
+
+    # BS departing tone: final -s (often after hyphen)
+    # Check for trailing -s pattern
+    if re.search(r"-s$", s):
+        return "departing"
+
     last = s[-1]
     # Check last meaningful character
     if last in ("ʔ", "ʕ"):
         return "rising"
-    if last in ("s", "h"):
-        # But 'h' might be part of a consonant cluster, and 's' could be
-        # the main coda.  In OC notation final -s = departing.
+    if last == "s":
+        # Final -s without hyphen (ZZ notation) → departing
+        return "departing"
+    if last == "h":
         return "departing"
     if last in ("p", "t", "k"):
         return "entering"
-    if last in ("b", "d", "g", "ɡ"):
+    if last in ("b", "d", "g", "ɡ", "ɢ"):
         # Voiced stop codas also → entering
         return "entering"
     # ŋ, n, m, vowels, etc → level
