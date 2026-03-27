@@ -1259,6 +1259,29 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                                 record["formation_type"] = "ideographic"
                                 record["formation_type_inferred"] = True
 
+        # --- Shuowen accuracy flag ---
+        # Compare Shuowen's formation claim against modern consensus
+        if record.get("shuowen") and record.get("formation_type"):
+            sw_expl = record["shuowen"].get("explanation", "")
+            sw_type = extract_shuowen_formation_type(sw_expl)
+            modern_type = normalize_formation_type(record["formation_type"])
+            if sw_type and modern_type:
+                sw_norm = normalize_formation_type(sw_type)
+                # Collapse indicative/ideographic for comparison
+                def _collapse(t):
+                    return "ideographic" if t in ("indicative", "ideographic") else t
+                if _collapse(sw_norm) == _collapse(modern_type):
+                    record["shuowen_accuracy"] = "confirmed"
+                else:
+                    # Only flag as error if modern sources (not just Shuowen) inform the type
+                    modern_etym_srcs = set(n.get("source", "") for n in record.get("etymology_notes", [])) - {"shuowen_jiezi"}
+                    if modern_etym_srcs:
+                        record["shuowen_accuracy"] = "corrected"
+                        record["shuowen"]["modern_correction"] = {
+                            "shuowen_says": sw_norm,
+                            "modern_says": modern_type,
+                        }
+
         # --- Verification status ---
         # A character is "verified" if multiple independent sources agree on
         # its etymology, or if it has high confidence from diverse sources
