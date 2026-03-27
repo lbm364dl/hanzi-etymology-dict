@@ -591,7 +591,7 @@ def parse_evobc():
 # ---------------------------------------------------------------------------
 def parse_guangyun():
     """Parse NK2028 Guangyun CSV for Middle Chinese phonological data."""
-    print("[12/13] Parsing NK2028 Guangyun...")
+    print("[12/15] Parsing NK2028 Guangyun...")
     chars = defaultdict(list)
     fpath = SOURCES_DIR / "nk2028" / "tshet-uinh-data" / "韻書" / "廣韻.csv"
     if not fpath.exists():
@@ -632,7 +632,7 @@ def parse_guangyun():
 # ---------------------------------------------------------------------------
 def parse_ytenx_oc():
     """Parse ytenx Old Chinese reconstruction data."""
-    print("[13/13] Parsing ytenx Old Chinese reconstructions...")
+    print("[13/15] Parsing ytenx Old Chinese reconstructions...")
     chars = defaultdict(list)
     fpath = SOURCES_DIR / "ytenx" / "ytenx" / "sync" / "dciangx" / "DrienghTriang.txt"
     if not fpath.exists():
@@ -668,11 +668,43 @@ def parse_ytenx_oc():
 
 
 # ---------------------------------------------------------------------------
+# 14. Character frequency (hanziDB)
+# ---------------------------------------------------------------------------
+def parse_frequency():
+    """Parse character frequency ranking from hanziDB."""
+    print("[14/15] Parsing character frequency data...")
+    chars = {}
+    fpath = SOURCES_DIR / "frequency" / "hanziDB.csv"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found")
+        return chars
+
+    with open(fpath, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            ch = row.get("character", "").strip()
+            if not ch or len(ch) != 1:
+                continue
+            try:
+                rank = int(row.get("frequency_rank", 0))
+            except ValueError:
+                continue
+            hsk = row.get("hsk_level", "")
+            chars[ch] = {
+                "frequency_rank": rank,
+                "hsk_level": int(hsk) if hsk and hsk.isdigit() else None,
+            }
+
+    print(f"  Parsed {len(chars)} characters with frequency data")
+    return chars
+
+
+# ---------------------------------------------------------------------------
 # Merge all sources into unified records
 # ---------------------------------------------------------------------------
 def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
               kangxi, baxter_sagart, wiktionary, cedict, evobc,
-              guangyun, ytenx_oc):
+              guangyun, ytenx_oc, frequency):
     """Merge all parsed sources into a single dict keyed by character."""
     print("\nMerging all sources...")
 
@@ -681,7 +713,7 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
     # Add characters from other sources too
     for source in [mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                    kangxi, baxter_sagart, wiktionary, cedict, evobc,
-                   guangyun, ytenx_oc]:
+                   guangyun, ytenx_oc, frequency]:
         all_chars.update(source.keys())
 
     print(f"  Total unique characters across all sources: {len(all_chars)}")
@@ -955,6 +987,13 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                         record["formation_details"] = {}
                     if not record["formation_details"].get("phonetic_component_ytenx"):
                         record["formation_details"]["phonetic_component_ytenx"] = phon_comp
+
+        # --- Frequency ---
+        freq = frequency.get(ch)
+        if freq:
+            record["frequency_rank"] = freq["frequency_rank"]
+            if freq.get("hsk_level"):
+                record["hsk_level"] = freq["hsk_level"]
 
         # --- Infer phonetic/semantic components from IDS + radical ---
         # Only infer for characters already classified as phono-semantic,
@@ -1400,12 +1439,13 @@ def main():
     evobc = parse_evobc()
     guangyun = parse_guangyun()
     ytenx_oc = parse_ytenx_oc()
+    frequency = parse_frequency()
 
     # Merge
     merged = merge_all(
         unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
         kangxi, baxter_sagart, wiktionary, cedict, evobc,
-        guangyun, ytenx_oc,
+        guangyun, ytenx_oc, frequency,
     )
 
     # Output
