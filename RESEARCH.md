@@ -253,6 +253,34 @@ For an open-source project, the safest combination:
 
 ---
 
+## Tier 7: Historical Phonology (Guangyun / Old Chinese)
+
+### 31. NK2028 Guangyun Data (tshet-uinh-data)
+- **Repo:** https://github.com/nk2028/tshet-uinh-data
+- **Coverage:** 19,337 unique characters from the Guangyun (廣韻, ~1008 AD)
+- **Format:** CSV with fields: 小韻號, 音韻地位, 反切, 字頭, 釋義
+- **License:** CC0 1.0 (public domain)
+- **Quality:** Definitive structured Middle Chinese data. The 音韻地位 field encodes full phonological classification (initial, division, rhyme, tone).
+- **Integrated:** Yes
+
+### 32. ytenx Old Chinese Reconstructions (BYVoid)
+- **Repo:** https://github.com/BYVoid/ytenx
+- **Coverage:** 13,118 unique characters with Zhengzhang Shangfang OC reconstructions
+- **Format:** Space-separated text (DrienghTriang.txt) with 17 fields including IPA reconstruction, phonetic component (聲符), rhyme group
+- **License:** Not explicitly stated
+- **Quality:** Comprehensive OC reconstruction table with phonetic series built in. 1,412 unique phonetic components identified.
+- **Integrated:** Yes
+
+### 33. Sagart et al. Sino-Tibetan Database of Lexical Cognates
+- **Repo:** https://github.com/lexibank/sagartst
+- **Coverage:** 289 Old Chinese entries linked to cognate sets across 50 Sino-Tibetan languages
+- **Format:** CLDF Wordlist (CSV files)
+- **License:** CC-BY-4.0
+- **Quality:** Expert-verified cognate judgments. Limited to ~250 basic concepts.
+- **Integrated:** Not yet (concept-level, not character-level)
+
+---
+
 ## Recommended Integration Strategy
 
 ### Phase 1: Foundation
