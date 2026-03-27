@@ -193,9 +193,51 @@ These are the most authoritative references that exist only as printed books or 
 
 ---
 
-## E. Action Items for Future Integration
+## E. Web Databases (Free Access, No Bulk Download)
 
-1. **Highest impact, lowest effort:** Download STEDT data from Dryad; download Wikimedia SVGs; query ctext.org API for Guangyun readings
-2. **High impact, moderate effort:** Obtain FreeMdict/MDX versions of 字源, 金文編; OCR and structure key entries
+### 30. 古今文字集成 (ccamc.org)
+- **URL:** http://ccamc.org/cjkv.php?cjkv={character}
+- **Coverage:** Historical character forms from ancient to modern scripts
+- **Why it matters:** Aggregates glyph images and scholarly references. Cited by Dong Chinese for specific character entries.
+- **Status:** Free web access. No bulk download or API evident.
+
+### 31. 中華語文知識庫 (chinese-linguipedia.org)
+- **URL:** https://www.chinese-linguipedia.org/search_source_inner.html?word={character}
+- **Coverage:** Character origins, word usage, linguistic information
+- **Why it matters:** Taiwanese cross-strait collaborative project providing another institutional perspective on character etymology.
+- **Status:** Free web access. No bulk download.
+
+## F. Books Discovered via Dong Chinese Citations
+
+### 32. 黃德寬《古文字譜系疏證》(Huang Dekuan)
+- **What:** Systematic Annotation of Ancient Characters -- major modern paleographic work
+- **Who:** Huang Dekuan (prominent paleography scholar, Anhui University)
+- **Coverage:** Systematic verification of ancient script genealogy
+- **Status:** Print only. Dong Chinese cites it with specific page numbers for characters like 國, 六.
+- **Impact:** Would provide systematic verification of character form evolution.
+
+### 33. 徐超《古漢字通解500例》(Xu Chao)
+- **What:** 500 Explanations of Ancient Chinese Characters
+- **Coverage:** 500 common characters with accessible paleographic analysis
+- **Status:** Print only. Dong Chinese cites it for entries like 安.
+- **Impact:** Good source for clear, pedagogically-oriented etymologies of common characters.
+
+---
+
+## G. Dong Chinese Methodology Insights
+
+Dong Chinese (https://blog.dong-chinese.com/2019/07/07/character-origins.html) documents their methodology explicitly. Key takeaways for our project:
+
+1. **Source hierarchy:** They rate CUHK Multi-function Database as the most reliable online source; Wiktionary as useful but sometimes inaccurate; Shuowen as historically important but often wrong.
+2. **Per-character citations:** They cite 1-2 specific scholarly references per character (with page numbers) -- primarily 漢語多功能字庫 (CUHK) and 季旭昇《說文新證》. This is the standard we should aim for.
+3. **Classification pragmatism:** They merge pictographic and ideographic into a single "iconic" category because "the distinction is subjective and not so important."
+4. **Honest uncertainty:** They mark characters as "Origin unclear" and use an "unknown" component type rather than guessing. They have an `isVerified` flag per entry.
+5. **Shuowen caveat:** They explicitly state that "research into Oracle bone script has revealed that many of the explanations in the Shuowen are inaccurate."
+6. **Admitted limitations:** The author acknowledges "I'm sure there are errors" and sometimes chose plausible explanations for pedagogical simplicity.
+
+## H. Action Items for Future Integration
+
+1. **Highest impact, lowest effort:** Extract Dong Chinese 415 historical SVG images; extract Unihan kPhonetic classes as explicit phonetic families
+2. **High impact, moderate effort:** Obtain FreeMdict/MDX versions of 字源, 金文編; download Wikimedia Shuowen seal SVGs via API
 3. **High impact, high effort:** Contact Xiaoxuetang / CUHK for academic data sharing; digitize 說文新證 corrections
 4. **Community effort:** Set up contribution pipeline for scholars to add/verify entries from print references
