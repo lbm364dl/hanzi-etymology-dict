@@ -821,6 +821,72 @@ def parse_sino_tibetan_cognates():
 
 
 # ---------------------------------------------------------------------------
+# Shuowen phonetic extraction
+# ---------------------------------------------------------------------------
+def extract_shuowen_phonetic(explanation):
+    """Extract phonetic component from Shuowen explanation text.
+
+    Handles patterns:
+      从X Y聲    -- standard phono-semantic
+      从X，Y聲   -- with comma
+      从X从Y，Z聲 -- two semantic + one phonetic
+      从X Y省聲  -- abbreviated phonetic
+      从X Y亦聲  -- component serves both roles
+    The phonetic is always the single character immediately before 聲/省聲/亦聲.
+    """
+    if not explanation or '聲' not in explanation or '从' not in explanation:
+        return None
+    m = re.search(r'(\w)(省聲|亦聲|聲)', explanation)
+    if m:
+        phonetic = m.group(1)
+        if len(phonetic) == 1 and phonetic not in ('之', '其', '而', '从'):
+            return phonetic
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Local glyph manifest loading
+# ---------------------------------------------------------------------------
+def load_glyph_manifests():
+    """Load local SVG glyph manifests (Dong Chinese + Wikimedia seal).
+
+    Returns two dicts, both keyed by character:
+      dong_glyphs[char] = ["oracle", "bronze", "seal", ...]
+      wikimedia_glyphs[char] = ["ACC-s00123.svg", ...]
+    Gracefully returns empty dicts if manifests are missing.
+    """
+    dong_glyphs = {}
+    wm_glyphs = defaultdict(list)
+
+    dong_path = OUTPUT_DIR / "glyphs" / "dong_chinese" / "manifest.json"
+    if dong_path.exists():
+        with open(dong_path, "r", encoding="utf-8") as f:
+            dong_manifest = json.load(f)
+        for ch, scripts in dong_manifest.items():
+            dong_glyphs[ch] = sorted(scripts.keys())
+        print(f"  Loaded Dong Chinese glyph manifest: {len(dong_glyphs)} characters")
+    else:
+        print(f"  Dong Chinese glyph manifest not found at {dong_path}, skipping")
+
+    wm_path = OUTPUT_DIR / "glyphs" / "wikimedia_seal" / "manifest.json"
+    if wm_path.exists():
+        with open(wm_path, "r", encoding="utf-8") as f:
+            wm_manifest = json.load(f)
+        for fname, info in wm_manifest.items():
+            ch = info.get("character", "")
+            if ch:
+                wm_glyphs[ch].append(fname)
+        # Sort filenames for deterministic output
+        for ch in wm_glyphs:
+            wm_glyphs[ch] = sorted(wm_glyphs[ch])
+        print(f"  Loaded Wikimedia seal glyph manifest: {len(wm_glyphs)} characters")
+    else:
+        print(f"  Wikimedia seal glyph manifest not found at {wm_path}, skipping")
+
+    return dong_glyphs, dict(wm_glyphs)
+
+
+# ---------------------------------------------------------------------------
 # Merge all sources into unified records
 # ---------------------------------------------------------------------------
 def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
@@ -829,6 +895,9 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
               class_to_chars, st_cognates):
     """Merge all parsed sources into a single dict keyed by character."""
     print("\nMerging all sources...")
+
+    # Load local glyph manifests
+    dong_glyphs, wikimedia_glyphs = load_glyph_manifests()
 
     # Start with the Unihan universe -- every character known to Unicode
     all_chars = set(unihan.keys())
@@ -869,6 +938,8 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
 
     merged = {}
     inferred_phonetic_count = 0
+    shuowen_phonetic_count = 0
+    local_glyph_count = 0
     for ch in sorted(all_chars):
         record = {"character": ch, "codepoint": f"U+{ord(ch):04X}"}
 
@@ -1071,6 +1142,17 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                             "old_chinese": entry["oc_baxter_sagart"],
                             "source": "baxter_sagart_wikt",
                         })
+                if entry.get("mc_baxter_sagart"):
+                    if "historical_phonology" not in record:
+                        record["historical_phonology"] = []
+                    existing_mc = {p.get("middle_chinese")
+                                   for p in record["historical_phonology"]
+                                   if p.get("middle_chinese")}
+                    if entry["mc_baxter_sagart"] not in existing_mc:
+                        record["historical_phonology"].append({
+                            "middle_chinese": entry["mc_baxter_sagart"],
+                            "source": "baxter_sagart_wikt",
+                        })
 
         # --- CC-CEDICT ---
         ce = cedict.get(ch)
@@ -1179,6 +1261,16 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
             if siblings:
                 # Limit to 30 most relevant siblings
                 record["phonetic_family"] = sorted(siblings)[:30]
+
+        # --- Extract phonetic from Shuowen for phono-semantic chars missing it ---
+        if sw and not record.get("formation_details", {}).get("phonetic"):
+            sw_phonetic = extract_shuowen_phonetic(sw.get("explanation", ""))
+            if sw_phonetic and sw_phonetic != ch:
+                if "formation_details" not in record:
+                    record["formation_details"] = {}
+                record["formation_details"]["phonetic"] = sw_phonetic
+                record["formation_details"]["phonetic_source"] = "shuowen"
+                shuowen_phonetic_count += 1
 
         # --- Infer phonetic/semantic components from IDS + radical ---
         # Only infer for characters already classified as phono-semantic,
@@ -1319,6 +1411,15 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
         record["sources"] = sources
         record["source_count"] = len(sources)
 
+        # --- Local glyph SVGs ---
+        local_glyphs = {}
+        if ch in dong_glyphs:
+            local_glyphs["dong_chinese"] = dong_glyphs[ch]
+        if ch in wikimedia_glyphs:
+            local_glyphs["wikimedia_seal"] = wikimedia_glyphs[ch]
+        if local_glyphs:
+            record["local_glyphs"] = local_glyphs
+
         # --- Fill formation type gaps for common characters ---
         # If a character has no formation type but has IDS decomposition with
         # 2 components and a Kangxi radical, try to classify it
@@ -1424,6 +1525,9 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
         merged[ch] = record
 
     print(f"  Inferred phonetic components from IDS+radical: {inferred_phonetic_count}")
+    print(f"  Extracted phonetic components from Shuowen: {shuowen_phonetic_count}")
+    local_glyph_count = sum(1 for r in merged.values() if r.get("local_glyphs"))
+    print(f"  Characters with local glyph SVGs: {local_glyph_count}")
 
     # --- Post-merge: propagate etymology from traditional to simplified variants ---
     propagated = 0
@@ -1641,7 +1745,9 @@ def compute_statistics(merged):
     has_ids = sum(1 for r in merged.values() if r.get("ids") or r.get("decomposition_ids"))
     has_phonetic = sum(1 for r in merged.values() if r.get("formation_details", {}).get("phonetic"))
     has_inferred = sum(1 for r in merged.values() if r.get("formation_details", {}).get("inferred"))
+    has_phonetic_from_shuowen = sum(1 for r in merged.values() if r.get("formation_details", {}).get("phonetic_source") == "shuowen")
     has_phonetic_series = sum(1 for r in merged.values() if r.get("phonetic_series"))
+    has_local_glyphs = sum(1 for r in merged.values() if r.get("local_glyphs"))
 
     # Verification status
     verification_counts = defaultdict(int)
@@ -1714,6 +1820,9 @@ def compute_statistics(merged):
         "conflict_type_pairs": {str(k): v for k, v in conflict_details.items()},
         "confidence_distribution": dict(confidence_buckets),
         "avg_confidence_etymology_chars": round(avg_confidence, 1),
+        "has_phonetic_component": has_phonetic,
+        "has_phonetic_from_shuowen": has_phonetic_from_shuowen,
+        "has_local_glyphs": has_local_glyphs,
     }
 
     print("\n" + "=" * 60)
@@ -1732,7 +1841,9 @@ def compute_statistics(merged):
     print(f"  With multi-source etymology:    {multi_source_etym:>8,}")
     print(f"  With phonetic component ID'd:   {has_phonetic:>8,}")
     print(f"    (of which inferred from IDS): {has_inferred:>8,}")
+    print(f"    (of which from Shuowen):      {has_phonetic_from_shuowen:>8,}")
     print(f"  With phonetic series (kPhon):   {has_phonetic_series:>8,}")
+    print(f"  With local glyph SVGs:          {has_local_glyphs:>8,}")
     print()
     print("  Verification status:")
     for vs in ["cross-verified", "single-source", "classical-only", "unverified", "no-etymology"]:
