@@ -87,7 +87,20 @@ def main():
             shutil.rmtree(dong_dst)
         shutil.copytree(dong_src, dong_dst)
         n_dirs = sum(1 for d in dong_dst.iterdir() if d.is_dir())
-        print(f"  Copied {n_dirs} character glyph folders to docs/glyphs/")
+        print(f"  Copied {n_dirs} Dong Chinese glyph folders to docs/glyphs/")
+
+    # Copy Wikimedia seal SVGs if available
+    wm_src = Path("output/glyphs/wikimedia_seal")
+    wm_dst = docs / "glyphs" / "wikimedia_seal"
+    if wm_src.exists():
+        if wm_dst.exists():
+            shutil.rmtree(wm_dst)
+        wm_dst.mkdir(parents=True)
+        n = 0
+        for svg in wm_src.glob("*.svg"):
+            shutil.copy2(svg, wm_dst / svg.name)
+            n += 1
+        print(f"  Copied {n} Wikimedia seal SVGs to docs/glyphs/")
 
 
 if __name__ == "__main__":
