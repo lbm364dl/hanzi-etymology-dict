@@ -31,7 +31,7 @@ def main():
                 compact["ids"] = r.get("ids") or r.get("decomposition_ids")
             if r.get("etymology_notes"):
                 compact["en"] = [
-                    {"s": n["source"], "t": n["text"][:500],
+                    {"s": n["source"], "t": n["text"],
                      **({" v": n["via_traditional"]} if n.get("via_traditional") else {}),
                      **({"w": 1} if n.get("caveat") else {})}
                     for n in r["etymology_notes"][:5]

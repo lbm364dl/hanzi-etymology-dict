@@ -229,8 +229,14 @@ function full(r){
     const sorted=[...en].sort((a,b)=>(so[a.s]??9)-(so[b.s]??9));
     for(const n of sorted.slice(0,5)){
       const via=n.v?` via ${n.v}`:'';
-      let t=n.t||'';if(t.length>400)t=t.slice(0,397)+'...';
-      h+=`<div class="ei"><div class="es">${n.s}${via}</div>${lk(t,r.c)}</div>`}
+      let t=n.t||'';
+      if(t.length>400){
+        const id='etym_'+r.c+'_'+n.s;
+        const short=t.slice(0,397);
+        h+=`<div class="ei"><div class="es">${n.s}${via}</div><span id="${id}_s">${lk(short,r.c)}... <a href="#" onclick="document.getElementById('${id}_s').style.display='none';document.getElementById('${id}_f').style.display='inline';return false" style="color:var(--accent);font-size:.85em">show more</a></span><span id="${id}_f" style="display:none">${lk(t,r.c)}</span></div>`
+      } else {
+        h+=`<div class="ei"><div class="es">${n.s}${via}</div>${lk(t,r.c)}</div>`
+      }}
     if(en.length>5)h+=`<div class="es">+ ${en.length-5} more sources</div>`;
     h+='</div>'}
 
