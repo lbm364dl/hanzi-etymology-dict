@@ -121,12 +121,19 @@ header p { color: var(--fg2); font-size: 0.9em; margin-top: 4px; }
 let db = null;
 const GLYPH_BASE = 'output/glyphs/';
 
-// Navigate to a character entry
+// Navigate to a character entry (updates URL for back/forward)
 function goTo(ch) {
   document.getElementById('query').value = ch;
-  search();
+  search(true);
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
+
+// Handle browser back/forward
+window.addEventListener('popstate', () => {
+  const q = new URLSearchParams(location.search).get('q') || '';
+  document.getElementById('query').value = q;
+  if (db) search(false);
+});
 
 // Wrap CJK characters in text as clickable cross-references
 // Skips the "self" character to avoid self-links
@@ -165,26 +172,39 @@ async function initDB() {
     const buf = await r.arrayBuffer();
     db = new SQL.Database(new Uint8Array(buf));
     st.textContent = '';
-    document.getElementById('query').focus();
+    // Load query from URL if present
+    const urlQ = new URLSearchParams(location.search).get('q');
+    if (urlQ) {
+      document.getElementById('query').value = urlQ;
+      search(false);
+    } else {
+      document.getElementById('query').focus();
+    }
   } catch (e) { st.textContent = 'Error: ' + e.message; }
 }
 
 let debounceTimer;
 document.getElementById('query').addEventListener('input', () => {
   clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(search, 200);
+  debounceTimer = setTimeout(() => search(true), 200);
 });
 document.getElementById('query').addEventListener('keydown', e => {
-  if (e.key === 'Enter') { clearTimeout(debounceTimer); search(); }
+  if (e.key === 'Enter') { clearTimeout(debounceTimer); search(true); }
 });
 
-function search() {
+function search(pushHistory = true) {
   if (!db) return;
   const q = document.getElementById('query').value.trim();
   const res = document.getElementById('results');
   const st = document.getElementById('status');
   res.innerHTML = '';
-  if (!q) { st.textContent = ''; return; }
+  if (!q) { st.textContent = ''; if (pushHistory) history.pushState(null, '', location.pathname); return; }
+
+  // Update URL
+  if (pushHistory) {
+    const newUrl = `${location.pathname}?q=${encodeURIComponent(q)}`;
+    history.pushState(null, '', newUrl);
+  }
 
   let rows;
   const isCJK = q.length === 1 && q.charCodeAt(0) > 0x2E00;
