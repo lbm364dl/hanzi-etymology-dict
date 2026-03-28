@@ -383,19 +383,21 @@ def parse_kangxi():
 
     # Try to identify header row
     header = rows[0]
-    for i, row in enumerate(rows[1:], 1):
+    # Columns: 繁體(0) 簡體(1) 字典路徑(2) 集1(3) 集2(4) 部首(5) 筆劃數(6) 康熙字典解釋(7)
+    for row in rows[1:]:
         if row and row[0] and isinstance(row[0], str) and len(row[0]) == 1:
             ch = row[0]
-            # Build entry from available columns
             entry = {}
             if len(row) > 1 and row[1]:
                 entry["simplified"] = str(row[1])
             if len(row) > 3 and row[3]:
                 entry["radical"] = str(row[3])
-            if len(row) > 4 and row[4]:
-                entry["stroke_count"] = row[4]
             if len(row) > 5 and row[5]:
-                entry["explanation"] = str(row[5])
+                entry["radical_char"] = str(row[5])
+            if len(row) > 6 and row[6]:
+                entry["stroke_count"] = row[6]
+            if len(row) > 7 and row[7]:
+                entry["explanation"] = str(row[7])
             chars[ch] = entry
 
     wb.close()
@@ -1071,8 +1073,22 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
         kx = kangxi.get(ch)
         if kx:
             record["kangxi"] = {}
-            if kx.get("explanation"):
-                record["kangxi"]["explanation"] = kx["explanation"]
+            kx_expl = kx.get("explanation", "")
+            if kx_expl:
+                record["kangxi"]["explanation"] = kx_expl
+                # Extract fanqie readings from Kangxi citations
+                # Patterns: 【唐韻】德紅切 【集韻】都籠切 【廣韻】...切
+                kangxi_fanqie = []
+                for m in re.finditer(r'【([^】]+)】(\S{2})切', kx_expl):
+                    source = m.group(1)
+                    fanqie = m.group(2)
+                    kangxi_fanqie.append({"source": source, "fanqie": fanqie})
+                if kangxi_fanqie:
+                    record["kangxi"]["fanqie_citations"] = kangxi_fanqie
+                # Extract Shuowen citation within Kangxi
+                sw_cite = re.search(r'【說文】(.{1,60}?)(?:。|　|又|$)', kx_expl)
+                if sw_cite:
+                    record["kangxi"]["shuowen_citation"] = sw_cite.group(1)
             if kx.get("radical"):
                 record["kangxi"]["radical"] = kx["radical"]
 
