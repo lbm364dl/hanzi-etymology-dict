@@ -1529,27 +1529,32 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
     local_glyph_count = sum(1 for r in merged.values() if r.get("local_glyphs"))
     print(f"  Characters with local glyph SVGs: {local_glyph_count}")
 
-    # --- Post-merge: propagate etymology from traditional to simplified variants ---
+    # --- Post-merge: propagate etymology from variant characters ---
     propagated = 0
     for ch, record in merged.items():
         if record.get("etymology_notes"):
             continue  # already has etymology
-        # Check if this character has a traditional variant with etymology
+        # Check traditional and semantic variants for etymology
         variants = record.get("variants", {})
-        trad_cps = variants.get("traditional", "")
-        if not trad_cps:
+        variant_strings = []
+        for vtype in ("traditional", "semantic"):
+            vs = variants.get(vtype, "")
+            if vs:
+                variant_strings.append(vs)
+        if not variant_strings:
             continue
-        # Parse variant references: can be "U+XXXX" format or raw characters
-        trad_chars = []
-        for token in trad_cps.split():
-            if token.startswith("U+"):
-                try:
-                    trad_chars.append(chr(int(token[2:].split("<")[0], 16)))
-                except ValueError:
-                    pass
-            elif len(token) == 1 and ord(token) >= 0x3400:
-                trad_chars.append(token)
-        for trad_ch in trad_chars:
+        # Parse variant references: can be "U+XXXX" or "U+XXXX<source" format or raw chars
+        variant_chars = []
+        for vs in variant_strings:
+            for token in vs.split():
+                if token.startswith("U+"):
+                    try:
+                        variant_chars.append(chr(int(token[2:].split("<")[0], 16)))
+                    except ValueError:
+                        pass
+                elif len(token) == 1 and ord(token) >= 0x3400:
+                    variant_chars.append(token)
+        for trad_ch in variant_chars:
                 trad_record = merged.get(trad_ch)
                 if trad_record and trad_record.get("etymology_notes"):
                     # Propagate etymology notes, tagged as from traditional variant
@@ -1573,7 +1578,7 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                     propagated += 1
                     break
 
-    print(f"  Propagated etymology from traditional variants: {propagated}")
+    print(f"  Propagated etymology from variant characters: {propagated}")
     return merged
 
 
