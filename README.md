@@ -9,18 +9,18 @@ A comprehensive open-source database of Chinese character (汉字) etymologies, 
 | Total unique characters | 103,207 |
 | CJK Unified Basic block | 20,992 |
 | With definitions | 28,073 |
-| With etymology notes | 17,819 |
+| With etymology notes | 18,778 |
 | With formation type classified | 63,585 |
 | With Shuowen Jiezi entry | 9,815 |
-| With Old/Middle Chinese reconstruction | 13,309 |
+| With Old/Middle Chinese reconstruction | 20,047 |
 | With Guangyun MC phonology | 19,337 |
 | With IDS decomposition | 88,942 |
 | With historical glyph images | 13,714 |
 | With readings (any language) | 50,896 |
 | With multi-source etymology | 8,710 |
-| With phonetic component identified | 59,575 |
+| With phonetic component identified | 61,966 |
 | With phonetic series (kPhonetic) | 22,456 |
-| Cross-verified etymology | 6,976 |
+| Cross-verified etymology | 7,000+ |
 | Sino-Tibetan cognate links | 369 |
 | Shuowen confirmed by modern sources | 9,204 |
 | Shuowen corrected by modern sources | 551 |
@@ -231,7 +231,8 @@ python3 build_database.py
 | Inferred formation type | IDS+radical inference quality | 98.1% vs Shuowen |
 | Top 1000 chars | Missing etymology | 0 |
 | Top 3000 chars | Missing etymology | 0 |
-| Top 3000 chars | Average confidence | 80.2 |
+| Top 5000 chars | Missing etymology | 5 |
+| Top 3000 chars | Average confidence | 80.3 |
 
 ## Cross-Source Validation
 
