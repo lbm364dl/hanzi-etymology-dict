@@ -80,6 +80,7 @@ function py2num(py){if(!py)return'';let t=5,r='';for(const c of py){if(TM[c]){r+
 function goTo(c){document.getElementById('q').value=c;search(true);window.scrollTo({top:0,behavior:'smooth'})}
 function lk(text,self){if(!text)return'';return text.replace(/([\u3400-\u9FFF\uF900-\uFAFF])/g,(m,c)=>c===self?`<b>${c}</b>`:`<span class="xr" onclick="goTo('${c}')">${c}</span>`)}
 function qd(c){const r=D[c];return r?r.d||'':''}
+function qp(c){const r=D[c];return r?r.py||'':''}
 
 window.addEventListener('popstate',()=>{const p=new URLSearchParams(location.search).get('q')||'';document.getElementById('q').value=p;if(D)search(false)});
 
@@ -186,7 +187,7 @@ function full(r){
     h+='<div class="s"><div class="st">Components</div><div class="cmp">';
     if(r.sem){const sd=qd(r.sem);h+=`<div><div class="cmc" onclick="goTo('${r.sem}')">${r.sem}</div><div class="cmr">semantic${sd?': '+sd.replace(/;.*/,'').slice(0,30):''}</div></div>`}
     if(r.sem&&r.phon)h+='<div class="cmp-plus">+</div>';
-    if(r.phon){const pd=qd(r.phon);h+=`<div><div class="cmc" onclick="goTo('${r.phon}')">${r.phon}</div><div class="cmr">phonetic${pd?': '+pd.replace(/;.*/,'').slice(0,30):''}</div></div>`}
+    if(r.phon){const pp=qp(r.phon);h+=`<div><div class="cmc" onclick="goTo('${r.phon}')">${r.phon}</div><div class="cmr">phonetic${pp?' ('+pp+')':''}</div></div>`}
     h+='</div></div>'}
 
   // Decomposition
