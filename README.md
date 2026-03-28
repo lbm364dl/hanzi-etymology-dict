@@ -9,8 +9,8 @@ A comprehensive open-source database of Chinese character (汉字) etymologies, 
 | Total unique characters | 103,207 |
 | CJK Unified Basic block | 20,992 |
 | With definitions | 28,073 |
-| With etymology notes | 16,480 |
-| With formation type classified | 62,556 |
+| With etymology notes | 17,819 |
+| With formation type classified | 63,585 |
 | With Shuowen Jiezi entry | 9,815 |
 | With Old/Middle Chinese reconstruction | 13,309 |
 | With Guangyun MC phonology | 19,337 |
@@ -20,7 +20,8 @@ A comprehensive open-source database of Chinese character (汉字) etymologies, 
 | With multi-source etymology | 8,710 |
 | With phonetic component identified | 59,575 |
 | With phonetic series (kPhonetic) | 22,456 |
-| Cross-verified etymology | 5,427 |
+| Cross-verified etymology | 6,976 |
+| Sino-Tibetan cognate links | 369 |
 | Shuowen confirmed by modern sources | 9,204 |
 | Shuowen corrected by modern sources | 551 |
 | Historical glyph SVGs (Dong Chinese) | 578 chars |
@@ -40,8 +41,8 @@ A comprehensive open-source database of Chinese character (汉字) etymologies, 
 
 | Status | Count | Meaning |
 |--------|-------|---------|
-| Cross-verified | 5,427 | 2+ modern sources agree on etymology |
-| Single-source | 6,350 | 1 modern source provides etymology |
+| Cross-verified | 6,976 | 2+ modern sources agree on etymology |
+| Single-source | 5,707 | 1 modern source provides etymology |
 | Classical-only | 4,367 | Only Shuowen Jiezi (needs modern corroboration) |
 | Unverified | 336 | Has notes but unclear classification |
 
@@ -140,6 +141,9 @@ Each character record contains:
 | 11 | [Baxter-Sagart](https://sites.lsa.umich.edu/ocbaxtersagart/) | 4,056 | Free academic | Old Chinese & Middle Chinese reconstructions |
 | 12 | [NK2028 Guangyun](https://github.com/nk2028/tshet-uinh-data) | 19,337 | CC0 | Middle Chinese phonology (音韻地位, fanqie) |
 | 13 | [ytenx Old Chinese](https://github.com/BYVoid/ytenx) | 13,118 | Unlicensed | Zhengzhang OC reconstruction, phonetic components |
+| 14 | [hanziDB](https://github.com/ruddfawcett/hanziDB.csv) | 9,900 | MIT | Character frequency ranking, HSK levels |
+| 15 | [AnimCJK](https://github.com/parsimonhi/animCJK) | 7,000 | Arphic/LGPL | HSK 3.0 levels, frequency tiers |
+| 16 | [Sagart Sino-Tibetan](https://github.com/lexibank/sagartst) | 369 | CC-BY-4.0 | Cognate links across 50 Sino-Tibetan languages |
 
 ## SQLite Database
 
@@ -226,6 +230,7 @@ python3 build_database.py
 | Shuowen OC rhyme test | Shuowen phonetics valid? | 66.6% validated |
 | Inferred formation type | IDS+radical inference quality | 98.1% vs Shuowen |
 | Top 1000 chars | Missing etymology | 0 |
+| Top 3000 chars | Missing etymology | 0 |
 | Top 3000 chars | Average confidence | 80.2 |
 
 ## Cross-Source Validation
