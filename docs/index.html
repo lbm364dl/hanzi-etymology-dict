@@ -79,7 +79,25 @@ function py2num(py){if(!py)return'';let t=5,r='';for(const c of py){if(TM[c]){r+
 
 function goTo(c){document.getElementById('q').value=c;search(true);window.scrollTo({top:0,behavior:'smooth'})}
 function lk(text,self){if(!text)return'';return text.replace(/([\u3400-\u9FFF\uF900-\uFAFF])/g,(m,c)=>c===self?`<b>${c}</b>`:`<span class="xr" onclick="goTo('${c}')">${c}</span>`)}
-function qd(c){const r=D[c];return r?r.d||'':''}
+// Semantic meaning overrides for radical variants with bad definitions
+const RM={'亻':'person','氵':'water','扌':'hand','忄':'heart, emotion','犭':'animal',
+'礻':'spirit, ritual','衤':'clothing','饣':'food, eating','钅':'metal','纟':'silk, thread',
+'讠':'speech','辶':'movement, walking','刂':'knife, cutting','⺮':'bamboo','⺾':'plant, grass',
+'⺼':'flesh, body','罒':'net','阝':'place; hill','釒':'metal','飠':'food','糹':'silk, thread',
+'冫':'ice','灬':'fire','攵':'strike','月':'flesh (body part)','王':'jade',
+'⻊':'foot','艹':'plant, grass','火':'fire','木':'tree, wood','土':'earth, ground',
+'口':'mouth','目':'eye','日':'sun, day','心':'heart','手':'hand','水':'water',
+'女':'woman','人':'person','金':'metal, gold','石':'stone','山':'mountain',
+'竹':'bamboo','米':'rice','田':'field','虫':'insect','言':'speech','足':'foot',
+'車':'vehicle','車':'vehicle','貝':'money, value','食':'food','馬':'horse',
+'鳥':'bird','魚':'fish','犬':'dog','牛':'cattle','羊':'sheep','禾':'grain',
+'雨':'rain','風':'wind','骨':'bone','肉':'flesh','皮':'skin','革':'leather',
+'鬼':'ghost','門':'gate','宀':'roof, shelter','广':'building','力':'force, strength',
+'弓':'bow','矢':'arrow','戈':'weapon','刀':'knife','斤':'axe','示':'spirit, ritual',
+'疒':'illness','衣':'clothing','見':'seeing','角':'horn','谷':'valley',
+'豆':'bean, vessel','豕':'pig','鹿':'deer','麥':'wheat','黑':'black','齒':'tooth',
+'鼎':'ritual vessel','鼓':'drum','鼠':'rat','鼻':'nose','龍':'dragon','龜':'turtle'};
+function qd(c){if(RM[c])return RM[c];const r=D[c];if(!r)return'';const d=r.d||'';return d.replace(/;?\s*radical number \d+/i,'').replace(/;?\s*Kangxi radical \d+/i,'').trim()||d}
 function qp(c){const r=D[c];return r?r.py||'':''}
 
 window.addEventListener('popstate',()=>{const p=new URLSearchParams(location.search).get('q')||'';document.getElementById('q').value=p;if(D)search(false)});
