@@ -901,6 +901,14 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
     # Load local glyph manifests
     dong_glyphs, wikimedia_glyphs = load_glyph_manifests()
 
+    # Load Shuowen translations (if available)
+    shuowen_translations = {}
+    sw_trans_path = OUTPUT_DIR / "shuowen_translations.json"
+    if sw_trans_path.exists():
+        with open(sw_trans_path, "r", encoding="utf-8") as f:
+            shuowen_translations = json.load(f)
+        print(f"  Loaded Shuowen translations: {len(shuowen_translations)} entries")
+
     # Start with the Unihan universe -- every character known to Unicode
     all_chars = set(unihan.keys())
     # Add characters from other sources too
@@ -1100,6 +1108,10 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                 record["shuowen"]["duan_notes"] = sw["duan_notes"]
             if sw.get("variants"):
                 record["shuowen"]["variants"] = sw["variants"]
+            # Add English translation if available
+            sw_trans = shuowen_translations.get(ch, "")
+            if sw_trans:
+                record["shuowen"]["english"] = sw_trans
             # Extract formation type from Shuowen explanation
             sw_ftype = extract_shuowen_formation_type(sw.get("explanation", ""))
             if sw_ftype:

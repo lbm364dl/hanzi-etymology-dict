@@ -367,23 +367,19 @@ function renderFull(r) {
     h += '</div>';
   }
 
-  // Shuowen -- show classical Chinese with cross-links + English interpretation
+  // Shuowen -- show classical Chinese with English translation
   if (r.shuowen && r.shuowen.explanation) {
     h += '<div class="section"><div class="sec-title">Shuowen Jiezi (~100 AD)</div><div class="sec-body">';
-    // Classical text with linkified characters
-    h += `<div style="font-size:1.05em;margin-bottom:6px">${linkify(r.shuowen.explanation, r.character)}</div>`;
-    // English interpretation: pick the best available English etymology as a "translation"
-    const engSources = ['dong_chinese', 'makemeahanzi', 'wiktionary'];
-    const engNote = (r.etymology_notes || []).find(n => engSources.includes(n.source));
-    if (engNote) {
-      let engText = engNote.text || '';
-      if (engText.length > 250) engText = engText.slice(0, 247) + '...';
-      h += `<div style="color:var(--fg2);font-size:0.85em;margin-top:4px;padding:6px 10px;background:var(--accent-bg);border-radius:6px"><strong>Modern interpretation:</strong> ${linkify(engText, r.character)}</div>`;
+    // English translation first (if available)
+    if (r.shuowen.english) {
+      h += `<div style="margin-bottom:8px">${linkify(r.shuowen.english, r.character)}</div>`;
     }
+    // Original classical Chinese with linkified characters
+    h += `<div style="color:var(--fg3);font-size:0.9em;border-left:2px solid var(--border);padding-left:10px">${linkify(r.shuowen.explanation, r.character)}</div>`;
     if (r.shuowen.modern_correction) {
-      h += `<div style="color:var(--red);font-size:0.85em;margin-top:4px">Corrected: Shuowen says ${r.shuowen.modern_correction.shuowen_says}, modern analysis says ${r.shuowen.modern_correction.modern_says}</div>`;
+      h += `<div style="color:var(--red);font-size:0.85em;margin-top:6px">Corrected: Shuowen says ${r.shuowen.modern_correction.shuowen_says}, modern analysis says ${r.shuowen.modern_correction.modern_says}</div>`;
     }
-    if (r.shuowen.pronunciation_fanqie) h += `<div style="font-size:0.85em;margin-top:4px">Fanqie: ${r.shuowen.pronunciation_fanqie}</div>`;
+    if (r.shuowen.pronunciation_fanqie) h += `<div style="font-size:0.85em;color:var(--fg3);margin-top:4px">Fanqie: ${r.shuowen.pronunciation_fanqie}</div>`;
     h += '</div></div>';
   }
 
