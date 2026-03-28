@@ -188,43 +188,28 @@ python3 build_database.py
 ## Project Files
 
 ```
-├── README.md                    # This file
-├── RESEARCH.md                  # Detailed source research & evaluation
-├── BOOKS.md                     # Bibliography of 73 authoritative references
-├── INACCESSIBLE_RESOURCES.md    # Resources we couldn't integrate (yet)
-├── GLYPH_DATA_SOURCES.md        # Historical glyph image source research
-├── SCHEMA.md                    # Complete field-by-field schema documentation
-├── LICENSE                      # Per-source license breakdown
-│
-├── build_database.py            # ETL pipeline (18 parsers, cross-validation)
-├── extract_dong_chinese.mjs     # Dong Chinese etymology data extraction
-├── extract_dong_svgs.mjs        # Historical glyph SVG extraction
-├── download_wikimedia_seals.py  # Wikimedia seal script SVG downloader
-├── search.py                    # Command-line search interface
-├── export_review.py             # Export review CSVs for expert adjudication
-│
-├── analyze_quality.py           # Cross-source quality analysis
-├── analyze_phonetic_series.py   # Phonetic series reliability testing
-├── validate_reconstructions.py  # OC cross-validation & Shuowen error detection
-│
-├── output/                      # Generated (rebuild with: python3 build_database.py)
-│   ├── hanzi_etymology.jsonl    # Full database (JSONL, ~56 MB)
-│   ├── hanzi_etymology.db       # Full database (SQLite, ~98 MB)
-│   ├── sample_records.json      # Example records for 10 common characters
-│   ├── statistics.json          # Build statistics
-│   ├── priority_gaps.json       # High-frequency chars needing work
-│   ├── shuowen_errors.json      # 551 Shuowen entries corrected by modern scholarship
-│   ├── review/                  # CSVs for expert review
-│   │   ├── formation_conflicts.csv       # 1,636 source disagreements
-│   │   ├── shuowen_corrections.csv       # 551 Shuowen errors
-│   │   ├── shuowen_phonetic_failures.csv # 200 OC rhyme test failures
-���   │   └── classical_only.csv            # 4,367 entries needing modern corroboration
-│   ├── phonetic_analysis.json   # Phonetic series reliability analysis results
-│   ├── validation_report.json   # Cross-validation results (BS vs ZZ, etc.)
-│   └── glyphs/                  # Historical character form SVGs
-│       ├── dong_chinese/        # 578 chars (oracle, bronze, seal, cursive)
-│       └── wikimedia_seal/      # 3,638 Shuowen seal script SVGs
-└── sources/                     # Raw source data (not committed)
+docs/                            # GitHub Pages site
+  index.html                     # Self-contained viewer (loads data.json.gz)
+
+build_database.py                # ETL pipeline (18 parsers, cross-validation)
+build_site.py                    # Build GitHub Pages site (docs/)
+extract_dong_chinese.mjs         # Dong Chinese etymology data extraction
+extract_dong_svgs.mjs            # Historical glyph SVG extraction
+download_wikimedia_seals.py      # Wikimedia seal script SVG downloader
+search.py                        # Command-line search interface
+export_anki.py                   # Anki flashcard deck exporter
+export_review.py                 # Export review CSVs for expert adjudication
+analyze_quality.py               # Cross-source quality analysis
+analyze_phonetic_series.py       # Phonetic series reliability testing
+validate_reconstructions.py      # OC cross-validation & Shuowen error detection
+
+output/                          # Generated (not committed)
+  hanzi_etymology.jsonl          # Full database (JSONL)
+  hanzi_etymology.db             # Full database (SQLite)
+  shuowen_translations.json      # 9,815 LLM-translated Shuowen entries
+  glyphs/dong_chinese/           # 578 chars (oracle, bronze, seal SVGs)
+  glyphs/wikimedia_seal/         # 3,638 Shuowen seal script SVGs
+sources/                         # Raw source data (not committed)
 ```
 
 ### Validation Results
