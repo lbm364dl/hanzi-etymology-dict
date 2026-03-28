@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hanzi Etymology Dictionary</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; }
+.container { max-width: 800px; margin: 0 auto; padding: 20px; }
+h1 { text-align: center; margin: 20px 0; font-size: 1.8em; }
+.subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+.search-box { display: flex; gap: 8px; margin-bottom: 20px; }
+.search-box input { flex: 1; padding: 12px 16px; font-size: 18px; border: 2px solid #ddd; border-radius: 8px; }
+.search-box input:focus { border-color: #4a90d9; outline: none; }
+.search-box button { padding: 12px 24px; background: #4a90d9; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+.search-box button:hover { background: #357abd; }
+#status { text-align: center; color: #999; padding: 20px; }
+.char-card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.char-header { display: flex; align-items: baseline; gap: 16px; margin-bottom: 16px; border-bottom: 1px solid #eee; padding-bottom: 12px; }
+.char-main { font-size: 64px; line-height: 1; }
+.char-pinyin { font-size: 24px; color: #4a90d9; }
+.char-def { font-size: 16px; color: #555; flex: 1; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.badge { padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+.badge-type { background: #e8f4fd; color: #1a73e8; }
+.badge-verified { background: #e6f4ea; color: #137333; }
+.badge-classical { background: #fef7e0; color: #b06000; }
+.badge-conflict { background: #fce8e6; color: #c5221f; }
+.badge-hsk { background: #f3e8fd; color: #7b1fa2; }
+.badge-field { background: #e8f5e9; color: #2e7d32; }
+.section { margin-bottom: 14px; }
+.section-title { font-weight: 600; color: #333; margin-bottom: 4px; font-size: 14px; }
+.section-body { color: #555; font-size: 14px; line-height: 1.6; }
+.etym-source { color: #999; font-size: 12px; }
+.etym-text { margin-bottom: 8px; }
+.phonology-row { font-family: 'Courier New', monospace; font-size: 13px; }
+.conflict-table { width: 100%; font-size: 13px; border-collapse: collapse; }
+.conflict-table td { padding: 2px 8px; border-bottom: 1px solid #f0f0f0; }
+.conflict-table td:first-child { color: #999; width: 140px; }
+.family-chars { font-size: 20px; letter-spacing: 2px; color: #4a90d9; }
+.meta { color: #999; font-size: 12px; margin-top: 8px; }
+.loading { text-align: center; padding: 40px; color: #999; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Hanzi Etymology Dictionary</h1>
+  <p class="subtitle">103,207 characters from 16 sources | <a href="https://github.com">Open Source</a></p>
+  <div class="search-box">
+    <input type="text" id="query" placeholder="Enter character, pinyin, or English..." autofocus>
+    <button onclick="search()">Search</button>
+  </div>
+  <div id="status">Loading database... (this may take a moment)</div>
+  <div id="results"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+<script>
+let db = null;
+
+async function initDB() {
+  const status = document.getElementById('status');
+  try {
+    const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${file}` });
+    status.textContent = 'Fetching database...';
+    const resp = await fetch('output/hanzi_etymology.db');
+    if (!resp.ok) throw new Error('Database file not found. Run: python3 build_database.py');
+    const buf = await resp.arrayBuffer();
+    db = new SQL.Database(new Uint8Array(buf));
+    status.textContent = 'Ready. Enter a character, pinyin, or English word to search.';
+  } catch (e) {
+    status.textContent = 'Error: ' + e.message;
+  }
+}
+
+function search() {
+  if (!db) return;
+  const q = document.getElementById('query').value.trim();
+  if (!q) return;
+  const results = document.getElementById('results');
+  results.innerHTML = '';
+
+  let rows;
+  if (q.length === 1 && q.charCodeAt(0) > 0x2000) {
+    // Direct character lookup
+    rows = db.exec("SELECT data FROM characters WHERE character = ?", [q]);
+  } else if (/^[a-zA-Z\u0100-\u024F]+[0-9]?$/.test(q)) {
+    // Pinyin search
+    rows = db.exec("SELECT data FROM characters WHERE data LIKE ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 30", ['%"mandarin": "' + q + '"%']);
+    if (!rows.length || !rows[0].values.length) {
+      rows = db.exec("SELECT data FROM characters WHERE data LIKE ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 30", ['%"mandarin": "%' + q + '%"%']);
+    }
+  } else {
+    // English definition search
+    rows = db.exec("SELECT data FROM characters WHERE definitions LIKE ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 30", ['%' + q + '%']);
+  }
+
+  if (!rows.length || !rows[0].values.length) {
+    results.innerHTML = '<div class="loading">No results found.</div>';
+    return;
+  }
+
+  for (const row of rows[0].values) {
+    const r = JSON.parse(row[0]);
+    results.appendChild(renderCard(r));
+  }
+  document.getElementById('status').textContent = `${rows[0].values.length} result(s)`;
+}
+
+function renderCard(r) {
+  const card = document.createElement('div');
+  card.className = 'char-card';
+
+  const mandarin = (r.readings || {}).mandarin || '';
+  const freq = r.frequency_rank ? `#${r.frequency_rank}` : '';
+
+  let html = `<div class="char-header">
+    <span class="char-main">${r.character}</span>
+    <span class="char-pinyin">${mandarin}</span>
+    <span class="char-def">${r.definitions || ''}</span>
+  </div><div class="badges">`;
+
+  if (r.formation_type) html += `<span class="badge badge-type">${r.formation_type}</span>`;
+  if (r.verification_status === 'cross-verified') html += `<span class="badge badge-verified">cross-verified</span>`;
+  else if (r.verification_status === 'classical-only') html += `<span class="badge badge-classical">classical-only</span>`;
+  if (r.formation_type_conflict) html += `<span class="badge badge-conflict">disputed</span>`;
+  if (r.hsk3_level) html += `<span class="badge badge-hsk">HSK ${r.hsk3_level}</span>`;
+  else if (r.hsk_level) html += `<span class="badge badge-hsk">HSK ${r.hsk_level}</span>`;
+  if (r.semantic_field) html += `<span class="badge badge-field">${r.semantic_field}</span>`;
+  if (freq) html += `<span class="badge" style="background:#f0f0f0;color:#666">${freq}</span>`;
+  html += `<span class="badge" style="background:#f0f0f0;color:#666">confidence: ${r.confidence || 0}</span>`;
+  html += '</div>';
+
+  // Formation details
+  const fd = r.formation_details || {};
+  if (fd.semantic || fd.phonetic) {
+    html += `<div class="section"><span class="section-title">Components: </span>`;
+    if (fd.semantic) html += `<span style="color:#2e7d32">${fd.semantic}</span> (semantic) `;
+    if (fd.phonetic) html += `<span style="color:#1a73e8">${fd.phonetic}</span> (phonetic)`;
+    html += '</div>';
+  }
+
+  // IDS
+  if (r.ids || r.decomposition_ids) {
+    html += `<div class="section"><span class="section-title">Decomposition: </span><span class="section-body">${r.ids || r.decomposition_ids}</span></div>`;
+  }
+
+  // Etymology notes
+  const notes = r.etymology_notes || [];
+  if (notes.length) {
+    html += '<div class="section"><div class="section-title">Etymology</div>';
+    for (const n of notes.slice(0, 4)) {
+      const via = n.via_traditional ? ` (via ${n.via_traditional})` : '';
+      const text = n.text.length > 300 ? n.text.slice(0, 297) + '...' : n.text;
+      html += `<div class="etym-text"><span class="etym-source">[${n.source}${via}]</span> ${text}</div>`;
+    }
+    if (notes.length > 4) html += `<div class="etym-source">... and ${notes.length - 4} more</div>`;
+    html += '</div>';
+  }
+
+  // Historical phonology
+  const phon = r.historical_phonology || [];
+  if (phon.length) {
+    html += '<div class="section"><div class="section-title">Historical Phonology</div><div class="section-body">';
+    for (const p of phon.slice(0, 4)) {
+      const parts = [];
+      if (p.old_chinese) parts.push(`OC(BS): ${p.old_chinese}`);
+      if (p.old_chinese_zhengzhang) parts.push(`OC(ZZ): ${p.old_chinese_zhengzhang}`);
+      if (p.middle_chinese) parts.push(`MC: ${p.middle_chinese}`);
+      if (p.middle_chinese_guangyun) parts.push(`MC(GY): ${p.middle_chinese_guangyun}`);
+      if (p.gloss) parts.push(`"${p.gloss}"`);
+      html += `<div class="phonology-row">${parts.join('  ')}</div>`;
+    }
+    html += '</div></div>';
+  }
+
+  // Conflict
+  if (r.formation_type_conflict) {
+    html += '<div class="section"><div class="section-title" style="color:#c5221f">Formation Type Conflict</div><table class="conflict-table">';
+    for (const [src, claim] of Object.entries(r.formation_type_conflict)) {
+      html += `<tr><td>${src}</td><td>${claim}</td></tr>`;
+    }
+    html += '</table></div>';
+  }
+
+  // Shuowen
+  if (r.shuowen) {
+    html += `<div class="section"><div class="section-title">Shuowen Jiezi</div><div class="section-body">${r.shuowen.explanation || ''}`;
+    if (r.shuowen_accuracy === 'corrected' && r.shuowen.modern_correction) {
+      html += ` <span style="color:#c5221f">[corrected: Shuowen says ${r.shuowen.modern_correction.shuowen_says}, modern says ${r.shuowen.modern_correction.modern_says}]</span>`;
+    }
+    html += '</div></div>';
+  }
+
+  // Phonetic family
+  if (r.phonetic_family && r.phonetic_family.length) {
+    html += `<div class="section"><div class="section-title">Phonetic Family</div><div class="family-chars">${r.phonetic_family.slice(0, 20).join('')}</div></div>`;
+  }
+
+  // ST cognates
+  if (r.sino_tibetan_cognates && r.sino_tibetan_cognates.length) {
+    html += '<div class="section"><div class="section-title">Sino-Tibetan Cognates</div><div class="section-body">';
+    for (const c of r.sino_tibetan_cognates) {
+      const cogs = (c.sample_cognates || []).map(x => `${x.language}: ${x.form}`).join(', ');
+      html += `"${c.concept}" -- ${cogs}<br>`;
+    }
+    html += '</div></div>';
+  }
+
+  // Meta
+  html += `<div class="meta">${r.source_count || 0} sources: ${(r.sources || []).join(', ')}</div>`;
+
+  card.innerHTML = html;
+  return card;
+}
+
+document.getElementById('query').addEventListener('keydown', e => { if (e.key === 'Enter') search(); });
+initDB();
+</script>
+</body>
+</html>
