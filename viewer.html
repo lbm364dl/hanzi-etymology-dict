@@ -65,7 +65,13 @@ header p { color: var(--fg2); font-size: 0.9em; margin-top: 4px; }
 .phon-row { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82em; margin-bottom: 2px; }
 .conflict-row { display: flex; gap: 8px; font-size: 0.85em; padding: 2px 0; }
 .conflict-src { color: var(--fg3); width: 130px; flex-shrink: 0; }
-.family { font-size: 1.4em; letter-spacing: 3px; color: var(--accent); line-height: 1.8; }
+.family { font-size: 1.4em; letter-spacing: 3px; line-height: 1.8; }
+
+/* Cross-reference links */
+.xref { color: var(--accent); cursor: pointer; text-decoration: none; border-bottom: 1px dotted var(--accent); }
+.xref:hover { border-bottom-style: solid; }
+.family .xref { border-bottom: none; }
+.family .xref:hover { background: var(--accent-bg); border-radius: 4px; }
 
 /* Glyphs */
 .glyphs { display: flex; gap: 12px; flex-wrap: wrap; }
@@ -76,7 +82,8 @@ header p { color: var(--fg2); font-size: 0.9em; margin-top: 4px; }
 /* Components */
 .components { display: flex; gap: 16px; align-items: center; font-size: 1.1em; }
 .comp { text-align: center; }
-.comp-char { font-size: 1.8em; }
+.comp-char { font-size: 1.8em; cursor: pointer; }
+.comp-char:hover { color: var(--accent); }
 .comp-role { font-size: 0.7em; color: var(--fg3); }
 .comp-plus { color: var(--fg3); font-size: 1.2em; }
 
@@ -113,6 +120,40 @@ header p { color: var(--fg2); font-size: 0.9em; margin-top: 4px; }
 <script>
 let db = null;
 const GLYPH_BASE = 'output/glyphs/';
+
+// Navigate to a character entry
+function goTo(ch) {
+  document.getElementById('query').value = ch;
+  search();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// Wrap CJK characters in text as clickable cross-references
+// Skips the "self" character to avoid self-links
+function linkify(text, selfChar) {
+  if (!text) return '';
+  // Match CJK Unified Ideographs + Extension A + common components
+  return text.replace(/([\u3400-\u9FFF\uF900-\uFAFF])/g, (m, ch) => {
+    if (ch === selfChar) return `<b>${ch}</b>`;
+    return `<span class="xref" onclick="goTo('${ch}')">${ch}</span>`;
+  });
+}
+
+// Make a single character a clickable link
+function charLink(ch, selfChar) {
+  if (!ch || ch === selfChar) return ch || '';
+  return `<span class="xref" onclick="goTo('${ch}')">${ch}</span>`;
+}
+
+// Quick lookup: get definition for a character (for tooltips / inline context)
+function quickDef(ch) {
+  if (!db) return '';
+  try {
+    const r = db.exec("SELECT definitions FROM characters WHERE character = ?", [ch]);
+    if (r.length && r[0].values.length) return r[0].values[0][0] || '';
+  } catch(e) {}
+  return '';
+}
 
 async function initDB() {
   const st = document.getElementById('status');
@@ -256,15 +297,21 @@ function renderFull(r) {
   const fd = r.formation_details || {};
   if (fd.semantic || fd.phonetic) {
     h += '<div class="section"><div class="sec-title">Components</div><div class="components">';
-    if (fd.semantic) h += `<div class="comp"><div class="comp-char">${fd.semantic}</div><div class="comp-role">semantic</div></div>`;
+    if (fd.semantic) {
+      const sDef = quickDef(fd.semantic);
+      h += `<div class="comp"><div class="comp-char" onclick="goTo('${fd.semantic}')">${fd.semantic}</div><div class="comp-role">semantic${sDef ? ': ' + sDef.slice(0,20) : ''}</div></div>`;
+    }
     if (fd.semantic && fd.phonetic) h += '<div class="comp-plus">+</div>';
-    if (fd.phonetic) h += `<div class="comp"><div class="comp-char">${fd.phonetic}</div><div class="comp-role">phonetic</div></div>`;
+    if (fd.phonetic) {
+      const pDef = quickDef(fd.phonetic);
+      h += `<div class="comp"><div class="comp-char" onclick="goTo('${fd.phonetic}')">${fd.phonetic}</div><div class="comp-role">phonetic${pDef ? ': ' + pDef.slice(0,20) : ''}</div></div>`;
+    }
     h += '</div></div>';
   }
 
   // Decomposition
   const ids = r.ids || r.decomposition_ids;
-  if (ids) h += `<div class="section"><div class="sec-title">Decomposition</div><div class="sec-body" style="font-size:1.3em;letter-spacing:2px">${ids}</div></div>`;
+  if (ids) h += `<div class="section"><div class="sec-title">Decomposition</div><div class="sec-body" style="font-size:1.3em;letter-spacing:2px">${linkify(ids, r.character)}</div></div>`;
 
   // Historical glyphs (local SVGs)
   const lg = r.local_glyphs || {};
@@ -295,7 +342,7 @@ function renderFull(r) {
       const via = n.via_traditional ? ` via ${n.via_traditional}` : '';
       let text = n.text || '';
       if (text.length > 400) text = text.slice(0, 397) + '...';
-      h += `<div class="etym-item"><div class="etym-src">${n.source}${via}${n.caveat ? ' (classical, may be inaccurate)' : ''}</div>${text}</div>`;
+      h += `<div class="etym-item"><div class="etym-src">${n.source}${via}${n.caveat ? ' (classical, may be inaccurate)' : ''}</div>${linkify(text, r.character)}</div>`;
     }
     if (notes.length > 5) h += `<div class="sec-body" style="color:var(--fg3)">+ ${notes.length - 5} more sources</div>`;
     h += '</div>';
@@ -320,13 +367,23 @@ function renderFull(r) {
     h += '</div>';
   }
 
-  // Shuowen
+  // Shuowen -- show classical Chinese with cross-links + English interpretation
   if (r.shuowen && r.shuowen.explanation) {
-    h += `<div class="section"><div class="sec-title">Shuowen Jiezi (~100 AD)</div><div class="sec-body">${r.shuowen.explanation}`;
-    if (r.shuowen.modern_correction) {
-      h += `<br><span style="color:var(--red)">Corrected: Shuowen says ${r.shuowen.modern_correction.shuowen_says}, modern analysis says ${r.shuowen.modern_correction.modern_says}</span>`;
+    h += '<div class="section"><div class="sec-title">Shuowen Jiezi (~100 AD)</div><div class="sec-body">';
+    // Classical text with linkified characters
+    h += `<div style="font-size:1.05em;margin-bottom:6px">${linkify(r.shuowen.explanation, r.character)}</div>`;
+    // English interpretation: pick the best available English etymology as a "translation"
+    const engSources = ['dong_chinese', 'makemeahanzi', 'wiktionary'];
+    const engNote = (r.etymology_notes || []).find(n => engSources.includes(n.source));
+    if (engNote) {
+      let engText = engNote.text || '';
+      if (engText.length > 250) engText = engText.slice(0, 247) + '...';
+      h += `<div style="color:var(--fg2);font-size:0.85em;margin-top:4px;padding:6px 10px;background:var(--accent-bg);border-radius:6px"><strong>Modern interpretation:</strong> ${linkify(engText, r.character)}</div>`;
     }
-    if (r.shuowen.pronunciation_fanqie) h += `<br>Fanqie: ${r.shuowen.pronunciation_fanqie}`;
+    if (r.shuowen.modern_correction) {
+      h += `<div style="color:var(--red);font-size:0.85em;margin-top:4px">Corrected: Shuowen says ${r.shuowen.modern_correction.shuowen_says}, modern analysis says ${r.shuowen.modern_correction.modern_says}</div>`;
+    }
+    if (r.shuowen.pronunciation_fanqie) h += `<div style="font-size:0.85em;margin-top:4px">Fanqie: ${r.shuowen.pronunciation_fanqie}</div>`;
     h += '</div></div>';
   }
 
@@ -334,7 +391,8 @@ function renderFull(r) {
   const kx = r.kangxi || {};
   if (kx.fanqie_citations && kx.fanqie_citations.length) {
     h += '<div class="section"><div class="sec-title">Kangxi Dictionary Citations</div><div class="sec-body">';
-    h += kx.fanqie_citations.map(c => `${c.source}: ${c.fanqie}切`).join(' &middot; ');
+    h += kx.fanqie_citations.map(c => `${c.source}: ${linkify(c.fanqie, r.character)}切`).join(' &middot; ');
+    if (kx.shuowen_citation) h += `<br><span style="color:var(--fg3)">Shuowen ref:</span> ${linkify(kx.shuowen_citation, r.character)}`;
     h += '</div></div>';
   }
 
@@ -349,7 +407,12 @@ function renderFull(r) {
 
   // Phonetic family
   if (r.phonetic_family && r.phonetic_family.length) {
-    h += `<div class="section"><div class="sec-title">Phonetic Family</div><div class="family">${r.phonetic_family.slice(0, 25).join('')}</div></div>`;
+    h += '<div class="section"><div class="sec-title">Phonetic Family</div><div class="family">';
+    h += r.phonetic_family.slice(0, 25).map(ch =>
+      `<span class="xref" onclick="goTo('${ch}')">${ch}</span>`
+    ).join('');
+    if (r.phonetic_family.length > 25) h += ` <span style="font-size:0.6em;color:var(--fg3)">+${r.phonetic_family.length - 25} more</span>`;
+    h += '</div></div>';
   }
 
   // ST cognates
