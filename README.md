@@ -193,12 +193,15 @@ python3 build_database.py
 ├── BOOKS.md                     # Bibliography of 73 authoritative references
 ├── INACCESSIBLE_RESOURCES.md    # Resources we couldn't integrate (yet)
 ├── GLYPH_DATA_SOURCES.md        # Historical glyph image source research
+├── SCHEMA.md                    # Complete field-by-field schema documentation
+├── LICENSE                      # Per-source license breakdown
 │
-├── build_database.py            # ETL pipeline (16 parsers, cross-validation)
+├── build_database.py            # ETL pipeline (18 parsers, cross-validation)
 ├── extract_dong_chinese.mjs     # Dong Chinese etymology data extraction
 ├── extract_dong_svgs.mjs        # Historical glyph SVG extraction
 ├── download_wikimedia_seals.py  # Wikimedia seal script SVG downloader
 ├── search.py                    # Command-line search interface
+├── export_review.py             # Export review CSVs for expert adjudication
 │
 ├── analyze_quality.py           # Cross-source quality analysis
 ├── analyze_phonetic_series.py   # Phonetic series reliability testing
@@ -211,6 +214,11 @@ python3 build_database.py
 │   ├── statistics.json          # Build statistics
 │   ├── priority_gaps.json       # High-frequency chars needing work
 │   ├── shuowen_errors.json      # 551 Shuowen entries corrected by modern scholarship
+│   ├── review/                  # CSVs for expert review
+│   │   ├── formation_conflicts.csv       # 1,636 source disagreements
+│   │   ├── shuowen_corrections.csv       # 551 Shuowen errors
+│   │   ├── shuowen_phonetic_failures.csv # 200 OC rhyme test failures
+���   │   └── classical_only.csv            # 4,367 entries needing modern corroboration
 │   ├── phonetic_analysis.json   # Phonetic series reliability analysis results
 │   ├── validation_report.json   # Cross-validation results (BS vs ZZ, etc.)
 │   └── glyphs/                  # Historical character form SVGs
@@ -275,6 +283,18 @@ The database extracts formation types from 4 independent sources and detects dis
 - **[BOOKS.md](BOOKS.md)** -- Comprehensive bibliography of 73 books, papers, and digital resources
 - **[INACCESSIBLE_RESOURCES.md](INACCESSIBLE_RESOURCES.md)** -- Resources not yet integrated (paywalled, web-only, un-digitized)
 - **[GLYPH_DATA_SOURCES.md](GLYPH_DATA_SOURCES.md)** -- Historical glyph image sources and integration strategy
+- **[SCHEMA.md](SCHEMA.md)** -- Complete field-by-field database schema documentation
+- **[LICENSE](LICENSE)** -- Per-source license breakdown and usage guidance
+
+## Contributing
+
+The most valuable contributions are expert reviews of the flagged entries.
+Run `python3 export_review.py` to generate CSV files for review:
+
+- **`formation_conflicts.csv`** (1,636 entries) -- Sources disagree on formation type. Each row shows what each source claims. Priority: top-frequency characters first.
+- **`shuowen_corrections.csv`** (551 entries) -- Shuowen entries where modern scholarship disagrees. Verify the modern correction is accurate.
+- **`shuowen_phonetic_failures.csv`** (200 entries) -- Shuowen claims a phonetic component but Old Chinese rhyme evidence doesn't support it. These are likely Shuowen errors.
+- **`classical_only.csv`** (4,367 entries) -- Characters with only Shuowen etymology, no modern corroboration. Adding modern analysis for these (especially high-frequency ones) is the biggest open task.
 
 ## License
 
