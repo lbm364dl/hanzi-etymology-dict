@@ -1,0 +1,75 @@
+# License
+
+This project combines data from multiple sources with different licenses.
+Users must comply with the most restrictive license applicable to the
+data they use.
+
+## Build Scripts and Analysis Code
+
+All Python and JavaScript scripts in this repository (build_database.py,
+search.py, analyze_*.py, validate_*.py, extract_*.mjs, download_*.py)
+are released under the MIT License:
+
+    MIT License
+
+    Copyright (c) 2026
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED.
+
+## Combined Database (output/)
+
+The combined database (hanzi_etymology.jsonl, hanzi_etymology.db)
+contains data from sources with varying licenses. The most restrictive
+applicable license for the combined dataset is **GPL v2** (from
+CJKVI-IDS / CHISE). If you remove the `ids` field (CJKVI-IDS data),
+the remaining data falls under a mix of CC BY-SA and permissive licenses.
+
+### Per-Source License Summary
+
+| Source | License | Fields Affected |
+|--------|---------|-----------------|
+| Unicode Unihan | Unicode ToS (permissive) | definitions, readings, radical_stroke, total_strokes, phonetic_class, variants |
+| CJKVI-IDS | **GPL v2** | ids |
+| CJK Decomposition | MIT / Apache 2.0 / CC BY-SA 3.0 (choose one) | cjk_decomp |
+| Make Me a Hanzi | **LGPL v3** | decomposition_ids, formation_type (partial), formation_details (partial), etymology_notes (makemeahanzi source) |
+| Dong Chinese | **CC BY-SA 4.0** | etymology_notes (dong_chinese source), formation_type (partial) |
+| Wiktionary | **CC BY-SA 3.0** | etymology_notes (wiktionary source), formation type extraction |
+| CC-CEDICT | **CC BY-SA 4.0** | cedict_definitions |
+| Shuowen Jiezi | Apache 2.0 | shuowen |
+| Kangxi Dictionary | MIT | kangxi |
+| Baxter-Sagart | Free academic use | historical_phonology (baxter_sagart source) |
+| NK2028 Guangyun | **CC0 1.0** (public domain) | guangyun, historical_phonology (guangyun source) |
+| ytenx Old Chinese | Not explicitly licensed | historical_phonology (zhengzhang source), formation_details.phonetic_component_ytenx |
+| EVOBC | Academic use | historical_glyphs |
+| hanziDB | MIT | frequency_rank, hsk_level |
+| AnimCJK | Arphic Public License / LGPL v3 | hsk3_level, frequency_tier |
+| Sagart Sino-Tibetan | **CC-BY 4.0** | sino_tibetan_cognates |
+
+### Practical Guidance
+
+- **For open-source projects (GPL-compatible):** Use the full database freely.
+- **For CC BY-SA compatible projects:** Attribute sources, share alike.
+- **For permissive / commercial use:** Remove `ids` field (GPL), and
+  attribute CC BY-SA sources (Dong Chinese, Wiktionary, CC-CEDICT).
+  The remaining data (Unihan, Shuowen, Kangxi, Guangyun, Baxter-Sagart,
+  hanziDB, frequency) is permissively licensed.
+- **Classical texts** (Shuowen Jiezi, Kangxi Dictionary original content)
+  are in the **public domain**.
+
+## Documentation
+
+All .md documentation files (README.md, RESEARCH.md, BOOKS.md,
+INACCESSIBLE_RESOURCES.md, GLYPH_DATA_SOURCES.md, SCHEMA.md) are
+released under CC BY-SA 4.0.
