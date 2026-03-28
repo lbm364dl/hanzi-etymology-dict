@@ -184,9 +184,9 @@ function full(r){
   // Components
   if(r.sem||r.phon){
     h+='<div class="s"><div class="st">Components</div><div class="cmp">';
-    if(r.sem){const sd=qd(r.sem);h+=`<div><div class="cmc" onclick="goTo('${r.sem}')">${r.sem}</div><div class="cmr">semantic${sd?': '+sd.slice(0,20):''}</div></div>`}
+    if(r.sem){const sd=qd(r.sem);h+=`<div><div class="cmc" onclick="goTo('${r.sem}')">${r.sem}</div><div class="cmr">semantic${sd?': '+sd.replace(/;.*/,'').slice(0,30):''}</div></div>`}
     if(r.sem&&r.phon)h+='<div class="cmp-plus">+</div>';
-    if(r.phon){const pd=qd(r.phon);h+=`<div><div class="cmc" onclick="goTo('${r.phon}')">${r.phon}</div><div class="cmr">phonetic${pd?': '+pd.slice(0,20):''}</div></div>`}
+    if(r.phon){const pd=qd(r.phon);h+=`<div><div class="cmc" onclick="goTo('${r.phon}')">${r.phon}</div><div class="cmr">phonetic${pd?': '+pd.replace(/;.*/,'').slice(0,30):''}</div></div>`}
     h+='</div></div>'}
 
   // Decomposition
@@ -196,19 +196,22 @@ function full(r){
   if(r.lg){
     h+='<div class="s"><div class="st">Historical Forms</div><div style="display:flex;gap:12px;flex-wrap:wrap">';
     const labels={oracle:'Oracle Bone',bronze:'Bronze',seal:'Seal Script',cursive:'Cursive'};
-    if(r.lg.dong_chinese)for(const s of r.lg.dong_chinese)h+=`<div style="text-align:center"><img src="glyphs/dong_chinese/${r.c}/${r.c}_${s}.svg" width="64" height="64" onerror="this.style.display='none'" alt="${s}"><div style="font-size:.7em;color:var(--fg3)">${labels[s]||s}</div></div>`;
+    if(r.lg.dong_chinese)for(const s of r.lg.dong_chinese)h+=`<div style="text-align:center"><img src="glyphs/dong_chinese/${r.c}/${r.c}_${s}.svg" width="64" height="64" onerror="this.parentElement.style.display='none'" alt="${s}"><div style="font-size:.7em;color:var(--fg3)">${labels[s]||s}</div></div>`;
+    if(r.lg.wikimedia_seal)for(const f of r.lg.wikimedia_seal.slice(0,3)){
+      const wUrl='https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(f);
+      h+=`<div style="text-align:center"><a href="${wUrl}" target="_blank" rel="noopener"><img src="glyphs/wikimedia_seal/${f}" width="64" height="64" style="background:#fff;border-radius:4px" onerror="this.parentElement.parentElement.style.display='none'" alt="seal"></a><div style="font-size:.7em;color:var(--fg3)"><a href="${wUrl}" target="_blank" rel="noopener" style="color:var(--fg3)">Seal (Wikimedia)</a></div></div>`}
     h+='</div></div>'}
 
-  // Etymology
-  const en=r.en||[];
+  // Etymology (exclude shuowen_jiezi -- shown in its own section below)
+  const en=(r.en||[]).filter(n=>n.s!=='shuowen_jiezi');
   if(en.length){
     h+='<div class="s"><div class="st">Etymology</div>';
-    const so={'dong_chinese':0,'wiktionary':1,'makemeahanzi':2,'shuowen_jiezi':3};
+    const so={'dong_chinese':0,'wiktionary':1,'makemeahanzi':2};
     const sorted=[...en].sort((a,b)=>(so[a.s]??9)-(so[b.s]??9));
     for(const n of sorted.slice(0,5)){
       const via=n.v?` via ${n.v}`:'';
       let t=n.t||'';if(t.length>400)t=t.slice(0,397)+'...';
-      h+=`<div class="ei"><div class="es">${n.s}${via}${n.w?' (classical, may be inaccurate)':''}</div>${lk(t,r.c)}</div>`}
+      h+=`<div class="ei"><div class="es">${n.s}${via}</div>${lk(t,r.c)}</div>`}
     if(en.length>5)h+=`<div class="es">+ ${en.length-5} more sources</div>`;
     h+='</div>'}
 
