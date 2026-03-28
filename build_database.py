@@ -1109,10 +1109,21 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
             if "guangyun" not in record:
                 record["guangyun"] = []
             for entry in gy:
+                phon_pos = entry.get("phonological_position", "")
+                fanqie = entry.get("fanqie", "")
                 record["guangyun"].append({
-                    "phonological_position": entry.get("phonological_position", ""),
-                    "fanqie": entry.get("fanqie", ""),
+                    "phonological_position": phon_pos,
+                    "fanqie": fanqie,
                 })
+                # Also add to historical_phonology as MC data
+                if phon_pos:
+                    if "historical_phonology" not in record:
+                        record["historical_phonology"] = []
+                    record["historical_phonology"].append({
+                        "middle_chinese_guangyun": phon_pos,
+                        "fanqie": fanqie,
+                        "source": "guangyun",
+                    })
 
         # --- ytenx Old Chinese (Zhengzhang Shangfang) ---
         yt = ytenx_oc.get(ch)
