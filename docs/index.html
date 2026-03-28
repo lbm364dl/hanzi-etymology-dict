@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hanzi Etymology Dictionary</title>
+<meta name="description" content="Open-source Chinese character etymology database with 103,000+ characters from 16 sources">
+<style>
+:root{--bg:#fafafa;--bg2:#fff;--fg:#1a1a1a;--fg2:#555;--fg3:#999;--border:#e5e5e5;--accent:#2563eb;--abg:#eff6ff;--green:#16a34a;--gbg:#f0fdf4;--yellow:#ca8a04;--ybg:#fefce8;--red:#dc2626;--rbg:#fef2f2;--purple:#9333ea;--pbg:#faf5ff;--r:10px}
+@media(prefers-color-scheme:dark){:root{--bg:#0f0f0f;--bg2:#1a1a1a;--fg:#e5e5e5;--fg2:#a3a3a3;--fg3:#666;--border:#2a2a2a;--accent:#60a5fa;--abg:#1e293b;--green:#4ade80;--gbg:#14532d;--yellow:#fbbf24;--ybg:#422006;--red:#f87171;--rbg:#450a0a;--purple:#c084fc;--pbg:#3b0764}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--fg);line-height:1.5}
+.ct{max-width:860px;margin:0 auto;padding:16px}
+header{text-align:center;padding:32px 0 24px}
+header h1{font-size:1.6em;font-weight:700;letter-spacing:-.02em}
+header p{color:var(--fg2);font-size:.9em;margin-top:4px}
+header a{color:var(--accent);text-decoration:none}
+.sw{position:relative;margin-bottom:24px}
+.sw input{width:100%;padding:14px 20px;font-size:18px;border:2px solid var(--border);border-radius:var(--r);background:var(--bg2);color:var(--fg);transition:border-color .15s}
+.sw input:focus{border-color:var(--accent);outline:none}
+.sw input::placeholder{color:var(--fg3)}
+#st{text-align:center;color:var(--fg3);padding:12px;font-size:.85em}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:16px}
+.ch{display:flex;align-items:flex-start;gap:20px;margin-bottom:16px}
+.cb{font-size:72px;line-height:1;font-weight:300;min-width:80px;text-align:center}
+.ci{flex:1;min-width:0}
+.cp{font-size:1.4em;color:var(--accent);font-weight:500}
+.cd{color:var(--fg2);margin-top:2px}
+.cm{font-size:.8em;color:var(--fg3);margin-top:4px}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.t{padding:2px 10px;border-radius:99px;font-size:.75em;font-weight:500;white-space:nowrap}
+.tb{background:var(--abg);color:var(--accent)}.tg{background:var(--gbg);color:var(--green)}
+.ty{background:var(--ybg);color:var(--yellow)}.tr{background:var(--rbg);color:var(--red)}
+.tp{background:var(--pbg);color:var(--purple)}.tx{background:var(--border);color:var(--fg2)}
+.s{margin-bottom:16px}.s:last-child{margin-bottom:0}
+.st{font-size:.75em;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--fg3);margin-bottom:6px}
+.sb{font-size:.9em;color:var(--fg2)}
+.ei{margin-bottom:10px;padding-left:12px;border-left:3px solid var(--border)}
+.es{font-size:.75em;color:var(--fg3);margin-bottom:2px}
+.pr{font-family:'SF Mono','Fira Code',monospace;font-size:.82em;margin-bottom:2px}
+.cr{display:flex;gap:8px;font-size:.85em;padding:2px 0}.cs{color:var(--fg3);width:130px;flex-shrink:0}
+.fm{font-size:1.4em;letter-spacing:3px;line-height:1.8}
+.xr{color:var(--accent);cursor:pointer;text-decoration:none;border-bottom:1px dotted var(--accent)}
+.xr:hover{border-bottom-style:solid}
+.fm .xr{border-bottom:none}.fm .xr:hover{background:var(--abg);border-radius:4px}
+.cmp{display:flex;gap:16px;align-items:center;font-size:1.1em}
+.cmc{font-size:1.8em;cursor:pointer}.cmc:hover{color:var(--accent)}
+.cmr{font-size:.7em;color:var(--fg3)}
+.cmp-plus{color:var(--fg3);font-size:1.2em}
+.rg{display:grid;gap:8px;margin-bottom:16px}
+.rr{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color .1s}
+.rr:hover{border-color:var(--accent)}
+.rc{font-size:1.5em;width:36px;text-align:center}
+.ri{flex:1;min-width:0}.rp{color:var(--accent);font-weight:500}
+.rd{color:var(--fg2);font-size:.85em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rt{display:flex;gap:4px}
+@media(max-width:600px){.cb{font-size:56px;min-width:64px}.card{padding:16px}}
+</style>
+</head>
+<body>
+<div class="ct">
+  <header>
+    <h1>Hanzi Etymology Dictionary</h1>
+    <p>103,207 characters &middot; 16 sources &middot; <a href="https://github.com/user/hanzi-etymology-dict">open-source</a></p>
+  </header>
+  <div class="sw">
+    <input type="text" id="q" placeholder="Type a character, pinyin (e.g. ma3), or English word..." autofocus>
+  </div>
+  <div id="st">Loading dictionary data...</div>
+  <div id="r"></div>
+</div>
+<script>
+let D=null; // character index: {char -> record}
+let PI=null; // pinyin index: {numbered_pinyin -> [chars]}
+
+// Tone mark -> number conversion
+const TM={'ā':'a1','á':'a2','ǎ':'a3','à':'a4','ē':'e1','é':'e2','ě':'e3','è':'e4','ī':'i1','í':'i2','ǐ':'i3','ì':'i4','ō':'o1','ó':'o2','ǒ':'o3','ò':'o4','ū':'u1','ú':'u2','ǔ':'u3','ù':'u4','ǖ':'v1','ǘ':'v2','ǚ':'v3','ǜ':'v4'};
+function py2num(py){if(!py)return'';let t=5,r='';for(const c of py){if(TM[c]){r+=TM[c][0];t=+TM[c][1]}else r+=c}return r+(t<5?t:'')}
+
+function goTo(c){document.getElementById('q').value=c;search(true);window.scrollTo({top:0,behavior:'smooth'})}
+function lk(text,self){if(!text)return'';return text.replace(/([\u3400-\u9FFF\uF900-\uFAFF])/g,(m,c)=>c===self?`<b>${c}</b>`:`<span class="xr" onclick="goTo('${c}')">${c}</span>`)}
+function qd(c){const r=D[c];return r?r.d||'':''}
+
+window.addEventListener('popstate',()=>{const p=new URLSearchParams(location.search).get('q')||'';document.getElementById('q').value=p;if(D)search(false)});
+
+async function init(){
+  const st=document.getElementById('st');
+  try{
+    st.textContent='Downloading dictionary (6 MB)...';
+    const resp=await fetch('data.json.gz');
+    if(!resp.ok)throw new Error('data.json.gz not found');
+    const ds=new DecompressionStream('gzip');
+    const decompressed=resp.body.pipeThrough(ds);
+    const text=await new Response(decompressed).text();
+    const records=JSON.parse(text);
+    // Build indices
+    D={};PI={};
+    for(const r of records){
+      D[r.c]=r;
+      if(r.py){
+        const num=py2num(r.py);
+        const base=num.replace(/[1-5]$/,'');
+        if(!PI[num])PI[num]=[];
+        PI[num].push(r.c);
+        if(num!==base){if(!PI[base])PI[base]=[];PI[base].push(r.c)}
+      }
+    }
+    st.textContent='';
+    const urlQ=new URLSearchParams(location.search).get('q');
+    if(urlQ){document.getElementById('q').value=urlQ;search(false)}
+    else document.getElementById('q').focus();
+  }catch(e){st.textContent='Error: '+e.message}
+}
+
+let dt;
+document.getElementById('q').addEventListener('input',()=>{clearTimeout(dt);dt=setTimeout(()=>search(true),200)});
+document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter'){clearTimeout(dt);search(true)}});
+
+function search(push=true){
+  if(!D)return;
+  const q=document.getElementById('q').value.trim();
+  const res=document.getElementById('r');
+  const st=document.getElementById('st');
+  res.innerHTML='';
+  if(!q){st.textContent='';if(push)history.pushState(null,'',location.pathname);return}
+  if(push){history.pushState(null,'',`${location.pathname}?q=${encodeURIComponent(q)}`)}
+
+  // Direct CJK lookup
+  if(q.length===1&&q.charCodeAt(0)>0x2E00&&D[q]){res.appendChild(full(D[q]));st.textContent='';return}
+  // Multi CJK
+  if(q.length>1&&[...q].every(c=>c.charCodeAt(0)>0x2E00)){
+    let n=0;for(const c of q){if(D[c]){res.appendChild(full(D[c]));n++}}
+    st.textContent=n+' characters';return}
+
+  // Pinyin search
+  const isPY=/^[a-zA-Z\u00C0-\u024F]+[1-5]?$/.test(q);
+  if(isPY){
+    const ql=q.toLowerCase();
+    let chars=PI[ql]||[];
+    if(!chars.length){const base=ql.replace(/[1-5]$/,'');chars=PI[base]||[]}
+    if(chars.length){
+      // Sort by frequency
+      const sorted=[...new Set(chars)].sort((a,b)=>(D[a].fr||99999)-(D[b].fr||99999)).slice(0,50);
+      const g=document.createElement('div');g.className='rg';
+      for(const c of sorted){const r=D[c];g.appendChild(mkRow(r))}
+      res.appendChild(g);st.textContent=sorted.length+' results';return}
+  }
+
+  // English search
+  const ql=q.toLowerCase();
+  const matches=[];
+  for(const c in D){
+    const r=D[c];
+    if(r.d&&r.d.toLowerCase().includes(ql))matches.push(r);
+    if(matches.length>=50)break}
+  matches.sort((a,b)=>(a.fr||99999)-(b.fr||99999));
+  if(matches.length){
+    const g=document.createElement('div');g.className='rg';
+    for(const r of matches)g.appendChild(mkRow(r));
+    res.appendChild(g);st.textContent=matches.length+' results'}
+  else st.textContent='No results found.'}
+
+function mkRow(r){
+  const el=document.createElement('div');el.className='rr';
+  el.onclick=()=>goTo(r.c);
+  el.innerHTML=`<span class="rc">${r.c}</span><span class="ri"><span class="rp">${r.py||''}</span> <span class="rd">${r.d||''}</span></span><span class="rt">${r.ft?`<span class="t tb">${r.ft}</span>`:''}${r.conf?`<span class="t tx">${r.conf}</span>`:''}</span>`;
+  return el}
+
+function full(r){
+  const card=document.createElement('div');card.className='card';
+  const py=r.py||'',fr=r.fr?`#${r.fr}`:'',str=r.str||'?';
+  let h=`<div class="ch"><div class="cb">${r.c}</div><div class="ci"><div class="cp">${py}</div><div class="cd">${r.d||''}</div><div class="cm">${r.p} &middot; ${str} strokes${fr?' &middot; freq '+fr:''}${r.ca?' &middot; Cantonese: '+r.ca:''}</div></div></div><div class="tags">`;
+  if(r.ft)h+=`<span class="t tb">${r.ft}</span>`;
+  if(r.vs==='cross-verified')h+='<span class="t tg">cross-verified</span>';
+  else if(r.vs==='single-source')h+='<span class="t ty">single-source</span>';
+  else if(r.vs==='classical-only')h+='<span class="t ty">classical-only</span>';
+  if(r.ftc)h+='<span class="t tr">disputed</span>';
+  if(r.sa==='corrected')h+='<span class="t tr">Shuowen corrected</span>';
+  if(r.hsk)h+=`<span class="t tp">HSK ${r.hsk}</span>`;
+  if(r.sf)h+=`<span class="t tg">${r.sf}</span>`;
+  if(r.conf)h+=`<span class="t tx">confidence ${r.conf}</span>`;
+  h+='</div>';
+
+  // Components
+  if(r.sem||r.phon){
+    h+='<div class="s"><div class="st">Components</div><div class="cmp">';
+    if(r.sem){const sd=qd(r.sem);h+=`<div><div class="cmc" onclick="goTo('${r.sem}')">${r.sem}</div><div class="cmr">semantic${sd?': '+sd.slice(0,20):''}</div></div>`}
+    if(r.sem&&r.phon)h+='<div class="cmp-plus">+</div>';
+    if(r.phon){const pd=qd(r.phon);h+=`<div><div class="cmc" onclick="goTo('${r.phon}')">${r.phon}</div><div class="cmr">phonetic${pd?': '+pd.slice(0,20):''}</div></div>`}
+    h+='</div></div>'}
+
+  // Decomposition
+  if(r.ids)h+=`<div class="s"><div class="st">Decomposition</div><div class="sb" style="font-size:1.3em;letter-spacing:2px">${lk(r.ids,r.c)}</div></div>`;
+
+  // Glyphs
+  if(r.lg){
+    h+='<div class="s"><div class="st">Historical Forms</div><div style="display:flex;gap:12px;flex-wrap:wrap">';
+    const labels={oracle:'Oracle Bone',bronze:'Bronze',seal:'Seal Script',cursive:'Cursive'};
+    if(r.lg.dong_chinese)for(const s of r.lg.dong_chinese)h+=`<div style="text-align:center"><img src="glyphs/dong_chinese/${r.c}/${r.c}_${s}.svg" width="64" height="64" onerror="this.style.display='none'" alt="${s}"><div style="font-size:.7em;color:var(--fg3)">${labels[s]||s}</div></div>`;
+    h+='</div></div>'}
+
+  // Etymology
+  const en=r.en||[];
+  if(en.length){
+    h+='<div class="s"><div class="st">Etymology</div>';
+    const so={'dong_chinese':0,'wiktionary':1,'makemeahanzi':2,'shuowen_jiezi':3};
+    const sorted=[...en].sort((a,b)=>(so[a.s]??9)-(so[b.s]??9));
+    for(const n of sorted.slice(0,5)){
+      const via=n.v?` via ${n.v}`:'';
+      let t=n.t||'';if(t.length>400)t=t.slice(0,397)+'...';
+      h+=`<div class="ei"><div class="es">${n.s}${via}${n.w?' (classical, may be inaccurate)':''}</div>${lk(t,r.c)}</div>`}
+    if(en.length>5)h+=`<div class="es">+ ${en.length-5} more sources</div>`;
+    h+='</div>'}
+
+  // Shuowen
+  if(r.sw){
+    h+='<div class="s"><div class="st">Shuowen Jiezi (~100 AD)</div><div class="sb">';
+    if(r.swe)h+=`<div style="margin-bottom:8px">${lk(r.swe,r.c)}</div>`;
+    h+=`<div style="color:var(--fg3);font-size:.9em;border-left:2px solid var(--border);padding-left:10px">${lk(r.sw,r.c)}</div>`;
+    if(r.swc)h+=`<div style="color:var(--red);font-size:.85em;margin-top:6px">Corrected: Shuowen says ${r.swc.shuowen_says}, modern says ${r.swc.modern_says}</div>`;
+    if(r.swf)h+=`<div style="font-size:.85em;color:var(--fg3);margin-top:4px">Fanqie: ${r.swf}</div>`;
+    h+='</div></div>'}
+
+  // Historical phonology
+  const hp=r.hp||[];
+  if(hp.length){
+    h+='<div class="s"><div class="st">Historical Phonology</div>';
+    const seen=new Set();
+    for(const p of hp.slice(0,6)){
+      const pts=[];
+      if(p.old_chinese)pts.push('OC(BS) '+p.old_chinese);
+      if(p.old_chinese_zhengzhang)pts.push('OC(ZZ) '+p.old_chinese_zhengzhang);
+      if(p.middle_chinese)pts.push('MC '+p.middle_chinese);
+      if(p.middle_chinese_guangyun)pts.push('MC(GY) '+p.middle_chinese_guangyun);
+      if(p.fanqie)pts.push('fanqie: '+p.fanqie);
+      if(p.gloss)pts.push('"'+p.gloss+'"');
+      const k=pts.join('|');if(!seen.has(k)){seen.add(k);h+=`<div class="pr">${pts.join(' &nbsp; ')}</div>`}}
+    h+='</div>'}
+
+  // Kangxi fanqie
+  if(r.kxf&&r.kxf.length){
+    h+='<div class="s"><div class="st">Kangxi Dictionary</div><div class="sb">';
+    h+=r.kxf.map(c=>`${c.source}: ${lk(c.fanqie,r.c)}切`).join(' &middot; ');
+    h+='</div></div>'}
+
+  // Conflict
+  if(r.ftc){
+    h+='<div class="s"><div class="st" style="color:var(--red)">Formation Type Dispute</div>';
+    for(const[s,cl]of Object.entries(r.ftc))h+=`<div class="cr"><span class="cs">${s}</span><span>${cl}</span></div>`;
+    h+='</div>'}
+
+  // Phonetic family
+  if(r.pf&&r.pf.length){
+    h+='<div class="s"><div class="st">Phonetic Family</div><div class="fm">';
+    h+=r.pf.map(c=>`<span class="xr" onclick="goTo('${c}')">${c}</span>`).join('');
+    if(r.pf.length>=20)h+=' <span style="font-size:.6em;color:var(--fg3)">+more</span>';
+    h+='</div></div>'}
+
+  // ST cognates
+  if(r.stc&&r.stc.length){
+    h+='<div class="s"><div class="st">Sino-Tibetan Cognates</div><div class="sb">';
+    for(const c of r.stc){const cg=(c.sample_cognates||[]).map(x=>`${x.language}: <em>${x.form}</em>`).join(', ');h+=`"${c.concept}" &mdash; ${cg}<br>`}
+    h+='</div></div>'}
+
+  // Readings
+  const rds=[];
+  if(r.py)rds.push('Mandarin: '+r.py);if(r.ca)rds.push('Cantonese: '+r.ca);
+  if(r.jo)rds.push("On'yomi: "+r.jo);if(r.jk)rds.push("Kun'yomi: "+r.jk);
+  if(r.ko)rds.push('Korean: '+r.ko);if(r.vi)rds.push('Vietnamese: '+r.vi);
+  if(rds.length>1)h+=`<div class="s"><div class="st">Readings</div><div class="sb">${rds.join('<br>')}</div></div>`;
+
+  // Variants
+  if(r.var){
+    const vp=[];
+    for(const[k,v]of Object.entries(r.var)){
+      const chars=v.match(/U\+([0-9A-F]+)/g);
+      if(chars){const linked=chars.map(cp=>{const c=String.fromCodePoint(parseInt(cp.slice(2),16));return`<span class="xr" onclick="goTo('${c}')">${c}</span>`}).join(' ');vp.push(`${k}: ${linked}`)}}
+    if(vp.length)h+=`<div class="s"><div class="st">Variants</div><div class="sb">${vp.join(' &middot; ')}</div></div>`}
+
+  card.innerHTML=h;return card}
+
+init();
+</script>
+</body>
+</html>
