@@ -5,217 +5,379 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hanzi Etymology Dictionary</title>
 <style>
+:root {
+  --bg: #fafafa; --bg2: #fff; --fg: #1a1a1a; --fg2: #555; --fg3: #999;
+  --border: #e5e5e5; --accent: #2563eb; --accent-bg: #eff6ff;
+  --green: #16a34a; --green-bg: #f0fdf4;
+  --yellow: #ca8a04; --yellow-bg: #fefce8;
+  --red: #dc2626; --red-bg: #fef2f2;
+  --purple: #9333ea; --purple-bg: #faf5ff;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f0f0f; --bg2: #1a1a1a; --fg: #e5e5e5; --fg2: #a3a3a3; --fg3: #666;
+    --border: #2a2a2a; --accent: #60a5fa; --accent-bg: #1e293b;
+    --green: #4ade80; --green-bg: #14532d;
+    --yellow: #fbbf24; --yellow-bg: #422006;
+    --red: #f87171; --red-bg: #450a0a;
+    --purple: #c084fc; --purple-bg: #3b0764;
+  }
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #333; }
-.container { max-width: 800px; margin: 0 auto; padding: 20px; }
-h1 { text-align: center; margin: 20px 0; font-size: 1.8em; }
-.subtitle { text-align: center; color: #666; margin-bottom: 30px; }
-.search-box { display: flex; gap: 8px; margin-bottom: 20px; }
-.search-box input { flex: 1; padding: 12px 16px; font-size: 18px; border: 2px solid #ddd; border-radius: 8px; }
-.search-box input:focus { border-color: #4a90d9; outline: none; }
-.search-box button { padding: 12px 24px; background: #4a90d9; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
-.search-box button:hover { background: #357abd; }
-#status { text-align: center; color: #999; padding: 20px; }
-.char-card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-.char-header { display: flex; align-items: baseline; gap: 16px; margin-bottom: 16px; border-bottom: 1px solid #eee; padding-bottom: 12px; }
-.char-main { font-size: 64px; line-height: 1; }
-.char-pinyin { font-size: 24px; color: #4a90d9; }
-.char-def { font-size: 16px; color: #555; flex: 1; }
-.badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
-.badge { padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
-.badge-type { background: #e8f4fd; color: #1a73e8; }
-.badge-verified { background: #e6f4ea; color: #137333; }
-.badge-classical { background: #fef7e0; color: #b06000; }
-.badge-conflict { background: #fce8e6; color: #c5221f; }
-.badge-hsk { background: #f3e8fd; color: #7b1fa2; }
-.badge-field { background: #e8f5e9; color: #2e7d32; }
-.section { margin-bottom: 14px; }
-.section-title { font-weight: 600; color: #333; margin-bottom: 4px; font-size: 14px; }
-.section-body { color: #555; font-size: 14px; line-height: 1.6; }
-.etym-source { color: #999; font-size: 12px; }
-.etym-text { margin-bottom: 8px; }
-.phonology-row { font-family: 'Courier New', monospace; font-size: 13px; }
-.conflict-table { width: 100%; font-size: 13px; border-collapse: collapse; }
-.conflict-table td { padding: 2px 8px; border-bottom: 1px solid #f0f0f0; }
-.conflict-table td:first-child { color: #999; width: 140px; }
-.family-chars { font-size: 20px; letter-spacing: 2px; color: #4a90d9; }
-.meta { color: #999; font-size: 12px; margin-top: 8px; }
-.loading { text-align: center; padding: 40px; color: #999; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.5; }
+.container { max-width: 860px; margin: 0 auto; padding: 16px; }
+header { text-align: center; padding: 32px 0 24px; }
+header h1 { font-size: 1.6em; font-weight: 700; letter-spacing: -0.02em; }
+header p { color: var(--fg2); font-size: 0.9em; margin-top: 4px; }
+.search-wrap { position: relative; margin-bottom: 24px; }
+.search-wrap input { width: 100%; padding: 14px 20px; font-size: 18px; border: 2px solid var(--border); border-radius: var(--radius); background: var(--bg2); color: var(--fg); transition: border-color .15s; }
+.search-wrap input:focus { border-color: var(--accent); outline: none; }
+.search-wrap input::placeholder { color: var(--fg3); }
+#status { text-align: center; color: var(--fg3); padding: 12px; font-size: 0.85em; }
+
+/* Card */
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; }
+.card-head { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 16px; }
+.char-big { font-size: 72px; line-height: 1; font-weight: 300; min-width: 80px; text-align: center; }
+.char-info { flex: 1; min-width: 0; }
+.char-pinyin { font-size: 1.4em; color: var(--accent); font-weight: 500; }
+.char-def { color: var(--fg2); margin-top: 2px; }
+.char-meta { font-size: 0.8em; color: var(--fg3); margin-top: 4px; }
+
+/* Tags */
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 14px; }
+.tag { padding: 2px 10px; border-radius: 99px; font-size: 0.75em; font-weight: 500; white-space: nowrap; }
+.tag-blue { background: var(--accent-bg); color: var(--accent); }
+.tag-green { background: var(--green-bg); color: var(--green); }
+.tag-yellow { background: var(--yellow-bg); color: var(--yellow); }
+.tag-red { background: var(--red-bg); color: var(--red); }
+.tag-purple { background: var(--purple-bg); color: var(--purple); }
+.tag-gray { background: var(--border); color: var(--fg2); }
+
+/* Sections */
+.section { margin-bottom: 16px; }
+.section:last-child { margin-bottom: 0; }
+.sec-title { font-size: 0.75em; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--fg3); margin-bottom: 6px; }
+.sec-body { font-size: 0.9em; color: var(--fg2); }
+.etym-item { margin-bottom: 10px; padding-left: 12px; border-left: 3px solid var(--border); }
+.etym-src { font-size: 0.75em; color: var(--fg3); margin-bottom: 2px; }
+.phon-row { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82em; margin-bottom: 2px; }
+.conflict-row { display: flex; gap: 8px; font-size: 0.85em; padding: 2px 0; }
+.conflict-src { color: var(--fg3); width: 130px; flex-shrink: 0; }
+.family { font-size: 1.4em; letter-spacing: 3px; color: var(--accent); line-height: 1.8; }
+
+/* Glyphs */
+.glyphs { display: flex; gap: 12px; flex-wrap: wrap; }
+.glyph-item { text-align: center; }
+.glyph-item img, .glyph-item object { width: 64px; height: 64px; }
+.glyph-label { font-size: 0.7em; color: var(--fg3); }
+
+/* Components */
+.components { display: flex; gap: 16px; align-items: center; font-size: 1.1em; }
+.comp { text-align: center; }
+.comp-char { font-size: 1.8em; }
+.comp-role { font-size: 0.7em; color: var(--fg3); }
+.comp-plus { color: var(--fg3); font-size: 1.2em; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .char-big { font-size: 56px; min-width: 64px; }
+  .card { padding: 16px; }
+}
+
+.results-grid { display: grid; gap: 8px; margin-bottom: 16px; }
+.result-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: border-color .1s; }
+.result-row:hover { border-color: var(--accent); }
+.result-char { font-size: 1.5em; width: 36px; text-align: center; }
+.result-info { flex: 1; min-width: 0; }
+.result-pinyin { color: var(--accent); font-weight: 500; }
+.result-def { color: var(--fg2); font-size: 0.85em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.result-tags { display: flex; gap: 4px; }
 </style>
 </head>
 <body>
 <div class="container">
-  <h1>Hanzi Etymology Dictionary</h1>
-  <p class="subtitle">103,207 characters from 16 sources | <a href="https://github.com">Open Source</a></p>
-  <div class="search-box">
-    <input type="text" id="query" placeholder="Enter character, pinyin, or English..." autofocus>
-    <button onclick="search()">Search</button>
+  <header>
+    <h1>Hanzi Etymology Dictionary</h1>
+    <p>103,207 characters &middot; 18 sources &middot; open-source</p>
+  </header>
+  <div class="search-wrap">
+    <input type="text" id="query" placeholder="Type a character, pinyin, or English word..." autofocus>
   </div>
-  <div id="status">Loading database... (this may take a moment)</div>
+  <div id="status">Loading database...</div>
   <div id="results"></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
 <script>
 let db = null;
+const GLYPH_BASE = 'output/glyphs/';
 
 async function initDB() {
-  const status = document.getElementById('status');
+  const st = document.getElementById('status');
   try {
-    const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${file}` });
-    status.textContent = 'Fetching database...';
-    const resp = await fetch('output/hanzi_etymology.db');
-    if (!resp.ok) throw new Error('Database file not found. Run: python3 build_database.py');
-    const buf = await resp.arrayBuffer();
+    const SQL = await initSqlJs({ locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${f}` });
+    st.textContent = 'Downloading database...';
+    const r = await fetch('output/hanzi_etymology.db');
+    if (!r.ok) throw new Error('Database not found. Build first: python3 build_database.py');
+    const buf = await r.arrayBuffer();
     db = new SQL.Database(new Uint8Array(buf));
-    status.textContent = 'Ready. Enter a character, pinyin, or English word to search.';
-  } catch (e) {
-    status.textContent = 'Error: ' + e.message;
-  }
+    st.textContent = '';
+    document.getElementById('query').focus();
+  } catch (e) { st.textContent = 'Error: ' + e.message; }
 }
+
+let debounceTimer;
+document.getElementById('query').addEventListener('input', () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(search, 200);
+});
+document.getElementById('query').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { clearTimeout(debounceTimer); search(); }
+});
 
 function search() {
   if (!db) return;
   const q = document.getElementById('query').value.trim();
-  if (!q) return;
-  const results = document.getElementById('results');
-  results.innerHTML = '';
+  const res = document.getElementById('results');
+  const st = document.getElementById('status');
+  res.innerHTML = '';
+  if (!q) { st.textContent = ''; return; }
 
   let rows;
-  if (q.length === 1 && q.charCodeAt(0) > 0x2000) {
-    // Direct character lookup
+  const isCJK = q.length === 1 && q.charCodeAt(0) > 0x2E00;
+
+  if (isCJK) {
     rows = db.exec("SELECT data FROM characters WHERE character = ?", [q]);
-  } else if (/^[a-zA-Z\u0100-\u024F]+[0-9]?$/.test(q)) {
-    // Pinyin search
-    rows = db.exec("SELECT data FROM characters WHERE data LIKE ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 30", ['%"mandarin": "' + q + '"%']);
-    if (!rows.length || !rows[0].values.length) {
-      rows = db.exec("SELECT data FROM characters WHERE data LIKE ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 30", ['%"mandarin": "%' + q + '%"%']);
+    if (rows.length && rows[0].values.length) {
+      const r = JSON.parse(rows[0].values[0][0]);
+      res.appendChild(renderFull(r));
+      st.textContent = '';
+      return;
     }
-  } else {
-    // English definition search
-    rows = db.exec("SELECT data FROM characters WHERE definitions LIKE ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 30", ['%' + q + '%']);
   }
 
-  if (!rows.length || !rows[0].values.length) {
-    results.innerHTML = '<div class="loading">No results found.</div>';
+  // Multi-char or search
+  if (q.length > 1 && [...q].every(c => c.charCodeAt(0) > 0x2E00)) {
+    // Multiple characters - show each
+    for (const ch of q) {
+      const r2 = db.exec("SELECT data FROM characters WHERE character = ?", [ch]);
+      if (r2.length && r2[0].values.length) res.appendChild(renderFull(JSON.parse(r2[0].values[0][0])));
+    }
+    st.textContent = `${[...q].length} characters`;
     return;
   }
 
+  // Pinyin or English
+  let sql, params;
+  if (/^[a-zA-Z\u00C0-\u024F]+[1-4]?$/.test(q)) {
+    sql = `SELECT data FROM characters WHERE data LIKE ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 40`;
+    params = [`%"mandarin":"${q}%`];
+    rows = db.exec(sql, params);
+    if (!rows.length || !rows[0].values.length) {
+      params = [`%"mandarin": "${q}%`];
+      rows = db.exec(sql, params);
+    }
+    if (!rows.length || !rows[0].values.length) {
+      params = [`%${q}%mandarin%`];
+      rows = db.exec(sql, params);
+    }
+  } else {
+    sql = `SELECT data FROM characters WHERE definitions LIKE ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 40`;
+    params = [`%${q}%`];
+    rows = db.exec(sql, params);
+  }
+
+  if (!rows.length || !rows[0].values.length) {
+    st.textContent = 'No results found.';
+    return;
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'results-grid';
   for (const row of rows[0].values) {
     const r = JSON.parse(row[0]);
-    results.appendChild(renderCard(r));
+    const el = document.createElement('div');
+    el.className = 'result-row';
+    el.onclick = () => { document.getElementById('query').value = r.character; search(); };
+    const py = (r.readings || {}).mandarin || '';
+    const ft = r.formation_type || '';
+    const conf = r.confidence || 0;
+    el.innerHTML = `
+      <span class="result-char">${r.character}</span>
+      <span class="result-info">
+        <span class="result-pinyin">${py}</span>
+        <span class="result-def">${r.definitions || ''}</span>
+      </span>
+      <span class="result-tags">
+        ${ft ? `<span class="tag tag-blue">${ft}</span>` : ''}
+        <span class="tag tag-gray">${conf}</span>
+      </span>`;
+    grid.appendChild(el);
   }
-  document.getElementById('status').textContent = `${rows[0].values.length} result(s)`;
+  res.appendChild(grid);
+  st.textContent = `${rows[0].values.length} results`;
 }
 
-function renderCard(r) {
+function renderFull(r) {
   const card = document.createElement('div');
-  card.className = 'char-card';
-
-  const mandarin = (r.readings || {}).mandarin || '';
+  card.className = 'card';
+  const py = (r.readings || {}).mandarin || '';
+  const rd = r.readings || {};
   const freq = r.frequency_rank ? `#${r.frequency_rank}` : '';
+  const strokes = r.total_strokes || '?';
+  const cp = r.codepoint || '';
 
-  let html = `<div class="char-header">
-    <span class="char-main">${r.character}</span>
-    <span class="char-pinyin">${mandarin}</span>
-    <span class="char-def">${r.definitions || ''}</span>
-  </div><div class="badges">`;
+  let h = `<div class="card-head">
+    <div class="char-big">${r.character}</div>
+    <div class="char-info">
+      <div class="char-pinyin">${py}</div>
+      <div class="char-def">${r.definitions || ''}</div>
+      <div class="char-meta">${cp} &middot; ${strokes} strokes${freq ? ' &middot; freq ' + freq : ''}${rd.cantonese ? ' &middot; Cantonese: ' + rd.cantonese : ''}</div>
+    </div>
+  </div>`;
 
-  if (r.formation_type) html += `<span class="badge badge-type">${r.formation_type}</span>`;
-  if (r.verification_status === 'cross-verified') html += `<span class="badge badge-verified">cross-verified</span>`;
-  else if (r.verification_status === 'classical-only') html += `<span class="badge badge-classical">classical-only</span>`;
-  if (r.formation_type_conflict) html += `<span class="badge badge-conflict">disputed</span>`;
-  if (r.hsk3_level) html += `<span class="badge badge-hsk">HSK ${r.hsk3_level}</span>`;
-  else if (r.hsk_level) html += `<span class="badge badge-hsk">HSK ${r.hsk_level}</span>`;
-  if (r.semantic_field) html += `<span class="badge badge-field">${r.semantic_field}</span>`;
-  if (freq) html += `<span class="badge" style="background:#f0f0f0;color:#666">${freq}</span>`;
-  html += `<span class="badge" style="background:#f0f0f0;color:#666">confidence: ${r.confidence || 0}</span>`;
-  html += '</div>';
+  // Tags
+  h += '<div class="tags">';
+  if (r.formation_type) h += `<span class="tag tag-blue">${r.formation_type}${r.formation_type_inferred ? ' (inferred)' : ''}</span>`;
+  if (r.verification_status === 'cross-verified') h += '<span class="tag tag-green">cross-verified</span>';
+  else if (r.verification_status === 'single-source') h += '<span class="tag tag-yellow">single-source</span>';
+  else if (r.verification_status === 'classical-only') h += '<span class="tag tag-yellow">classical-only</span>';
+  if (r.formation_type_conflict) h += '<span class="tag tag-red">disputed</span>';
+  if (r.shuowen_accuracy === 'corrected') h += '<span class="tag tag-red">Shuowen corrected</span>';
+  if (r.hsk3_level) h += `<span class="tag tag-purple">HSK ${r.hsk3_level}</span>`;
+  else if (r.hsk_level) h += `<span class="tag tag-purple">HSK ${r.hsk_level}</span>`;
+  if (r.semantic_field) h += `<span class="tag tag-green">${r.semantic_field}</span>`;
+  h += `<span class="tag tag-gray">confidence ${r.confidence || 0}</span>`;
+  h += '</div>';
 
-  // Formation details
+  // Components
   const fd = r.formation_details || {};
   if (fd.semantic || fd.phonetic) {
-    html += `<div class="section"><span class="section-title">Components: </span>`;
-    if (fd.semantic) html += `<span style="color:#2e7d32">${fd.semantic}</span> (semantic) `;
-    if (fd.phonetic) html += `<span style="color:#1a73e8">${fd.phonetic}</span> (phonetic)`;
-    html += '</div>';
+    h += '<div class="section"><div class="sec-title">Components</div><div class="components">';
+    if (fd.semantic) h += `<div class="comp"><div class="comp-char">${fd.semantic}</div><div class="comp-role">semantic</div></div>`;
+    if (fd.semantic && fd.phonetic) h += '<div class="comp-plus">+</div>';
+    if (fd.phonetic) h += `<div class="comp"><div class="comp-char">${fd.phonetic}</div><div class="comp-role">phonetic</div></div>`;
+    h += '</div></div>';
   }
 
-  // IDS
-  if (r.ids || r.decomposition_ids) {
-    html += `<div class="section"><span class="section-title">Decomposition: </span><span class="section-body">${r.ids || r.decomposition_ids}</span></div>`;
+  // Decomposition
+  const ids = r.ids || r.decomposition_ids;
+  if (ids) h += `<div class="section"><div class="sec-title">Decomposition</div><div class="sec-body" style="font-size:1.3em;letter-spacing:2px">${ids}</div></div>`;
+
+  // Historical glyphs (local SVGs)
+  const lg = r.local_glyphs || {};
+  if (lg.dong_chinese || lg.wikimedia_seal) {
+    h += '<div class="section"><div class="sec-title">Historical Forms</div><div class="glyphs">';
+    const scriptLabels = { oracle: 'Oracle Bone', bronze: 'Bronze', seal: 'Seal Script', cursive: 'Cursive' };
+    if (lg.dong_chinese) {
+      for (const script of lg.dong_chinese) {
+        const path = `${GLYPH_BASE}dong_chinese/${r.character}/${r.character}_${script}.svg`;
+        h += `<div class="glyph-item"><img src="${path}" alt="${script}" onerror="this.style.display='none'"><div class="glyph-label">${scriptLabels[script] || script}</div></div>`;
+      }
+    }
+    if (lg.wikimedia_seal) {
+      for (const fname of lg.wikimedia_seal.slice(0, 3)) {
+        h += `<div class="glyph-item"><img src="${GLYPH_BASE}wikimedia_seal/${fname}" alt="seal" style="background:#fff;border-radius:4px" onerror="this.style.display='none'"><div class="glyph-label">Seal (Wikimedia)</div></div>`;
+      }
+    }
+    h += '</div></div>';
   }
 
-  // Etymology notes
+  // Etymology
   const notes = r.etymology_notes || [];
   if (notes.length) {
-    html += '<div class="section"><div class="section-title">Etymology</div>';
-    for (const n of notes.slice(0, 4)) {
-      const via = n.via_traditional ? ` (via ${n.via_traditional})` : '';
-      const text = n.text.length > 300 ? n.text.slice(0, 297) + '...' : n.text;
-      html += `<div class="etym-text"><span class="etym-source">[${n.source}${via}]</span> ${text}</div>`;
+    h += '<div class="section"><div class="sec-title">Etymology</div>';
+    const srcOrder = {'dong_chinese':0,'wiktionary':1,'makemeahanzi':2,'shuowen_jiezi':3};
+    const sorted = [...notes].sort((a,b) => (srcOrder[a.source]??9) - (srcOrder[b.source]??9));
+    for (const n of sorted.slice(0, 5)) {
+      const via = n.via_traditional ? ` via ${n.via_traditional}` : '';
+      let text = n.text || '';
+      if (text.length > 400) text = text.slice(0, 397) + '...';
+      h += `<div class="etym-item"><div class="etym-src">${n.source}${via}${n.caveat ? ' (classical, may be inaccurate)' : ''}</div>${text}</div>`;
     }
-    if (notes.length > 4) html += `<div class="etym-source">... and ${notes.length - 4} more</div>`;
-    html += '</div>';
+    if (notes.length > 5) h += `<div class="sec-body" style="color:var(--fg3)">+ ${notes.length - 5} more sources</div>`;
+    h += '</div>';
   }
 
   // Historical phonology
   const phon = r.historical_phonology || [];
   if (phon.length) {
-    html += '<div class="section"><div class="section-title">Historical Phonology</div><div class="section-body">';
-    for (const p of phon.slice(0, 4)) {
+    h += '<div class="section"><div class="sec-title">Historical Phonology</div>';
+    const seen = new Set();
+    for (const p of phon.slice(0, 6)) {
       const parts = [];
-      if (p.old_chinese) parts.push(`OC(BS): ${p.old_chinese}`);
-      if (p.old_chinese_zhengzhang) parts.push(`OC(ZZ): ${p.old_chinese_zhengzhang}`);
-      if (p.middle_chinese) parts.push(`MC: ${p.middle_chinese}`);
-      if (p.middle_chinese_guangyun) parts.push(`MC(GY): ${p.middle_chinese_guangyun}`);
+      if (p.old_chinese) parts.push(`OC(BS) ${p.old_chinese}`);
+      if (p.old_chinese_zhengzhang) parts.push(`OC(ZZ) ${p.old_chinese_zhengzhang}`);
+      if (p.middle_chinese) parts.push(`MC ${p.middle_chinese}`);
+      if (p.middle_chinese_guangyun) parts.push(`MC(GY) ${p.middle_chinese_guangyun}`);
+      if (p.fanqie) parts.push(`fanqie: ${p.fanqie}`);
       if (p.gloss) parts.push(`"${p.gloss}"`);
-      html += `<div class="phonology-row">${parts.join('  ')}</div>`;
+      const key = parts.join('|');
+      if (!seen.has(key)) { seen.add(key); h += `<div class="phon-row">${parts.join(' &nbsp; ')}</div>`; }
     }
-    html += '</div></div>';
+    h += '</div>';
+  }
+
+  // Shuowen
+  if (r.shuowen && r.shuowen.explanation) {
+    h += `<div class="section"><div class="sec-title">Shuowen Jiezi (~100 AD)</div><div class="sec-body">${r.shuowen.explanation}`;
+    if (r.shuowen.modern_correction) {
+      h += `<br><span style="color:var(--red)">Corrected: Shuowen says ${r.shuowen.modern_correction.shuowen_says}, modern analysis says ${r.shuowen.modern_correction.modern_says}</span>`;
+    }
+    if (r.shuowen.pronunciation_fanqie) h += `<br>Fanqie: ${r.shuowen.pronunciation_fanqie}`;
+    h += '</div></div>';
+  }
+
+  // Kangxi fanqie
+  const kx = r.kangxi || {};
+  if (kx.fanqie_citations && kx.fanqie_citations.length) {
+    h += '<div class="section"><div class="sec-title">Kangxi Dictionary Citations</div><div class="sec-body">';
+    h += kx.fanqie_citations.map(c => `${c.source}: ${c.fanqie}切`).join(' &middot; ');
+    h += '</div></div>';
   }
 
   // Conflict
   if (r.formation_type_conflict) {
-    html += '<div class="section"><div class="section-title" style="color:#c5221f">Formation Type Conflict</div><table class="conflict-table">';
+    h += '<div class="section"><div class="sec-title" style="color:var(--red)">Formation Type Dispute</div>';
     for (const [src, claim] of Object.entries(r.formation_type_conflict)) {
-      html += `<tr><td>${src}</td><td>${claim}</td></tr>`;
+      h += `<div class="conflict-row"><span class="conflict-src">${src}</span><span>${claim}</span></div>`;
     }
-    html += '</table></div>';
-  }
-
-  // Shuowen
-  if (r.shuowen) {
-    html += `<div class="section"><div class="section-title">Shuowen Jiezi</div><div class="section-body">${r.shuowen.explanation || ''}`;
-    if (r.shuowen_accuracy === 'corrected' && r.shuowen.modern_correction) {
-      html += ` <span style="color:#c5221f">[corrected: Shuowen says ${r.shuowen.modern_correction.shuowen_says}, modern says ${r.shuowen.modern_correction.modern_says}]</span>`;
-    }
-    html += '</div></div>';
+    h += '</div>';
   }
 
   // Phonetic family
   if (r.phonetic_family && r.phonetic_family.length) {
-    html += `<div class="section"><div class="section-title">Phonetic Family</div><div class="family-chars">${r.phonetic_family.slice(0, 20).join('')}</div></div>`;
+    h += `<div class="section"><div class="sec-title">Phonetic Family</div><div class="family">${r.phonetic_family.slice(0, 25).join('')}</div></div>`;
   }
 
   // ST cognates
   if (r.sino_tibetan_cognates && r.sino_tibetan_cognates.length) {
-    html += '<div class="section"><div class="section-title">Sino-Tibetan Cognates</div><div class="section-body">';
+    h += '<div class="section"><div class="sec-title">Sino-Tibetan Cognates</div><div class="sec-body">';
     for (const c of r.sino_tibetan_cognates) {
-      const cogs = (c.sample_cognates || []).map(x => `${x.language}: ${x.form}`).join(', ');
-      html += `"${c.concept}" -- ${cogs}<br>`;
+      const cogs = (c.sample_cognates||[]).map(x => `${x.language}: <em>${x.form}</em>`).join(', ');
+      h += `"${c.concept}" &mdash; ${cogs}<br>`;
     }
-    html += '</div></div>';
+    h += '</div></div>';
   }
 
-  // Meta
-  html += `<div class="meta">${r.source_count || 0} sources: ${(r.sources || []).join(', ')}</div>`;
+  // Readings
+  if (rd && Object.keys(rd).length > 1) {
+    h += '<div class="section"><div class="sec-title">Readings</div><div class="sec-body">';
+    const labels = {mandarin:'Mandarin',cantonese:'Cantonese',japanese_on:"Japanese On'yomi",japanese_kun:"Japanese Kun'yomi",korean:'Korean',vietnamese:'Vietnamese',tang:'Tang'};
+    for (const [k,v] of Object.entries(rd)) {
+      if (v) h += `${labels[k]||k}: ${v}<br>`;
+    }
+    h += '</div></div>';
+  }
 
-  card.innerHTML = html;
+  h += `<div style="margin-top:12px;font-size:0.75em;color:var(--fg3)">${r.source_count || 0} sources: ${(r.sources||[]).join(', ')}</div>`;
+
+  card.innerHTML = h;
   return card;
 }
 
-document.getElementById('query').addEventListener('keydown', e => { if (e.key === 'Enter') search(); });
 initDB();
 </script>
 </body>
