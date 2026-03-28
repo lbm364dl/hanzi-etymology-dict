@@ -23,6 +23,29 @@ import sqlite3
 from collections import defaultdict
 from pathlib import Path
 
+# Pinyin tone mark -> number conversion
+_TONE_MAP = {}
+for _vowel, _toned in [
+    ('a', 'āáǎà'), ('e', 'ēéěè'), ('i', 'īíǐì'),
+    ('o', 'ōóǒò'), ('u', 'ūúǔù'), ('v', 'ǖǘǚǜ'), ('ü', 'ǖǘǚǜ'),
+]:
+    for _tone, _ch in enumerate(_toned, 1):
+        _TONE_MAP[_ch] = (_vowel, _tone)
+
+def pinyin_to_numbered(py):
+    """Convert tone-marked pinyin to numbered: 'shàng' -> 'shang4'."""
+    if not py:
+        return ""
+    tone = 5  # neutral
+    result = []
+    for ch in py:
+        if ch in _TONE_MAP:
+            vowel, tone = _TONE_MAP[ch]
+            result.append(vowel)
+        else:
+            result.append(ch)
+    return "".join(result) + (str(tone) if tone < 5 else "")
+
 SOURCES_DIR = Path("sources")
 OUTPUT_DIR = Path("output")
 OUTPUT_DIR.mkdir(exist_ok=True)
@@ -1692,6 +1715,8 @@ def write_sqlite(merged, path):
         CREATE TABLE characters (
             character TEXT PRIMARY KEY,
             codepoint TEXT,
+            pinyin TEXT,
+            pinyin_numbered TEXT,
             definitions TEXT,
             formation_type TEXT,
             formation_type_conflict TEXT,
@@ -1757,11 +1782,15 @@ def write_sqlite(merged, path):
     # Insert data
     for ch, record in merged.items():
         conflict = record.get("formation_type_conflict")
+        mandarin = record.get("readings", {}).get("mandarin", "")
+        mandarin_num = pinyin_to_numbered(mandarin)
         c.execute(
-            "INSERT INTO characters VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO characters VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (
                 record.get("character", ""),
                 record.get("codepoint", ""),
+                mandarin,
+                mandarin_num,
                 record.get("definitions", ""),
                 record.get("formation_type", ""),
                 json.dumps(conflict, ensure_ascii=False) if conflict else None,
@@ -1815,6 +1844,7 @@ def write_sqlite(merged, path):
     c.execute("CREATE INDEX idx_char_sources ON characters(source_count)")
     c.execute("CREATE INDEX idx_char_confidence ON characters(confidence)")
     c.execute("CREATE INDEX idx_char_conflict ON characters(formation_type_conflict) WHERE formation_type_conflict IS NOT NULL")
+    c.execute("CREATE INDEX idx_char_pinyin ON characters(pinyin_numbered)")
     c.execute("CREATE INDEX idx_char_verification ON characters(verification_status)")
     c.execute("CREATE INDEX idx_char_frequency ON characters(frequency_rank) WHERE frequency_rank IS NOT NULL")
 

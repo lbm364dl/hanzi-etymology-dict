@@ -230,22 +230,34 @@ function search(pushHistory = true) {
     return;
   }
 
-  // Pinyin or English
+  // Pinyin or English search
+  const isPinyin = /^[a-zA-Z\u00C0-\u024F]+[1-5]?$/.test(q);
   let sql, params;
-  if (/^[a-zA-Z\u00C0-\u024F]+[1-4]?$/.test(q)) {
-    sql = `SELECT data FROM characters WHERE data LIKE ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 40`;
-    params = [`%"mandarin":"${q}%`];
-    rows = db.exec(sql, params);
-    if (!rows.length || !rows[0].values.length) {
-      params = [`%"mandarin": "${q}%`];
+
+  if (isPinyin) {
+    const ql = q.toLowerCase();
+    // Exact pinyin with tone number: "duan4" -> matches pinyin_numbered = "duan4"
+    if (/[1-5]$/.test(ql)) {
+      sql = `SELECT data FROM characters WHERE pinyin_numbered = ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 50`;
+      params = [ql];
       rows = db.exec(sql, params);
     }
-    if (!rows.length || !rows[0].values.length) {
-      params = [`%${q}%mandarin%`];
+    // No tone number or no results: prefix match "duan" -> matches "duan1", "duan4", etc.
+    if (!rows || !rows.length || !rows[0].values.length) {
+      const base = ql.replace(/[1-5]$/, '');
+      sql = `SELECT data FROM characters WHERE pinyin_numbered LIKE ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 50`;
+      params = [base + '%'];
+      rows = db.exec(sql, params);
+    }
+    // Fallback: try matching tone-marked pinyin directly
+    if (!rows || !rows.length || !rows[0].values.length) {
+      sql = `SELECT data FROM characters WHERE pinyin LIKE ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 50`;
+      params = [q + '%'];
       rows = db.exec(sql, params);
     }
   } else {
-    sql = `SELECT data FROM characters WHERE definitions LIKE ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 40`;
+    // English definition search
+    sql = `SELECT data FROM characters WHERE definitions LIKE ? ORDER BY CASE WHEN frequency_rank IS NOT NULL THEN frequency_rank ELSE 999999 END LIMIT 50`;
     params = [`%${q}%`];
     rows = db.exec(sql, params);
   }
