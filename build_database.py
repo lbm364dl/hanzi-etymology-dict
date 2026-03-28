@@ -767,7 +767,7 @@ def parse_animcjk():
 # ---------------------------------------------------------------------------
 def parse_phonetic_classes():
     """Parse Unihan kPhonetic field into phonetic family groupings."""
-    print("[16/17] Parsing Unihan kPhonetic classes...")
+    print("[16/18] Parsing Unihan kPhonetic classes...")
     char_to_classes = {}
     class_to_chars = defaultdict(list)
     fpath = SOURCES_DIR / "unihan" / "Unihan_DictionaryLikeData.txt"
@@ -794,11 +794,41 @@ def parse_phonetic_classes():
 
 
 # ---------------------------------------------------------------------------
+# 17. Sagart Sino-Tibetan cognates
+# ---------------------------------------------------------------------------
+def parse_sino_tibetan_cognates():
+    """Parse pre-built Chinese-to-cognate mapping from Sagart CLDF data."""
+    print("[17/18] Parsing Sino-Tibetan cognate data...")
+    chars = defaultdict(list)
+    fpath = SOURCES_DIR / "stedt" / "sagartst" / "chinese_cognates.json"
+    if not fpath.exists():
+        print(f"  Warning: {fpath} not found (run cognate extraction first)")
+        return dict(chars)
+
+    with open(fpath, "r", encoding="utf-8") as f:
+        entries = json.load(f)
+
+    for entry in entries:
+        ch = entry.get("char", "")
+        if len(ch) == 1:
+            chars[ch].append({
+                "concept": entry.get("concept", ""),
+                "cognacy_set": entry.get("cognacy_set", ""),
+                "cognate_count": entry.get("cognate_count", 0),
+                "sample_cognates": entry.get("sample_cognates", [])[:3],
+            })
+
+    print(f"  Parsed {len(chars)} characters with Sino-Tibetan cognate data")
+    return dict(chars)
+
+
+# ---------------------------------------------------------------------------
 # Merge all sources into unified records
 # ---------------------------------------------------------------------------
 def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
               kangxi, baxter_sagart, wiktionary, cedict, evobc,
-              guangyun, ytenx_oc, frequency, animcjk, phonetic_classes, class_to_chars):
+              guangyun, ytenx_oc, frequency, animcjk, phonetic_classes,
+              class_to_chars, st_cognates):
     """Merge all parsed sources into a single dict keyed by character."""
     print("\nMerging all sources...")
 
@@ -807,7 +837,7 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
     # Add characters from other sources too
     for source in [mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                    kangxi, baxter_sagart, wiktionary, cedict, evobc,
-                   guangyun, ytenx_oc, frequency, animcjk]:
+                   guangyun, ytenx_oc, frequency, animcjk, st_cognates]:
         all_chars.update(source.keys())
 
     print(f"  Total unique characters across all sources: {len(all_chars)}")
@@ -1121,6 +1151,11 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                 record["hsk3_level"] = acjk["hsk3_level"]
             if acjk.get("frequency_tier"):
                 record["frequency_tier"] = acjk["frequency_tier"]
+
+        # --- Sino-Tibetan cognates ---
+        stc = st_cognates.get(ch)
+        if stc:
+            record["sino_tibetan_cognates"] = stc
 
         # --- Phonetic classes (Unihan kPhonetic) ---
         ph_classes = phonetic_classes.get(ch)
@@ -1743,12 +1778,14 @@ def main():
     frequency = parse_frequency()
     animcjk = parse_animcjk()
     phonetic_classes, class_to_chars = parse_phonetic_classes()
+    st_cognates = parse_sino_tibetan_cognates()
 
     # Merge
     merged = merge_all(
         unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
         kangxi, baxter_sagart, wiktionary, cedict, evobc,
-        guangyun, ytenx_oc, frequency, animcjk, phonetic_classes, class_to_chars,
+        guangyun, ytenx_oc, frequency, animcjk, phonetic_classes,
+        class_to_chars, st_cognates,
     )
 
     # Output
