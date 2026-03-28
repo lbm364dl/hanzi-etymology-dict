@@ -215,7 +215,7 @@ function full(r){
   if(r.lg){
     h+='<div class="s"><div class="st">Historical Forms</div><div style="display:flex;gap:12px;flex-wrap:wrap">';
     const labels={oracle:'Oracle Bone',bronze:'Bronze',seal:'Seal Script',cursive:'Cursive'};
-    if(r.lg.dong_chinese)for(const s of r.lg.dong_chinese)h+=`<div style="text-align:center"><img src="glyphs/dong_chinese/${r.c}/${r.c}_${s}.svg" width="64" height="64" onerror="this.parentElement.style.display='none'" alt="${s}"><div style="font-size:.7em;color:var(--fg3)">${labels[s]||s}</div></div>`;
+    if(r.lg.dong_chinese)for(const s of r.lg.dong_chinese){const hzyUrl='https://hanziyuan.net/#'+r.c;h+=`<div style="text-align:center"><a href="${hzyUrl}" target="_blank" rel="noopener"><img src="glyphs/dong_chinese/${r.c}/${r.c}_${s}.svg" width="64" height="64" onerror="this.parentElement.parentElement.style.display='none'" alt="${s}"></a><div style="font-size:.7em;color:var(--fg3)"><a href="${hzyUrl}" target="_blank" rel="noopener" style="color:var(--fg3)">${labels[s]||s}</a></div></div>`}
     if(r.lg.wikimedia_seal)for(const f of r.lg.wikimedia_seal.slice(0,3)){
       const wUrl='https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(f);
       h+=`<div style="text-align:center"><a href="${wUrl}" target="_blank" rel="noopener"><img src="glyphs/wikimedia_seal/${f}" width="64" height="64" style="background:#fff;border-radius:4px" onerror="this.parentElement.parentElement.style.display='none'" alt="seal"></a><div style="font-size:.7em;color:var(--fg3)"><a href="${wUrl}" target="_blank" rel="noopener" style="color:var(--fg3)">Seal (Wikimedia)</a></div></div>`}
