@@ -1380,6 +1380,52 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
         merged[ch] = record
 
     print(f"  Inferred phonetic components from IDS+radical: {inferred_phonetic_count}")
+
+    # --- Post-merge: propagate etymology from traditional to simplified variants ---
+    propagated = 0
+    for ch, record in merged.items():
+        if record.get("etymology_notes"):
+            continue  # already has etymology
+        # Check if this character has a traditional variant with etymology
+        variants = record.get("variants", {})
+        trad_cps = variants.get("traditional", "")
+        if not trad_cps:
+            continue
+        # Parse variant references: can be "U+XXXX" format or raw characters
+        trad_chars = []
+        for token in trad_cps.split():
+            if token.startswith("U+"):
+                try:
+                    trad_chars.append(chr(int(token[2:].split("<")[0], 16)))
+                except ValueError:
+                    pass
+            elif len(token) == 1 and ord(token) >= 0x3400:
+                trad_chars.append(token)
+        for trad_ch in trad_chars:
+                trad_record = merged.get(trad_ch)
+                if trad_record and trad_record.get("etymology_notes"):
+                    # Propagate etymology notes, tagged as from traditional variant
+                    for note in trad_record["etymology_notes"]:
+                        record.setdefault("etymology_notes", []).append({
+                            **note,
+                            "via_traditional": trad_ch,
+                        })
+                    # Propagate formation type if missing
+                    if not record.get("formation_type") and trad_record.get("formation_type"):
+                        record["formation_type"] = trad_record["formation_type"]
+                    if not record.get("formation_details") and trad_record.get("formation_details"):
+                        record["formation_details"] = trad_record["formation_details"]
+                    # Update verification status
+                    etym_sources = set(n.get("source", "") for n in record.get("etymology_notes", []))
+                    modern = etym_sources - {"shuowen_jiezi"}
+                    if len(modern) >= 2:
+                        record["verification_status"] = "cross-verified"
+                    elif len(modern) == 1:
+                        record["verification_status"] = "single-source"
+                    propagated += 1
+                    break
+
+    print(f"  Propagated etymology from traditional variants: {propagated}")
     return merged
 
 
