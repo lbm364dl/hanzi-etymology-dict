@@ -911,6 +911,49 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
 
     print(f"  Total unique characters across all sources: {len(all_chars)}")
 
+    # Semantic field mapping from radical/semantic component -> meaning category
+    RADICAL_SEMANTICS = {
+        "水": "water/liquid", "氵": "water/liquid", "冫": "ice/cold",
+        "火": "fire/heat", "灬": "fire/heat",
+        "木": "wood/tree", "艹": "plant/grass", "⺾": "plant/grass", "禾": "grain/crop",
+        "竹": "bamboo", "⺮": "bamboo", "米": "rice/grain",
+        "金": "metal", "钅": "metal", "釒": "metal",
+        "土": "earth/ground", "石": "stone", "山": "mountain",
+        "日": "sun/day/time", "月": "moon/month", "⺼": "flesh/body",
+        "心": "heart/emotion", "忄": "heart/emotion",
+        "手": "hand/action", "扌": "hand/action", "又": "hand",
+        "足": "foot/walk", "⻊": "foot/walk", "辵": "movement", "辶": "movement",
+        "口": "mouth/speech", "言": "speech/language", "讠": "speech/language",
+        "目": "eye/seeing", "見": "seeing", "见": "seeing",
+        "耳": "ear/hearing",
+        "人": "person", "亻": "person", "女": "woman/female", "子": "child",
+        "食": "food/eating", "饣": "food/eating", "飠": "food/eating",
+        "衣": "clothing", "衤": "clothing",
+        "刀": "knife/cutting", "刂": "knife/cutting",
+        "弓": "bow/weapon", "戈": "weapon", "矢": "arrow",
+        "馬": "horse/animal", "犬": "dog/animal", "犭": "animal",
+        "牛": "cattle", "羊": "sheep/animal",
+        "魚": "fish", "鳥": "bird", "鱼": "fish", "鸟": "bird",
+        "虫": "insect/creature",
+        "貝": "money/value", "贝": "money/value",
+        "車": "vehicle", "车": "vehicle", "舟": "boat",
+        "糸": "silk/thread", "纟": "silk/thread",
+        "玉": "jade/gem",
+        "阜": "hill/mound",
+        "雨": "rain/weather", "风": "wind", "風": "wind",
+        "疒": "illness/disease",
+        "示": "spirit/ritual", "礻": "spirit/ritual",
+        "���": "door/gate", "门": "door/gate",
+        "宀": "roof/building", "广": "building",
+        "力": "force/strength",
+        "田": "field/agriculture",
+        "网": "net", "罒": "net",
+        "皮": "skin/leather", "革": "leather",
+        "骨": "bone", "肉": "flesh/body",
+        "酉": "wine/fermentation", "鬼": "ghost/spirit",
+        "頁": "head/face", "页": "head/face",
+    }
+
     # Pre-compute: Kangxi radical number -> radical character mapping
     kangxi_radical_chars = "一丨丶丿乙亅二亠人儿入八冂冖冫几凵刀力勹匕匚匸十卜卩厂厶又口囗土士夂夊夕大女子宀寸小尢尸屮山巛工己巾干幺广廴廾弋弓彐彡彳心戈戶手支攴文斗斤方无日曰月木欠止歹殳毋比毛氏气水火爪父爻爿片牙牛犬玄玉瓜瓦甘生用田疋疒癶白皮皿目矛矢石示禸禾穴立竹米糸缶网羊羽老而耒耳聿肉臣自至臼舌舛舟艮色艸虍虫血行衣襾見角言谷豆豕豸貝赤走足身車辛辰辵邑酉釆里金長門阜隶隹雨靑非面革韋韭音頁風飛食首香馬骨高髟鬥鬯鬲鬼魚鳥鹵鹿麥麻黃黍黑黹黽鼎鼓鼠鼻齊齒龍龜龠"
     kangxi_num_to_char = {}
@@ -1258,6 +1301,19 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                 record["hsk3_level"] = acjk["hsk3_level"]
             if acjk.get("frequency_tier"):
                 record["frequency_tier"] = acjk["frequency_tier"]
+
+        # --- Semantic field ---
+        # Try explicit semantic component first, fall back to Kangxi radical
+        sem_comp = record.get("formation_details", {}).get("semantic", "")
+        if sem_comp and sem_comp in RADICAL_SEMANTICS:
+            record["semantic_field"] = RADICAL_SEMANTICS[sem_comp]
+        elif not sem_comp:
+            # Use Kangxi radical
+            rad_num = char_to_radical_num.get(ch)
+            if rad_num:
+                rad_char = kangxi_num_to_char.get(rad_num, "")
+                if rad_char in RADICAL_SEMANTICS:
+                    record["semantic_field"] = RADICAL_SEMANTICS[rad_char]
 
         # --- Sino-Tibetan cognates ---
         stc = st_cognates.get(ch)
