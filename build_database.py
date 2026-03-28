@@ -86,21 +86,24 @@ def extract_shuowen_formation_type(explanation):
     """Extract formation type hints from Shuowen explanation text."""
     if not explanation:
         return None
-    # 从X, Y声 = phono-semantic compound (形聲)
-    if re.search(r'聲[。，]|聲$', explanation) and '从' in explanation:
+    # Strip radical declarations -- "凡X之屬皆从X" is not a formation claim
+    core = re.sub(r'凡.{1,3}之屬皆从.{1,3}[。]?', '', explanation)
+    # 从X, Y聲 = phono-semantic compound (形聲)
+    if re.search(r'聲[。，]|聲$', core) and '从' in core:
         return "phono-semantic"
-    # 象形 = pictographic
-    if '象形' in explanation or '象.*之形' in explanation:
+    # 象形 or 象X之形 = pictographic (use regex, not string literal)
+    if '象形' in core or re.search(r'象.+之形', core):
         return "pictographic"
-    # 从X从Y (no 聲) = ideographic compound
-    if explanation.count('从') >= 2 and '聲' not in explanation:
-        return "ideographic"
-    # 从X = simple semantic derivation (could be various)
-    if '从' in explanation and '聲' not in explanation:
-        return "ideographic"  # conservative classification
     # 指事 = indicative
-    if '指事' in explanation:
+    if '指事' in core:
         return "indicative"
+    # 从X从Y (no 聲) = ideographic compound (need 2+ 从 in the core text)
+    from_count = len(re.findall(r'从', core))
+    if from_count >= 2 and '聲' not in core:
+        return "ideographic"
+    # Single 从X = semantic derivation (ideographic)
+    if from_count == 1 and '聲' not in core:
+        return "ideographic"
     return None
 
 def normalize_formation_type(ftype):
