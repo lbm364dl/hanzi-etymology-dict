@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hanzi Etymology Dictionary</title>
-<meta name="description" content="Open-source Chinese character etymology database with 103,000+ characters from 16 sources">
+<title>Hanzi / Kanji Etymology Dictionary</title>
+<meta name="description" content="Open-source Chinese and Japanese character etymology database">
 <style>
 :root{--bg:#fafafa;--bg2:#fff;--fg:#1a1a1a;--fg2:#555;--fg3:#999;--border:#e5e5e5;--accent:#2563eb;--abg:#eff6ff;--green:#16a34a;--gbg:#f0fdf4;--yellow:#ca8a04;--ybg:#fefce8;--red:#dc2626;--rbg:#fef2f2;--purple:#9333ea;--pbg:#faf5ff;--r:10px}
 @media(prefers-color-scheme:dark){:root{--bg:#0f0f0f;--bg2:#1a1a1a;--fg:#e5e5e5;--fg2:#a3a3a3;--fg3:#666;--border:#2a2a2a;--accent:#60a5fa;--abg:#1e293b;--green:#4ade80;--gbg:#14532d;--yellow:#fbbf24;--ybg:#422006;--red:#f87171;--rbg:#450a0a;--purple:#c084fc;--pbg:#3b0764}}
@@ -53,15 +53,35 @@ header a{color:var(--accent);text-decoration:none}
 .rc{font-size:1.5em;width:36px;text-align:center}
 .ri{flex:1;min-width:0}.rp{color:var(--accent);font-weight:500}
 .rd{color:var(--fg2);font-size:.85em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rd mark{background:none;color:var(--fg1);font-weight:600}
 .rt{display:flex;gap:4px}
 @media(max-width:600px){.cb{font-size:56px;min-width:64px}.card{padding:16px}}
+/* Mode toggle */
+.mtg{display:flex;justify-content:center;gap:8px;margin-top:12px}
+.mb{padding:5px 18px;border-radius:99px;border:2px solid var(--border);background:var(--bg2);color:var(--fg2);font-size:.85em;font-weight:500;cursor:pointer;transition:all .15s}
+.mb.on{border-color:var(--accent);background:var(--abg);color:var(--accent)}
+.mb:hover:not(.on){border-color:var(--fg3)}
+/* JLPT tags */
+.jn5{background:var(--gbg);color:var(--green)}
+.jn4{background:var(--gbg);color:var(--green)}
+.jn3{background:var(--ybg);color:var(--yellow)}
+.jn2{background:var(--ybg);color:var(--yellow)}
+.jn1{background:var(--rbg);color:var(--red)}
+/* Japanese card reading layout */
+.jr{display:flex;flex-direction:column;gap:1px}
+.jr-on{font-size:1.3em;color:var(--accent);font-weight:500;font-family:-apple-system,sans-serif}
+.jr-kun{font-size:.95em;color:var(--fg2);font-family:-apple-system,sans-serif}
 </style>
 </head>
 <body>
 <div class="ct">
   <header>
-    <h1>Hanzi Etymology Dictionary</h1>
-    <p>103,207 characters &middot; 16 sources &middot; <a href="https://github.com/user/hanzi-etymology-dict">open-source</a></p>
+    <h1 id="htitle">Hanzi Etymology Dictionary</h1>
+    <p id="hsub">103,207 characters &middot; 16 sources &middot; <a href="https://github.com/user/hanzi-etymology-dict">open-source</a></p>
+    <div class="mtg">
+      <button class="mb on" id="btn-zh" onclick="setMode('zh')">Chinese 汉字</button>
+      <button class="mb" id="btn-ja" onclick="setMode('ja')">Japanese 漢字</button>
+    </div>
   </header>
   <div class="sw">
     <input type="text" id="q" placeholder="Type a character, pinyin (e.g. ma3), or English word..." autofocus>
@@ -70,14 +90,101 @@ header a{color:var(--accent);text-decoration:none}
   <div id="r"></div>
 </div>
 <script>
-let D=null; // character index: {char -> record}
-let PI=null; // pinyin index: {numbered_pinyin -> [chars]}
+// --- Mode management ---
+let mode='zh'; // 'zh' or 'ja'
+let D_ZH=null,PI_ZH=null;   // Chinese data + pinyin index
+let D_JA=null,OI=null,KI=null; // Japanese data + on/kun indices
+let D=null,PI=null;         // aliases to current mode's data
+let jaKunSet=null; // chars whose kun'yomi matched the last search (null = on'yomi matched)
 
-// Tone mark -> number conversion
+function setMode(m,push=true){
+  if(m===mode&&D!==null)return;
+  mode=m;
+  localStorage.setItem('etym_mode',m);
+  document.getElementById('btn-zh').className='mb'+(m==='zh'?' on':'');
+  document.getElementById('btn-ja').className='mb'+(m==='ja'?' on':'');
+  const iJa=m==='ja';
+  document.getElementById('htitle').textContent=iJa?'Kanji Etymology Dictionary':'Hanzi Etymology Dictionary';
+  document.getElementById('q').placeholder=iJa?
+    'Type a kanji, reading (e.g. ゴ, かた), romaji (go), or English...':
+    'Type a character, pinyin (e.g. ma3), or English word...';
+  if(iJa){
+    if(!D_JA){loadJa(push);return}
+    D=D_JA;
+  }else{
+    if(!D_ZH){loadZh(push);return}
+    D=D_ZH;PI=PI_ZH;
+  }
+  const q=document.getElementById('q').value.trim();
+  if(q)search(push);
+}
+
+// --- Character data: {char -> record} ---
+// D is the active index (mode-dependent)
+
+// Tone mark -> number conversion (Chinese)
 const TM={'ā':'a1','á':'a2','ǎ':'a3','à':'a4','ē':'e1','é':'e2','ě':'e3','è':'e4','ī':'i1','í':'i2','ǐ':'i3','ì':'i4','ō':'o1','ó':'o2','ǒ':'o3','ò':'o4','ū':'u1','ú':'u2','ǔ':'u3','ù':'u4','ǖ':'v1','ǘ':'v2','ǚ':'v3','ǜ':'v4'};
 function py2num(py){if(!py)return'';let t=5,r='';for(const c of py){if(TM[c]){r+=TM[c][0];t=+TM[c][1]}else r+=c}return r+(t<5?t:'')}
 
-function goTo(c){document.getElementById('q').value=c;search(true);window.scrollTo({top:0,behavior:'smooth'})}
+// Romaji -> katakana (Hepburn) for Japanese on'yomi search
+const RK=(()=>{
+  const t={};
+  const rows=[
+    ['a','ア'],['i','イ'],['u','ウ'],['e','エ'],['o','オ'],
+    ['ka','カ'],['ki','キ'],['ku','ク'],['ke','ケ'],['ko','コ'],
+    ['sa','サ'],['shi','シ'],['si','シ'],['su','ス'],['se','セ'],['so','ソ'],
+    ['ta','タ'],['chi','チ'],['ti','チ'],['tsu','ツ'],['tu','ツ'],['te','テ'],['to','ト'],
+    ['na','ナ'],['ni','ニ'],['nu','ヌ'],['ne','ネ'],['no','ノ'],
+    ['ha','ハ'],['hi','ヒ'],['fu','フ'],['hu','フ'],['he','ヘ'],['ho','ホ'],
+    ['ma','マ'],['mi','ミ'],['mu','ム'],['me','メ'],['mo','モ'],
+    ['ya','ヤ'],['yu','ユ'],['yo','ヨ'],
+    ['ra','ラ'],['ri','リ'],['ru','ル'],['re','レ'],['ro','ロ'],
+    ['wa','ワ'],['wi','ヰ'],['we','ヱ'],['wo','ヲ'],['n','ン'],
+    ['ga','ガ'],['gi','ギ'],['gu','グ'],['ge','ゲ'],['go','ゴ'],
+    ['za','ザ'],['ji','ジ'],['zi','ジ'],['zu','ズ'],['ze','ゼ'],['zo','ゾ'],
+    ['da','ダ'],['de','デ'],['do','ド'],
+    ['ba','バ'],['bi','ビ'],['bu','ブ'],['be','ベ'],['bo','ボ'],
+    ['pa','パ'],['pi','ピ'],['pu','プ'],['pe','ペ'],['po','ポ'],
+    ['kya','キャ'],['kyu','キュ'],['kyo','キョ'],
+    ['sha','シャ'],['shu','シュ'],['sho','ショ'],
+    ['cha','チャ'],['chu','チュ'],['cho','チョ'],
+    ['nya','ニャ'],['nyu','ニュ'],['nyo','ニョ'],
+    ['hya','ヒャ'],['hyu','ヒュ'],['hyo','ヒョ'],
+    ['mya','ミャ'],['myu','ミュ'],['myo','ミョ'],
+    ['rya','リャ'],['ryu','リュ'],['ryo','リョ'],
+    ['gya','ギャ'],['gyu','ギュ'],['gyo','ギョ'],
+    ['ja','ジャ'],['ju','ジュ'],['jo','ジョ'],
+    ['bya','ビャ'],['byu','ビュ'],['byo','ビョ'],
+    ['pya','ピャ'],['pyu','ピュ'],['pyo','ピョ'],
+  ];
+  for(const[r,k]of rows)t[r]=k;
+  return t;
+})();
+function romToKatakana(s){
+  s=s.toLowerCase();
+  let out='',i=0;
+  while(i<s.length){
+    let m=null;
+    for(const len of[3,2,1]){
+      const sub=s.slice(i,i+len);
+      if(RK[sub]){m=sub;break}
+    }
+    if(m){out+=RK[m];i+=m.length}
+    else{out+=s[i];i++}
+  }
+  return out;
+}
+
+function goTo(c){
+  document.getElementById('q').value=c;
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(!D||D[c]){search(true);return;}
+  // Character not in current mode — try the other
+  const otherMode=mode==='ja'?'zh':'ja';
+  const otherD=mode==='ja'?D_ZH:D_JA;
+  if(otherD&&!otherD[c]){search(true);return;} // neither has it
+  setMode(otherMode); // other mode has it (or not loaded yet — Chinese is a safe fallback)
+}
 function lk(text,self){if(!text)return'';return text.replace(/([\u3400-\u9FFF\uF900-\uFAFF])/g,(m,c)=>c===self?`<b>${c}</b>`:`<span class="xr" onclick="goTo('${c}')">${c}</span>`)}
 // Semantic meaning overrides for radical variants with bad definitions
 const RM={'亻':'person','氵':'water','扌':'hand','忄':'heart, emotion','犭':'animal',
@@ -99,36 +206,90 @@ const RM={'亻':'person','氵':'water','扌':'hand','忄':'heart, emotion','犭'
 '鼎':'ritual vessel','鼓':'drum','鼠':'rat','鼻':'nose','龍':'dragon','龜':'turtle'};
 function qd(c){if(RM[c])return RM[c];const r=D[c];if(!r)return'';const d=r.d||'';return d.replace(/;?\s*radical number \d+/i,'').replace(/;?\s*Kangxi radical \d+/i,'').trim()||d}
 function qp(c){const r=D[c];return r?r.py||'':''}
+// First on'yomi of a character (for phonetic component labels in Japanese mode)
+function qjo(c){const r=D[c];if(!r||!r.jo)return'';return r.jo.split(' ')[0]||''}
 
-window.addEventListener('popstate',()=>{const p=new URLSearchParams(location.search).get('q')||'';document.getElementById('q').value=p;if(D)search(false)});
+window.addEventListener('popstate',()=>{
+  const params=new URLSearchParams(location.search);
+  const p=params.get('q')||'';
+  const m=params.get('m')||'zh';
+  document.getElementById('q').value=p;
+  if(m!==mode){setMode(m,false);}
+  else if(D){search(false);}
+});
 
-async function init(){
+async function loadGz(url){
+  const resp=await fetch(url);
+  if(!resp.ok)throw new Error(url+' not found');
+  const ds=new DecompressionStream('gzip');
+  const text=await new Response(resp.body.pipeThrough(ds)).text();
+  return JSON.parse(text);
+}
+
+async function loadZh(push=false){
   const st=document.getElementById('st');
   try{
-    st.textContent='Downloading dictionary (6 MB)...';
-    const resp=await fetch('data.json.gz');
-    if(!resp.ok)throw new Error('data.json.gz not found');
-    const ds=new DecompressionStream('gzip');
-    const decompressed=resp.body.pipeThrough(ds);
-    const text=await new Response(decompressed).text();
-    const records=JSON.parse(text);
-    // Build indices
-    D={};PI={};
+    st.textContent='Downloading Chinese dictionary (~6 MB)...';
+    const records=await loadGz('data.json.gz');
+    D_ZH={};PI_ZH={};
     for(const r of records){
-      D[r.c]=r;
+      D_ZH[r.c]=r;
       if(r.py){
         const num=py2num(r.py);
         const base=num.replace(/[1-5]$/,'');
-        if(!PI[num])PI[num]=[];
-        PI[num].push(r.c);
-        if(num!==base){if(!PI[base])PI[base]=[];PI[base].push(r.c)}
+        if(!PI_ZH[num])PI_ZH[num]=[];PI_ZH[num].push(r.c);
+        if(num!==base){if(!PI_ZH[base])PI_ZH[base]=[];PI_ZH[base].push(r.c)}
       }
     }
+    D=D_ZH;PI=PI_ZH;
     st.textContent='';
-    const urlQ=new URLSearchParams(location.search).get('q');
-    if(urlQ){document.getElementById('q').value=urlQ;search(false)}
+    const q=document.getElementById('q').value.trim();
+    if(q)search(push);
     else document.getElementById('q').focus();
-  }catch(e){st.textContent='Error: '+e.message}
+  }catch(e){st.textContent='Error loading Chinese data: '+e.message}
+}
+
+async function loadJa(push=false){
+  const st=document.getElementById('st');
+  try{
+    st.textContent='Downloading Japanese dictionary...';
+    const records=await loadGz('kanji_data.json.gz');
+    D_JA={};OI={};KI={};
+    for(const r of records){
+      D_JA[r.c]=r;
+      if(r.jo){
+        for(const rd of r.jo.split(' ')){
+          const k=rd.trim();if(!k)continue;
+          if(!OI[k])OI[k]=[];OI[k].push(r.c);
+        }
+      }
+      if(r.jk){
+        for(const rd of r.jk.split(' ')){
+          const stem=rd.split('.')[0].trim();if(!stem)continue;
+          if(!KI[stem])KI[stem]=[];KI[stem].push(r.c);
+        }
+      }
+    }
+    D=D_JA;
+    st.textContent='';
+    const q=document.getElementById('q').value.trim();
+    if(q)search(push);
+    else document.getElementById('q').focus();
+  }catch(e){st.textContent='Error loading Japanese data: '+e.message}
+}
+
+async function init(){
+  const params=new URLSearchParams(location.search);
+  const urlQ=params.get('q')||'';
+  const urlM=params.get('m');
+  const savedMode=urlM||(localStorage.getItem('etym_mode')||'zh');
+  if(urlQ)document.getElementById('q').value=urlQ;
+  if(savedMode==='ja'){
+    mode='zh';
+    setMode('ja',false);
+  }else{
+    await loadZh(false);
+  }
 }
 
 let dt;
@@ -141,16 +302,19 @@ function search(push=true){
   const res=document.getElementById('r');
   const st=document.getElementById('st');
   res.innerHTML='';
-  if(!q){st.textContent='';if(push)history.pushState(null,'',location.pathname);return}
-  if(push){history.pushState(null,'',`${location.pathname}?q=${encodeURIComponent(q)}`)}
+  if(!q){st.textContent='';if(push)history.pushState(null,'',`${location.pathname}?m=${mode}`);return}
+  if(push)history.pushState(null,'',`${location.pathname}?q=${encodeURIComponent(q)}&m=${mode}`);
 
-  // Direct CJK lookup
+  // Direct CJK lookup (both modes)
   if(q.length===1&&q.charCodeAt(0)>0x2E00&&D[q]){res.appendChild(full(D[q]));st.textContent='';return}
-  // Multi CJK
+  // Multi-CJK
   if(q.length>1&&[...q].every(c=>c.charCodeAt(0)>0x2E00)){
     let n=0;for(const c of q){if(D[c]){res.appendChild(full(D[c]));n++}}
     st.textContent=n+' characters';return}
 
+  if(mode==='ja'){searchJa(q,res,st);return}
+
+  // --- Chinese mode ---
   // Pinyin search
   const isPY=/^[a-zA-Z\u00C0-\u024F]+[1-5]?$/.test(q);
   if(isPY){
@@ -158,14 +322,12 @@ function search(push=true){
     let chars=PI[ql]||[];
     if(!chars.length){const base=ql.replace(/[1-5]$/,'');chars=PI[base]||[]}
     if(chars.length){
-      // Sort by frequency
       const sorted=[...new Set(chars)].sort((a,b)=>(D[a].fr||99999)-(D[b].fr||99999)).slice(0,50);
       const g=document.createElement('div');g.className='rg';
-      for(const c of sorted){const r=D[c];g.appendChild(mkRow(r))}
+      for(const c of sorted)g.appendChild(mkRow(D[c]));
       res.appendChild(g);st.textContent=sorted.length+' results';return}
   }
-
-  // English search
+  // English
   const ql=q.toLowerCase();
   const matches=[];
   for(const c in D){
@@ -179,33 +341,127 @@ function search(push=true){
     res.appendChild(g);st.textContent=matches.length+' results'}
   else st.textContent='No results found.'}
 
+function searchJa(q,res,st){
+  // Katakana -> on'yomi lookup
+  if(/^[ァ-ヾ]+$/.test(q)){
+    jaKunSet=null;
+    const chars=OI[q]||[];
+    if(chars.length){showList(chars,res,st,r=>(r.jfr||99999));return}
+    st.textContent='No results found.';return}
+  // Hiragana -> kun'yomi lookup (match stem, strip okurigana)
+  if(/^[ぁ-ゖ]+$/.test(q)){
+    const stem=q.split('.')[0];
+    const chars=KI[stem]||[];
+    jaKunSet=new Set(chars);
+    if(chars.length){showList(chars,res,st,r=>(r.jfr||99999));return}
+    st.textContent='No results found.';return}
+  // Romaji -> on'yomi (katakana) and kun'yomi (hiragana) lookup
+  if(/^[a-zA-Z]+$/.test(q)){
+    const kata=romToKatakana(q);
+    const hira=kata.replace(/[ァ-ン]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));
+    const onChars=OI[kata]||[],kunChars=KI[hira]||[];
+    const onSet=new Set(onChars);
+    jaKunSet=new Set(kunChars.filter(c=>!onSet.has(c)));
+    const chars=[...new Set([...onChars,...kunChars])];
+    if(chars.length){showList(chars,res,st,r=>(r.jfr||99999));return}
+    // Fall through to English search
+  }
+  // English definition search
+  const ql=q.toLowerCase();
+  const matches=[];
+  for(const c in D){
+    const r=D[c];
+    if(r.d&&r.d.toLowerCase().includes(ql))matches.push(r);
+    if(matches.length>=50)break}
+  matches.sort((a,b)=>(a.jfr||99999)-(b.jfr||99999));
+  // Prefer kun'yomi display for English matches (native Japanese meanings)
+  jaKunSet=mode==='ja'?new Set(matches.filter(r=>r.jk).map(r=>r.c)):null;
+  if(matches.length){
+    const g=document.createElement('div');g.className='rg';
+    for(const r of matches)g.appendChild(mkRow(r));
+    res.appendChild(g);st.textContent=matches.length+' results'}
+  else st.textContent='No results found.'}
+
+function showList(chars,res,st,sortKey){
+  const sorted=[...new Set(chars)].sort((a,b)=>sortKey(D[a])-sortKey(D[b])).slice(0,50);
+  const g=document.createElement('div');g.className='rg';
+  for(const c of sorted)if(D[c])g.appendChild(mkRow(D[c]));
+  res.appendChild(g);st.textContent=sorted.length+' results'}
+
 function mkRow(r){
   const el=document.createElement('div');el.className='rr';
   el.onclick=()=>goTo(r.c);
-  el.innerHTML=`<span class="rc">${r.c}</span><span class="ri"><span class="rp">${r.py||''}</span> <span class="rd">${r.d||''}</span></span><span class="rt">${r.ft?`<span class="t tb">${r.ft}</span>`:''}${r.conf?`<span class="t tx">${r.conf}</span>`:''}</span>`;
+  const tag=mode==='ja'&&r.jlpt?`<span class="t jn${r.jlpt}">N${r.jlpt}</span>`:
+            (r.ft?`<span class="t tb">${r.ft}</span>`:'');
+  let reading;
+  if(mode==='ja'){
+    const on=r.jo||'',kun=r.jk?r.jk.split(' ')[0]:'';
+    const kunMatch=jaKunSet&&jaKunSet.has(r.c);
+    const pri=kunMatch?kun:on, sec=kunMatch?on:kun;
+    reading=(pri?`<span class="jr-on" style="font-size:1em">${pri}</span>`:'')+
+            (sec?` <span class="jr-kun">${sec}</span>`:'');
+  }else{reading=`<span class="rp">${r.py||''}</span>`}
+  const rawDef=r.d||'';
+  const q0=document.getElementById('q').value.trim();
+  const def=/^[a-zA-Z\s]+$/.test(q0)&&q0.length>1
+    ?rawDef.replace(new RegExp('('+q0.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>')
+    :rawDef;
+  el.innerHTML=`<span class="rc">${r.c}</span><span class="ri">${reading} <span class="rd">${def}</span></span><span class="rt">${tag}${r.conf&&mode!=='ja'?`<span class="t tx">${r.conf}</span>`:''}</span>`;
   return el}
 
 function full(r){
   const card=document.createElement('div');card.className='card';
-  const py=r.py||'',fr=r.fr?`#${r.fr}`:'',str=r.str||'?';
-  let h=`<div class="ch"><div class="cb">${r.c}</div><div class="ci"><div class="cp">${py}</div><div class="cd">${r.d||''}</div><div class="cm">${r.p} &middot; ${str} strokes${fr?' &middot; freq '+fr:''}${r.ca?' &middot; Cantonese: '+r.ca:''}</div></div></div><div class="tags">`;
-  if(r.ft)h+=`<span class="t tb">${r.ft}</span>`;
-  if(r.vs==='cross-verified')h+='<span class="t tg">cross-verified</span>';
-  else if(r.vs==='single-source')h+='<span class="t ty">single-source</span>';
-  else if(r.vs==='classical-only')h+='<span class="t ty">classical-only</span>';
-  if(r.ftc)h+='<span class="t tr">disputed</span>';
-  if(r.sa==='corrected')h+='<span class="t tr">Shuowen corrected</span>';
-  if(r.hsk)h+=`<span class="t tp">HSK ${r.hsk}</span>`;
-  if(r.sf)h+=`<span class="t tg">${r.sf}</span>`;
-  if(r.conf)h+=`<span class="t tx">confidence ${r.conf}</span>`;
-  h+='</div>';
+  const str=r.str||'?';
+  let h='';
+
+  if(mode==='ja'){
+    // Japanese card header
+    const on=r.jo||'',kun=r.jk||'',nanori=r.jn||'';
+    const jlptLabel=r.jlpt?`JLPT N${r.jlpt}`:'';
+    const gradeLabel=r.grade?`Grade ${r.grade}`:'';
+    const jfr=r.jfr?`#${r.jfr}`:'';
+    h+=`<div class="ch"><div class="cb">${r.c}</div><div class="ci">`;
+    h+=`<div class="jr">`;
+    if(on)h+=`<div class="jr-on">${on}</div>`;
+    if(kun)h+=`<div class="jr-kun">${kun}</div>`;
+    h+=`</div>`;
+    h+=`<div class="cd" style="margin-top:4px">${r.d||''}</div>`;
+    h+=`<div class="cm">${r.p} &middot; ${str} strokes${jlptLabel?' &middot; '+jlptLabel:''}${jfr?' &middot; freq '+jfr:''}</div>`;
+    h+=`</div></div><div class="tags">`;
+    if(r.jlpt)h+=`<span class="t jn${r.jlpt}">JLPT N${r.jlpt}</span>`;
+    if(r.joyo&&r.grade&&r.grade<=6)h+=`<span class="t tb">Grade ${r.grade}</span>`;
+    else if(r.joyo)h+=`<span class="t tx">Jōyō</span>`;
+    if(r.jinmeiyo)h+=`<span class="t tp">Jinmeiyō</span>`;
+    if(r.kokuji)h+='<span class="t tr">国字 kokuji</span>';
+    if(r.ft)h+=`<span class="t tb">${r.ft}</span>`;
+    if(r.vs==='cross-verified')h+='<span class="t tg">cross-verified</span>';
+    else if(r.vs==='single-source')h+='<span class="t ty">single-source</span>';
+    if(r.ftc)h+='<span class="t tr">disputed</span>';
+    if(r.conf)h+=`<span class="t tx">confidence ${r.conf}</span>`;
+    h+='</div>';
+  } else {
+    // Chinese card header
+    const py=r.py||'',fr=r.fr?`#${r.fr}`:'';
+    h+=`<div class="ch"><div class="cb">${r.c}</div><div class="ci"><div class="cp">${py}</div><div class="cd">${r.d||''}</div><div class="cm">${r.p} &middot; ${str} strokes${fr?' &middot; freq '+fr:''}${r.ca?' &middot; Cantonese: '+r.ca:''}</div></div></div><div class="tags">`;
+    if(r.ft)h+=`<span class="t tb">${r.ft}</span>`;
+    if(r.vs==='cross-verified')h+='<span class="t tg">cross-verified</span>';
+    else if(r.vs==='single-source')h+='<span class="t ty">single-source</span>';
+    else if(r.vs==='classical-only')h+='<span class="t ty">classical-only</span>';
+    if(r.ftc)h+='<span class="t tr">disputed</span>';
+    if(r.sa==='corrected')h+='<span class="t tr">Shuowen corrected</span>';
+    if(r.hsk)h+=`<span class="t tp">HSK ${r.hsk}</span>`;
+    if(r.sf)h+=`<span class="t tg">${r.sf}</span>`;
+    if(r.conf)h+=`<span class="t tx">confidence ${r.conf}</span>`;
+    if(r.kokuji)h+='<span class="t tr">国字 kokuji</span>';
+    h+='</div>';
+  }
 
   // Components
   if(r.sem||r.phon){
     h+='<div class="s"><div class="st">Components</div><div class="cmp">';
     if(r.sem){const sd=qd(r.sem);h+=`<div><div class="cmc" onclick="goTo('${r.sem}')">${r.sem}</div><div class="cmr">semantic${sd?': '+sd.replace(/;.*/,'').slice(0,30):''}</div></div>`}
     if(r.sem&&r.phon)h+='<div class="cmp-plus">+</div>';
-    if(r.phon){const pp=qp(r.phon);h+=`<div><div class="cmc" onclick="goTo('${r.phon}')">${r.phon}</div><div class="cmr">phonetic${pp?' ('+pp+')':''}</div></div>`}
+    if(r.phon){const pp=mode==='ja'?qjo(r.phon):qp(r.phon);h+=`<div><div class="cmc" onclick="goTo('${r.phon}')">${r.phon}</div><div class="cmr">phonetic${pp?' ('+pp+')':''}</div></div>`}
     h+='</div></div>'}
 
   // Decomposition
@@ -230,6 +486,27 @@ function full(r){
     for(const n of sorted.slice(0,5)){
       const via=n.v?` via ${n.v}`:'';
       let t=n.t||'';
+      // makemeahanzi hints are often just the semantic meaning with no phonetic context
+      if(n.s==='makemeahanzi'&&r.sem&&r.phon&&t&&!t.includes(r.phon)){
+        t=`${r.sem} (${t}) provides the meaning; ${r.phon} provides the pronunciation`;
+      }
+      // ids_analysis notes need cleanup
+      if(n.s==='ids_analysis'){
+        const raw=t.replace(/^Etymological analysis:\s*/,'');
+        // Skip entries that duplicate the formation type tag or other badges
+        if(['pictographic','indicative','phonetic-loan','phono-semantic','国字','？','闕'].includes(raw))continue;
+        if(raw==='會意'||raw==='会意'){
+          t='Ideographic compound: meaning derived by combining components';
+        } else if(raw==='會意？'||raw==='会意？'){
+          t='Possibly an ideographic compound (uncertain)';
+        } else if((raw.includes('(phonetic)')||raw.includes('(phonosemantic)'))&&r.sem){
+          t=`${r.sem} provides the meaning; ${raw}`;
+        } else if(raw.includes('(phonetic)')||raw.includes('(phonosemantic)')){
+          t=`Phono-semantic: ${raw}`;
+        } else {
+          t=raw; // strip the "Etymological analysis: " prefix for anything else
+        }
+      }
       if(t.length>400){
         const id='etym_'+r.c+'_'+n.s;
         const short=t.slice(0,397);
@@ -281,7 +558,6 @@ function full(r){
   if(r.pf&&r.pf.length){
     h+='<div class="s"><div class="st">Phonetic Family</div><div class="fm">';
     h+=r.pf.map(c=>`<span class="xr" onclick="goTo('${c}')">${c}</span>`).join('');
-    if(r.pf.length>=20)h+=' <span style="font-size:.6em;color:var(--fg3)">+more</span>';
     h+='</div></div>'}
 
   // ST cognates
@@ -291,11 +567,20 @@ function full(r){
     h+='</div></div>'}
 
   // Readings
-  const rds=[];
-  if(r.py)rds.push('Mandarin: '+r.py);if(r.ca)rds.push('Cantonese: '+r.ca);
-  if(r.jo)rds.push("On'yomi: "+r.jo);if(r.jk)rds.push("Kun'yomi: "+r.jk);
-  if(r.ko)rds.push('Korean: '+r.ko);if(r.vi)rds.push('Vietnamese: '+r.vi);
-  if(rds.length>1)h+=`<div class="s"><div class="st">Readings</div><div class="sb">${rds.join('<br>')}</div></div>`;
+  if(mode==='ja'){
+    const rds=[];
+    if(r.jn)rds.push("Nanori (names): "+r.jn);
+    if(r.py)rds.push('Mandarin: '+r.py);
+    if(r.ko)rds.push('Korean: '+r.ko);
+    if(r.vi)rds.push('Vietnamese: '+r.vi);
+    if(rds.length)h+=`<div class="s"><div class="st">Readings</div><div class="sb">${rds.join('<br>')}</div></div>`;
+  }else{
+    const rds=[];
+    if(r.py)rds.push('Mandarin: '+r.py);if(r.ca)rds.push('Cantonese: '+r.ca);
+    if(r.jo)rds.push("On'yomi: "+r.jo);if(r.jk)rds.push("Kun'yomi: "+r.jk);
+    if(r.ko)rds.push('Korean: '+r.ko);if(r.vi)rds.push('Vietnamese: '+r.vi);
+    if(rds.length>1)h+=`<div class="s"><div class="st">Readings</div><div class="sb">${rds.join('<br>')}</div></div>`;
+  }
 
   // Variants
   if(r.var){
