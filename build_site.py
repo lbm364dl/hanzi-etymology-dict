@@ -108,7 +108,12 @@ def build_kanji(kokuji_set=None):
             if lg: compact["lg"] = lg
             v = r.get("variants", {})
             if v: compact["var"] = v
-            if r.get("phonetic_family"): compact["pf"] = r["phonetic_family"][:30]
+            for key, short in [("phonetic_series", "ps"), ("semantic_series", "ss"),
+                                ("phonetic_siblings", "psib"), ("semantic_siblings", "ssib")]:
+                if r.get(key):
+                    compact[short] = r[key][:30]
+                    total_key = key + "_total"
+                    if r.get(total_key): compact[short + "t"] = r[total_key]
             if r["character"] in kokuji_set: compact["kokuji"] = True
 
             records.append(compact)
@@ -172,7 +177,12 @@ def main():
             if r.get("hsk3_level"): compact["hsk"] = r["hsk3_level"]
             elif r.get("hsk_level"): compact["hsk"] = r["hsk_level"]
             if r.get("semantic_field"): compact["sf"] = r["semantic_field"]
-            if r.get("phonetic_family"): compact["pf"] = r["phonetic_family"][:30]
+            for key, short in [("phonetic_series", "ps"), ("semantic_series", "ss"),
+                                ("phonetic_siblings", "psib"), ("semantic_siblings", "ssib")]:
+                if r.get(key):
+                    compact[short] = r[key][:30]
+                    total_key = key + "_total"
+                    if r.get(total_key): compact[short + "t"] = r[total_key]
             if r.get("sino_tibetan_cognates"): compact["stc"] = r["sino_tibetan_cognates"]
             lg = r.get("local_glyphs", {})
             if lg: compact["lg"] = lg

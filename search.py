@@ -128,11 +128,15 @@ def lookup_character(ch, conn):
         for g in gy[:3]:
             print(f"    {g.get('phonological_position', '')}  fanqie: {g.get('fanqie', '')}")
 
-    # Phonetic family
-    family = r.get("phonetic_family", [])
-    if family:
-        print(f"\n  Phonetic family: {''.join(family[:20])}" +
-              (f"... ({len(family)} total)" if len(family) > 20 else ""))
+    # Phonetic/semantic series and siblings
+    for key, label in [("phonetic_series", "Phonetic series"),
+                       ("semantic_series", "Semantic series"),
+                       ("phonetic_siblings", "Phonetic siblings"),
+                       ("semantic_siblings", "Semantic siblings")]:
+        chars = r.get(key, [])
+        if chars:
+            print(f"\n  {label}: {''.join(chars[:20])}" +
+                  (f"... ({len(chars)} total)" if len(chars) > 20 else ""))
 
     # Historical glyphs
     glyphs = r.get("historical_glyphs", {})

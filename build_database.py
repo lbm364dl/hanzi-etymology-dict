@@ -919,8 +919,7 @@ def load_glyph_manifests():
 # ---------------------------------------------------------------------------
 def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
               kangxi, baxter_sagart, wiktionary, cedict, evobc,
-              guangyun, ytenx_oc, frequency, animcjk, phonetic_classes,
-              class_to_chars, st_cognates):
+              guangyun, ytenx_oc, frequency, animcjk, st_cognates):
     """Merge all parsed sources into a single dict keyed by character."""
     print("\nMerging all sources...")
 
@@ -1358,19 +1357,7 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
         if stc:
             record["sino_tibetan_cognates"] = stc
 
-        # --- Phonetic classes (Unihan kPhonetic) ---
-        ph_classes = phonetic_classes.get(ch)
-        if ph_classes:
-            record["phonetic_series"] = ph_classes
-            # For each class, list sibling characters (same phonetic family)
-            siblings = set()
-            for cls in ph_classes:
-                for sibling in class_to_chars.get(cls, []):
-                    if sibling != ch:
-                        siblings.add(sibling)
-            if siblings:
-                # Limit to 30 most relevant siblings
-                record["phonetic_family"] = sorted(siblings)[:30]
+        # --- Phonetic family built in post-merge pass (see below) ---
 
         # --- Extract phonetic from Shuowen for phono-semantic chars missing it ---
         if sw and not record.get("formation_details", {}).get("phonetic"):
@@ -1545,23 +1532,20 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                     b_is_rad = (comp_b == rad_char or
                                 radical_variants.get(comp_b) == rad_char)
                     # If one component is the radical and the other isn't,
-                    # and the char has a phonetic class, likely phono-semantic
+                    # check if the non-radical component appears as a
+                    # phonetic in other characters (i.e. is productive)
                     non_rad = comp_b if a_is_rad else (comp_a if b_is_rad else None)
                     if non_rad and (a_is_rad != b_is_rad):
-                        if ch in phonetic_classes:
-                            record["formation_type"] = "phono-semantic"
+                        # Could be ideographic compound
+                        total_strokes_val = 0
+                        try:
+                            total_strokes_val = int(
+                                record.get("total_strokes", "0").split()[0])
+                        except (ValueError, IndexError):
+                            pass
+                        if total_strokes_val >= 6:
+                            record["formation_type"] = "ideographic"
                             record["formation_type_inferred"] = True
-                        else:
-                            # Could be ideographic compound
-                            total_strokes_val = 0
-                            try:
-                                total_strokes_val = int(
-                                    record.get("total_strokes", "0").split()[0])
-                            except (ValueError, IndexError):
-                                pass
-                            if total_strokes_val >= 6:
-                                record["formation_type"] = "ideographic"
-                                record["formation_type_inferred"] = True
 
         # --- Shuowen accuracy flag ---
         # Compare Shuowen's formation claim against modern consensus
@@ -1689,6 +1673,101 @@ def merge_all(unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
                     break
 
     print(f"  Propagated etymology from variant characters: {propagated}")
+
+    # --- Helper: sort characters by frequency (most common first) ---
+    def sort_by_freq(chars):
+        """Sort characters by frequency rank (lower = more common), unknowns last."""
+        def key(ch):
+            r = merged.get(ch)
+            if r:
+                return r.get("frequency_rank") or 999999
+            return 999999
+        return sorted(chars, key=key)
+
+    # --- Build phonetic/semantic series and siblings ---
+    print("  Building phonetic & semantic series and siblings...")
+
+    # Build reverse mapping: canonical radical → set of variant forms
+    canonical_to_variants = defaultdict(set)
+    for variant, canonical in radical_variants.items():
+        canonical_to_variants[canonical].add(variant)
+
+    # Collect all characters that use each phonetic/semantic component,
+    # normalizing variant forms to canonical so 刂→刀, 氵→水, etc.
+    phonetic_to_chars = defaultdict(set)
+    semantic_to_chars = defaultdict(set)
+    for ch, record in merged.items():
+        fd = record.get("formation_details", {})
+        phon = fd.get("phonetic")
+        sem = fd.get("semantic")
+        if phon:
+            canon = radical_variants.get(phon, phon)
+            phonetic_to_chars[canon].add(ch)
+        if sem:
+            canon = radical_variants.get(sem, sem)
+            semantic_to_chars[canon].add(ch)
+
+    def get_series(ch, comp_to_chars):
+        """Get all derivatives for ch, including via its variant forms."""
+        canon = radical_variants.get(ch, ch)
+        derivs = set()
+        # If this char is canonical, collect from itself + all variants
+        if canon == ch:
+            derivs |= comp_to_chars.get(ch, set())
+            for var in canonical_to_variants.get(ch, set()):
+                derivs |= comp_to_chars.get(var, set())
+        else:
+            # This char is a variant; collect from its canonical form
+            derivs |= comp_to_chars.get(canon, set())
+        return derivs
+
+    def get_siblings(comp, comp_to_chars):
+        """Get all siblings sharing the same component (normalized)."""
+        canon = radical_variants.get(comp, comp)
+        return comp_to_chars.get(canon, set())
+
+    ps_count = ss_count = psib_count = ssib_count = 0
+    for ch, record in merged.items():
+        fd = record.get("formation_details", {})
+        # Phonetic series: chars where THIS char (or its variants) is the phonetic
+        derivs = get_series(ch, phonetic_to_chars)
+        if derivs:
+            total = len(derivs)
+            record["phonetic_series"] = sort_by_freq(derivs)[:30]
+            if total > 30:
+                record["phonetic_series_total"] = total
+            ps_count += 1
+        # Semantic series: chars where THIS char (or its variants) is the semantic
+        derivs = get_series(ch, semantic_to_chars)
+        if derivs:
+            total = len(derivs)
+            record["semantic_series"] = sort_by_freq(derivs)[:30]
+            if total > 30:
+                record["semantic_series_total"] = total
+            ss_count += 1
+        # Phonetic siblings: other chars sharing my phonetic component
+        phon = fd.get("phonetic")
+        if phon:
+            siblings = get_siblings(phon, phonetic_to_chars) - {ch}
+            if siblings:
+                total = len(siblings)
+                record["phonetic_siblings"] = sort_by_freq(siblings)[:30]
+                if total > 30:
+                    record["phonetic_siblings_total"] = total
+                psib_count += 1
+        # Semantic siblings: other chars sharing my semantic component
+        sem = fd.get("semantic")
+        if sem:
+            siblings = get_siblings(sem, semantic_to_chars) - {ch}
+            if siblings:
+                total = len(siblings)
+                record["semantic_siblings"] = sort_by_freq(siblings)[:30]
+                if total > 30:
+                    record["semantic_siblings_total"] = total
+                ssib_count += 1
+    print(f"  Phonetic series: {ps_count}, Semantic series: {ss_count}")
+    print(f"  Phonetic siblings: {psib_count}, Semantic siblings: {ssib_count}")
+
     return merged
 
 
@@ -1869,6 +1948,7 @@ def compute_statistics(merged):
     has_inferred = sum(1 for r in merged.values() if r.get("formation_details", {}).get("inferred"))
     has_phonetic_from_shuowen = sum(1 for r in merged.values() if r.get("formation_details", {}).get("phonetic_source") == "shuowen")
     has_phonetic_series = sum(1 for r in merged.values() if r.get("phonetic_series"))
+    has_semantic_series = sum(1 for r in merged.values() if r.get("semantic_series"))
     has_local_glyphs = sum(1 for r in merged.values() if r.get("local_glyphs"))
 
     # Verification status
@@ -1964,7 +2044,8 @@ def compute_statistics(merged):
     print(f"  With phonetic component ID'd:   {has_phonetic:>8,}")
     print(f"    (of which inferred from IDS): {has_inferred:>8,}")
     print(f"    (of which from Shuowen):      {has_phonetic_from_shuowen:>8,}")
-    print(f"  With phonetic series (kPhon):   {has_phonetic_series:>8,}")
+    print(f"  With phonetic series:           {has_phonetic_series:>8,}")
+    print(f"  With semantic series:           {has_semantic_series:>8,}")
     print(f"  With local glyph SVGs:          {has_local_glyphs:>8,}")
     print()
     print("  Verification status:")
@@ -2019,15 +2100,13 @@ def main():
     ytenx_oc = parse_ytenx_oc()
     frequency = parse_frequency()
     animcjk = parse_animcjk()
-    phonetic_classes, class_to_chars = parse_phonetic_classes()
     st_cognates = parse_sino_tibetan_cognates()
 
     # Merge
     merged = merge_all(
         unihan, mmah, dong, cjkvi_ids, cjk_decomp, shuowen,
         kangxi, baxter_sagart, wiktionary, cedict, evobc,
-        guangyun, ytenx_oc, frequency, animcjk, phonetic_classes,
-        class_to_chars, st_cognates,
+        guangyun, ytenx_oc, frequency, animcjk, st_cognates,
     )
 
     # Output

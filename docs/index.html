@@ -554,11 +554,14 @@ function full(r){
     for(const[s,cl]of Object.entries(r.ftc))h+=`<div class="cr"><span class="cs">${s}</span><span>${cl}</span></div>`;
     h+='</div>'}
 
-  // Phonetic family
-  if(r.pf&&r.pf.length){
-    h+='<div class="s"><div class="st">Phonetic Family</div><div class="fm">';
-    h+=r.pf.map(c=>`<span class="xr" onclick="goTo('${c}')">${c}</span>`).join('');
-    h+='</div></div>'}
+  // Phonetic & semantic series/siblings
+  for(const [arr,tot,label] of [
+    [r.ps,r.pst,'Phonetic Series'],[r.ss,r.sst,'Semantic Series'],
+    [r.psib,r.psibt,'Phonetic Siblings'],[r.ssib,r.ssibt,'Semantic Siblings']]){
+    if(arr&&arr.length){
+      h+='<div class="s"><div class="st">'+label+(tot?' <span style="font-weight:normal;opacity:.6">('+arr.length+' of '+tot+' shown)</span>':'')+'</div><div class="fm">';
+      h+=arr.map(c=>`<span class="xr" onclick="goTo('${c}')">${c}</span>`).join('');
+      h+='</div></div>'}}
 
   // ST cognates
   if(r.stc&&r.stc.length){
