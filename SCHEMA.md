@@ -93,8 +93,14 @@ All fields are optional except `character` and `codepoint`.
 | `historical_phonology` | array | multiple | Old/Middle Chinese reconstructions (see below) |
 | `guangyun` | array | NK2028 | Guangyun entries with phonological position + fanqie |
 | `phonetic_class` | string | Unihan | Soothill/Fenn phonetic class number(s) |
-| `phonetic_series` | array | Unihan | kPhonetic class numbers this character belongs to |
-| `phonetic_family` | array | build | Sibling characters sharing the same phonetic series (max 30) |
+| `phonetic_series` | array | build | Characters where this character serves as the phonetic component (max 30, sorted by frequency) |
+| `phonetic_series_total` | integer | build | Total count when more than 30 exist |
+| `semantic_series` | array | build | Characters where this character serves as the semantic component (max 30, sorted by frequency) |
+| `semantic_series_total` | integer | build | Total count when more than 30 exist |
+| `phonetic_siblings` | array | build | Other characters sharing the same phonetic component as this character (max 30, sorted by frequency) |
+| `phonetic_siblings_total` | integer | build | Total count when more than 30 exist |
+| `semantic_siblings` | array | build | Other characters sharing the same semantic component as this character (max 30, sorted by frequency) |
+| `semantic_siblings_total` | integer | build | Total count when more than 30 exist |
 
 ### `historical_phonology` Array Items
 

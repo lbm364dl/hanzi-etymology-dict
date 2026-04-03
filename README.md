@@ -26,15 +26,17 @@ An open-source etymology dictionary for Chinese characters (汉字) and Japanese
 | CJK Unified Basic block | 20,992 |
 | With definitions | 28,073 |
 | With etymology notes | 18,778 |
-| With formation type classified | 63,585 |
+| With formation type classified | 63,870 |
 | With Shuowen Jiezi entry | 9,815 |
 | With Old/Middle Chinese reconstruction | 20,047 |
 | With Guangyun MC phonology | 19,337 |
 | With IDS decomposition | 88,942 |
 | With historical glyph images | 13,714 |
 | With readings (any language) | 50,896 |
-| With multi-source etymology | 8,710 |
-| With phonetic component identified | 61,966 |
+| With multi-source etymology | 9,773 |
+| With phonetic component identified | 62,193 |
+| With phonetic series | 8,155 |
+| With semantic series | 379 |
 | Cross-verified etymology | 7,000+ |
 | Sino-Tibetan cognate links | 369 |
 | Historical glyph SVGs (Dong Chinese) | 578 chars |
@@ -44,20 +46,19 @@ An open-source etymology dictionary for Chinese characters (汉字) and Japanese
 
 | Type | Count |
 |------|-------|
-| Ideographic (會意) | 40,353 |
-| Phono-semantic (形聲) | 21,694 |
-| Pictographic (象形) | 486 |
-| Indicative (指事) | 20 |
+| Ideographic (會意) | 48,624 |
+| Phono-semantic (形聲) | 14,664 |
+| Pictographic (象形) | 554 |
+| Indicative (指事) | 25 |
 | Phonetic loan (假借) | 3 |
 
 ### Verification Status
 
 | Status | Count | Meaning |
 |--------|-------|---------|
-| Cross-verified | 6,976 | 2+ modern sources agree |
-| Single-source | 5,707 | 1 modern source |
+| Cross-verified | 7,652 | 2+ modern sources agree |
+| Single-source | 5,898 | 1 modern source |
 | Classical-only | 4,367 | Shuowen only, no modern corroboration |
-| Unverified | 336 | Has notes but unclear classification |
 
 ---
 
@@ -194,7 +195,10 @@ Each Chinese character record contains:
   "confidence": 93,
   "verification_status": "cross-verified",
   "frequency_rank": 7059,
-  "phonetic_family": ["驱", "驻", "骂", "..."],
+  "phonetic_series": ["驱", "驻", "骂", "..."],
+  "semantic_series": ["..."],
+  "phonetic_siblings": ["..."],
+  "semantic_siblings": ["..."],
   "sources": ["unihan", "makemeahanzi", "dong_chinese", "..."],
   "source_count": 11
 }
@@ -247,7 +251,8 @@ search.py                        # Command-line search interface
 export_anki.py                   # Anki flashcard deck exporter
 export_review.py                 # Export review CSVs for expert adjudication
 analyze_quality.py               # Cross-source quality analysis
-analyze_phonetic_series.py       # Phonetic series reliability testing
+analyze_phonetic_series.py       # Phonetic series reliability analysis
+test_phonetic_family.py          # Tests for phonetic/semantic series logic
 validate_reconstructions.py      # OC cross-validation & Shuowen error detection
 
 output/                          # Generated (not committed to repo)
@@ -297,6 +302,14 @@ See [RESEARCH.md](RESEARCH.md) for a detailed evaluation of all 30+ sources cons
 - **Shuowen Jiezi** (~100 AD): Written before oracle bone discovery. Many analyses are incorrect by modern paleographic standards. All Shuowen entries are flagged with a caveat.
 - **Formation types**: Some classifications are debatable. When sources disagree, all interpretations are preserved with attribution.
 - **Japanese sources**: KANJIDIC2 is the authoritative reference for Japanese readings. JLPT levels use the post-2010 five-level scale.
+
+## Known Limitations
+
+### Phonetic & semantic series
+
+- **Radical variant merging is incomplete.** The phonetic/semantic series merge variant component forms (e.g. 刂→刀, 氵→水, 糹→糸) so that looking up 刀 also shows characters written with 刂. However, the variant mapping is a hardcoded list of ~25 common pairs. Less common variant forms may not be merged, causing some characters to be missing from series they should belong to. A more complete mapping could be derived from Unicode CJK radical equivalence tables.
+- **Series are limited to 30 characters.** For productive components like 口 (2,450+ semantic derivatives) or 氵 (2,270+), only the 30 most frequent characters are shown. The total count is provided.
+- **Phonetic/semantic component identification depends on source quality.** Components are identified from Dong Chinese, Wiktionary, Shuowen Jiezi, and IDS+radical inference. Characters missing from all these sources will have no series data. The IDS+radical inference assumes a binary decomposition (⿰AB, ⿱AB, etc.) and cannot handle three-part structures.
 
 ---
 
