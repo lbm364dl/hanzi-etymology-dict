@@ -1,0 +1,8 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "`meaning_history.senses` and its generated `has_sense` edge for `上:more_than` assert an established sense of 上, but the cited evidence only reports 以上 meaning “more than” and expressly says this compound does not establish a single-character sense. Remove that sense and edge, or represent the evidence only as a reported compound use without classifying it as an established sense.",
+    "`meaning_history.senses` and generated `has_sense` edges classify `上:authority`, `上:ascend`, and `上:put_up` as established historical senses. Their cited evidence reports later-literature glosses or separate reconstructed lexical rows, without establishing dated historical usage for 上. Remove them as established historical senses or qualify them as reported glosses whose attestation and chronology are unresolved.",
+    "`meaning_history.senses` and its generated edge for `上:current_top` include “go up” as an established current gloss based on dictionary metadata. Narrow the gloss and text to current spatial and rank meanings, or separate “go up” and qualify its historical status, which the dossier leaves unresolved."
+  ]
+}

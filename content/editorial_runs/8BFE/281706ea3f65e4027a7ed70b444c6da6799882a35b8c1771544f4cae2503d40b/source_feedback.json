@@ -1,0 +1,33 @@
+{
+  "task": "Apply the review findings with a concise overview, at most 35 words. Explain 課 is traditional 课 and the scoped 言 meaning / 果 sound analysis. Component prose must stay below 30 words and need not repeat the displayed guǒ/kè pair.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`learner.overview.text` omits the supported traditional analysis of 課 (言 as a meaning component and 果 as a sound component), despite presenting the traditional test/examine sense and current school meanings. Briefly explain that analysis as applying to 課, while preserving that the link between the senses is unestablished. Cite E8, E11, X-2e403232d7fd546e43b3, and X-a5e87e6e3c11834a90b4."
+      ],
+      "article_hash": "6b4953b97df7ed9bb78e00021df0625e39c5be27c6568bdb3894a6157a71abfd",
+      "dossier_hash": "2fb58792b764c09b0a41ee83faced80ca46e22efef55adc7970e1218e00955c0",
+      "reviewer": "gpt-6-luna:low:factual:01a0e061-aac7-7322-b521-c107a7803865"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`learner.overview.text` should identify 課 explicitly as the traditional form of 课. Currently it shifts from 课 to “課” without explaining their relationship, which makes the opening unclear to a first-time reader; evidence supports the simplified counterpart relation (E3, X-92b4a0a16cb424c361a8).",
+        "`learner.components[2].text` exceeds the 30-word hard limit and repeats the Mandarin readings already shown in the component data. Shorten it to explain in plain language that 果 supplies the sound element in traditional 課 (E8, X-2e403232d7fd546e43b3)."
+      ],
+      "article_hash": "6b4953b97df7ed9bb78e00021df0625e39c5be27c6568bdb3894a6157a71abfd",
+      "dossier_hash": "2fb58792b764c09b0a41ee83faced80ca46e22efef55adc7970e1218e00955c0",
+      "reviewer": "gpt-6-luna:low:readability:01a0e061-da75-7261-aeaf-266b373e59bc"
+    }
+  ],
+  "validation": {
+    "role": "validation",
+    "verdict": "revise",
+    "findings": [
+      "Phonosemantic formation requires semantic or pictorial meaning and a phonetic component role"
+    ]
+  }
+}

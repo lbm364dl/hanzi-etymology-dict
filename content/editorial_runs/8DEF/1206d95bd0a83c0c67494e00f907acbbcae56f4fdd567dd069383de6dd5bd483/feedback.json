@@ -1,0 +1,25 @@
+{
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`components[1].sound` is missing an available Modern Mandarin comparison. Add a cited entry with `component_form: 各`, `component_reading: gè`, `character_reading: lù`, and `system: Modern Mandarin`, supported by X-3b97cb54a799c2221f77 for 各 and X-cf49cabd410e77a69b7b for 路. Retain the Old Chinese comparisons and separate limitation."
+      ],
+      "article_hash": "8a7168e733b7d079e2eae9a4b754a276e34337388639c76fbee448e0de67f3dc",
+      "dossier_hash": "061aa856328f08ba486927de104920ef0ed8a63220194cbeb9de3cfff3f76a21",
+      "reviewer": "gpt-6-luna:low:factual:01a0e049-4c84-7491-b58f-ea534681abc6"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "components[1].sound[1]: Replace or remove the Baxter–Sagart comparison. Its cited evidence gives 各 *kˤak and 路 *Cə.әrˤak-s, but does not support the article’s transcription *Cə.әrˤak-s as a value for 路 within this component comparison; it explicitly says no paired comparison is asserted for this component. Retain the Zhengzhang pair, which is documented for both characters (X-14fa515f51007a882178, X-3b97cb54a799c2221f77)."
+      ],
+      "article_hash": "8a7168e733b7d079e2eae9a4b754a276e34337388639c76fbee448e0de67f3dc",
+      "dossier_hash": "061aa856328f08ba486927de104920ef0ed8a63220194cbeb9de3cfff3f76a21",
+      "reviewer": "gpt-6-luna:low:readability:01a0e049-8846-7b33-a7c5-6e0bfc59d93a"
+    }
+  ],
+  "instruction": "The cited research record X-14fa515f51007a882178 itself has a transcription error. The actual local Baxter–Sagart table row for 路 gives OC *Cə.rˤak-s, not *Cə.әrˤak-s. Use the supplied primary reading packet and inspect the exact row plus the official source table; route to research to add a correctly transcribed evidence record rather than editing prose while continuing to cite the erroneous record. Preserve traceability of the earlier failure without relying on it as support. Retain the verified Modern Mandarin 各 gè / 路 lù comparison with appropriate evidence for both."
+}

@@ -1,0 +1,9 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "`components[1].sound[0].evidence_ids` cites `X-c66bf1077ca98026f7aa`, which reports 呢 as Mandarin `ne` and its Middle Chinese classification, but does not support 尼 reading `ní`. The cited `X-d88fa6ff0c22e2e3a4d7` explicitly states that the local Unihan row gives 尼 = `ní`, so the sound comparison's actual values are supported; however, that evidence ID is already cited there, making the claim adequately sourced. No correction needed for that field.",
+    "`components[1].sound_limitation.text` says no 呢 Baxter–Sagart row is supplied, but the dossier also says the supplied local table has no 呢 row, so this limitation is supported. No correction needed.",
+    "`historical_glyphs.limitations[0].text` says early graphic forms remain undocumented in the available character-specific evidence and no verified direct image establishes a particular form. The dossier supports this, and no images are attached. No correction needed.",
+    "`learner.components[1].text` refers to the sound similarity as a resemblance while correctly cautioning that it does not prove a historical relation; the cited local rows support both readings. No correction needed."
+  ]
+}

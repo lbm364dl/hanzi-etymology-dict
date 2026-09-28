@@ -1,6 +1,16 @@
 # Hanzi / Kanji Etymology Dictionary
 
-An open-source etymology dictionary for Chinese characters (汉字) and Japanese kanji (漢字), compiled from 20 parsers across 17+ authoritative sources. Features cross-source validation, confidence scoring, historical phonology, glyph images, and a live web dictionary.
+An open-source etymology dictionary for Chinese characters (汉字) and Japanese kanji (漢字). The project is moving from collected source notes to coherent, cited explanations, with the original records available for inspection.
+
+## Authored-entry pilot
+
+The first editorial pilot covers **木 本 休 明 好 信 東 來 馬 水 河 清 青 字 安 武 我 国 働 峠**. Entries lead with a neutral explanation and a functional component breakdown: what each part depicts or contributes in meaning or sound, and how its form has changed. Historical detail and uncertainties follow; citation links carry the source attribution. The existing database provides a starting point for further research.
+
+The pipeline prepares evidence dossiers, requires external research with an access audit, analyzes claims and disagreements, writes an entry, and runs separate factual-support and readability reviews. Publication requires both reviewers to pass the exact draft against the enriched dossier. These are **AI editorial reviews**, not certification by a human specialist. The pilot researchers and reviewers consulted the linked external pages, including CUHK and Kanjipedia, to investigate component histories and gaps in the imported records.
+
+See [pipeline/README.md](pipeline/README.md) for generation, review, resumption, and publication, and [content/README.md](content/README.md) for the pilot and provenance. Build the site with `python3 build_site.py` after publishing entries.
+
+The coverage statistics and source aggregation details below describe the legacy database. Its numeric confidence and “cross-verified” fields are legacy aggregation heuristics, not measures of historical certainty; the reading interface no longer presents them as such.
 
 **Live site:** [lbm364dl.github.io/hanzi-etymology-dict](https://lbm364dl.github.io/hanzi-etymology-dict/)
 
@@ -117,7 +127,7 @@ An open-source etymology dictionary for Chinese characters (汉字) and Japanese
 
 ```bash
 # Install dependencies
-pip install openpyxl
+pip install openpyxl -r pipeline/requirements.txt
 
 # Extract Dong Chinese glyph data (requires Node.js)
 node extract_dong_chinese.mjs

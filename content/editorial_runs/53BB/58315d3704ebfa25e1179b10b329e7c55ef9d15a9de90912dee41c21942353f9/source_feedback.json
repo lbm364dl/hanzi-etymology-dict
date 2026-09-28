@@ -1,0 +1,27 @@
+{
+  "task": "Apply exact visual caption and rights corrections from verified reviewers. Rights of a source image do not establish rights of its redraw; inspect the actual Commons file-license record for each selected asset and keep each claim separate. Correct the open-bottom description from actual attached image. Qualify transmitted passage dates as required and ensure learner component_index cards cover every canonical component exactly once. Research first because writers/visual curators cannot silently edit fixed rights metadata.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`historical_glyphs.items[0].caption`: replace “rounded enclosed shape” with wording that describes the attached redraw’s lower form as open at the bottom. The cited record describes the oracle form, but the supplied PNG visibly has an open-bottom lower shape; retain the disputed interpretations.",
+        "`historical_glyphs.items[1].rights`: remove the claim that the SVG is CC0 1.0. The cited file record identifies the underlying Sinica image as CC0 and the SVG as a modern redraw by the Ancient Chinese Characters project, without establishing the SVG’s license. State only the rights supported for each asset.",
+        "`historical_glyphs.items[0].rights`: clarify the separate rights claims for the redraw and the underlying Sinica image. The current wording may imply that CC0 for the underlying image establishes the redraw’s rights; the cited record describes the redraw as public domain and the Sinica image as CC0."
+      ],
+      "article_hash": "354b08f3299345e6b1845f5dd22de1fd728e757a48c48dac57b646eb9eec4ea0",
+      "dossier_hash": "d11d19c0aa57b9830b6f2ad67610c9e485162f0ae104801006169e65fad12849",
+      "reviewer": "gpt-6-luna:low:factual:01a0e07b-340a-7963-a6b4-08cf82f92742"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses[0].period` and the generated `relationships[0].text`, qualify “Western Zhou” as the characterization of departure uses in transmitted Zhouyi and Shijing passages, with exact manuscript dating unresolved. The text already explains this limitation, but the period field currently states only “Western Zhou,” leaving the assembled sense and edge to overstate the date. Use wording such as “transmitted Zhouyi and Shijing passages, characterized as Western Zhou; exact dating unresolved.” Evidence: X-5cb0209aed7955fad4c3, X-8411eb8bc9a027b02705."
+      ],
+      "article_hash": "354b08f3299345e6b1845f5dd22de1fd728e757a48c48dac57b646eb9eec4ea0",
+      "dossier_hash": "d11d19c0aa57b9830b6f2ad67610c9e485162f0ae104801006169e65fad12849",
+      "reviewer": "gpt-6-luna:low:readability:01a0e07b-68b4-7bc2-91a4-b6bcdb744a5e"
+    }
+  ]
+}

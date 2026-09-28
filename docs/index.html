@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hanzi / Kanji Etymology Dictionary</title>
-<meta name="description" content="Open-source Chinese and Japanese character etymology database">
+<meta name="description" content="Chinese and Japanese character histories, written from sources with inspectable evidence">
 <style>
 :root{--bg:#fafafa;--bg2:#fff;--fg:#1a1a1a;--fg2:#555;--fg3:#999;--border:#e5e5e5;--accent:#2563eb;--abg:#eff6ff;--green:#16a34a;--gbg:#f0fdf4;--yellow:#ca8a04;--ybg:#fefce8;--red:#dc2626;--rbg:#fef2f2;--purple:#9333ea;--pbg:#faf5ff;--r:10px}
 @media(prefers-color-scheme:dark){:root{--bg:#0f0f0f;--bg2:#1a1a1a;--fg:#e5e5e5;--fg2:#a3a3a3;--fg3:#666;--border:#2a2a2a;--accent:#60a5fa;--abg:#1e293b;--green:#4ade80;--gbg:#14532d;--yellow:#fbbf24;--ybg:#422006;--red:#f87171;--rbg:#450a0a;--purple:#c084fc;--pbg:#3b0764}}
@@ -71,13 +71,114 @@ header a{color:var(--accent);text-decoration:none}
 .jr{display:flex;flex-direction:column;gap:1px}
 .jr-on{font-size:1.3em;color:var(--accent);font-weight:500;font-family:-apple-system,sans-serif}
 .jr-kun{font-size:.95em;color:var(--fg2);font-family:-apple-system,sans-serif}
+/* Authored entries */
+.article{line-height:1.8;margin:22px 0 26px;max-width:70ch}
+.article h2{font-size:1.15em;margin:18px 0 8px;font-weight:600}
+.article p{margin:0 0 14px;white-space:pre-line}
+.article .lead{font-size:1.12em;color:var(--fg)}
+.article .citation{color:var(--accent);font:inherit;font-size:.72em;vertical-align:super;border:0;background:none;padding:1px 3px;margin-left:3px;cursor:pointer;white-space:nowrap}
+.article .citation:hover,.article .citation:focus-visible{background:var(--abg);border-radius:3px}
+details.editorial{border-top:1px solid var(--border);padding:12px 0}
+details.editorial>summary{cursor:pointer;color:var(--fg2);font-weight:500}
+details.editorial[open]>summary{margin-bottom:14px}
+.evidence-list{padding-left:24px;font-size:.88em;color:var(--fg2)}
+.evidence-list li{padding:8px 4px;scroll-margin-top:24px;overflow-wrap:anywhere}
+.evidence-list blockquote{border-left:2px solid var(--border);padding-left:12px;white-space:pre-line;margin-top:4px}
+.article-status{font-size:.8em;color:var(--fg2)}
+.learner-section{margin-bottom:24px}
+.japanese-usage{margin-top:20px}
+.japanese-reading{padding:12px 0;border-top:1px solid var(--border)}
+.japanese-reading h3{margin:0 0 5px;font-size:1em}
+.japanese-reading p{margin:5px 0}
+.learner-components{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px;margin:18px 0}
+.learner-component{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--bg2)}
+.learner-component>:not(.component-symbol){grid-column:2}
+.learner-component .component-symbol{font-size:2.6em;line-height:1.3;grid-row:1 / 4;align-self:start}
+.learner-component .component-symbol a{text-decoration:none;color:var(--accent)}
+.learner-component .component-roles{margin:0}
+.learner-component p{margin:0;font-size:.96em}
+.learner-component .sound-pair{font-size:.9em;margin:0}
+.learner-component .sound-system{margin:0}
+.learner-takeaway{border-left:3px solid var(--accent);padding:4px 0 4px 14px}
+.learner-takeaway p{margin:0}
+.deeper-reading{border-top:1px solid var(--border);margin-top:24px;padding-top:18px}
+.deeper-reading>summary{cursor:pointer;color:var(--fg);padding:4px 0}
+.deeper-reading>summary .deeper-title{font-size:1.12em;font-weight:600}
+.deeper-reading>summary .deeper-description{display:block;font-size:.85em;color:var(--fg2);margin:3px 0 0 20px}
+.deeper-reading[open]>summary{margin-bottom:20px}
+.deeper-reading>summary:focus-visible{outline:2px solid var(--accent);outline-offset:5px;border-radius:3px}
+.article-pending{padding:12px 16px;background:var(--abg);border-radius:var(--r);margin-bottom:20px;color:var(--fg2);font-size:.9em}
+.formation-label{display:inline-block;font-size:.8em;color:var(--accent);background:var(--abg);padding:3px 9px;border-radius:6px;margin-bottom:8px}
+.component-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px;margin:12px 0 24px}
+.component{padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--bg2);min-width:0}
+.component h3{font-size:1em;line-height:1.5;margin:0 0 10px;font-weight:500;overflow-wrap:anywhere}
+.component h3 .component-glyph{font-size:1.8em}
+.component a.character-link{color:var(--accent);text-decoration:none}
+.component-roles{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;font-size:.78em}
+.component-roles button{font:inherit;background:var(--abg);color:var(--accent);border:0;border-radius:4px;padding:1px 6px;cursor:pointer}
+.component-roles button:hover{text-decoration:underline}
+.component-change{font-size:.8em;color:var(--fg2);margin:6px 0 10px}
+.component p{font-size:.94em;margin-bottom:0}
+.source-title{display:block;color:var(--accent);overflow-wrap:anywhere}
+.source-meta{font-size:.85em;color:var(--fg2)}
+.component-key{font-size:.88em;color:var(--fg2);margin:0 0 20px}
+.component-key summary{cursor:pointer}
+.component-key dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:12px 0}
+.component-key dt{font-weight:600}.component-key dd{margin:0}
+.sound-comparison{margin:12px 0;padding:10px;border-left:2px solid var(--accent);background:var(--abg);border-radius:0 5px 5px 0;overflow-wrap:anywhere}
+.sound-system{font-size:.76em;color:var(--fg2);margin-bottom:5px}
+.sound-pair{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;font-weight:600;margin-bottom:7px}
+.sound-comparison p{font-size:.87em}
+.citation-dialog{box-sizing:border-box;width:min(660px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:85dvh;max-height:min(85dvh,900px);margin:auto;padding:0;border:1px solid var(--border);border-radius:12px;background:var(--bg2);color:var(--fg);box-shadow:0 20px 70px #0004;overflow:auto;overscroll-behavior:contain}
+.citation-dialog::backdrop{background:#0006}
+.dialog-heading{display:flex;align-items:center;gap:20px;justify-content:space-between;position:sticky;top:0;background:var(--bg2);padding:18px 22px;border-bottom:1px solid var(--border);z-index:1}
+.dialog-heading h2{font-size:1.1em;margin:0}
+.dialog-close{font:inherit;background:var(--bg);color:var(--fg);border:1px solid var(--border);border-radius:6px;padding:6px 12px;cursor:pointer}
+.dialog-body{padding:4px 22px 22px;line-height:1.7;overflow-wrap:anywhere}
+.citation-source{padding:20px 0;border-bottom:1px solid var(--border)}
+.citation-source:last-child{border-bottom:0;padding-bottom:0}
+.citation-source h3{font-size:1em;margin:0 0 5px}
+.citation-source p{white-space:pre-line;margin:10px 0 0}
+.citation-source .source-meta{margin-bottom:10px}
+.source-excerpt summary{cursor:pointer;color:var(--accent)}
+.sources-intro{font-size:.88em;color:var(--fg2);margin-top:16px}
+.source-topic{font-size:.85em;color:var(--fg2)}
+.source-note{margin-bottom:12px}
+.source-excerpt{margin:8px 0}
+.source-excerpt[open]{padding-bottom:12px}
+.source-values{display:grid;grid-template-columns:minmax(100px,1fr) 2fr;gap:5px 16px;font-size:.9em;margin-top:12px}
+.source-values dt{color:var(--fg2)}
+.source-values dd{margin:0}
+.source-record+.source-record{border-top:1px solid var(--border);margin-top:12px}
+.citation-source .source-title{font-size:.9em;margin-top:12px}
+.citation-source .source-meta{font-size:.75em;margin:4px 0 0}
+@media(max-width:500px){.citation-dialog{max-height:90dvh}.dialog-heading{padding:14px 16px}.dialog-body{padding:4px 16px 16px}}
+.selected-glyphs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px;margin:16px 0 24px}
+.historical-glyph{border:1px solid var(--border);border-radius:8px;padding:16px;min-width:0}
+.historical-glyph img{display:block;object-fit:contain;max-width:100%;margin:0 auto 16px;background:#fff;border-radius:4px}
+.historical-glyph h3,.meaning-sense h3{font-size:1em;font-weight:600}
+.historical-glyph p{font-size:.9em}
+.home-intro{margin:8px 0 24px;color:var(--fg2)}
+.home-intro h2{color:var(--fg);font-size:1.3em;margin-bottom:8px}
+.hsk-level{border:1px solid var(--border);border-radius:var(--r);background:var(--bg2);margin:12px 0;overflow:hidden}
+.hsk-level>summary{cursor:pointer;padding:18px;font-weight:600}
+.hsk-count{display:block;color:var(--fg2);font-size:.85em;font-weight:400;margin:4px 0 0 20px}
+.hsk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:7px;padding:0 18px 18px}
+.hsk-character{display:flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--border);border-radius:7px;color:var(--fg);text-decoration:none;font-size:1.45em}
+.hsk-character.authored{background:var(--abg);border-color:var(--accent);color:var(--accent)}
+.hsk-character:hover,.hsk-character:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.home-legend{font-size:.85em;margin-top:10px}.home-legend span{color:var(--accent)}
+.home-link{border:0;background:none;color:var(--accent);font:inherit;font-size:.9em;cursor:pointer;margin-bottom:12px;padding:4px 0}
+.counterpart-links{font-size:.95em;color:var(--fg2);margin:10px 0 20px}
+.glyph-credit{font:inherit;font-size:.8em;color:var(--accent);background:none;border:0;cursor:pointer;padding:4px 0;text-decoration:underline}
+.meaning-sense{margin:16px 0;padding-left:16px;border-left:2px solid var(--border)}
 </style>
 </head>
 <body>
 <div class="ct">
   <header>
     <h1 id="htitle">Hanzi Etymology Dictionary</h1>
-    <p id="hsub">103,207 characters &middot; 16 sources &middot; <a href="https://github.com/lbm364dl/hanzi-etymology-dict">open-source</a></p>
+    <p id="hsub">Character histories, explained from evidence &middot; <a href="https://github.com/lbm364dl/hanzi-etymology-dict">open-source</a></p>
     <div class="mtg">
       <button class="mb on" id="btn-zh" onclick="setMode('zh')">Chinese 汉字</button>
       <button class="mb" id="btn-ja" onclick="setMode('ja')">Japanese 漢字</button>
@@ -87,6 +188,7 @@ header a{color:var(--accent);text-decoration:none}
     <input type="text" id="q" placeholder="Type a character, pinyin (e.g. ma3), or English word..." autofocus>
   </div>
   <div id="st">Loading dictionary data...</div>
+  <button id="browse-home" class="home-link" type="button" onclick="goTo('')" hidden>← Browse HSK levels</button>
   <div id="r"></div>
 </div>
 <script>
@@ -95,6 +197,8 @@ let mode='zh'; // 'zh' or 'ja'
 let D_ZH=null,PI_ZH=null;   // Chinese data + pinyin index
 let D_JA=null,OI=null,KI=null; // Japanese data + on/kun indices
 let D=null,PI=null;         // aliases to current mode's data
+let HSK_LEVELS=null;
+let JLPT_LEVELS=null;
 let jaKunSet=null; // chars whose kun'yomi matched the last search (null = on'yomi matched)
 
 function setMode(m,push=true){
@@ -116,7 +220,7 @@ function setMode(m,push=true){
     D=D_ZH;PI=PI_ZH;
   }
   const q=document.getElementById('q').value.trim();
-  if(q)search(push);
+  search(push);
 }
 
 // --- Character data: {char -> record} ---
@@ -178,7 +282,7 @@ function romToKatakana(s){
 function goTo(c){
   document.getElementById('q').value=c;
   window.scrollTo({top:0,behavior:'smooth'});
-  if(!D||D[c]){search(true);return;}
+  if(!c||!D||D[c]){search(true);return;}
   // Character not in current mode — try the other
   const otherMode=mode==='ja'?'zh':'ja';
   const otherD=mode==='ja'?D_ZH:D_JA;
@@ -230,9 +334,12 @@ async function loadZh(push=false){
   const st=document.getElementById('st');
   try{
     st.textContent='Downloading Chinese dictionary (~6 MB)...';
-    const records=await loadGz('data.json.gz');
+    const [records,hsk]=await Promise.all([loadGz('data.json.gz'),fetch('hsk-levels.json').then(r=>{if(!r.ok)throw new Error('HSK lists not found');return r.json();})]);
+    HSK_LEVELS=hsk.levels;
+    const levels=new Map(HSK_LEVELS.flatMap(level=>level.characters.map(c=>[c,level.label])));
     D_ZH={};PI_ZH={};
     for(const r of records){
+      r.hsk=levels.get(r.c);
       D_ZH[r.c]=r;
       if(r.py){
         const num=py2num(r.py);
@@ -245,7 +352,7 @@ async function loadZh(push=false){
     st.textContent='';
     const q=document.getElementById('q').value.trim();
     if(q)search(push);
-    else document.getElementById('q').focus();
+    else{search(false);document.getElementById('q').focus();}
   }catch(e){st.textContent='Error loading Chinese data: '+e.message}
 }
 
@@ -253,7 +360,8 @@ async function loadJa(push=false){
   const st=document.getElementById('st');
   try{
     st.textContent='Downloading Japanese dictionary...';
-    const records=await loadGz('kanji_data.json.gz');
+    const [records,jlpt]=await Promise.all([loadGz('kanji_data.json.gz'),fetch('jlpt-levels.json').then(r=>{if(!r.ok)throw new Error('JLPT lists not found');return r.json();})]);
+    JLPT_LEVELS=jlpt.levels;
     D_JA={};OI={};KI={};
     for(const r of records){
       D_JA[r.c]=r;
@@ -274,7 +382,7 @@ async function loadJa(push=false){
     st.textContent='';
     const q=document.getElementById('q').value.trim();
     if(q)search(push);
-    else document.getElementById('q').focus();
+    else{search(false);document.getElementById('q').focus();}
   }catch(e){st.textContent='Error loading Japanese data: '+e.message}
 }
 
@@ -296,13 +404,53 @@ let dt;
 document.getElementById('q').addEventListener('input',()=>{clearTimeout(dt);dt=setTimeout(()=>search(true),200)});
 document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter'){clearTimeout(dt);search(true)}});
 
+function jlptHome(res){
+  res.innerHTML='<div class="home-intro"><h2>Browse Japanese kanji</h2><p>Approximate JLPT study levels · These are study lists, not official exam syllabi.</p><p class="home-legend"><span>Highlighted characters have a Japanese explanation.</span> Other characters open the existing source notes.</p></div>';
+  for(const level of JLPT_LEVELS){
+    const explained=level.characters.filter(c=>D[c]?.article?.review?.status==='approved').length;
+    const section=document.createElement('details');section.className='hsk-level';section.id='jlpt-'+level.id;section.open=level.label==='N5';
+    section.innerHTML='<summary>'+escapeHTML(level.label)+'<span class="hsk-count">'+level.characters.length+' characters · '+explained+' explained</span></summary>';
+    const grid=document.createElement('div');grid.className='hsk-grid';
+    for(const c of level.characters){
+      const r=D[c];const link=document.createElement('a');link.className='hsk-character'+(r?.article?.review?.status==='approved'?' authored':'');link.textContent=c;link.href='?q='+encodeURIComponent(c)+'&m=ja';link.title=[c,r?.jo,r?.jk,r?.d].filter(Boolean).join(' · ');link.addEventListener('click',event=>{if(event.button===0&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey){event.preventDefault();goTo(c);}});grid.appendChild(link);
+    }
+    section.appendChild(grid);res.appendChild(section);
+  }
+}
+
+function hskHome(res){
+  res.innerHTML='<div class="home-intro"><h2>Browse HSK characters</h2><p>HSK 3.0 (2021) · Characters introduced at each level.</p><p class="home-legend"><span>Highlighted characters have an explanation.</span> Other characters open the existing source notes.</p></div>';
+  for(const level of HSK_LEVELS){
+    const explained=level.characters.filter(c=>D[c]?.article?.review?.status==='approved').length;
+    const section=document.createElement('details');section.className='hsk-level';section.id='hsk-'+level.id;section.open=level.id==='1';
+    section.innerHTML='<summary>HSK '+escapeHTML(level.label)+'<span class="hsk-count">'+level.characters.length+' characters · '+explained+' explained</span></summary>';
+    const grid=document.createElement('div');grid.className='hsk-grid';
+    for(const c of level.characters){
+      const r=D[c];const link=document.createElement('a');link.className='hsk-character'+(r?.article?.review?.status==='approved'?' authored':'');link.textContent=c;link.href='?q='+encodeURIComponent(c)+'&m=zh';link.title=[c,r?.py,r?.d].filter(Boolean).join(' · ');link.addEventListener('click',event=>{if(event.button===0&&!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey){event.preventDefault();goTo(c);}});grid.appendChild(link);
+    }
+    section.appendChild(grid);res.appendChild(section);
+  }
+}
+
 function search(push=true){
   if(!D)return;
+  if(detailDialog?.open)closeDetail();
   const q=document.getElementById('q').value.trim();
   const res=document.getElementById('r');
   const st=document.getElementById('st');
+  document.getElementById('browse-home').hidden=!q;
   res.innerHTML='';
-  if(!q){st.textContent='';if(push)history.pushState(null,'',`${location.pathname}?m=${mode}`);return}
+  if(!q){
+    if(mode==='ja'&&JLPT_LEVELS){jlptHome(res);st.textContent='';if(push)history.pushState(null,'',`${location.pathname}?m=ja`);return;}
+    if(mode==='zh'&&HSK_LEVELS){hskHome(res);st.textContent='';if(push)history.pushState(null,'',`${location.pathname}?m=zh`);return;}
+    const articles=Object.values(D).filter(r=>r.article?.review?.status==='approved');
+    st.textContent=articles.length?articles.length+' written entries · Explore the pilot':'Search for a character.';
+    const grid=document.createElement('div');grid.className='rg';
+    for(const r of articles)grid.appendChild(mkRow(r));
+    res.appendChild(grid);
+    if(push)history.pushState(null,'',`${location.pathname}?m=${mode}`);
+    return;
+  }
   if(push)history.pushState(null,'',`${location.pathname}?q=${encodeURIComponent(q)}&m=${mode}`);
 
   // Direct CJK lookup (both modes)
@@ -392,7 +540,7 @@ function mkRow(r){
   const el=document.createElement('div');el.className='rr';
   el.onclick=()=>goTo(r.c);
   const tag=mode==='ja'&&r.jlpt?`<span class="t jn${r.jlpt}">N${r.jlpt}</span>`:
-            (r.ft?`<span class="t tb">${r.ft}</span>`:'');
+            (!r.article&&r.ft?`<span class="t tb">${r.ft}</span>`:'');
   let reading;
   if(mode==='ja'){
     const on=r.jo||'',kun=r.jk?r.jk.split(' ')[0]:'';
@@ -406,56 +554,256 @@ function mkRow(r){
   const def=/^[a-zA-Z\s]+$/.test(q0)&&q0.length>1
     ?rawDef.replace(new RegExp('('+q0.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>')
     :rawDef;
-  el.innerHTML=`<span class="rc">${r.c}</span><span class="ri">${reading} <span class="rd">${def}</span></span><span class="rt">${tag}${r.conf&&mode!=='ja'?`<span class="t tx">${r.conf}</span>`:''}</span>`;
+  el.innerHTML=`<span class="rc">${r.c}</span><span class="ri">${reading} <span class="rd">${def}</span></span><span class="rt">${tag}${r.article?'<span class="t tg">Written entry</span>':''}</span>`;
   return el}
 
-function full(r){
-  const card=document.createElement('div');card.className='card';
-  const str=r.str||'?';
-  let h='';
-
-  if(mode==='ja'){
-    // Japanese card header
-    const on=r.jo||'',kun=r.jk||'',nanori=r.jn||'';
-    const jlptLabel=r.jlpt?`JLPT N${r.jlpt}`:'';
-    const gradeLabel=r.grade?`Grade ${r.grade}`:'';
-    const jfr=r.jfr?`#${r.jfr}`:'';
-    h+=`<div class="ch"><div class="cb">${r.c}</div><div class="ci">`;
-    h+=`<div class="jr">`;
-    if(on)h+=`<div class="jr-on">${on}</div>`;
-    if(kun)h+=`<div class="jr-kun">${kun}</div>`;
-    h+=`</div>`;
-    h+=`<div class="cd" style="margin-top:4px">${r.d||''}</div>`;
-    h+=`<div class="cm">${r.p} &middot; ${str} strokes${jlptLabel?' &middot; '+jlptLabel:''}${jfr?' &middot; freq '+jfr:''}</div>`;
-    h+=`</div></div><div class="tags">`;
-    if(r.jlpt)h+=`<span class="t jn${r.jlpt}">JLPT N${r.jlpt}</span>`;
-    if(r.joyo&&r.grade&&r.grade<=6)h+=`<span class="t tb">Grade ${r.grade}</span>`;
-    else if(r.joyo)h+=`<span class="t tx">Jōyō</span>`;
-    if(r.jinmeiyo)h+=`<span class="t tp">Jinmeiyō</span>`;
-    if(r.kokuji)h+='<span class="t tr">国字 kokuji</span>';
-    if(r.ft)h+=`<span class="t tb">${r.ft}</span>`;
-    if(r.vs==='cross-verified')h+='<span class="t tg">cross-verified</span>';
-    else if(r.vs==='single-source')h+='<span class="t ty">single-source</span>';
-    if(r.ftc)h+='<span class="t tr">disputed</span>';
-    if(r.conf)h+=`<span class="t tx">confidence ${r.conf}</span>`;
-    h+='</div>';
-  } else {
-    // Chinese card header
-    const py=r.py||'',fr=r.fr?`#${r.fr}`:'';
-    h+=`<div class="ch"><div class="cb">${r.c}</div><div class="ci"><div class="cp">${py}</div><div class="cd">${r.d||''}</div><div class="cm">${r.p} &middot; ${str} strokes${fr?' &middot; freq '+fr:''}${r.ca?' &middot; Cantonese: '+r.ca:''}</div></div></div><div class="tags">`;
-    if(r.ft)h+=`<span class="t tb">${r.ft}</span>`;
-    if(r.vs==='cross-verified')h+='<span class="t tg">cross-verified</span>';
-    else if(r.vs==='single-source')h+='<span class="t ty">single-source</span>';
-    else if(r.vs==='classical-only')h+='<span class="t ty">classical-only</span>';
-    if(r.ftc)h+='<span class="t tr">disputed</span>';
-    if(r.sa==='corrected')h+='<span class="t tr">Shuowen corrected</span>';
-    if(r.hsk)h+=`<span class="t tp">HSK ${r.hsk}</span>`;
-    if(r.sf)h+=`<span class="t tg">${r.sf}</span>`;
-    if(r.conf)h+=`<span class="t tx">confidence ${r.conf}</span>`;
-    if(r.kokuji)h+='<span class="t tr">国字 kokuji</span>';
-    h+='</div>';
+// Authored prose is plain text. Never interpret model output as HTML.
+function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+let detailDialog=null,detailTrigger=null,previousOverflow='';
+function restoreDetail(){
+  document.documentElement.style.overflow=previousOverflow;
+  if(detailTrigger?.isConnected)detailTrigger.focus({preventScroll:true});
+  detailTrigger=null;
+}
+function closeDetail(){
+  detailDialog.close();
+  restoreDetail();
+}
+function showDetail(title,body,trigger){
+  if(!detailDialog){
+    detailDialog=document.createElement('dialog');
+    detailDialog.className='citation-dialog';
+    detailDialog.setAttribute('aria-labelledby','detail-title');
+    document.body.appendChild(detailDialog);
+    detailDialog.addEventListener('close',()=>{
+      if(!detailDialog.open&&detailTrigger)restoreDetail();
+    });
+    detailDialog.addEventListener('cancel',event=>{event.preventDefault();closeDetail();});
+    detailDialog.addEventListener('click',event=>{
+      if(event.target!==detailDialog)return;
+      const box=detailDialog.getBoundingClientRect();
+      if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)closeDetail();
+    });
   }
+  detailTrigger=trigger;
+  detailDialog.innerHTML='<div class="dialog-heading"><h2 id="detail-title">'+escapeHTML(title)+'</h2><button type="button" class="dialog-close" autofocus>Close</button></div><div class="dialog-body">'+body+'</div>';
+  detailDialog.querySelector('.dialog-close').addEventListener('click',closeDetail);
+  if(!detailDialog.open){
+    previousOverflow=document.documentElement.style.overflow;
+    document.documentElement.style.overflow='hidden';
+    detailDialog.showModal();
+  }
+  detailDialog.scrollTop=0;
+}
+function sourceExcerpt(text){
+  // Dictionary fields may contain structured readings; present them as labeled values.
+  const labels={japanese_kun:'Japanese native reading',japanese_on:'Japanese on reading',old_chinese:'Old Chinese (Baxter–Sagart)',middle_chinese:'Middle Chinese',old_chinese_zhengzhang:'Old Chinese (Zhengzhang)',middle_chinese_guangyun:'Guangyun classification',gsr:'Grammata Serica Recensa',gloss:'Meaning',fanqie:'Fanqie spelling',rhyme_group:'Rhyme group'};
+  const render=value=>{
+    if(Array.isArray(value))return value.map(v=>'<div class="source-record">'+render(v)+'</div>').join('');
+    if(value&&typeof value==='object')return '<dl class="source-values">'+Object.entries(value).map(([k,v])=>'<dt>'+escapeHTML(labels[k]||k.replaceAll('_',' ').replace(/^./,c=>c.toUpperCase()))+'</dt><dd>'+render(v)+'</dd>').join('')+'</dl>';
+    return escapeHTML(value);
+  };
+  try{return render(JSON.parse(text));}catch{return '<p>'+escapeHTML(text)+'</p>';}
+}
+function showSources(record,ids,trigger){
+  const evidence=new Map(record.article.evidence.map(e=>[e.id,e]));
+  const names={wiktionary:'Wiktionary',dong_chinese:'Dong Chinese',makemeahanzi:'Make Me a Hanzi',shuowen_jiezi:'Shuowen Jiezi',merged_record:'Dictionary reference data',kanjidic2_via_build_kanji:'KANJIDIC2',ids_analysis:'CJKVI'};
+  const selected=ids.map(id=>evidence.get(id)).filter(Boolean);
+  const groups=new Map();
+  for(const source of selected){
+    const name=names[source.source]||source.source;
+    const key=source.url||name+'|'+source.record_character;
+    if(!groups.has(key))groups.set(key,{name,items:[]});
+    groups.get(key).items.push(source);
+  }
+  let body='<p class="sources-intro">References for this passage. Summaries are paraphrases; follow a link to read the original.</p>';
+  for(const group of [...groups.values()].sort((a,b)=>Number(b.items.some(e=>e.kind==='external_research'))-Number(a.items.some(e=>e.kind==='external_research')))){
+    const notes=group.items.filter(e=>e.kind==='external_research');
+    const excerpts=group.items.filter(e=>e.kind!=='external_research');
+    const first=group.items[0];
+    let url='';try{const parsed=new URL(first.url);if(['http:','https:'].includes(parsed.protocol))url=parsed.href;}catch{}
+    body+='<section class="citation-source"><h3>'+escapeHTML(group.name)+'</h3>';
+    if(notes.length){
+      for(const note of notes){
+        body+='<div class="source-note"><div class="source-topic">'+escapeHTML(note.title||note.record_character)+'</div><p>'+escapeHTML(note.text)+'</p></div>';
+      }
+    }
+    for(const excerpt of excerpts){
+      const topic=/phonology/.test(excerpt.field)?'Historical pronunciations':/readings/.test(excerpt.field)?'Readings':/definition/.test(excerpt.field)?'Meanings':'Character origin';
+      const readable=excerpt.text.length<=350&&/[a-z]{3}/i.test(excerpt.text)&&!/^\s*[\[{]/.test(excerpt.text);
+      body+='<div class="source-topic">'+escapeHTML(excerpt.record_character+' · '+topic)+'</div>';
+      if(readable)body+=sourceExcerpt(excerpt.text);
+      else body+='<details class="source-excerpt"><summary>Read saved excerpt</summary>'+sourceExcerpt(excerpt.text)+'</details>';
+    }
+    if(url)body+='<a class="source-title" href="'+escapeHTML(url)+'" target="_blank" rel="noopener noreferrer">Read original ↗</a>';
 
+    if(first.accessed_at)body+='<div class="source-meta">Consulted '+escapeHTML(new Intl.DateTimeFormat('en',{year:'numeric',month:'short',day:'numeric',timeZone:'UTC'}).format(new Date(first.accessed_at)))+'</div>';
+    body+='</section>';
+  }
+  showDetail('Sources for this passage',body,trigger);
+}
+function componentFormLabel(component){
+  // Labels express the reviewed relationship, not a guess from the shapes or change category.
+  return {full_form:'Full form',earlier_form:'Earlier form',variant_form:'Variant form',simplified_form:'Traditional form'}[component.origin_relation]||'Related form';
+}
+function separateVariantForms(article){
+  const ancestry=new Set();
+  for(const edge of article.relationships||[]){
+    if(!['simplified_from','derived_from'].includes(edge.predicate))continue;
+    if(edge.subject.kind==='character'&&edge.object.kind==='character'){
+      if(edge.subject.id===article.character)ancestry.add(edge.object.id);
+      if(edge.object.id===article.character)ancestry.add(edge.subject.id);
+    }
+  }
+  const forms=new Map();
+  for(const edge of article.relationships||[]){
+    if(edge.predicate!=='variant_of'||edge.subject.kind!=='character'||edge.object.kind!=='character')continue;
+    const other=edge.subject.id===article.character?edge.object.id:edge.object.id===article.character?edge.subject.id:null;
+    if(other&&other!==article.character&&!ancestry.has(other))forms.set(other,edge);
+  }
+  return forms;
+}
+function learnerComponentCards(article){
+  const separateVariants=separateVariantForms(article);
+  const current=article.components.filter(c=>(c.scope_character||article.character)===article.character);
+  return article.learner.components.filter(brief=>{
+    const component=article.components[brief.component_index];
+    if(separateVariants.has(component.scope_character||article.character))return false;
+    if((component.scope_character||article.character)===article.character)return true;
+    if(article.language==='ja')return false;
+    return !current.some(c=>c.origin_form===component.form&&
+      ['full_form','earlier_form','variant_form','simplified_form'].includes(c.origin_relation)&&
+      c.roles.some(role=>component.roles.includes(role)));
+  });
+}
+function learnerSoundComparisons(component,language){
+  const sounds=component.sound||[];
+  if(language==='ja')return sounds.filter(sound=>/japanese|on[’']?yomi/i.test(sound.system));
+  const current=sounds.filter(sound=>/(?:modern|standard|current) mandarin|^mandarin\b/i.test(sound.system));
+  return current.length?current:sounds.slice(0,1);
+}
+function componentRoleLabel(article,component,role,label){
+  const host=component.scope_character||article.character;
+  const claims=(article.relationships||[]).filter(edge=>edge.predicate===role+'_component_of'&&
+    edge.object.kind==='character'&&edge.object.id===host&&
+    edge.subject.kind==='component'&&[component.form,component.origin_form].includes(edge.subject.id));
+  if(!claims.length||claims.some(edge=>edge.certainty==='established'))return label;
+  const prefix=claims.some(edge=>edge.certainty==='probable')?'Likely ':'Proposed ';
+  return prefix+label.charAt(0).toLowerCase()+label.slice(1);
+}
+function glyphScriptLabel(glyph){
+  const description=(glyph.tradition+' '+glyph.period).toLowerCase();
+  const labels=[
+    [/oracle[ -]?(?:bone|script)|甲骨/, 'Oracle-bone script'],
+    [/bronze|金文/, 'Bronze script'],
+    [/seal|篆/, 'Seal script'],
+    [/clerical|隸|隶/, 'Clerical script'],
+    [/regular script|楷/, 'Regular script'],
+    [/running script|行書|行书/, 'Running script'],
+    [/cursive|草書|草书/, 'Cursive script']
+  ].filter(([pattern])=>pattern.test(description));
+  return labels.length===1?labels[0][1]:'Historical form';
+}
+function articleHTML(r){
+  const a=r.article;
+  const sections=[...(a.japanese_usage?[a.japanese_usage.summary,...a.japanese_usage.readings]:[]),...(a.learner?[a.learner.overview,...a.learner.components,...(a.learner.takeaway?[a.learner.takeaway]:[])]:[]),...(a.meaning_history?.senses||[]),...(a.meaning_history?.developments||[]),...(a.meaning_history?.limitations||[]),...(a.historical_glyphs?.items||[]).map(g=>({text:g.caption,evidence_ids:g.evidence_ids})),...(a.historical_glyphs?.limitations||[]),a.summary,...(a.history||[]),...(a.uncertainties||[]),...(a.components||[]),...(a.components||[]).flatMap(c=>[...(c.sound||[]),...(c.sound_limitation?[c.sound_limitation]:[])]),...(a.formation?[a.formation]:[])];
+  const used=new Set(sections.flatMap(p=>p.evidence_ids||[]));
+  const evidence=(a.evidence||[]).filter(e=>used.has(e.id));
+  const numbers=new Map(evidence.map((e,i)=>[e.id,i+1]));
+  const citationButton=p=>{
+    const ids=(p.evidence_ids||[]).filter(id=>numbers.has(id));
+    return ids.length?'<button type="button" class="citation" data-evidence="'+escapeHTML(JSON.stringify(ids))+'" aria-haspopup="dialog" aria-label="Show '+ids.length+' sources for this passage">Sources</button>':'';
+  };
+  const paragraph=(p,cls='')=>'<p class="'+cls+'">'+characterLink(p.text)+citationButton(p)+'</p>';
+  const characterLink=(form,heading=false)=>escapeHTML(form).replace(/\p{Script=Han}/gu,char=>{
+    const label=heading?'<span class="component-glyph">'+char+'</span>':char;
+    const targetMode=mode==='ja'&&!D[char]?'zh':mode;
+    return char!==r.c?`<a class="character-link" data-character="${char}" href="?q=${encodeURIComponent(char)}&amp;m=${targetMode}">${label}</a>`:label;
+  });
+  const separateVariants=separateVariantForms(a);
+  let h='<article class="article"><div class="article-status">AI-written · AI review against cited evidence</div>';
+  if(a.language==='ja')h+='<p class="source-topic"><a href="?q='+encodeURIComponent(r.c)+'&amp;m=zh">View this character in the Chinese dictionary</a></p>';
+  if(a.learner){
+    const learnerRoles={semantic:'Meaning',phonetic:'Sound',pictorial:'Picture',indicator:'Indicating mark',replacement:'Replacement',empty:'No sound or meaning role',unknown:'Role uncertain'};
+    h+='<section class="learner-section"><h2>Understand the character</h2>'+paragraph(a.learner.overview,'lead');
+    const learnerCards=learnerComponentCards(a);
+    if(learnerCards.length){
+      h+='<div class="learner-components">';
+      for(const brief of learnerCards){
+        const component=a.components[brief.component_index];
+        const whole=component.form===r.c&&a.components.length===1&&component.roles.includes('pictorial');
+        h+='<section class="learner-component"><div class="component-symbol">'+characterLink(component.form)+'</div><div class="component-roles">'+escapeHTML(whole?'One whole picture':component.roles.map(role=>componentRoleLabel(a,component,role,learnerRoles[role]||role)).join(' · '))+'</div>'+paragraph(brief);
+        if(component.origin_form&&component.origin_form!==component.form)h+='<div class="source-topic">'+componentFormLabel(component)+': '+characterLink(component.origin_form)+'</div>';
+        if(component.scope_character&&component.scope_character!==r.c)h+='<div class="source-topic">Component of '+characterLink(component.scope_character)+'</div>';
+        const learnerSounds=learnerSoundComparisons(component,a.language);
+        if(!learnerSounds.length&&component.sound_limitation&&a.language!=='ja')h+=paragraph(component.sound_limitation);
+        for(const sound of learnerSounds){
+          h+='<div class="sound-system">'+escapeHTML(sound.system)+'</div><div class="sound-pair"><span>'+characterLink(sound.component_form)+' '+escapeHTML(sound.component_reading)+'</span><span aria-label="compared with">→</span><span>'+escapeHTML(component.scope_character||r.c)+' '+escapeHTML(sound.character_reading)+'</span>'+citationButton(sound)+'</div>';
+        }
+        h+='</section>';
+      }
+      h+='</div>';
+    }
+    if(a.learner.takeaway)h+='<div class="learner-takeaway">'+paragraph(a.learner.takeaway)+'</div>';
+    h+='</section><details class="deeper-reading"><summary><span class="deeper-title">Explore its history</span><span class="deeper-description">Historical forms, meaning changes, and competing interpretations</span></summary>';
+  }else h+='<h2>The character explained</h2>'+paragraph(a.summary,'lead');
+  if(a.formation){
+    const types={pictographic:'Pictograph',indicative:'Indicative formation',semantic:'Meaning compound',phonosemantic:'Sound–meaning compound',phonetic_loan:'Phonetic loan',mixed:'Combined meaning and sound roles',derived:'Derived form',disputed:'Formation disputed',unknown:'Formation uncertain'};
+    const roles={semantic:'Meaning component',phonetic:'Sound component',pictorial:'Form component',indicator:'Indicating mark',replacement:'Replacement element',empty:'Empty component',unknown:'Role uncertain'};
+    const roleDefinitions={semantic:'A meaning of the component contributes to the character.',phonetic:'A pronunciation of the component supplies a sound cue, often clearer in an earlier language stage.',pictorial:'The component contributes through the object or form it depicts.',indicator:'A mark points to a position or part of a picture.',replacement:'A shape stands in for an earlier component; its old function may have been lost.',empty:'The element has no established meaning or sound function in this character.',unknown:'The evidence does not establish the component’s function.'};
+    const changes={preserved:'Preserved form',variant:'Variant form',stylized:'Stylized form',corruption:'Corrupted form',replacement:'Replaced form',simplified:'Simplified form',disputed:'Form history disputed',unknown:'Form history uncertain'};
+    h+='<section class="component-analysis"><h2>Structure and components</h2><div class="formation-label">'+escapeHTML(types[a.formation.type]||a.formation.type)+'</div>'+paragraph(a.formation);
+    h+='<div class="component-grid">';
+    for(const component of (a.components||[]).filter(c=>!separateVariants.has(c.scope_character||r.c))){
+      h+='<section class="component"><h3>'+characterLink(component.form,true)+'</h3><div class="component-roles">'+component.roles.map(role=>'<button type="button" data-role-title="'+escapeHTML(componentRoleLabel(a,component,role,roles[role]||role))+'" data-role-text="'+escapeHTML(roleDefinitions[role]||'')+'" aria-haspopup="dialog">'+escapeHTML(componentRoleLabel(a,component,role,roles[role]||role))+'</button>').join('')+'</div>';
+      h+='<div class="component-change">'+escapeHTML(changes[component.form_status]||component.form_status);
+      if(component.origin_form&&component.origin_form!==component.form)h+=' · '+componentFormLabel(component)+': '+characterLink(component.origin_form);
+      h+='</div>';
+      if(component.scope_character&&component.scope_character!==r.c)h+='<div class="source-topic">Component of '+characterLink(component.scope_character)+'</div>';
+      if(component.sound_limitation)h+=paragraph(component.sound_limitation);
+      for(const sound of component.sound||[]){
+        h+='<div class="sound-comparison"><div class="sound-system">'+escapeHTML(sound.system)+'</div><div class="sound-pair"><span>'+characterLink(sound.component_form)+' '+escapeHTML(sound.component_reading)+'</span><span aria-label="compared with">→</span><span>'+escapeHTML(component.scope_character||r.c)+' '+escapeHTML(sound.character_reading)+'</span></div>'+paragraph(sound)+'</div>';
+      }
+      h+=paragraph(component)+'</section>';
+    }
+    h+='</div></section>';
+  }
+  if(a.historical_glyphs?.items?.length){
+    h+='<section class="historical-forms"><h2>Historical forms</h2><div class="selected-glyphs">';
+    for(const glyph of a.historical_glyphs.items){
+      let imageURL='';try{const url=new URL(a.display_glyphs?.[glyph.id]||glyph.image_url,location.href);if(['https:','http:'].includes(url.protocol))imageURL=url.href;}catch{}
+      h+='<figure class="historical-glyph">';
+      if(imageURL)h+='<img src="'+escapeHTML(imageURL)+'" alt="'+escapeHTML(glyph.alt)+'" loading="lazy" referrerpolicy="no-referrer" width="150" height="150">';
+      h+='<figcaption><h3>'+escapeHTML(glyphScriptLabel(glyph))+'</h3>'+paragraph({text:glyph.caption,evidence_ids:glyph.evidence_ids})+'<button class="glyph-credit" type="button" data-glyph="'+escapeHTML(glyph.id)+'" aria-haspopup="dialog">Image details</button></figcaption></figure>';
+    }
+    h+='</div></section>';
+  }
+  if(separateVariants.size){
+    h+='<section class="related-historical-forms"><h2>Related forms</h2>';
+    for(const [form,edge] of separateVariants)h+='<h3>'+characterLink(form)+' · Variant form</h3>'+paragraph(edge)+'<p>'+characterLink(form)+' — open its entry for its own component breakdown.</p>';
+    h+='</section>';
+  }
+  if(a.history?.length)h+='<h2>'+(a.schema_version===2?'History of the form':'History and meaning')+'</h2>'+a.history.map(p=>paragraph(p)).join('');
+  if(a.meaning_history){
+    const meanings=a.meaning_history;
+    if(meanings.senses.length||meanings.developments.length){
+      h+='<section class="meaning-history"><h2>Meaning and use</h2>';
+      for(const sense of meanings.senses){
+        h+='<div class="meaning-sense"><h3>'+escapeHTML(sense.gloss)+'</h3><div class="source-topic">'+escapeHTML(({earliest_attested:'Earliest attested use',historical:'Historical use',current:'Current use'}[sense.status]||'')+' · '+sense.period)+'</div>'+paragraph(sense)+'</div>';
+      }
+      for(const change of meanings.developments)h+=paragraph(change);
+      h+='</section>';
+    }
+    if(meanings.limitations.length)h+='<details class="editorial"><summary>Limits of the meaning history</summary>'+meanings.limitations.map(p=>paragraph(p)).join('')+'</details>';
+  }
+  if(a.historical_glyphs?.limitations?.length)h+='<details class="editorial"><summary>About the historical forms</summary>'+a.historical_glyphs.limitations.map(p=>paragraph(p)).join('')+'</details>';
+  const entryUncertainties=(a.uncertainties||[]).filter(p=>p.text.includes(r.c)||![...separateVariants.keys()].some(form=>p.text.includes(form)));
+  if(entryUncertainties.length)h+='<details class="editorial"><summary>Uncertainty and differing interpretations</summary>'+entryUncertainties.map(p=>paragraph(p)).join('')+'</details>';
+  return h+(a.learner?'</details>':'')+'</article>';
+}
+
+function legacyHTML(r){
+  let h='<div class="article-pending">Source notes · A unified explanation is not available yet.</div>';
   // Components
   if(r.sem||r.phon){
     h+='<div class="s"><div class="st">Components</div><div class="cmp">';
@@ -593,7 +941,78 @@ function full(r){
       if(chars){const linked=chars.map(cp=>{const c=String.fromCodePoint(parseInt(cp.slice(2),16));return`<span class="xr" onclick="goTo('${c}')">${c}</span>`}).join(' ');vp.push(`${k}: ${linked}`)}}
     if(vp.length)h+=`<div class="s"><div class="st">Variants</div><div class="sb">${vp.join(' &middot; ')}</div></div>`}
 
-  card.innerHTML=h;return card}
+
+  return h;
+}
+
+function full(r){
+  const card=document.createElement('div');card.className='card';
+  const str=r.str||'?';
+  const hasArticle=r.article?.review?.status==='approved';
+  let h='';
+
+  if(mode==='ja'){
+    // Japanese card header
+    const on=r.jo||'',kun=r.jk||'',nanori=r.jn||'';
+    const jlptLabel=r.jlpt?`JLPT N${r.jlpt}`:'';
+    const gradeLabel=r.grade?`Grade ${r.grade}`:'';
+    const jfr=r.jfr?`#${r.jfr}`:'';
+    h+=`<div class="ch"><div class="cb">${r.c}</div><div class="ci">`;
+    h+=`<div class="jr">`;
+    if(on)h+=`<div class="jr-on">${on}</div>`;
+    if(kun)h+=`<div class="jr-kun">${kun}</div>`;
+    h+=`</div>`;
+    h+=`<div class="cd" style="margin-top:4px">${r.d||''}</div>`;
+    h+=`<div class="cm">${r.p} &middot; ${str} strokes${jlptLabel?' &middot; '+jlptLabel:''}${jfr?' &middot; freq '+jfr:''}</div>`;
+    h+=`</div></div><div class="tags">`;
+    if(r.jlpt)h+=`<span class="t jn${r.jlpt}">JLPT N${r.jlpt}</span>`;
+    if(r.joyo&&r.grade&&r.grade<=6)h+=`<span class="t tb">Grade ${r.grade}</span>`;
+    else if(r.joyo)h+=`<span class="t tx">Jōyō</span>`;
+    if(r.jinmeiyo)h+=`<span class="t tp">Jinmeiyō</span>`;
+    if(r.kokuji)h+='<span class="t tr">国字 kokuji</span>';
+    h+='</div>';
+  } else {
+    // Chinese card header
+    const py=r.py||'',fr=r.fr?`#${r.fr}`:'';
+    h+=`<div class="ch"><div class="cb">${r.c}</div><div class="ci"><div class="cp">${py}</div><div class="cd">${r.d||''}</div><div class="cm">${r.p} &middot; ${str} strokes${fr?' &middot; freq '+fr:''}${r.ca?' &middot; Cantonese: '+r.ca:''}</div></div></div><div class="tags">`;
+    if(r.hsk)h+=`<span class="t tp">HSK ${r.hsk}</span>`;
+    if(r.kokuji)h+='<span class="t tr">国字 kokuji</span>';
+    h+='</div>';
+  }
+
+  const counterparts=[];
+  for(const [kind,label] of [['traditional','Traditional form'],['simplified','Simplified form']]){
+    const matches=String(r.var?.[kind]||'').matchAll(/U\+([0-9A-F]+)/g);
+    for(const match of matches){const c=String.fromCodePoint(parseInt(match[1],16));if(c!==r.c)counterparts.push({c,label});}
+  }
+  for(const edge of r.article?.relationships||[]){
+    if(edge.predicate!=='simplified_from'||edge.certainty!=='established')continue;
+    const c=edge.subject.id===r.c?edge.object.id:edge.object.id===r.c?edge.subject.id:null;
+    if(c&&!counterparts.some(x=>x.c===c))counterparts.push({c,label:edge.subject.id===r.c?'Traditional form':'Simplified form'});
+  }
+  if(counterparts.length)h+='<div class="counterpart-links">'+counterparts.map(({c,label})=>escapeHTML(label)+': <a class="character-link" data-character="'+escapeHTML(c)+'" href="?q='+encodeURIComponent(c)+'&amp;m='+mode+'">'+escapeHTML(c)+'</a>').join(' · ')+'</div>';
+  if(hasArticle)h+=articleHTML(r);
+  else h+=legacyHTML(r);
+  card.innerHTML=h;
+  card.addEventListener('click',event=>{
+    const character=event.target.closest('[data-character]');
+    if(character){event.preventDefault();goTo(character.dataset.character);return;}
+    const citation=event.target.closest('[data-evidence]');
+    if(citation){
+      const ids=JSON.parse(citation.dataset.evidence);
+      showSources(r,ids,citation);
+      return;
+    }
+    const glyphButton=event.target.closest('[data-glyph]');
+    if(glyphButton){
+      const glyph=r.article.historical_glyphs.items.find(g=>g.id===glyphButton.dataset.glyph);
+      const link=(url,label)=>{try{const parsed=new URL(url);if(['https:','http:'].includes(parsed.protocol))return '<a href="'+escapeHTML(parsed.href)+'" target="_blank" rel="noopener noreferrer">'+escapeHTML(label)+' ↗</a>';}catch{}return escapeHTML(label);};
+      showDetail('About this image','<h3>'+escapeHTML(glyph.source_title)+'</h3><p>'+escapeHTML(glyph.tradition)+' · '+escapeHTML(glyph.period)+'</p><p>'+escapeHTML(glyph.selection_reason)+'</p><p>'+link(glyph.source_url,'View source record')+'</p><p>'+escapeHTML(glyph.rights)+'</p><p>'+link(glyph.rights_url,'Rights information')+'</p>',glyphButton);return;
+    }
+    const role=event.target.closest('[data-role-text]');
+    if(role)showDetail(role.dataset.roleTitle,'<p>'+escapeHTML(role.dataset.roleText)+'</p>',role);
+  });
+  return card}
 
 init();
 </script>

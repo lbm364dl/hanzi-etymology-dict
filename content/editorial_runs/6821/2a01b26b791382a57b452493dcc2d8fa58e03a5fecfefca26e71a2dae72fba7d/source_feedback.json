@@ -1,0 +1,30 @@
+{
+  "task": "Independently inspect exact local 交 and 校 Unihan rows and cite their true provenance. Absence from the initial packet or failed external lookup is not absence from the full local source. Keep bare readings and a simple Modern Mandarin system label, with usage/source notes in cited prose.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "2033cb70ba84fee525050220cf2ed3f49fb30970d6168ffb118c49bc1e50c006",
+      "dossier_hash": "a81e1f3a5d31ab8c46f1c77a577d87577e3d9864112011577c83b049cb6f5bfe",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0e9-752d-7023-a027-e237e8d22750"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "components[1].sound[0].system: Replace “Mandarin, current (local Unihan rows supplied in dossier)” with a label that accurately identifies the supplied local readings without attributing both to local Unihan rows. The dossier provides a local Unihan kMandarin row for 校 = xiào, but states no exact local row for 交 was located; X-158edc07d1eab2f40e15 reports 交 = jiāo only as a supplied reading whose Unicode character page was inaccessible. Preserve the jiāo–xiào comparison only with citations and wording that reflect this evidence; keep the historical-relation caveat in sound_limitation."
+      ],
+      "article_hash": "2033cb70ba84fee525050220cf2ed3f49fb30970d6168ffb118c49bc1e50c006",
+      "dossier_hash": "a81e1f3a5d31ab8c46f1c77a577d87577e3d9864112011577c83b049cb6f5bfe",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0e9-a6ba-7f00-aa2b-0742b79ea34a"
+    }
+  ],
+  "validation": {
+    "role": "validation",
+    "verdict": "revise",
+    "findings": [
+      "Sound comparisons require readings, not placeholders; use a cited sound_limitation"
+    ]
+  }
+}

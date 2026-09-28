@@ -1,0 +1,30 @@
+{
+  "task": "Apply the exact finding: 人+十 is a traditional reported analysis associated with a unit of ten, but a people-organizing depicted scene is not established. Preserve the unresolved contribution of 人. Ensure every supported semantic role, including 十 if supported, has an exact matching cited semantic_component_of edge; do not introduce a role unsupported by the evidence.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "f7136d41d3ea6e4ba62f6bfa81fae40af9b726c29efbb44e4bdd762528f19565",
+      "dossier_hash": "faeedd85045bb5a4f8f126a2c9089128b2a16c87f7df8f2c77094eee0d8c6a67",
+      "reviewer": "gpt-6-luna:low:factual:01a0e088-0086-7ea2-b8f3-b38036a6b83e"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`learner.overview.text` and `summary.text`: Replace “for organizing people in tens,” which assigns 人 a people-depicting role the evidence does not establish, with wording that says the traditional 人+十 analysis is associated with a unit of ten while 人’s precise contribution remains unresolved. The evidence supports the component analysis and ten-unit association but explicitly leaves 人’s role unsettled (E3, X-608298e3b9d9328d5190, X-330925790e184b57df03)."
+      ],
+      "article_hash": "f7136d41d3ea6e4ba62f6bfa81fae40af9b726c29efbb44e4bdd762528f19565",
+      "dossier_hash": "faeedd85045bb5a4f8f126a2c9089128b2a16c87f7df8f2c77094eee0d8c6a67",
+      "reviewer": "gpt-6-luna:low:readability:01a0e088-23e7-7d33-801a-1c9c0e462c66"
+    }
+  ],
+  "validation": {
+    "role": "validation",
+    "verdict": "revise",
+    "findings": [
+      "Every supported component role requires a contextual relationship: '十' has role 'semantic' in '什', but no matching 'semantic_component_of' edge. Add a cited edge if the role is supported, or remove the unsupported role."
+    ]
+  }
+}

@@ -771,7 +771,9 @@ def parse_animcjk():
             for s in sets:
                 if s.startswith("hsk3"):
                     try:
-                        entry["hsk3_level"] = int(s[3:])
+                        level = int(s[4:])
+                        if 1 <= level <= 9:
+                            entry["hsk3_level"] = level
                     except ValueError:
                         pass
             # Extract frequency tier

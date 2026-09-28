@@ -1,0 +1,25 @@
+{
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "components[1].sound[0]: Add a cited Modern Mandarin comparison with component_form 曼, component_reading màn, and character_reading màn (X-126749d9377dfe59fddb); the existing Middle Chinese comparison does not include the available current reading pair. Keep the separate limitation about the unresolved ancient correspondence."
+      ],
+      "article_hash": "f0baf655eab0e2084c56106bb42b7fc4374b7d339ab41b70d6bbcfd19ccf2c26",
+      "dossier_hash": "830f38706831df4ffcdaf8fd4e629498e79d3d48f7f7f846c2fcfbecedfd39b4",
+      "reviewer": "gpt-6-luna:low:factual:01a0e046-7ba6-7e23-afc8-642a0af6f2f2"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "components[1].sound: Add the available Modern Mandarin pair: component_form 曼, component_reading màn, character_reading màn, system Modern Mandarin. The dossier records màn for both in CUHK metadata and the local Unihan extract for 慢 (X-126749d9377dfe59fddb), while noting that 曼’s exact official character-specific record was not verified (X-9a3cb45cb5d13064eb4c). Keep the separate limitation that this modern pair does not establish the ancient correspondence."
+      ],
+      "article_hash": "f0baf655eab0e2084c56106bb42b7fc4374b7d339ab41b70d6bbcfd19ccf2c26",
+      "dossier_hash": "830f38706831df4ffcdaf8fd4e629498e79d3d48f7f7f846c2fcfbecedfd39b4",
+      "reviewer": "gpt-6-luna:low:readability:01a0e046-9e63-7611-876d-bdc96ef9b7ee"
+    }
+  ],
+  "instruction": "Add and retain the available Modern Mandarin comparison of 曼 màn and 慢 màn, citing the actual inspected source readings. Preserve the separate historical comparison and its supported limitations. Do not delete a verified modern pair merely because it does not prove the ancient relationship. Keep neutral concise learner wording and exact fanqie transcriptions."
+}

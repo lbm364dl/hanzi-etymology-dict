@@ -1,0 +1,24 @@
+{
+  "task": "Resolve the factual role findings: a depicted axe or wood in a scene has a pictorial role, not automatically an additional lexical semantic role. Preserve the qualified pictorial accounts and exact host scopes, removing unsupported semantic roles and corresponding edges while keeping supported formation and prose.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "components[0].roles and relationship xin-斤: Remove the semantic role and semantic_component_of edge while retaining the qualified pictorial role. The cited construction describes 斤 as the depicted axe; chopping wood is the scene’s action, and the evidence does not establish 斤 independently contributing a lexical meaning. Evidence: X-bf29c1495bca84d1218d, X-96f387ea90f2b57035c6, X-2148a98f4e54531107b3.",
+        "components[2].roles and relationship xin-木: Remove the semantic role and semantic_component_of edge. 木 is interpreted as depicted wood in some variable early forms, but the evidence does not establish it as an independent semantic component of 新. Retain its qualified pictorial account. Evidence: X-bf29c1495bca84d1218d, X-2148a98f4e54531107b3"
+      ],
+      "article_hash": "c533dd1ed4a31713ee65a130e6dae369e4b58adf4418cb12fb531794a5337827",
+      "dossier_hash": "62a606fc07376dbe5796cf7c67a2fbd8560ee3e530b4c43b771ddb393cdf39eb",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0f0-da2d-73d0-8106-b53f43611b38"
+    },
+    {
+      "role": "readability",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "c533dd1ed4a31713ee65a130e6dae369e4b58adf4418cb12fb531794a5337827",
+      "dossier_hash": "62a606fc07376dbe5796cf7c67a2fbd8560ee3e530b4c43b771ddb393cdf39eb",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0f1-116f-75f3-9390-8efc87d2ad75"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "edits"
+  ],
+  "properties": {
+    "edits": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field",
+          "text"
+        ],
+        "properties": {
+          "field": {
+            "enum": [
+              "components/1/sound_limitation/text",
+              "components/1/sound/0/text",
+              "relationships/1/text"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "task": "Correct cross-character scope: 大 within 智 does not belong to entry 知 merely because 知 is a phonetic element in 智. Retain the directed phonetic_element_in relationship and cited expert connection; remove unsupported cross-character component cards unless a genuine graphic variant relationship is independently supported. Do not invent a graphic relation to satisfy validation.",
+  "reviews": [],
+  "validation": {
+    "role": "validation",
+    "verdict": "revise",
+    "findings": [
+      "Component '大' belongs to scope '智', but that host has no cited graphic relationship to entry '知'. Add the evidence-supported connection with the correct direction; do not transfer the component to the modern graph."
+    ]
+  }
+}

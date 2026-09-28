@@ -30,7 +30,7 @@
 - **Repo:** https://github.com/unicode-org/unihan-database
 - **Coverage:** 97,000+ characters
 - **Format:** Tab-delimited text; use https://github.com/cihai/unihan-etl for JSON/CSV/YAML export
-- **License:** Unicode Terms of Use (permissive)
+- **License:** Unihan data files use Unicode License v3 unless a file identifies an exception. The checked-in project extract includes the upstream notice in `pipeline/data/LICENSE-UNICODE.txt`.
 - **Key etymology-related fields:**
   - `kRSUnicode` -- Kangxi radical + residual strokes
   - `kPhonetic` -- phonetic class groupings (~1,500 classes)
@@ -38,6 +38,7 @@
   - `kMandarin`, `kCantonese` -- readings
   - `kSemanticVariant`, `kTraditionalVariant`, `kSimplifiedVariant`
 - **Quality:** Authoritative baseline. Standard reference for all CJK metadata.
+- **Editorial-pipeline use:** The local `sources/unihan/Unihan_Readings.txt` is a cross-check for current Mandarin readings. A compact 17.0.0 extract in `pipeline/data/unihan-kmandarin-hsk1.tsv` keeps this check available on a clean checkout; it covers the 300 HSK 1 characters and phonetic forms used in the published pilot. When a sound array needs a modern pair, inspect separate `kMandarin` rows for the component and host, then cite their official character-specific lookup pages, for example `https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=4E0D` for U+4E0D 不. The validator checks proposed Modern Mandarin values against the exact local rows when available. These readings describe current metadata only; they do not establish an ancient phonetic relationship.
 
 ### 4. Wiktionary via Wiktextract (kaikki.org)
 - **Repo:** https://github.com/tatuylonen/wiktextract
@@ -124,8 +125,9 @@
 ### 15. Baxter-Sagart Old Chinese Reconstruction
 - **URL:** https://sites.lsa.umich.edu/ocbaxtersagart/
 - **Coverage:** ~5,000 Old Chinese reconstructions
-- **Format:** XLSX, freely downloadable
+- **Format:** The repository keeps a tab-separated character table at `sources/baxter-sagart/baxtersagart.tsv`. The official [2014 version 1.1 GSR-sorted table](https://sites.lsa.umich.edu/ocbaxtersagart/wp-content/uploads/sites/1415/2025/03/BaxterSagartOCbyGSR2014-09-20.pdf) is the citation target for row-level claims.
 - **Quality:** State-of-the-art OC reconstruction. Essential for understanding phonetic loans and phonetic series.
+- **Editorial use:** Compare exact local rows for both members of a proposed sound relationship. Keep this reconstruction system separate from Zhengzhang and other systems; the bracket notation in this table marks uncertainty, not optional material that can be silently dropped.
 
 ### 16. Schuessler EDOC (ABC Etymological Dictionary of Old Chinese)
 - **Digital version:** https://edoc.uchicago.edu/edoc2013/digitaledoc_index.php (free, web-only)
@@ -207,19 +209,44 @@
 
 ### 29. Xiaoxuetang (小學堂) -- Academia Sinica
 - **URL:** https://xiaoxue.iis.sinica.edu.tw/
-- **Coverage:** 22,000+ characters with glyph evolution
-- **Access:** Web-based, registration may be required
+- **Coverage:** The guide reports more than 220,000 glyph records across oracle, bronze, Warring States, seal, and regular-script forms, plus historical readings.
+- **Access:** Character lookup; selected downloads include independent historical phonology files and a seal font. The official [phonology download page](https://xiaoxue.iis.sinica.edu.tw/ccrdata/) marks the independent sound-data files with the Public Domain Mark (PDM).
+- **Reuse:** The official [rights notice](https://xiaoxue.iis.sinica.edu.tw/License/License) applies CC0 1.0 to glyph images and glyph-attribute information obtained through its query interface. The sound-file PDM statement is separate and does not establish a blanket license for the full database, linked dictionaries, their text, or other Academia Sinica databases. The linked Shang phonology ZIP returned HTTP 401 in this review environment; no file was mirrored or access control bypassed. Store only specifically queried glyph images selected for entries, with record URLs and the rights notice.
+- **Editorial-pipeline access:** Its [official usage guide](https://xiaoxue.iis.sinica.edu.tw/yanbian/Content/Files/yanbian-Get_Started.pdf) describes one-character searches. The form returns the glyph results after submission, so a plain GET or search-engine page may show only the interface. `pipeline/xiaoxuetang.py` performs this lookup only when glyph research finds no usable image or acquisition fails; it queries one locally recorded traditional counterpart when available, otherwise the entry form. A two-second minimum request interval and an hour-long pause after HTTP 401 limit repeated requests. The run keeps its query output, while only selected images and evidence are retained with the reviewed entry. It does not mirror the database.
+- **Editorial-pipeline usage:** Cited in 96 of 155 validated published entries matching the current HSK 1 cohort (counted 2026-09-27).
 
 ### 30. CUHK Multi-function Chinese Character Database
-- **URL:** http://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/
+- **URL:** https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/
 - **Content:** Etymology, ancient script forms, comprehensive per-character data
 - **Access:** Web-based lookup only, no bulk download
 - **Quality:** Rated "world leading" academically
+- **Editorial-pipeline usage:** Cited from this domain in 120 of 155 validated published entries matching the current HSK 1 cohort (counted 2026-09-27).
 
 ### 31. zhongwen.com
 - **URL:** https://zhongwen.com/
 - **Content:** Character etymology tree (Rick Harbaugh's Chinese Characters: A Genealogy and Dictionary)
 - **Access:** Web-based
+
+### 32. Ministry of Education (Taiwan), Dictionary of Chinese Character Variants (教育部《異體字字典》)
+- **URL:** https://dict.variants.moe.edu.tw/
+- **Coverage and content:** 100,000+ character forms, variant links, readings, and source references ([MOE history](https://dict.variants.moe.edu.tw/page.jsp?ID=350&la=1)).
+- **Access and reuse:** Searchable online. The [form-data policy](https://dict.variants.moe.edu.tw/page.jsp?ID=14) says some underlying reference material is not public, limits requests for that material to five main-character records per application, and requires users to observe copyright law. The MOE [public-license portal](https://language.moe.gov.tw/001/Upload/Files/site_content/M0001/respub/index.html) lists four other MOE dictionaries, not this dictionary; no bulk reuse grant for this dataset was identified. Do not mirror its contents without clearer permission.
+- **Editorial-pipeline usage:** Cited from this domain in 110 of 155 validated published entries matching the current HSK 1 cohort (counted 2026-09-27). Keep character-specific links and concise attributed evidence in each dossier while treating it as a lookup source.
+
+### 33. Unicode CJK Radicals Supplement
+- **URL:** https://www.unicode.org/charts/PDF/U2E80.pdf
+- **Content:** Official names and mappings for the CJK radical forms, including relationships between radical glyphs and their ideographs.
+- **Editorial-pipeline use:** Consult the character-specific chart entry when a component's positional shape and its full form need to be distinguished from a historical ancestor. Cite the exact chart record in the entry; do not infer historical development from a Unicode mapping.
+
+### Editorial-pipeline source frequency snapshot (2026-09-27)
+
+Latest refreshed checkpoint: **300 validated HSK 1 entries**. Dossier URLs appear on Wikimedia Commons in 259 entries, CUHK Humanum in 223, the Taiwan variants dictionary in 217, Unicode in 216, Xiaoxuetang in 167, English Wiktionary in 152, and Academia Sinica's character database in 120. These are exact-host counts per entry, not independent corroboration or article-citation counts. The machine-readable file `output/hsk1-source-frequency.json` contains the refreshed totals. The paragraph below records the earlier 155-entry checkpoint.
+
+The current HSK 1 cohort has 300 characters; 155 have validated published v2 entries with learner sections. Twelve additional published pilot entries fall outside the list. Counting distinct validated HSK entries with dossier evidence URLs on each exact hostname, CUHK Humanum and Wikimedia Commons each appear in 120/155, the Taiwan variants dictionary in 110/155, English Wiktionary in 105/155, and Xiaoxuetang in 96/155. Academia Sinica’s character database appears in 60/155, Unicode and Shuowen.org each in 58/155, Chinese Text Project in 55/155, `zdic.net` in 54/155 (with `www.zdic.net` counted separately in 21/155), and Chinese Wikisource in 45/155. The machine-readable checkpoint is `output/hsk1-source-frequency.json` (2026-09-27); it counts dossier URLs, including records that need not be cited in article prose. This counts linked evidence, not independent corroboration: source repetition and search-result-only records do not make a claim stronger. Wiktionary JSONL, Baxter–Sagart data, CJK decomposition, and other structured datasets are already in `sources/`; accepted glyph images are retained as reviewed, hash-checked per-entry snapshots. The recurring online dictionaries still lack a clearly identified blanket reuse grant for their full contents; continue linking to character-specific records instead of mirroring them. Xiaoxuetang's official CC0 notice covers queried glyph images and glyph attributes, not its entire database. Its separate sound-data downloads are marked PDM, but the selected linked file returned HTTP 401 during this review, so it was not cached. Unicode radical charts are directly useful for component-form relationships, but the chart is evidence for its code-point mappings, not historical character derivation. Unihan is the recurring exception where a compact local extract adds a concrete editorial cross-check and the upstream license permits redistribution; keep the extract scoped and retain per-character citations. Source frequency identifies what to investigate, while reuse terms and editorial need decide what to copy.
+
+#### When to add a recurring source locally
+
+Use the corpus frequency snapshot to spot sources worth reviewing, not as permission to copy them. Check the license and terms for the exact material, then ask whether a narrow, versioned extract would support a repeatable pipeline check or useful offline research. If both reuse permission and editorial value are clear, track its upstream version and URL, scope, license notice, checksum, and reproducible export path. Otherwise keep character-specific links and concise evidence paraphrases. A grant for selected glyphs or metadata does not extend to the source's full text or database. The currently approved addition is the project-scoped Unihan `kMandarin` extract documented in `pipeline/data/README.md`; the high-frequency MOE and other dictionary pages remain linked because a blanket reuse right for their contents has not been identified.
 
 ---
 

@@ -1,0 +1,26 @@
+{
+  "task": "Verify the actual same-system 見 and 現 rows and sense-specific readings. Reviewer findings contain a potentially mixed-system suggested correction: never retain a Zhengzhang host paired with Baxter–Sagart component. Retain an existing comparison if its exact citations support both values, and add a verified Baxter–Sagart pair if helpful to explain the learner sound relation. Scope 見 appear versus see readings explicitly. Matching values alone do not prove historical phonetic role. Explain briefly why the historical comparison can differ from current jiàn versus xiàn.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "components[1].sound[0]: Replace the component reading *ɡeːns with 見’s attested Baxter–Sagart 2014 ‘appear’ reading *N-[k]ˤen-s, retaining the host reading *ɡeːns only if both readings are from one reconstruction system. The current item labels both values Zhengzhang, but the supplied Baxter–Sagart rows give 現 *N-[k]ˤen-s and 見 *N-[k]ˤen-s (X-6376fed4ada08ea11265); the cited Zhengzhang comparison separately reports 現 *ɡeːns and 見 *keːns or *ɡeːns (X-89de0bbdfb4a972a09f4, X-739e15fdea40cab431ab). Use the same-system Baxter–Sagart pair and cite its evidence, while retaining the limitation that a reading comparison alone does not establish the graph’s phonetic role."
+      ],
+      "article_hash": "a827c6375e43cd5f31a559b8fdc930c9140592714b8c3e7aeaa19a82cd0a857b",
+      "dossier_hash": "5290800f709f6bc2b1c8855b6dce3890c8d92705b395749887afb56fd8945aa0",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0ea-e07c-7b83-b1f4-ced937bf0d84"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`components[1].sound_limitation`: add a separate cited Baxter–Sagart comparison using the supplied local rows: 見 *N-[k]ˤen-s and 現 *N-[k]ˤen-s. Clarify that the matching listed readings do not independently establish 見’s phonetic role in 現. Cite `X-6376fed4ada08ea11265` for 現 and `X-89de0bbdfb4a972a09f4` for the reported 見 comparison; retain the distinct Zhengzhang limitation.",
+        "`learner.components[1].text`: explain the non-obvious sound analysis for a first-time reader. The article’s cited historical comparison includes a matching 見 and 現 reading, while their displayed Modern Mandarin readings jiàn and xiàn differ. Briefly state that distinction and cite the relevant sound evidence."
+      ],
+      "article_hash": "a827c6375e43cd5f31a559b8fdc930c9140592714b8c3e7aeaa19a82cd0a857b",
+      "dossier_hash": "5290800f709f6bc2b1c8855b6dce3890c8d92705b395749887afb56fd8945aa0",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0eb-266f-7371-b3fb-c93bef46f9a6"
+    }
+  ]
+}

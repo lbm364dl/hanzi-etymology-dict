@@ -1,0 +1,31 @@
+{
+  "task": "Resolve exact 隹 same-system readings with independently inspected primary rows and citations for both component and host. Add actual evidence for reported bare 隹 use, and keep image availability limitation confined to what was inspected. For the speech component, document the cited chain of its traditional meaning contribution and regular standardized representation in the same word; this can support the continuing meaning contribution without a new historical-origin claim. Keep 讠 scoped to 谁 and 言/訁 to 誰; never place 讠 in the traditional host. Current semantic role is distinct from classifying the entry ancient formation. Keep source/period labels accurate, including MC data in the Baxter–Sagart table.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`components[0]` is scoped to 谁, but its cited account describes 讠 as the simplified 訁 component in traditional 誰. Either remove this redundant card and its `semantic_component_of` edge `r1`, or scope the component and edge to 誰; the evidence supports 訁 → 讠 simplification, not an independently established semantic role for 讠 inside 谁. Keep the whole-character simplification in `r3`.",
+        "`components[0].sound` compares 讠 with 谁, but its `character_reading` is `shéi`, whereas the supplied local Unihan row gives 谁 as `shéi` and 誰 as `shuí shéi`; the comparison is correctly scoped to 谁, so the reading itself is supported. However, this card is redundant with the traditional component analysis and the current simplified graph is already represented by `r3`; remove the component sound pair along with the redundant card/edge rather than changing it to a 誰 reading.",
+        "`components[2].sound[0].evidence_ids` cite E17 and X-a49df…, which do not supply the 隹 Middle Chinese value `tsywij`; X-a49df… explicitly says no local row for 隹 was supplied. Cite the supplied Baxter–Sagart 隹 row as evidence for this comparison.",
+        "`components[2].sound[1].evidence_ids` do not support the cited Baxter–Sagart Old Chinese component reading `*tur`: E17 supplies the host value only, and X-5ff… gives Zhengzhang values, not Baxter–Sagart. Cite evidence supporting both Baxter–Sagart readings or remove this comparison.",
+        "`relationships[r2].evidence_ids` omit support for its claim that a bronze inscription used bare 隹 read as 誰. Add X-aef66311689aaeb0f238 and X-fe911d4f0931f9ee61b4, which support that reported reading.",
+        "`historical_glyphs.limitations[0].text` says no character-specific image is available, while the evidence establishes only that no verified image was inspected or selected. Rephrase to state that no verified character-specific image is available for display in this entry, without implying none exists."
+      ],
+      "article_hash": "1256f603569d1d5d58f6ee456bda204ec760245ac014035d4e3043c556ded15e",
+      "dossier_hash": "f468ac59c9efefe0a1ae4d1f7ab2001f4987c08f65f590d3ae3c653f05272142",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0f9-c20e-7f72-b3e5-55409362514b"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`components[0]` and `learner.components[0]` treat 讠 as a semantic component scoped to 谁. The evidence supports the semantic role for 言/訁 in traditional 誰 and identifies 誰 → 谁 with 訁 → 讠, but does not establish 讠 as an independently analyzed semantic component in 谁 (E3, E7, E8). Remove this separate current component/card, or scope it to traditional 誰 as the simplified form of 訁; keep the whole-character simplified relationship in `relationships`.",
+        "`components[2].sound[0].system` labels the Middle Chinese pair as “Baxter–Sagart 2014, Middle Chinese.” The cited Baxter–Sagart table does supply MC values, but its MC column is Middle Chinese rather than an Old Chinese reconstruction. Change the label to `Middle Chinese`; keep the existing readings `tsywij` and `dzywij` (E17, X-a49df6329e9939d76860)."
+      ],
+      "article_hash": "1256f603569d1d5d58f6ee456bda204ec760245ac014035d4e3043c556ded15e",
+      "dossier_hash": "f468ac59c9efefe0a1ae4d1f7ab2001f4987c08f65f590d3ae3c653f05272142",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0fa-3b3a-7052-ad5b-3e65140674d8"
+    }
+  ]
+}

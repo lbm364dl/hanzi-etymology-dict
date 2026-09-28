@@ -1,0 +1,6 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "`components[1].sound[0]` cites local Unihan data that gives both 占 and 站 as zhàn, but cites X-432e0906c5c999c7a47a and X-2597dce044648260c079, which say the local file returned neither row for these characters and only packet metadata supplied 站. Cite the dossier’s `local_primary_readings.unihan.rows` evidence or accurately state that the comparison comes from packet metadata; do not attribute it to the failed lookup."
+  ]
+}

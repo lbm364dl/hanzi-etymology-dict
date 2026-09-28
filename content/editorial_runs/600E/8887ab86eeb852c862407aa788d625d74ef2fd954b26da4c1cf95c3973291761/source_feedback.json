@@ -1,0 +1,25 @@
+{
+  "task": "Make only the concrete corrections in the latest independent reviews. Preserve unaffected approved fields, citations and readings. Retain uncertainty where the evidence does not establish a mechanism. Whole-character interpretations belong in prose, not self-components.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "In `components[1].sound[1]`, `character_reading: \"tsak\"` is the proposed Middle Chinese reading of 作 in 作勿生／作沒生, not a reading of the scoped host 怎. Remove this row or replace it with a cited pair for 乍 and 怎 in the same system. The evidence supports 乍’s Middle Chinese `dzraeH`, but supplies no matched historical reading for 怎; retain the existing Modern Mandarin comparison and explain this limitation separately."
+      ],
+      "article_hash": "f9d4c9e9c266b19b80258d4ac63243c0206e3ba8bb7ed1743bcc3f291eb8f10c",
+      "dossier_hash": "b3b581b61e6c235b4f6a0322385d01910ec8e711e620e808e08d057f839a97f2",
+      "reviewer": "gpt-6-luna:low:factual:01a0e112-c332-7b93-8b2e-5e400d4c3e68"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `components[1].sound[1].character_reading` and `components[1].sound[1].system`, `tsak` is presented as the host reading, but the cited account assigns it to 作 in proposed expressions 作勿生／作沒生; it does not establish a reading for 怎 (`E3`, `X-3b63048886dd7437b117`). Remove this mismatched host comparison, retaining the lexical-proposal context in `sound_limitation` or prose. Keep the separate Modern Mandarin pair and its caveat."
+      ],
+      "article_hash": "f9d4c9e9c266b19b80258d4ac63243c0206e3ba8bb7ed1743bcc3f291eb8f10c",
+      "dossier_hash": "b3b581b61e6c235b4f6a0322385d01910ec8e711e620e808e08d057f839a97f2",
+      "reviewer": "gpt-6-luna:low:readability:01a0e112-f475-7a01-827a-c61e816d315c"
+    }
+  ]
+}

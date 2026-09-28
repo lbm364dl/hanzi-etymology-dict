@@ -1,0 +1,48 @@
+{
+  "task": "Independently verify the latest edge finding against the actual field and schema. The edge is already certainty disputed and its text explicitly says one analysis proposes corruption while others reject it. Such a cited graph hypothesis is supported by schema and review policy; the predicate alone does not assert historical certainty. Do not remove an adequately qualified supported hypothesis merely because accounts disagree, and do not invent a neutral predicate absent from the schema. Preserve the article exactly if no real correction is needed; otherwise correct only an actual overstatement supported by the cited evidence. Obtain fresh independent reviews under the clarified graph policy.",
+  "actual_edge": {
+    "id": "教-component-孝",
+    "subject": {
+      "kind": "component",
+      "id": "孝"
+    },
+    "object": {
+      "kind": "character",
+      "id": "教"
+    },
+    "predicate": "replacement_component_of",
+    "context_character": "教",
+    "certainty": "disputed",
+    "text": "One analysis treats visible 孝 as a graphic corruption of earlier 𡥉; other analyses differ on or reject this connection, so its direction and status remain disputed.",
+    "evidence_ids": [
+      "X-c591a16605448f5955ab",
+      "X-51d93845489b962c42f9",
+      "X-85b408c7122b17de1226",
+      "X-2cf609b1fd1963735227",
+      "X-31d41a0b099749ea1451",
+      "X-ef3ca2ce75943f4efee6",
+      "X-03927b05fc691ffea933",
+      "X-b50960496d8b170fd846"
+    ]
+  },
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "In `relationships[1]`, the `replacement_component_of` predicate and text asserting that 孝 is a graphic corruption of 𡥉 overstate the evidence. The cited sources report that as one disputed analysis, while others reject or differ on the connection (X-c591a16605448f5955ab, X-51d93845489b962c42f9, X-85b408c7122b17de1226, X-2cf609b1fd1963735227, X-03927b05fc691ffea933). Remove this replacement edge or use a neutral graphic-connection predicate if available, keeping the disputed proposal in the component prose."
+      ],
+      "article_hash": "d123c9e660a45c48406adcf3cbca875cf5d4cceba2dfd3e37725d46830a15d0d",
+      "dossier_hash": "e4f05e4cab75e2f4753520ba86e1e415fa2fb8244934f6bf25f2116ca38d6e2b",
+      "reviewer": "gpt-6-luna:low:factual:01a0e12f-8544-7a23-b4d7-ecbdf7cb2bec"
+    },
+    {
+      "role": "readability",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "d123c9e660a45c48406adcf3cbca875cf5d4cceba2dfd3e37725d46830a15d0d",
+      "dossier_hash": "e4f05e4cab75e2f4753520ba86e1e415fa2fb8244934f6bf25f2116ca38d6e2b",
+      "reviewer": "gpt-6-luna:low:readability:01a0e12f-af33-7593-8c6f-424ae96e61a6"
+    }
+  ]
+}

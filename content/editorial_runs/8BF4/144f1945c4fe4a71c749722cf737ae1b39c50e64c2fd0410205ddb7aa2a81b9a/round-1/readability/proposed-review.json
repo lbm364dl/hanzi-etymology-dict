@@ -1,0 +1,6 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "components[1].sound[0]: the pair lists Modern Mandarin readings 兑 duì and 说 shuō, but the scoped host is 说 and local Unihan gives the correct host reading; however the evidence IDs cite access failures that explicitly say no 兑 row was supplied. Replace the comparison with the available local Unihan pair 兌 duì and 說 shuō for the traditional host analysis, scope the component to 說 (or cite available local rows for 兑 and 说 if retaining the simplified host), and update the sound text and evidence IDs accordingly. As written, the comparison uses unsupported evidence for 兑 and does not establish the scoped host's pronunciation."
+  ]
+}

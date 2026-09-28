@@ -1,0 +1,24 @@
+{
+  "task": "Make only the concrete corrections in the latest independent reviews. Preserve unaffected approved fields, citations and readings. Retain uncertainty where the evidence does not establish a mechanism. Whole-character interpretations belong in prose, not self-components.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`learner.overview.text` presents the proposed sound-based reuse as a match: “because the words sounded alike.” Rephrase it as a proposed sound-based reuse whose match is compatible with the cited Baxter–Sagart comparison, while keeping the unknown old object-name caveat. `X-a5c92e5fd3959848b7b8` describes the readings as compatible, not as proof; `X-a3bd81e427db8a7f33a3` and `X-032c823cdf5efc9a0ced` leave 才’s object-name and pronunciation unsettled.",
+        "Change `meaning_history.senses[id=\"在:exist\"].certainty` from `probable` to `established`, and set the generated `has_sense` edge for `在:exist` to the same certainty. The cited evidence reports bronze uses for existence (`X-e9902958d87c4965e1a3`, `X-2645f2ead2e4859b80b3`, `X-c506d7ddeb21ac97c9cb`); uncertainty about when this sense arose does not make the reported usage itself uncertain."
+      ],
+      "article_hash": "2a4c6a7b39010c75f733c2869fff1c7c0add6512c99c8160c081ffe22a331c9b",
+      "dossier_hash": "e1a6339206d133816f81600c0b0825cfe20027791ecbe07191af4d20b9c45d5b",
+      "reviewer": "gpt-6-luna:low:factual:01a0e110-dd46-7c91-9a82-cc8bdd7bc2d5"
+    },
+    {
+      "role": "readability",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "2a4c6a7b39010c75f733c2869fff1c7c0add6512c99c8160c081ffe22a331c9b",
+      "dossier_hash": "e1a6339206d133816f81600c0b0825cfe20027791ecbe07191af4d20b9c45d5b",
+      "reviewer": "gpt-6-luna:low:readability:01a0e111-17c2-7df2-812b-b3deb32eef54"
+    }
+  ]
+}

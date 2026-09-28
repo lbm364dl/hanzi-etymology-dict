@@ -1,0 +1,90 @@
+{
+  "job": "runs/form-relations/56FD",
+  "source_approval": {
+    "status": "approved",
+    "article_hash": "08e7ee858e0fba8f3ffc87d14e59e6af0c61a1712b9d8450905b8bbcedd93e5b",
+    "dossier_hash": "a4bf2e28e5cce7595bc4db94af760f6a596e7ec523cc0d8b70fd272cc8395943",
+    "reviews": [
+      {
+        "role": "factual",
+        "verdict": "pass",
+        "findings": [],
+        "article_hash": "08e7ee858e0fba8f3ffc87d14e59e6af0c61a1712b9d8450905b8bbcedd93e5b",
+        "dossier_hash": "a4bf2e28e5cce7595bc4db94af760f6a596e7ec523cc0d8b70fd272cc8395943",
+        "reviewer": "v2-factual:/root/pilot_writer"
+      },
+      {
+        "role": "readability",
+        "verdict": "pass",
+        "findings": [],
+        "article_hash": "08e7ee858e0fba8f3ffc87d14e59e6af0c61a1712b9d8450905b8bbcedd93e5b",
+        "dossier_hash": "a4bf2e28e5cce7595bc4db94af760f6a596e7ec523cc0d8b70fd272cc8395943",
+        "reviewer": "v2-readability:/root"
+      }
+    ]
+  },
+  "review_scope": "component_form_relations",
+  "stages": [
+    {
+      "stage": "round-0/form_annotation",
+      "status": "complete",
+      "fingerprint": "e2de86a815dd11514fa9c4b2aace2648dcb57b4e9e63a24309bbc12fc5b5efc6",
+      "role": "form_annotation",
+      "model": "gpt-6-luna",
+      "reasoning": "low",
+      "started_at": 1790433223.8480601,
+      "agent_thread_ids": [
+        "01a0de22-e59f-7ca3-9de6-77904a32d137"
+      ],
+      "web_search_calls": 0,
+      "result_hash": "a493bc64b4fe3e6f592cd28bd539f62fae0516f08998e0914b33846f4d23a19e",
+      "finished_at": 1790433230.9899552
+    },
+    {
+      "stage": "round-1/factual",
+      "status": "complete",
+      "fingerprint": "f38852763369bd3cae0dccb7857869e16218e99657682358dc9959624987079a",
+      "role": "factual",
+      "model": "gpt-6-luna",
+      "reasoning": "low",
+      "started_at": 1790433236.1743422,
+      "agent_thread_ids": [
+        "01a0de23-15d3-7920-81c7-03f01868b1ed"
+      ],
+      "web_search_calls": 0,
+      "result_hash": "1687ba385160b0a52b3874d95dcb347ceee9c8d7bf87739d2c7043eb03b330bc",
+      "finished_at": 1790433239.5519543
+    },
+    {
+      "stage": "round-1/form_annotation",
+      "status": "complete",
+      "fingerprint": "f9571b5c7ed4a8bc0c7f9029f68501a914981aa210989a85d2a1f3cb44ab2192",
+      "role": "form_annotation",
+      "model": "gpt-6-luna",
+      "reasoning": "low",
+      "started_at": 1790433230.992323,
+      "agent_thread_ids": [
+        "01a0de23-0174-7b30-910b-4f8400e7a37f"
+      ],
+      "web_search_calls": 0,
+      "result_hash": "9710adacd61117089b19626aa3ef04a30d6a38571e3fd568d8cc622bc2a21082",
+      "finished_at": 1790433236.1714382
+    },
+    {
+      "stage": "round-1/readability",
+      "status": "complete",
+      "fingerprint": "a5bb6291319330c2780e8f938b33d818800d7090dfce6183749aaaa2439104a0",
+      "role": "readability",
+      "model": "gpt-6-luna",
+      "reasoning": "low",
+      "started_at": 1790433239.5535152,
+      "agent_thread_ids": [
+        "01a0de23-230a-7ee1-b530-6f61fd264533"
+      ],
+      "web_search_calls": 0,
+      "result_hash": "1687ba385160b0a52b3874d95dcb347ceee9c8d7bf87739d2c7043eb03b330bc",
+      "finished_at": 1790433242.879371
+    }
+  ],
+  "previous": null
+}

@@ -1,0 +1,27 @@
+{
+  "character": "叫",
+  "removed_unreferenced_external_evidence": [
+    "X-be28f4652b3d7a407281"
+  ],
+  "verified_local_rows": {
+    "source": "sources/unihan/Unihan_Readings.txt",
+    "role": "internal validation only; not entry citation",
+    "rows": {
+      "丩": "jiū",
+      "叫": "jiào"
+    },
+    "missing_rows": []
+  },
+  "reason": "The local table is an internal validation source, not a click-through evidence record. Current readings in the entry are cited to the inspected official MOE pages.",
+  "removed_audits": [
+    {
+      "query": "Local exact-row cross-check, no web search",
+      "urls": [
+        "https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=4E29",
+        "https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=53EB"
+      ],
+      "outcome": "Searched sources/unihan/Unihan_Readings.txt for both code points and character strings. No kMandarin rows were found. The official Unicode URLs are provided as character lookup links; they were not opened in this check."
+    }
+  ],
+  "removed_gaps": []
+}

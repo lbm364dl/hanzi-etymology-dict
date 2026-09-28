@@ -1,0 +1,25 @@
+{
+  "task": "Resolve actual supported corrections with minimal edits. The readability reviewer requests simplified_form for components[0], but its literal pair is form 訁 with origin_form 言, scoped to 謝, not 讠 from 訁. Do not apply a classification to the wrong endpoints. Verify positional/full-form support for 訁 and 言, retain uncertainty if needed, and describe the separate documented 訁 to 讠 simplification correctly. Learner overview plus component cards already identifies speech meaning and 射 sound; assess the whole learner view without requiring duplication, but make the combined construction clear if needed. Preserve qualified historical comparisons and evidence.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`learner.overview.text` calls 謝 a “speech-related phonosemantic compound” but does not explain its meaning contribution. Revise it to say that 言 marks the speech-related category and 射 supplies the sound cue, supported by E7 or E8. The separate component card does not explain how the whole compound works."
+      ],
+      "article_hash": "d6e37688a28e9d161a4528703890e89292ee562cf54cec21a87679da057fad1f",
+      "dossier_hash": "f7d7cfe06433f2c02a5e2825317cdfc0c45aa13300cc63bac26ce794ab5d4e76",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0f5-1566-7282-b491-86c69147e303"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "Set `components[0].origin_relation` to `simplified_form` and revise its explanation to state that 訁 in traditional 謝 is represented by standardized 讠 in 谢. The entry already identifies 谢 as simplified from 謝, and the evidence explicitly supports 訁 → 讠; the current `uncertain` value and claim that this graphic relation is unresolved are incorrect. Cite E3, X-b12007ffc3cf685e1d18, and X-8ad36fd5e7e47999dd9e."
+      ],
+      "article_hash": "d6e37688a28e9d161a4528703890e89292ee562cf54cec21a87679da057fad1f",
+      "dossier_hash": "f7d7cfe06433f2c02a5e2825317cdfc0c45aa13300cc63bac26ce794ab5d4e76",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0f5-62f7-7d80-9857-2f4995b1f4a5"
+    }
+  ]
+}

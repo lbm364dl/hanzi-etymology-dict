@@ -1,0 +1,32 @@
+{
+  "task": "Keep competing accounts distinct: the received analysis gives 心 meaning and 自 sound, while another identifies lower breath strokes later regularized toward 心. Do not claim both accounts make modern 自 and 心 semantic. Describe each proposed identity and role accurately, retain uncertainty and separate attested breathing/panting glosses from disputed early graphic interpretation. origin_form accepts a literal graph only: if no literal earlier form is identified, use an empty value and explain breath strokes in prose.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "505d03124d0ace3f4619e42ae7d82d8ad7f06c4482c48a8db10e78a77644befd",
+      "dossier_hash": "259d42655c7dc054e4c2a5ec006be3d3984a5613c70b8908aeab3d8d50639e25",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0e8-66ae-7613-b200-420b00b167ca"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`learner.overview.text` claims both analyses have 自 and 心 “both contributing meaning,” but the breath-stroke account treats the lower strokes as breath later regularized toward 心, and the received 說文 analysis assigns 自 a phonetic role. Revise the overview to describe the disputed alternatives accurately (E2, E3, X-ebc0a0e0ffe4374b2b9c, X-33f420bfcf4b71610776, X-f7850d3ce9d94b60140b, X-fc078abc8393f81a70a1, X-ba7a1ab51f717785cf9a, X-642f314afded57f883d7).",
+        "`components[1].text` says 心’s role in the earliest graph is disputed but does not state the competing accounts clearly. Specify that one account treats 心 as semantic, while another identifies the lower strokes as breath later regularized toward 心 (E2, X-ebc0a0e0ffe4374b2b9c, X-33f420bfcf4b71610776, X-fc078abc8393f81a70a1, X-ba7a1ab51f717785cf9a).",
+        "`meaning_history.senses[0].text` links the received dictionary gloss to accounts’ interpretation of the proposed early graph without clearly separating the attested breathing/panting gloss from the disputed graphic interpretation. Separate those claims and retain that the gloss does not establish the earliest attestation (E3, E5, X-33f420bfcf4b71610776, X-f7850d3ce9d94b60140b, X-ba7a1ab51f717785cf9a, X-642f314afded57f883d7)."
+      ],
+      "article_hash": "505d03124d0ace3f4619e42ae7d82d8ad7f06c4482c48a8db10e78a77644befd",
+      "dossier_hash": "259d42655c7dc054e4c2a5ec006be3d3984a5613c70b8908aeab3d8d50639e25",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0e8-961a-7860-b318-482cf320843f"
+    }
+  ],
+  "validation": {
+    "role": "validation",
+    "verdict": "revise",
+    "findings": [
+      "Component origin_form must be a literal form, not prose: ' breath-strokes'; use text for explanation and empty origin_form if absent"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "evidence": [
+    {
+      "source": "Ministry of Education, Taiwan, Dictionary of Chinese Character Variants",
+      "field": "漢語拼音; 注音",
+      "text": "The 丩 entry gives Mandarin Pinyin jiū (注音 ㄐㄧㄡ).",
+      "record_character": "丩",
+      "kind": "dictionary_entry",
+      "url": "https://dict.variants.moe.edu.tw/dictView.jsp?educode=C00010&powerMode=2",
+      "title": "[C00010] 丩 - 教育部《異體字字典》",
+      "accessed_at": "2026-09-27"
+    },
+    {
+      "source": "Ministry of Education, Taiwan, Dictionary of Chinese Character Variants",
+      "field": "漢語拼音; 注音; 說文釋形",
+      "text": "The 叫 entry gives Mandarin Pinyin jiào (注音 ㄐㄧㄠˋ) and repeats the traditional analysis “从口，丩聲.”",
+      "record_character": "叫",
+      "kind": "dictionary_entry",
+      "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=5412&q=1",
+      "title": "[A00491] 叫 - 教育部《異體字字典》",
+      "accessed_at": "2026-09-27"
+    },
+    {
+      "source": "Local tracked Unihan readings dataset; upstream record identity cross-link",
+      "field": "sources/unihan/Unihan_Readings.txt exact kMandarin rows for U+4E29 and U+53EB",
+      "text": "Searched the specified file for both code points and for the character strings. No kMandarin row was found for 丩 (U+4E29) or 叫 (U+53EB); only unrelated kFanqie matches appeared. Official per-code-point Unihan lookup links: 丩 https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=4E29 and 叫 https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=53EB. This local check provides no Unihan Mandarin reading values.",
+      "record_character": "丩; 叫",
+      "kind": "local_dataset_crosscheck",
+      "url": "https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=4E29",
+      "title": "Unihan lookup for U+4E29 and U+53EB (official character lookup links)",
+      "accessed_at": "2026-09-27"
+    }
+  ],
+  "search_audit": [
+    {
+      "query": "site:dict.variants.moe.edu.tw/dictView.jsp educode=C00010 丩 教育部 字典 Pinyin 丩 叫",
+      "urls": [
+        "https://dict.variants.moe.edu.tw/dictView.jsp?educode=C00010",
+        "https://dict.variants.moe.edu.tw/dictView.jsp?ID=5412&la=1",
+        "https://dict.variants.moe.edu.tw/dictView.jsp?ID=5412&q=1"
+      ],
+      "outcome": "Performed one web search for the exact Taiwan MOE entries. Opened the requested 丩 and 叫 URLs; verified Pinyin jiū and jiào, and that 叫 repeats the traditional 从口，丩聲 analysis."
+    },
+    {
+      "query": "Local exact-row cross-check, no web search",
+      "urls": [
+        "https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=4E29",
+        "https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=53EB"
+      ],
+      "outcome": "Searched sources/unihan/Unihan_Readings.txt for both code points and character strings. No kMandarin rows were found. The official Unicode URLs are provided as character lookup links; they were not opened in this check."
+    }
+  ],
+  "gaps": [
+    "The requested Unihan file contains no kMandarin rows for either character, so it cannot independently confirm their current Mandarin readings. The MOE entries provide the readings cited above.",
+    "This check concerns current readings only; it does not assess or modify Middle Chinese or Old Chinese reconstructions."
+  ]
+}

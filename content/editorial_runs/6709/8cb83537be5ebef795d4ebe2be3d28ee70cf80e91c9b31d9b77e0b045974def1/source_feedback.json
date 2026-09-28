@@ -1,0 +1,30 @@
+{
+  "task": "Resolve actual role certainty for the received 月/eclipse analysis. Distinguish the reported association from an established lexical semantic component function; if supported only as a proposal, represent that precisely rather than claiming agreement across competing origins. Keep role arrays and contextual edges consistent, and keep sound_limitation only on phonetic or unresolved components. Preserve the supported alternative early account and reader clarity.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`components[1].roles` and the generated `有:shuowen-moon` relationship classify 月 as semantic. The cited 說文 account records 月 plus sound-bearing 又 and explains 月 through the eclipse passage (E2, X-d9e54f316ef72d49915e, X-3c7e3162016e44ebc7d5); it does not establish 月 as a semantic component. Remove the semantic role and `semantic_component_of` relationship, or otherwise represent the eclipse link only as the received account’s proposed association, not an established component function."
+      ],
+      "article_hash": "0c92207bc3135db8eeda7dea0809c8e9084397dc20f8b3f05f8fbdd6cf80ed57",
+      "dossier_hash": "c78427fc1a65ec4daa15571b471b737118a9c1d2d9f2af73b53b1142798a5a94",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0fb-e4d4-7e60-90b9-db7d9ac9259d"
+    },
+    {
+      "role": "readability",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "0c92207bc3135db8eeda7dea0809c8e9084397dc20f8b3f05f8fbdd6cf80ed57",
+      "dossier_hash": "c78427fc1a65ec4daa15571b471b737118a9c1d2d9f2af73b53b1142798a5a94",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0fc-3449-7241-8c16-0f0e5bf701ee"
+    }
+  ],
+  "validation": {
+    "role": "validation",
+    "verdict": "revise",
+    "findings": [
+      "A sound limitation requires a phonetic or unresolved component role"
+    ]
+  }
+}

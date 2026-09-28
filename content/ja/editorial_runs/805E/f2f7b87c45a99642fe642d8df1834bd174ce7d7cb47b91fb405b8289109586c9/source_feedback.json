@@ -1,0 +1,6 @@
+{
+  "findings": [
+    "In `learner.components`, remove cards with `component_index` 2 and 3. They describe the separate historical graph 䎽, while `components` contains only the two current components of 聞 (index 0: 耳, index 1: 門); learner cards must correspond to detailed components.",
+    "`article.learner.components` should contain cards only for the current 聞 components described by `article.components` at indices 0 and 1. Remove cards 2 and 3, which describe 耳 and 昏 scoped to the separate ancient graph 䎽, and retain that historical analysis in the expert account. The current learner cards already use indices 0 and 1; the extra cards do not match current 聞. Evidence: X-6601b345ab9187bbc7c4, X-23387a3c4503bc49c19f."
+  ]
+}

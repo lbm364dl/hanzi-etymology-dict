@@ -1,0 +1,6 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "`components[1].sound[1]`: the Modern Mandarin comparison lists 各 gè and 路 lù, and both readings match the supplied local Unihan rows. But its evidence IDs (`X-3b97cb54a799c2221f77`, `E7`) do not establish both readings: the reconstruction-table record supports 各 gè, while E7 lists 路 lù without identifying it as Modern Mandarin. Add evidence that directly supports the modern reading pair, or remove this comparison; keep the Old Chinese comparison and its separate limitation."
+  ]
+}

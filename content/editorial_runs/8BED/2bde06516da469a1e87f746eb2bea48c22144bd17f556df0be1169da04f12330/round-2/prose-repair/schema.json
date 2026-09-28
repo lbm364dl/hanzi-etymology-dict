@@ -1,0 +1,57 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "edits"
+  ],
+  "properties": {
+    "edits": {
+      "type": "array",
+      "minItems": 25,
+      "maxItems": 25,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field",
+          "text"
+        ],
+        "properties": {
+          "field": {
+            "enum": [
+              "summary/text",
+              "formation/text",
+              "components/0/text",
+              "components/1/text",
+              "components/1/sound/0/text",
+              "components/1/sound/1/text",
+              "components/1/sound/2/text",
+              "history/0/text",
+              "history/1/text",
+              "uncertainties/0/text",
+              "uncertainties/1/text",
+              "meaning_history/senses/0/text",
+              "meaning_history/senses/1/text",
+              "meaning_history/senses/2/text",
+              "meaning_history/limitations/0/text",
+              "meaning_history/limitations/1/text",
+              "learner/overview/text",
+              "learner/components/0/text",
+              "learner/components/1/text",
+              "relationships/0/text",
+              "relationships/1/text",
+              "relationships/2/text",
+              "relationships/3/text",
+              "relationships/4/text",
+              "relationships/5/text"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "task": "Address the review citation scopes and standardization wording. Do not require literal Unihan delimiter formatting in readable prose: shí / shì and shí shì enumerate the same two readings; verify meanings and keep sound systems distinct.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "components[3].sound[0].evidence_ids and components[3].sound[1].evidence_ids: remove X-94225871f924697f3eb3 from these citations. It supports the host 識 readings only; cite X-bf04afc9a3aa7ca79e33 and X-bc10323f44f26b542780 for the 戠 *tək component and host reading pairs.",
+        "learner.overview.text: replace “The simplified 只 represents 戠 only in 识” with wording that says standardization substitutes 只 for 戠 in 识. The current phrase can mislead readers about the graphic relationship; the cited standard supports this substitution (X-772ededa1d52d83b1c28, X-72a829ea44f8b4c3d9bd)."
+      ],
+      "article_hash": "8de790f66c71a0108a05f797fcdd23d86bed48cbbb768b97619f11f2554aecb9",
+      "dossier_hash": "40de496d4d1404640c4b7786f0778cc4ebb330a39f4ff7cb73c47111377408dc",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0b2-0adc-7d32-bbdd-b9d1e467f944"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "components[3].sound[2].character_reading is “shí / shì,” but the supplied local Unihan kMandarin row for scoped host 識 is “shí shì.” Replace it with “shí shì” and update the comparison text accordingly, citing X-312d35438b666e789980."
+      ],
+      "article_hash": "8de790f66c71a0108a05f797fcdd23d86bed48cbbb768b97619f11f2554aecb9",
+      "dossier_hash": "40de496d4d1404640c4b7786f0778cc4ebb330a39f4ff7cb73c47111377408dc",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0b2-37d3-7ef1-9544-8a1fc50bc451"
+    }
+  ]
+}

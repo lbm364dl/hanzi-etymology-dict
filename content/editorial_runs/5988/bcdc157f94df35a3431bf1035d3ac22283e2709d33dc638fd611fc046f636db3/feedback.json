@@ -1,0 +1,22 @@
+[
+  {
+    "role": "factual",
+    "verdict": "revise",
+    "findings": [
+      "In `components[1].sound[1]`, `component_form` is `马`, but the cited local Unihan rows (X-2bdf4644c325023e43db) report `mǎ` for `馬` (U+99AC), not `马` (U+9A6C). Change `component_form` to `馬` and clarify that the pair compares the readings of `馬` and `媽`; retain `mǎ` and `mā` as the readings."
+    ],
+    "article_hash": "37f9b84ba03563df4294cd69c1f623e72050932fb72163237c95b403924e113a",
+    "dossier_hash": "2843585da19033c06af83811fb85a0076048efde21a08e8331271779a81e67fb",
+    "reviewer": "gpt-6-luna:low:factual:01a0e038-a21f-76b3-8125-2a26dd806e70"
+  },
+  {
+    "role": "readability",
+    "verdict": "revise",
+    "findings": [
+      "In `learner.components[1].text`, replace “similar initial and broad rhyme despite the vowel difference” with a brief plain-language explanation: the reported older pronunciations begin similarly and have broadly similar rhymes, though their vowels differ. This comparison is supported by `X-3f424eaee6ecf25b8343`; explain it directly so learners can see why 馬 is proposed as a sound cue."
+    ],
+    "article_hash": "37f9b84ba03563df4294cd69c1f623e72050932fb72163237c95b403924e113a",
+    "dossier_hash": "2843585da19033c06af83811fb85a0076048efde21a08e8331271779a81e67fb",
+    "reviewer": "gpt-6-luna:low:readability:01a0e038-c9c4-7c10-addd-c8de90ac0f9e"
+  }
+]

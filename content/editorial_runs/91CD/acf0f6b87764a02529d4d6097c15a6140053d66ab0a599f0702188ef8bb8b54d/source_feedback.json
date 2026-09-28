@@ -1,0 +1,23 @@
+{
+  "task": "Make only the latest required corrections. Preserve unaffected fields, citations and supported readings. For 重, align each learner component card to its own corresponding detailed component, retaining uncertainty.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "d1826db526e0ab6acbdc3c3379e47b0fd6eb82ff7793c8c5d872265aedd485ec",
+      "dossier_hash": "f0d3d3f2aff9d9442e5c9aa06a576126ae2c1a425a2400e29258c60781bc39a2",
+      "reviewer": "gpt-6-luna:low:factual:01a0e11c-f129-7932-b4b0-c194f4e90d5f"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `learner.components[2]`, explain only the proposed sack reading of 東; it currently also assigns 土 the role of a weight. In `learner.components[3]`, explain only the proposed weight reading of 土; it currently repeats the sack-and-weight account. Keep each card aligned with its corresponding detailed component, preserving the disputed qualification and citations (X-75b1a52fddcba6bfdb8a, X-8f96943666a39eef08c3)."
+      ],
+      "article_hash": "d1826db526e0ab6acbdc3c3379e47b0fd6eb82ff7793c8c5d872265aedd485ec",
+      "dossier_hash": "f0d3d3f2aff9d9442e5c9aa06a576126ae2c1a425a2400e29258c60781bc39a2",
+      "reviewer": "gpt-6-luna:low:readability:01a0e11d-22b0-7a91-976f-4c7076a35280"
+    }
+  ]
+}

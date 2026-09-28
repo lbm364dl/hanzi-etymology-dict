@@ -1,0 +1,23 @@
+[
+  {
+    "role": "factual",
+    "verdict": "revise",
+    "findings": [
+      "In `components[0]`, `form: \"一\"` and `roles: [\"indicator\", \"semantic\"]` present two mutually exclusive analyses as unconditional properties. The cited sources distinguish a top mark indicating one hundred from 一 in a combined 一-plus-白 spelling (X-6411d20e888387533d64, X-d751aea87628ea05c9a0). Represent the top mark without asserting its identity as 一, or explicitly make the 一 identity conditional; do not assign both roles unconditionally. Update `百-semantic-一` consistently so its disputed status and text do not imply an established 一 component.",
+      "In `learner.components[1]`, state plainly that 白 is proposed as the sound element in one analysis. The current card mentions an unsettled sound role but does not explain what 白 contributes; the adjacent sound comparison already gives the pronunciation details (X-6411d20e888387533d64, X-d751aea87628ea05c9a0, X-20353b748cf2fba60d42)."
+    ],
+    "article_hash": "037fbf16da806538d427eeacbea6187b7cae95c9386966520f96acadc63eba3c",
+    "dossier_hash": "384262ba2db1cc95fd11d0c9c2ee5a5d8e20ceaf22b853fc7d62c844e54fb39e",
+    "reviewer": "gpt-6-luna:low:factual:01a0de5b-2392-7da2-ae8d-dcc22d0a4a35"
+  },
+  {
+    "role": "readability",
+    "verdict": "revise",
+    "findings": [
+      "In `components[0].roles`, `indicator` and `semantic` are presented together without limiting them to the competing analyses, and the `百-indicator-一` and `百-semantic-一` relationships likewise assert both roles. Mark these roles and edges as conditional/disputed, or otherwise make clear that the top stroke is either an indicator or 一 with a semantic contribution in separate analyses. The component and formation text already describe that distinction; the canonical roles and edges should not suggest both apply in one construction. Evidence: X-6411d20e888387533d64, X-d751aea87628ea05c9a0, X-cbfa1b722a5fac1e65eb."
+    ],
+    "article_hash": "037fbf16da806538d427eeacbea6187b7cae95c9386966520f96acadc63eba3c",
+    "dossier_hash": "384262ba2db1cc95fd11d0c9c2ee5a5d8e20ceaf22b853fc7d62c844e54fb39e",
+    "reviewer": "gpt-6-luna:low:readability:01a0de5b-6295-7313-9ad3-b1bc1e84c75c"
+  }
+]

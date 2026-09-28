@@ -1,0 +1,75 @@
+{
+  "job": "runs/form-relations/4FE1",
+  "source_approval": {
+    "status": "approved",
+    "article_hash": "9d1110a4d68d214834279f47933cbcfc295ec8cf71b35b4a28a88487c5aff4c0",
+    "dossier_hash": "e483f50e4fa29c73a406dbdcd801fb4f25238e32136caf61a2c67518552f3c9f",
+    "reviews": [
+      {
+        "role": "factual",
+        "verdict": "pass",
+        "findings": [],
+        "article_hash": "9d1110a4d68d214834279f47933cbcfc295ec8cf71b35b4a28a88487c5aff4c0",
+        "dossier_hash": "e483f50e4fa29c73a406dbdcd801fb4f25238e32136caf61a2c67518552f3c9f",
+        "reviewer": "v3-factual:/root/reading_interface"
+      },
+      {
+        "role": "readability",
+        "verdict": "pass",
+        "findings": [],
+        "article_hash": "9d1110a4d68d214834279f47933cbcfc295ec8cf71b35b4a28a88487c5aff4c0",
+        "dossier_hash": "e483f50e4fa29c73a406dbdcd801fb4f25238e32136caf61a2c67518552f3c9f",
+        "reviewer": "v3-readability:/root"
+      }
+    ]
+  },
+  "review_scope": "component_form_relations",
+  "stages": [
+    {
+      "stage": "round-0/factual",
+      "status": "complete",
+      "fingerprint": "28fce56de52728beb71ad1b527e9ccef6cc559f431bf798c7728597c97303a62",
+      "role": "factual",
+      "model": "gpt-6-luna",
+      "reasoning": "low",
+      "started_at": 1790433281.9745877,
+      "agent_thread_ids": [
+        "01a0de23-c8b4-76f2-b3f1-e5e838016748"
+      ],
+      "web_search_calls": 0,
+      "result_hash": "1687ba385160b0a52b3874d95dcb347ceee9c8d7bf87739d2c7043eb03b330bc",
+      "finished_at": 1790433289.1100183
+    },
+    {
+      "stage": "round-0/form_annotation",
+      "status": "complete",
+      "fingerprint": "ad8c464bc8591e4529a9f9f56e3ec94ac544cbcb393c4735f2ed2b35d307a87c",
+      "role": "form_annotation",
+      "model": "gpt-6-luna",
+      "reasoning": "low",
+      "started_at": 1790433277.786915,
+      "agent_thread_ids": [
+        "01a0de23-b8cf-75a1-ad9e-91ce26834b96"
+      ],
+      "web_search_calls": 0,
+      "result_hash": "258743257fdb7e9db1f72c702feb1f24685f03478f26b841150f29c113712ba6",
+      "finished_at": 1790433281.972266
+    },
+    {
+      "stage": "round-0/readability",
+      "status": "complete",
+      "fingerprint": "39a856b3459b2ebf3402f39b0a5047044c2d6036b02a7d20de5d91b1f8a5e7ca",
+      "role": "readability",
+      "model": "gpt-6-luna",
+      "reasoning": "low",
+      "started_at": 1790433289.111516,
+      "agent_thread_ids": [
+        "01a0de23-e462-76b2-adb2-710a551ee381"
+      ],
+      "web_search_calls": 0,
+      "result_hash": "1687ba385160b0a52b3874d95dcb347ceee9c8d7bf87739d2c7043eb03b330bc",
+      "finished_at": 1790433292.1834266
+    }
+  ],
+  "previous": null
+}

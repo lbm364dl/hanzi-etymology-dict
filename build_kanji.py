@@ -243,13 +243,12 @@ def build():
         meanings = kd2.get("meanings") or kd["meanings"]
         definition = "; ".join(meanings[:5]) if meanings else ""
 
-        # --- JLPT level (new scale: 1=N1 hardest, 5=N5 easiest) ---
-        jlpt = kd2.get("jlpt_new") or kd2.get("jlpt_old")
-        if not jlpt and kd.get("jlpt_old"):
-            # Old JLPT had 4 levels (1-4); map approximately to new 5-level scale
-            # Old 4 (easiest) ≈ New N4/N5; old 1 (hardest) ≈ New N1/N2
-            old_to_new = {4: 4, 3: 3, 2: 2, 1: 1}
-            jlpt = old_to_new.get(kd["jlpt_old"])
+        # Modern study estimates and pre-2010 test levels are different systems.
+        # Preserve legacy levels separately; never label old level 4 as N4.
+        jlpt = kd2.get("jlpt_new")
+        if jlpt not in (1, 2, 3, 4, 5):
+            jlpt = None
+        jlpt_old = kd.get("jlpt_old") or kd2.get("jlpt_old")
 
         # --- Grade & Joyo ---
         grade = kd2.get("grade") or kd.get("grade")
@@ -301,6 +300,14 @@ def build():
             },
             "definition": definition,
             "jlpt": jlpt,
+            "jlpt_old": jlpt_old,
+            "jlpt_provenance": {
+                "source": "davidluzgouveia/kanji-data",
+                "field": "jlpt_new",
+                "upstream": "https://www.tanos.co.uk/jlpt/",
+                "official": False,
+                "note": "Approximate modern study level; no legacy-level fallback.",
+            } if jlpt is not None else None,
             "grade": grade,
             "joyo": joyo,
             "jinmeiyo": jinmeiyo,

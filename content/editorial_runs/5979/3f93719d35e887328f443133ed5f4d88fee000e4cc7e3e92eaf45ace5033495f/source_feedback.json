@@ -1,0 +1,33 @@
+{
+  "task": "Resolve the historical-word versus modern-pronoun scope. Identify the literal graph used as an old alternative spelling of 姐 before assigning 也 a reported sound role; do not transfer that role automatically to modern 她, and do not place 也 into modern 姐, whose written parts differ. Align role, edge, learner card and certainty with the actual supported construction. Describe the 1924 resolution as assigning yi if that is what the cited accounts report, without implying its recommendation became universal current pronunciation.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`formation.text` and the `phonetic_component_of` relationship assign 也 a disputed sound role in 她 itself. The cited modern analysis (E2) asserts that analysis, but the historical evidence only reports 也 as phonetic in an alternative old spelling of 姐 (X-708c3f3fff2cef3504e3). Scope that reported role to 姐’s alternative spelling, or omit the phonetic role for 她; align the 她-scoped 也 component and learner card accordingly.",
+        "`history[1].text` says the 1924 resolution “proposed the reading yi.” The cited accounts say the resolution assigned 她 the reading yi (X-24657cd02484d20218e7; X-4c3d9e75981579267f2e). Revise that wording to reflect the reported assignment."
+      ],
+      "article_hash": "2694caa69c9dcf8fcc58ee58d34268e77074cb907fa7cd8befc6495cdb155feb",
+      "dossier_hash": "b5384842950bb7e590e0d195bdf48e78a16e2f52462c0695a4c5953b43710b48",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0a9-f47a-7f92-bd72-b961339bacdb"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "learner.components[1].text: Specify that the proposed 也 sound analysis is reported for an alternative old spelling of 姐, not established for 她’s historical graph. The detailed component’s yě–tā comparison is available in the interface, so no reading needs to be duplicated; cite X-708c3f3fff2cef3504e3."
+      ],
+      "article_hash": "2694caa69c9dcf8fcc58ee58d34268e77074cb907fa7cd8befc6495cdb155feb",
+      "dossier_hash": "b5384842950bb7e590e0d195bdf48e78a16e2f52462c0695a4c5953b43710b48",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0aa-219e-7923-9b61-a8161cde6d79"
+    }
+  ],
+  "validation": {
+    "role": "validation",
+    "verdict": "revise",
+    "findings": [
+      "Every supported component role requires a contextual relationship: '也' has role 'phonetic' in '她', but no matching 'phonetic_component_of' edge. Add a cited edge if the role is supported, or remove the unsupported role."
+    ]
+  }
+}

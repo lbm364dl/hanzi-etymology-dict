@@ -1,0 +1,24 @@
+{
+  "task": "Both final revise findings explicitly say the current readings and qualifications require no correction. Verify the exact existing article afresh; retain real required changes if found, otherwise return pass with no findings. Do not rewrite valid transcriptions or already qualified learner prose to satisfy a contradictory verdict.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "e284fd5ea6ee8e7aad80de495d4ff1dae816e12a5f476f4433b8c8decb6c3300",
+      "dossier_hash": "9560f3aeae282cc051b70f6e98cfba15594180b6002e4d09a04dbfd265d57c9d",
+      "reviewer": "gpt-6-luna:low:factual:01a0e101-f7c2-72f3-bb39-5e73418717ec"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`components[1].sound[1].component_reading` is transcribed as `*tjems`, but the cited Zhengzhang evidence gives 占 both `*ʔljem` and `*tjems`; the latter is valid and matches this row. No reading correction is required. However, the article's own sound limitation says the Zhengzhang comparison does not establish the historical role, so the proposed reading correction is unnecessary.",
+        "`learner.components[1].text` says the historical basis for 占’s sound role “remains limited,” and `components[1].text` says the Zhengzhang comparison does not independently establish its identity or role. These already qualify the analysis. No clarification is required."
+      ],
+      "article_hash": "e284fd5ea6ee8e7aad80de495d4ff1dae816e12a5f476f4433b8c8decb6c3300",
+      "dossier_hash": "9560f3aeae282cc051b70f6e98cfba15594180b6002e4d09a04dbfd265d57c9d",
+      "reviewer": "gpt-6-luna:low:readability:01a0e102-2db7-7a33-a64a-f2b7b7ff0c9e"
+    }
+  ]
+}

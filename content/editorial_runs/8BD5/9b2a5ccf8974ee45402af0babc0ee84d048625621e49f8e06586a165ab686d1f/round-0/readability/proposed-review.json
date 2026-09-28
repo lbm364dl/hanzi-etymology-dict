@@ -1,0 +1,8 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "`components[1].sound[0]` and `learner.components[1]` use a valid modern Mandarin comparison: 式 shì and 試 shì. But `formation.text` and `components[1].sound_limitation.text` say Baxter–Sagart gives 式 *l̥ək and 試 *l̥ək-s without noting that the host’s *-s is a reported difference from 式. Clarify that the supplied rows make the forms similar but not identical, and that this comparison does not establish the historical phonetic derivation or proposed suffix analysis (X-38459575efc5bba505ea, X-e4ed5aa1c8d39c0fb0df).",
+    "`history[0].text` unnecessarily says the quotation’s date and manuscript witness remain unresolved. The evidence supports reporting this as the received dictionary’s gloss and quoted use; it does not require treating the quotation itself as a dated manuscript attestation. Remove that qualification here, keeping earliest-attestation uncertainty in `uncertainties` (E8, X-cbf45894efa99f90cd37, X-27a6679ddae72983a8c2).",
+    "`historical_glyphs.limitations[0].text` says no historical glyph image is shown, which may imply an image was expected or omitted. State directly that no character-specific glyph image was selected or verified, so the early graphic forms cannot be assessed from this entry (X-104e1fe7b15ecc695574, X-9d21031aaac5b301b7d4, X-4b0a960a7f13f7dab383)."
+  ]
+}

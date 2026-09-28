@@ -1,0 +1,19 @@
+{
+  "character": "觉",
+  "removed_unreferenced_external_evidence": [],
+  "verified_local_rows": {
+    "source": "sources/unihan/Unihan_Readings.txt",
+    "role": "internal validation only; not entry citation",
+    "rows": {
+      "學": "xué",
+      "覺": "jué"
+    },
+    "missing_rows": []
+  },
+  "reason": "The local table is an internal validation source, not a click-through evidence record. Current readings in the entry are cited to the inspected official MOE pages.",
+  "removed_audits": [],
+  "removed_gaps": [
+    "The checkout contains only pipeline/data/unihan-kmandarin-hsk1.tsv; neither sources/unihan/Unihan_Readings.txt nor sources/baxter-sagart/baxtersagart.tsv was found. The HSK extract has no row for 覺 or 觉, so there is no local Mandarin-reading cross-check.",
+    "The requested local file sources/unihan/Unihan_Readings.txt was not present or returned no rows for U+5B78, U+89BA, or U+89C9 when queried. Thus there is no exact local kMandarin cross-check for either component or host in this checkout. The MOE readings above are dictionary Pinyin, not official Unicode Unihan kMandarin values."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "task": "Correct only the unsupported identity of the proposed two marks. Keep the historical interpretation in prose if no literal component graph is supported; remove any affected component card and graph edge coherently. Preserve unaffected reviewed fields.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "7ff1567fda7cfa953daaa81e946a9ab331b05582634a70e14f79f735c165ec70",
+      "dossier_hash": "384894f9318ed58675347f6cdf74a777b0ce44322753f210c9a7f1ea0c693cf2",
+      "reviewer": "gpt-6-luna:low:factual:01a0e117-6bab-79f1-ac75-a0d9e9906979"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`components[2]`, `relationships[次:㇐:indicator]`, and `learner.components[2]` identify the proposed station-marking strokes as the single component form `㇐`. The cited interpretation describes two strokes and does not identify them as `㇐`; revise these fields to describe the marks without assigning that unsupported component identity, or omit this component and edge. Preserve the distinction from Shuowen’s later analysis of `二`. Evidence: X-0073d2aa03e43d1d45ef, X-98c40431ffd44649d117."
+      ],
+      "article_hash": "7ff1567fda7cfa953daaa81e946a9ab331b05582634a70e14f79f735c165ec70",
+      "dossier_hash": "384894f9318ed58675347f6cdf74a777b0ce44322753f210c9a7f1ea0c693cf2",
+      "reviewer": "gpt-6-luna:low:readability:01a0e117-9621-7913-b044-68ab8f97a6ac"
+    }
+  ]
+}

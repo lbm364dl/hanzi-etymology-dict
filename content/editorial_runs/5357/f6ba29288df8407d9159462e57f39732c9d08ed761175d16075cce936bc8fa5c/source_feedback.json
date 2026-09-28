@@ -1,0 +1,23 @@
+{
+  "task": "Check the latest classification finding against all actual accounts. If the competing accounts agree that the graph pictures a whole object, classify pictographic while leaving object identity disputed in prose. If an account disputes pictographic formation itself, preserve disputed with the cited distinction. Change only implicated fields and graph certainty if needed; preserve glyphs and approved text otherwise.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "0d4660f0c78eaf85dd55a814e42f36f698b964663e6c2b34922ef0f2e1bfd2f0",
+      "dossier_hash": "25e5b0b52dbc6b72ec71c4796aa7be94fed2b669b9834d3ee271b58831160286",
+      "reviewer": "gpt-6-luna:low:factual:01a0e120-47ab-7df3-8dab-1987120a7e86"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `formation.type`, replace `disputed` with `pictographic`. The entry describes competing interpretations of the whole early graph as pictured objects; their disagreement concerns the depicted object, not whether the graph is pictographic. Keep the identities qualified in `formation.text` and cite `E1`, `E2`, `E4`, `X-a093af2dfd0924e2c4d6`, and `X-ebaca017e9819ccaed18`."
+      ],
+      "article_hash": "0d4660f0c78eaf85dd55a814e42f36f698b964663e6c2b34922ef0f2e1bfd2f0",
+      "dossier_hash": "25e5b0b52dbc6b72ec71c4796aa7be94fed2b669b9834d3ee271b58831160286",
+      "reviewer": "gpt-6-luna:low:readability:01a0e120-8184-7510-b8bf-fea02453bd9b"
+    }
+  ]
+}

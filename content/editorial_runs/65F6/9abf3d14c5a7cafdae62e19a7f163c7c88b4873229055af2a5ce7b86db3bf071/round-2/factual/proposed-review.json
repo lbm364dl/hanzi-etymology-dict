@@ -1,0 +1,7 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "`components[2].sound[0].character_reading` is `shí`, but that row is scoped to `旹`, so it must use the host’s available reading `shí` only if cited evidence supports 旹’s Mandarin reading. The cited local Unihan rows do report 旹 `shí` and 之 `zhī`, so the values are correct; however `components[2].sound[0].evidence_ids` cites only the local reading rows and omits `X-01882fdb46e567cc2a23` for the host reading. Add that exact evidence ID to support `character_reading` and its sound explanation.",
+    "`historical_glyphs.items[1].caption` says the upper part is identified as 之 and 日, but cites `X-a72482ec5e7ef463ae93`, which supports that analysis; the accompanying provenance citation `X-bddb8aee6ab906e3cf71` supports the modern redraw and public-domain claim. No correction is needed there. The actual required correction is in `components[2].sound[0].evidence_ids` as above."
+  ]
+}

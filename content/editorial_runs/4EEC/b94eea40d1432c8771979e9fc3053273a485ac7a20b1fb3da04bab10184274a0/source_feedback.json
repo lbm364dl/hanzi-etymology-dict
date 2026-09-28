@@ -1,0 +1,33 @@
+{
+  "task": "Research the ordinary coexisting 亻/人 positional/full-form relationship from a real accessible authoritative reference; the current semantic-role citation is not evidence for that mapping. Do not arbitrarily erase the relationship or call it an ancestor: retain full_form only with new actual support. Review component-edge certainty against actual cited role evidence, distinguishing a documented analysis from a demonstrated original historical sound relationship; probable roles are appropriate if evidence supports only a proposed account. Preserve 門 mén / 們 men and its separate historical limitation. Remove all reader-facing dossier/process narration using the focused text helper.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`relationships[0].certainty` is `established`, but its cited evidence reports the 亻 semantic analysis as a scholarly interpretation of 們, not an established fact. Change it to `probable` and qualify the relationship text accordingly. (E7, X-82299020dd38441703cc)",
+        "`relationships[1].certainty` is `established`, but the edge claims 門’s phonetic role in 們 while the cited modern reading resemblance does not establish that historical relation, and no matching historical reconstruction for 們 is supplied. Change it to `probable` and retain the stated historical limitation. (E7, X-f6521f95209db7889547, X-20cc8ec6b1159c8de71e, X-69020a31eb4ff6fd1699, X-152b829158c0fc4c199d)"
+      ],
+      "article_hash": "3ac0b8f8f6ece9e6834dc02d2b0584e71e6cfd049a0991a998c16c913180a2dc",
+      "dossier_hash": "786ff33004a88ddb42835943504fe654e5310a16ef537bc675d3e892393d970e",
+      "reviewer": "gpt-6-luna:low:factual:01a0e08c-5405-7ce0-a634-07ecb812c1e2"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `components[0]`, change `origin_form` from `人` to `\"\"` and `origin_relation` from `full_form` to `none`, and remove the claim that 亻 is 人’s conventional positional form. The cited evidence supports its semantic contribution in 們, but does not establish that graphic relationship (E7, X-82299020dd38441703cc, X-8953ce7dc4e5a1be776d)."
+      ],
+      "article_hash": "3ac0b8f8f6ece9e6834dc02d2b0584e71e6cfd049a0991a998c16c913180a2dc",
+      "dossier_hash": "786ff33004a88ddb42835943504fe654e5310a16ef537bc675d3e892393d970e",
+      "reviewer": "gpt-6-luna:low:readability:01a0e08c-82b1-7bc0-8ad5-7a83e9e12d0d"
+    }
+  ],
+  "validation": {
+    "role": "validation",
+    "verdict": "revise",
+    "findings": [
+      "Reader-facing prose must explain the character rather than refer to the dossier: Within 們, 亻 contributes a person-related category. The dossier does not establish its historical graphic relationship to"
+    ]
+  }
+}

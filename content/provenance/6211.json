@@ -1,0 +1,453 @@
+{
+  "job": "runs/smoke-expanded-learner/6211",
+  "stages": [
+    {
+      "stage": "round-0/factual",
+      "status": "complete",
+      "fingerprint": "dc44557b7d33a2a47d3e8fdf62eaefb8e38bbbb3e2d9542eec536a07673a48e3",
+      "role": "factual",
+      "model": "gpt-6-luna",
+      "reasoning": "low",
+      "started_at": 1790430709.4107437,
+      "agent_thread_ids": [
+        "01a0ddfc-8780-7b60-836a-5a2c7aa92042"
+      ],
+      "web_search_calls": 0,
+      "result_hash": "1687ba385160b0a52b3874d95dcb347ceee9c8d7bf87739d2c7043eb03b330bc",
+      "finished_at": 1790430712.84188
+    },
+    {
+      "stage": "round-0/learner",
+      "status": "complete",
+      "fingerprint": "63af1b773e4b0b9f44099bac0d5fbe572cb19a2377f26f0c95c1ba7d7ce38886",
+      "role": "learner",
+      "model": "gpt-6-luna",
+      "reasoning": "low",
+      "started_at": 1790430704.2755773,
+      "agent_thread_ids": [
+        "01a0ddfc-7373-7bf1-af4d-ae4e2fabe56c"
+      ],
+      "web_search_calls": 0,
+      "result_hash": "0206e232bb66d3aaa2256d708f001593045addc905be38e7311b70d6c96ac60b",
+      "finished_at": 1790430709.2712626
+    },
+    {
+      "stage": "round-0/readability",
+      "status": "complete",
+      "fingerprint": "7ee893d6fe9f264f1570f53ed57d641aa81ac4c9d9ac603fbb88217911fca8a9",
+      "role": "readability",
+      "model": "gpt-6-luna",
+      "reasoning": "low",
+      "started_at": 1790430712.8522918,
+      "agent_thread_ids": [
+        "01a0ddfc-94f7-7b10-9964-6fbd6944a027"
+      ],
+      "web_search_calls": 0,
+      "result_hash": "1687ba385160b0a52b3874d95dcb347ceee9c8d7bf87739d2c7043eb03b330bc",
+      "finished_at": 1790430716.340525
+    }
+  ],
+  "source_article_hash": "48a6ea65bb1b78a7cd69a9020ce421671519f4d9f4d2efabda7613b633c15046",
+  "previous": null,
+  "run_history": [
+    {
+      "job": "runs/smoke-expanded/6211",
+      "status": {
+        "character": "我",
+        "status": "approved",
+        "dossier_hash": "6b031c0d003c781a86bfd4f3062394d4902487394b4819c68f2747034ac9f936",
+        "revision": 2
+      },
+      "stages": [
+        {
+          "stage": "analysis",
+          "status": "complete",
+          "fingerprint": "0fa6f4be7c176ac292216c7d19bda7f19a200082f1ee8d06f568ac820ccefee2",
+          "role": "analysis",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430225.7208033,
+          "agent_thread_ids": [
+            "01a0ddf5-2617-78a3-bbda-ce39947a17f2"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "84cc7380defcb4273d94a9c9879dbb1a17ce2d372284cc75b048e266ff5056d6",
+          "finished_at": 1790430240.5900502
+        },
+        {
+          "stage": "glyph_research",
+          "status": "complete",
+          "fingerprint": "cf65f44f02e874980d396fdebf6b918acbce06692ce80dadb2ac062f5ea9539f",
+          "role": "glyph_research",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430162.2819436,
+          "agent_thread_ids": [
+            "01a0ddf4-2e30-75e1-a62e-44176269c16f"
+          ],
+          "web_search_calls": 3,
+          "result_hash": "ce858037bc53fe36e41eab311f8cadfb27a460a4d4fb8c7829cc7fdc544583cc",
+          "finished_at": 1790430213.0089386
+        },
+        {
+          "stage": "glyph_visual",
+          "status": "complete",
+          "fingerprint": "4bd0f3009d6dcdd6eb0e295b40001076c91bb27566378fd6f23c6344aac34e32",
+          "role": "glyph_visual",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430213.704169,
+          "agent_thread_ids": [
+            "01a0ddf4-f714-7331-905a-3cfad0520d81"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "792d0c972fdaf06e5f81e209780d8fc3d9051f5f1db611206764fe05671f2ead",
+          "finished_at": 1790430225.7115166
+        },
+        {
+          "stage": "research",
+          "status": "complete",
+          "fingerprint": "1dbf69e770459305444cd8a835f73fee990146816f7c83934eb0f0e80b626ab7",
+          "role": "research",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430048.1890335,
+          "agent_thread_ids": [
+            "01a0ddf2-70d2-7fc2-9cf9-b0a4f8104fc3"
+          ],
+          "web_search_calls": 8,
+          "result_hash": "8890a5409f1aeff72007a7f05dc8652d240d249d225e768e82397e24edcca6e1",
+          "finished_at": 1790430162.2741098
+        },
+        {
+          "stage": "round-0/editor",
+          "status": "complete",
+          "fingerprint": "75e7fe339fc260e2903a3d464965c9954abcfb2c6e40b72cc5f99f67fa4c27c5",
+          "role": "editor",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430278.3016162,
+          "agent_thread_ids": [
+            "01a0ddf5-f37c-7391-a135-a84ff0792e90"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "c73dc60a183b76792a37fb1b35ace87f4419d715f2029f246fd0e714a1afa576",
+          "finished_at": 1790430307.5212567
+        },
+        {
+          "stage": "round-0/factual",
+          "status": "complete",
+          "fingerprint": "4d45f24ab6933870e9d42fd2debc30aa8f8314adcc16de35b2f13a689c1cf80d",
+          "role": "factual",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430307.5340486,
+          "agent_thread_ids": [
+            "01a0ddf6-65bb-71a0-88fb-bed0c92c91cd"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "d738b5cc7a09c07c6c39f446af8cf1c10c9b4b879ed35750605fe29e86fa9da4",
+          "finished_at": 1790430314.0174034
+        },
+        {
+          "stage": "round-0/followup/glyph_research",
+          "status": "complete",
+          "fingerprint": "23b818d2565a35378f89f90536fc82bde2f31f39e695cd1c6c12f90db40aba6f",
+          "role": "glyph_research",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430365.2817295,
+          "agent_thread_ids": [
+            "01a0ddf7-4743-7af2-a516-91fc9b10608d"
+          ],
+          "web_search_calls": 3,
+          "result_hash": "461209ed11e7c63f09f1c40d7eb4ad6aed08b6ee0fe860758e3f04c8a3cb691a",
+          "finished_at": 1790430415.6658304
+        },
+        {
+          "stage": "round-0/followup/glyph_visual",
+          "status": "complete",
+          "fingerprint": "2dd1146ef89097a10fbb76e4c8b971f4088eb983c11e614c372b7dfca76807cf",
+          "role": "glyph_visual",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430415.671469,
+          "agent_thread_ids": [
+            "01a0ddf8-0c0a-7d62-85f2-060c57accc49"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "4250f19fb6cba0c2d01197f208822767fd14e301f23ee00535824c7f078bce00",
+          "finished_at": 1790430425.422324
+        },
+        {
+          "stage": "round-0/followup/research",
+          "status": "complete",
+          "fingerprint": "536d75c5a3613e49db8b521ff76c70086f65afe36faadc242210e0607421b272",
+          "role": "research",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430317.8541636,
+          "agent_thread_ids": [
+            "01a0ddf6-8e03-7de3-bf0a-b19d272caf5f"
+          ],
+          "web_search_calls": 3,
+          "result_hash": "ab97e4c3cbabd14ade6c7ddacc0eb72dfff732d3500825fe14c2ba0a86173201",
+          "finished_at": 1790430365.2727098
+        },
+        {
+          "stage": "round-0/readability",
+          "status": "complete",
+          "fingerprint": "5923ea30d66f13d386428553084991855261079dbe5ce921836f79000bf9214b",
+          "role": "readability",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430314.0200229,
+          "agent_thread_ids": [
+            "01a0ddf6-7f09-7a23-a0c3-bab4b6a0f27c"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "1687ba385160b0a52b3874d95dcb347ceee9c8d7bf87739d2c7043eb03b330bc",
+          "finished_at": 1790430317.846602
+        },
+        {
+          "stage": "round-0/revision",
+          "status": "complete",
+          "fingerprint": "b038ad8ed0275b2448dfc9449232d54f689883b8d12ba2e2471b6a9730ee554c",
+          "role": "revision",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430425.437067,
+          "agent_thread_ids": [
+            "01a0ddf8-3232-7ab3-b1ca-63f312aa4a42"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "52bc3ba29775590729b9e30a7d9a07014e27072fb5261a82a09726041f4b63bd",
+          "finished_at": 1790430453.2492263
+        },
+        {
+          "stage": "round-1/editor",
+          "status": "complete",
+          "fingerprint": "682f840d2b0c2a4db8ea6e0760395cc000e1848f496a7c00a7a29d422757583b",
+          "role": "editor",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430453.2579257,
+          "agent_thread_ids": [
+            "01a0ddf8-9edf-7411-b4b2-b7f966eb9d86"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "f00cf7ee7f7113eb2a37aee82a9f51e4ace55363cd5c5fb26fa4e6f75c3f85b1",
+          "finished_at": 1790430481.1593356
+        },
+        {
+          "stage": "round-1/factual",
+          "status": "complete",
+          "fingerprint": "a3a4c872637aef76dbae8de80ae6f3925c0ea7872a51381259fed5482c100695",
+          "role": "factual",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430481.1672332,
+          "agent_thread_ids": [
+            "01a0ddf9-0bde-73c1-9196-53e8056545de"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "25263c4a83b81fc6ce8105148e6791a868ee25d51abc8dc40df1b6b3a37e1680",
+          "finished_at": 1790430491.10938
+        },
+        {
+          "stage": "round-1/followup/glyph_research",
+          "status": "complete",
+          "fingerprint": "c029ce63a2c22ba88701067b487ac68fd19341220b96167cb279b50b413c1702",
+          "role": "glyph_research",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430531.4914114,
+          "agent_thread_ids": [
+            "01a0ddf9-d071-7df0-846c-0c7cce355e13"
+          ],
+          "web_search_calls": 3,
+          "result_hash": "faf0aaf91e5b325463d5e6dcd84b80fbcf34f1e821538fe36cd2408edee3c7ad",
+          "finished_at": 1790430591.7967992
+        },
+        {
+          "stage": "round-1/followup/glyph_visual",
+          "status": "complete",
+          "fingerprint": "075a1a60dbc496782f3f183ac4b4eaaa3a6f01b79ac7ac6c3307824a8323b44e",
+          "role": "glyph_visual",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430591.8129146,
+          "agent_thread_ids": [
+            "01a0ddfa-bc1f-7ce2-9b97-5579429ea8a8"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "57918c9e048cc00cb10c6232cd4e465c1090363d3b1f25c0efa047454c46f678",
+          "finished_at": 1790430603.6661906
+        },
+        {
+          "stage": "round-1/followup/research",
+          "status": "complete",
+          "fingerprint": "335f6b5da86ef2bcf4d4929248ec5c68eb3924a5911b2601266f32a4e6e8f4ed",
+          "role": "research",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430497.8068705,
+          "agent_thread_ids": [
+            "01a0ddf9-4ce8-7202-ad2a-dff987392dc9"
+          ],
+          "web_search_calls": 2,
+          "result_hash": "f7a922bc9e57a7bb9ff10e02b0d218ea813040bf821982ac8852a08d888f7fca",
+          "finished_at": 1790430531.4805052
+        },
+        {
+          "stage": "round-1/readability",
+          "status": "complete",
+          "fingerprint": "072a9b9632d892e4c624c8a99ec18f58f8c420bb5cf2ab31fd2e491aa2346678",
+          "role": "readability",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430491.1123738,
+          "agent_thread_ids": [
+            "01a0ddf9-32af-7150-9a75-11d02ec464a7"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "0a2d88b5054d3f7881fc62316def068c71e56cf279c32891061a6cda504813d1",
+          "finished_at": 1790430497.7997875
+        },
+        {
+          "stage": "round-1/revision",
+          "status": "complete",
+          "fingerprint": "07f9b0563b0195f18b1063a643a7d6509f55008dad64d70eccce9104d817151d",
+          "role": "revision",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430603.6805613,
+          "agent_thread_ids": [
+            "01a0ddfa-ea6c-73b3-bb81-1e6e850ce30c"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "5660dda6a237993e823981ecf929670a54843d3489c298deba8387626bfd1a40",
+          "finished_at": 1790430635.0804012
+        },
+        {
+          "stage": "round-2/editor",
+          "status": "complete",
+          "fingerprint": "bc965f620a15e982950a4de826199f1aa9176cc53cf9cc190adbc90b828dc193",
+          "role": "editor",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430635.084305,
+          "agent_thread_ids": [
+            "01a0ddfb-6513-70e0-b909-024e7c3ec8c6"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "2903ed586558dd6e4a5931347e08fe668c2e2bfa33c3acdf743870e4c3743729",
+          "finished_at": 1790430663.2299416
+        },
+        {
+          "stage": "round-2/factual",
+          "status": "complete",
+          "fingerprint": "73e2bc3b5365dc7be941d3805077b28054faa22e97cb99ae89ab1f9b707c3bc5",
+          "role": "factual",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430663.2455153,
+          "agent_thread_ids": [
+            "01a0ddfb-d31f-7512-93d0-314a06457132"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "1687ba385160b0a52b3874d95dcb347ceee9c8d7bf87739d2c7043eb03b330bc",
+          "finished_at": 1790430668.8738062
+        },
+        {
+          "stage": "round-2/readability",
+          "status": "complete",
+          "fingerprint": "5f6a5aaed49058ab8ea49974bda56b4dfddb42883aabe0b37108137f94114a6b",
+          "role": "readability",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430668.877059,
+          "agent_thread_ids": [
+            "01a0ddfb-e915-77e0-a5db-c8ebf176f760"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "1687ba385160b0a52b3874d95dcb347ceee9c8d7bf87739d2c7043eb03b330bc",
+          "finished_at": 1790430673.847391
+        },
+        {
+          "stage": "writer",
+          "status": "complete",
+          "fingerprint": "9424b54ce8e33178b374a7d1c9df11f17cb8220a9349f6d8af323835dbcfc669",
+          "role": "writer",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430240.598019,
+          "agent_thread_ids": [
+            "01a0ddf5-602f-76d1-9b84-154621b978a0"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "00a6b1d19ce964896634e853b2bf5c00719d1da33e11eed48ad1d23f5f5d0cfe",
+          "finished_at": 1790430278.2932966
+        }
+      ]
+    },
+    {
+      "job": "runs/smoke-expanded-learner/6211",
+      "status": {
+        "character": "我",
+        "status": "approved",
+        "mode": "add-learner",
+        "dossier_hash": "6b031c0d003c781a86bfd4f3062394d4902487394b4819c68f2747034ac9f936",
+        "source_article_hash": "48a6ea65bb1b78a7cd69a9020ce421671519f4d9f4d2efabda7613b633c15046",
+        "revision": 0
+      },
+      "stages": [
+        {
+          "stage": "round-0/factual",
+          "status": "complete",
+          "fingerprint": "dc44557b7d33a2a47d3e8fdf62eaefb8e38bbbb3e2d9542eec536a07673a48e3",
+          "role": "factual",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430709.4107437,
+          "agent_thread_ids": [
+            "01a0ddfc-8780-7b60-836a-5a2c7aa92042"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "1687ba385160b0a52b3874d95dcb347ceee9c8d7bf87739d2c7043eb03b330bc",
+          "finished_at": 1790430712.84188
+        },
+        {
+          "stage": "round-0/learner",
+          "status": "complete",
+          "fingerprint": "63af1b773e4b0b9f44099bac0d5fbe572cb19a2377f26f0c95c1ba7d7ce38886",
+          "role": "learner",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430704.2755773,
+          "agent_thread_ids": [
+            "01a0ddfc-7373-7bf1-af4d-ae4e2fabe56c"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "0206e232bb66d3aaa2256d708f001593045addc905be38e7311b70d6c96ac60b",
+          "finished_at": 1790430709.2712626
+        },
+        {
+          "stage": "round-0/readability",
+          "status": "complete",
+          "fingerprint": "7ee893d6fe9f264f1570f53ed57d641aa81ac4c9d9ac603fbb88217911fca8a9",
+          "role": "readability",
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "started_at": 1790430712.8522918,
+          "agent_thread_ids": [
+            "01a0ddfc-94f7-7b10-9964-6fbd6944a027"
+          ],
+          "web_search_calls": 0,
+          "result_hash": "1687ba385160b0a52b3874d95dcb347ceee9c8d7bf87739d2c7043eb03b330bc",
+          "finished_at": 1790430716.340525
+        }
+      ]
+    }
+  ]
+}

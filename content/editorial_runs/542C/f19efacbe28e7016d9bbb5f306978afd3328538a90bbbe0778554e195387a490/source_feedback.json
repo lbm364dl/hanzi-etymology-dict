@@ -1,0 +1,25 @@
+{
+  "task": "Independently recheck the actual attached glyph pixels and exact file record. Reviewers report that the selected redraw depicts 聽, not older 听. Verify literal identity and explain only the historically supported connection to entry 听. Refresh the curated research evidence and glyph selection so identity, caption, alt text, period association, selection reason and history agree. Do not present a 聽 seal redraw as the older smiling-word 听 graph. Preserve accurate rights and dates; do not invent a new image or remove verified useful glyph merely to avoid the identity question.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`article.history[0]` and `article.historical_glyphs.items[0]` misidentify the attached glyph as 听. The inspected attachment and its file record identify it as 聽 in Shuowen seal-script style, a modern redraw (X-97b1e0fa2224269566cc). Correct the glyph identity and the related period association, caption, alt text, and selection reason, or remove the item; it cannot illustrate the older 听 “smiling appearance” graph."
+      ],
+      "article_hash": "0f66289e8dedc5a975e76fbb1ca37c368a6e84bf4c0a921f3939bdbaf01eede6",
+      "dossier_hash": "758ff2374e3a9ce9853ed1527358c41cf89cad8fe7bcb12d779147509dec3fcc",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0ec-7268-7cb1-85f4-b6e021c98b50"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `historical_glyphs.items[0]`, the caption says the glyph is associated with 听’s older “smiling appearance” use, but the cited image evidence identifies only a modern redraw in Shuowen seal-script style and does not establish that specific association. Revise the caption to describe the image as a seal-style redraw without linking it to the older use, or remove the item. Evidence: X-2dc146a8cb661f700d0b, X-8a66b8e09b7f93c72ba5, X-3840bfdcc8c9449a4fa8."
+      ],
+      "article_hash": "0f66289e8dedc5a975e76fbb1ca37c368a6e84bf4c0a921f3939bdbaf01eede6",
+      "dossier_hash": "758ff2374e3a9ce9853ed1527358c41cf89cad8fe7bcb12d779147509dec3fcc",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0ec-a089-7d53-91f4-85966350020f"
+    }
+  ]
+}

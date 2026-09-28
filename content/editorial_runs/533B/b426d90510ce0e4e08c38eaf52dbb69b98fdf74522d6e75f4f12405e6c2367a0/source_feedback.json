@@ -1,0 +1,23 @@
+{
+  "task": "Check actual component 矢 shǐ and host 医 yī current readings and return accurately cited evidence for the available Mandarin pair. Keep the reported small-Xu phonetic analysis disputed and separate from original arrow/container interpretation. Current readings do not prove the historical role.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`components[1].roles` includes `phonetic`, and `relationships` asserts a disputed `phonetic_component_of` edge for 矢 in 医. The dossier reports a small-Xu sound analysis, so this role should remain represented as disputed; however, the cited historical readings do not establish a comparable 医 reading. Add the available Modern Mandarin comparison (矢 shǐ / 医 yī) if retaining this phonetic role, and keep the limitation that it does not establish the historical relation. Evidence: `X-327d886a528cbcff2184`, `X-1120cfcaeb4a16eb098f`, `X-e62d3d0b542982ebeaab`."
+      ],
+      "article_hash": "15028e6b2f505ea6a01dae0b4f41e276545b4aa30f021bde73a65398898bac32",
+      "dossier_hash": "83130e345a7d0f3da1e4d2a1d5e07d34b38b6fc3e7a84ccf77f034d2c1e9cae6",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0f5-bc61-7752-939f-0ea122e9d200"
+    },
+    {
+      "role": "readability",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "15028e6b2f505ea6a01dae0b4f41e276545b4aa30f021bde73a65398898bac32",
+      "dossier_hash": "83130e345a7d0f3da1e4d2a1d5e07d34b38b6fc3e7a84ccf77f034d2c1e9cae6",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0f6-190c-7193-b4db-d2d51fd64beb"
+    }
+  ]
+}

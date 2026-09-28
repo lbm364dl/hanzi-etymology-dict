@@ -1,0 +1,11 @@
+{
+  "task": "Resolve role/edge contradiction for 口: an unknown-role component cannot have an asserted indicator edge. Use actual evidence to support the same qualified role in component and relationship or remove an unsupported edge. Do not invent a role merely to satisfy validation.",
+  "reviews": [],
+  "validation": {
+    "role": "validation",
+    "verdict": "revise",
+    "findings": [
+      "Component edge '中:component:shuo_wen_enclosure' assigns role 'indicator' to '口', but its component roles are [['unknown']]. Correct the contradiction using evidence, or remove this unsupported edge; unknown is not semantic."
+    ]
+  }
+}

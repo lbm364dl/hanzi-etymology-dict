@@ -1,0 +1,30 @@
+{
+  "task": "Shorten learner overview to at most 30 words: current south/direction meaning, early attestation if useful, and uncertainty about the depicted referent. Keep the proposed instrument-name borrowing mechanism and its disputed sound/name evidence in the expert meaning history. Preserve its qualification; do not fabricate a named original instrument or ancient pronunciation.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "8a806aa25174cba832c1054eb3d1297a8887a202eb3fcef637dda22731d2520a",
+      "dossier_hash": "d679ad0c9ce7ce3f4ac93c56ed196fe844510d924650d38ea97c2e0c14eb7335",
+      "reviewer": "gpt-6-luna:low:factual:01a0e04c-3085-7040-9083-2a7370d4d519"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "learner.overview.text: Shorten the 56-word overview to the supported meaning and essential uncertainty about the graph’s referent. Move the proposed instrument-name borrowing mechanism and its limits to the detailed account; the dossier does not establish that borrowing (X-a093af2dfd0924e2c4d6, X-ec7e662f99c1d10ff88c, X-f06a3d12f277492badb6)."
+      ],
+      "article_hash": "8a806aa25174cba832c1054eb3d1297a8887a202eb3fcef637dda22731d2520a",
+      "dossier_hash": "d679ad0c9ce7ce3f4ac93c56ed196fe844510d924650d38ea97c2e0c14eb7335",
+      "reviewer": "gpt-6-luna:low:readability:01a0e04c-4f7e-7841-a6c1-18f0efb1c24f"
+    }
+  ],
+  "validation": {
+    "role": "validation",
+    "verdict": "revise",
+    "findings": [
+      "Learner paragraph exceeds the 45-word hard limit (49 words): '南 means “south” and was used for that direction in Shang inscriptions. What its early graph depicts is disputed. One proposal says an instrument sign was reused for “south” because the words sounded similar, but the instrument’s ancient name and pronunciation are unsettled, so this sound-based explanation remains uncertain.'. Cut lower-priority details already explained in the expert, component, or history sections; aim for 40 words and keep only the main point and any essential caveat."
+    ]
+  }
+}

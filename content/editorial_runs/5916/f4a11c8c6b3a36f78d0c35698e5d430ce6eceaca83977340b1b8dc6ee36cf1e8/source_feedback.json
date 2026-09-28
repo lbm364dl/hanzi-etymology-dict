@@ -1,0 +1,25 @@
+{
+  "task": "Research and verify the selected glyph period: the existing oracle-bone style evidence alone does not establish a Shang artifact date. Update the frozen curated period through actual research to the supported script-style label if finer dating is unsupported. Keep the learner historical-sound comparison qualified as a plausible proposal, not proof, with the exact cited primary values.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`historical_glyphs.items[0].period` calls the image “Shang period script style,” but its cited evidence identifies it as an oracle-bone-script-style modern redraw and does not establish that period. Replace the period with the supported label “oracle-bone script style.”"
+      ],
+      "article_hash": "4245e4c8d42dd336968b041ba489e42cec4e3a476b7f5c689f91704b3cecb8ef",
+      "dossier_hash": "7c8aa22e438ee5b56beab5937d2d84b07bae2499fa743181fe0894f1d604b22d",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0f7-a6f2-74e1-a99f-b453a96abf30"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`learner.components[1].text` says similar Old Chinese readings support 月’s sound role but does not explain that the readings are only a possible comparison: Baxter–Sagart gives 月 *[ŋ]ʷat and 外 *[ŋ]ʷˤa[t]-s, while a secondary transcription for 外 differs. Replace the claim with a short explanation that the similar but nonidentical readings make the reported sound role plausible, not proven; cite `X-b48cc753a3822f61ca14` and `X-4bab01d4f8e5e71eb543` alongside the formation evidence."
+      ],
+      "article_hash": "4245e4c8d42dd336968b041ba489e42cec4e3a476b7f5c689f91704b3cecb8ef",
+      "dossier_hash": "7c8aa22e438ee5b56beab5937d2d84b07bae2499fa743181fe0894f1d604b22d",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0f7-d3f6-7a70-b25a-09fc5f5d63eb"
+    }
+  ]
+}

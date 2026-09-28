@@ -1,0 +1,23 @@
+{
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`learner.overview.text` and `summary.text` leave a misleading tension between calling 來 a wheat picture and saying it was reused for a “similar-sounding word,” without stating that the plant’s original spoken name is unknown and the proposed sound match is not established. Rephrase the borrowing as a proposed mechanism and preserve that limitation, supported by X-3732a44ae58dcc0e3ba4 and X-6a55706f7ae2ccc7c253."
+      ],
+      "article_hash": "13b5a1dd38ccb93680f47cfc87bfd8329cb1eb958fbb1fa66a5885671850fe56",
+      "dossier_hash": "0ee372ba569e2ad65fabd463b783543649aa91271dd5d76b47d16c61f33e4c5b",
+      "reviewer": "gpt-6-luna:low:factual:01a0e03d-367f-7af3-8222-41594a9900be"
+    },
+    {
+      "role": "readability",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "13b5a1dd38ccb93680f47cfc87bfd8329cb1eb958fbb1fa66a5885671850fe56",
+      "dossier_hash": "0ee372ba569e2ad65fabd463b783543649aa91271dd5d76b47d16c61f33e4c5b",
+      "reviewer": "gpt-6-luna:low:readability:01a0e03d-97a1-77b0-8b5a-c182a92fdf46"
+    }
+  ],
+  "instruction": "Resolve the learner and summary borrowing claim concisely: clearly identify the historical sound connection as a proposed mechanism, not a demonstrated sound match. Explain the wheat picture and current come meaning first. State that the historical match is unverified; this is narrower than saying the original plant name is categorically unknown. Avoid accumulating all detailed caveats in the learner overview; keep it under 35 words and preserve fuller limitations in expert sections. Independently check the quoted evidence."
+}

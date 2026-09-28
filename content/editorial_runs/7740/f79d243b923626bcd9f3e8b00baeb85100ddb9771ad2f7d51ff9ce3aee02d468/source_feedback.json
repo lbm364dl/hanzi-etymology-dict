@@ -1,0 +1,25 @@
+{
+  "task": "Resolve the optional make-a-move/take-action sense: imported definition metadata alone does not establish a distinct historical period or usage. Remove that optional asserted historical sense or research a contextual example before asserting it. Preserve other supported uses and generated sense-edge consistency.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`meaning_history.senses[1]` asserts the definition “make a move; take action” as a probable historical sense, but its only evidence is an imported definition with no contextual example (E3). Remove it as an asserted sense or represent it only as an unresolved candidate."
+      ],
+      "article_hash": "e528dd58cf7c3f072fac99bdb5e09fc72bab6f2698910635211cb8c36321f0ee",
+      "dossier_hash": "e863010e5d76aaa27e72a58c7c8e719274c9958795062a5180010ef7b0b90962",
+      "reviewer": "gpt-6-luna:low:factual:01a0e106-a4ec-75e2-918f-668c0df2337c"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses[1]`, remove or recast the probable historical sense “make a move; take action”: its only support is imported definition metadata (`E3`), and the entry itself says no contextual example establishes it as a distinct historical use. Update the generated `meaning:着:put_action` `has_sense` edge to match; it currently asserts that sense with probable certainty."
+      ],
+      "article_hash": "e528dd58cf7c3f072fac99bdb5e09fc72bab6f2698910635211cb8c36321f0ee",
+      "dossier_hash": "e863010e5d76aaa27e72a58c7c8e719274c9958795062a5180010ef7b0b90962",
+      "reviewer": "gpt-6-luna:low:readability:01a0e106-ce26-7903-97d6-49e38616e450"
+    }
+  ]
+}

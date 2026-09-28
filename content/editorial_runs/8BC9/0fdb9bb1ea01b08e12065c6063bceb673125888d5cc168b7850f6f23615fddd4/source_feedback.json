@@ -1,0 +1,26 @@
+{
+  "task": "Resolve the proposed directional earlier-form relation 㡿 to 厈 to 斥. Use earlier_form for the explicitly proposed directional account while preserving disputed certainty and the lack of early specimen confirmation. The sound comparison should name the actual proposed component 㡿, not merely visible 斥, and cite its same-system row separately from 訴. Preserve unaffected content.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "components[1].origin_relation: change `uncertain` to `earlier_form`. The cited evidence explicitly reports Duan Yucai’s proposed direction 㡿 → 厈 → 斥; the component text already qualifies that account as unconfirmed by an early specimen. [X-6af44f9219d9fd9f1091, X-ef99ca89a185649f87c5, X-7fcdde0311abc379c1b4]"
+      ],
+      "article_hash": "e40c25df5c7644fc399346a61c7a3a1a2332a12f78b732dcbd2f89a3cf06a97b",
+      "dossier_hash": "b4899a041503b2e3267e5453dbd0e9996fcb08e33d0bce6e591f2d48a7518686",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0f3-6317-7013-847e-42799c3e7b43"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "components[1].origin_relation: Change \"uncertain\" to \"earlier_form\". The cited account explicitly proposes the direction 㡿 → 厈 → 斥; keep the component text’s qualification that this is a commentator’s proposal, not a specimen-confirmed sequence (X-6af44f9219d9fd9f1091, X-ef99ca89a185649f87c5, X-571f48a8f469fb1fd217).",
+        "components[1].sound[0]: The row compares visible 斥 (tsyhek) with 訴 (suH), but the proposed sound element is 㡿. Change component_form to 㡿 and component_reading to its Baxter–Sagart 2014 Middle Chinese reading, tsyhek; retain character_reading 訴 as suH. The cited table rows give 㡿 MC tsyhek and 訴 MC suH (X-43c95dab3ffff7bbfe7f, X-1fc887f8a7378e70f964)."
+      ],
+      "article_hash": "e40c25df5c7644fc399346a61c7a3a1a2332a12f78b732dcbd2f89a3cf06a97b",
+      "dossier_hash": "b4899a041503b2e3267e5453dbd0e9996fcb08e33d0bce6e591f2d48a7518686",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0f3-b30c-7622-b029-d1e155b8e24c"
+    }
+  ]
+}

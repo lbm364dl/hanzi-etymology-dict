@@ -1,0 +1,209 @@
+{
+  "character": "果",
+  "summary": {
+    "text": "果 is a pictograph of fruit growing on a tree. Its common meanings include “fruit” and “result,” though their historical connection is not fully traced.",
+    "evidence_ids": [
+      "ref012",
+      "ref022",
+      "ref006",
+      "ref021"
+    ]
+  },
+  "formation": {
+    "text": "Pictographic: early forms are interpreted as a tree bearing fruit. A curated oracle-style form illustrates this picture; it is a modern redraw, not an ancient artifact image.",
+    "evidence_ids": [
+      "ref012",
+      "ref022",
+      "ref025"
+    ],
+    "type": "pictographic"
+  },
+  "components": [
+    {
+      "text": "木 is the tree in the depicted scene, while the forms above it represent fruit. The fruit shapes later came to resemble 田; this is not evidence of scribal corruption. 木 is pictorial here, not a sound element or an ancestor of the whole graph.",
+      "evidence_ids": [
+        "ref003",
+        "ref012",
+        "ref022"
+      ],
+      "form": "木",
+      "origin_form": "",
+      "origin_relation": "none",
+      "scope_character": "果",
+      "sound_limitation": null,
+      "sound": [],
+      "roles": [
+        "pictorial"
+      ],
+      "form_status": "preserved"
+    }
+  ],
+  "history": [
+    {
+      "text": "Early forms are recorded in oracle-bone and bronze script, with later examples in Chu texts, small seal, and regular script. The described early forms show fruit above 木; later bronze fruit shapes resemble 田, a shape continued in seal and regular script. The available descriptions do not provide a complete sequence of individual forms.",
+      "evidence_ids": [
+        "ref012",
+        "ref013",
+        "ref022",
+        "ref023"
+      ]
+    },
+    {
+      "text": "An older analysis identified the oracle form as an early graph for 葉. A later paleographic account disputes that identification through comparison with other plant graphs and 采; the disagreement is not resolved here.",
+      "evidence_ids": [
+        "ref012",
+        "ref022"
+      ]
+    }
+  ],
+  "uncertainties": [
+    {
+      "text": "Early graphic forms support the pictorial analysis, but do not by themselves prove that a particular inscription used 果 to mean “fruit.” The earliest securely dated fruit context remains unsettled.",
+      "evidence_ids": [
+        "ref013",
+        "ref023"
+      ]
+    },
+    {
+      "text": "Accounts differ on reported early uses: 果然 and a place name, or a proposed use meaning “can.” Their readings and relations to the fruit word remain unsettled.",
+      "evidence_ids": [
+        "ref014",
+        "ref015",
+        "ref029"
+      ]
+    }
+  ],
+  "schema_version": 2,
+  "meaning_history": {
+    "senses": [
+      {
+        "id": "果:fruit",
+        "gloss": "fruit; tree fruit",
+        "period": "dating unresolved",
+        "certainty": "probable",
+        "status": "earliest_attested",
+        "text": "Fruit is identified as the graph’s original meaning in the pictographic analysis and historical dictionary account. Early forms are reported, but a securely dated inscriptional context for this word meaning is not established.",
+        "evidence_ids": [
+          "ref003",
+          "ref012",
+          "ref013",
+          "ref016",
+          "ref023"
+        ]
+      },
+      {
+        "id": "果:result",
+        "gloss": "result; outcome; accomplishment",
+        "period": "historical; first development date unresolved",
+        "certainty": "established",
+        "status": "historical",
+        "text": "Classical textual citations show uses meaning “result” or “accomplishment.” They do not show when or through what steps these meanings developed from “fruit.”",
+        "evidence_ids": [
+          "ref006",
+          "ref021",
+          "ref027"
+        ]
+      },
+      {
+        "id": "果:resolute",
+        "gloss": "resolute; decisive",
+        "period": "historical; first development date unresolved",
+        "certainty": "established",
+        "status": "historical",
+        "text": "Dictionary citations document uses such as 果敢, “brave and decisive.” The timing and development of this sense are unresolved.",
+        "evidence_ids": [
+          "ref027",
+          "ref030"
+        ]
+      },
+      {
+        "id": "果:indeed",
+        "gloss": "indeed; as expected (果然)",
+        "period": "early use reported; dating unresolved",
+        "certainty": "disputed",
+        "status": "historical",
+        "text": "An account reports oracle-bone use in 果然 and proposes a development from the fruit sense; another discusses early adverbial use. The examples do not establish a dated path or settle the relation to the fruit word.",
+        "evidence_ids": [
+          "ref014",
+          "ref015",
+          "ref029"
+        ]
+      }
+    ],
+    "developments": [
+      {
+        "from_sense": "果:fruit",
+        "to_sense": "果:indeed",
+        "type": "extension",
+        "certainty": "disputed",
+        "text": "A proposed extension from “fruit” to 果然 remains uncertain because the dates and contexts needed to confirm it are not established.",
+        "evidence_ids": [
+          "ref014",
+          "ref029"
+        ]
+      }
+    ],
+    "limitations": [
+      {
+        "text": "Historical citations support several uses but do not establish a full chronology or semantic chain among them.",
+        "evidence_ids": [
+          "ref021",
+          "ref027",
+          "ref029"
+        ]
+      },
+      {
+        "text": "The reported place-name and “can” uses are not connected to the fruit sense by demonstrated semantic development or a supported sound comparison.",
+        "evidence_ids": [
+          "ref014",
+          "ref015"
+        ]
+      }
+    ]
+  },
+  "learner": {
+    "overview": {
+      "text": "果 pictures fruit growing above a tree. It is used today for “fruit” and “result,” but their historical connection is not fully traced.",
+      "evidence_ids": [
+        "ref012",
+        "ref022",
+        "ref006",
+        "ref021"
+      ]
+    },
+    "components": [
+      {
+        "component_index": 0,
+        "text": "木 is the tree in the picture; the shapes above it represent fruit. Later fruit shapes resembled 田, but are not shown to result from corruption.",
+        "evidence_ids": [
+          "ref003",
+          "ref012",
+          "ref022"
+        ]
+      }
+    ],
+    "takeaway": null
+  },
+  "relationships": [
+    {
+      "id": "果:木:pictorial",
+      "subject": {
+        "kind": "component",
+        "id": "木"
+      },
+      "object": {
+        "kind": "character",
+        "id": "果"
+      },
+      "predicate": "pictorial_component_of",
+      "context_character": "果",
+      "certainty": "probable",
+      "text": "木 represents the tree in the pictographic scene of fruit growing above it.",
+      "evidence_ids": [
+        "ref003",
+        "ref012",
+        "ref022"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "In `components[0].sound[0]`, the character_reading is `zuǒ`, but the component is scoped to 左 and its cited local Unihan row lists only 左, not 𠂇. The dossier separately supplies local Unihan readings of `𠂇` and 左 as `zuǒ` (`local_primary_readings.unihan.rows`), so retain the comparison only with evidence that cites a verified 𠂇 row; the current cited evidence does not support both readings. If that row cannot be cited, remove the sound comparison and add a cited sound_limitation explaining the gap."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "task": "Resolve classifier sense status from actual evidence. Do not label a use historical merely because currentness is unresolved. Verify current or historical use with research, or omit an optional unscoped classifier sense rather than inventing a chronology. Retain supported core senses and transitions.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`meaning_history.senses[3].status` is `current`, while its text says the evidence does not establish whether the classifier use is current or historical; dossier evidence `X-c8e439dca4e98c7d181d` only records classifier use for 樣. Change the status to `historical` or otherwise represent its period as unresolved."
+      ],
+      "article_hash": "32e7221811a94b9da998e617f6b1760b12d94b672c9b7458f7b0d13a75aaba82",
+      "dossier_hash": "b80db54e40bb5fa860beba359b77e1900d736898054b189af3fdd215929b8a8d",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0f3-6477-7e71-9d75-9957d0924f7d"
+    },
+    {
+      "role": "readability",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "32e7221811a94b9da998e617f6b1760b12d94b672c9b7458f7b0d13a75aaba82",
+      "dossier_hash": "b80db54e40bb5fa860beba359b77e1900d736898054b189af3fdd215929b8a8d",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0f3-a0ea-7aa1-8e43-893bf20e4127"
+    }
+  ]
+}

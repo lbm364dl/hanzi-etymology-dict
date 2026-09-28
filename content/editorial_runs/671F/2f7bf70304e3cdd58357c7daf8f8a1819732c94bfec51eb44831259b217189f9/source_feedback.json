@@ -1,0 +1,25 @@
+{
+  "task": "Correct latest review findings using fresh targeted research and visual curation. Inspect the exact attached image and qualify its confirmed identity/components correctly; the curator must own any alt/caption/selection_reason correction. Retrieve exact 其 and 期 rows for any historical sound comparison, in one named system; if a valid pair cannot be established, preserve supported MC and Mandarin pairs and explain the limitation. Keep approved unrelated prose/graph unchanged.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "In `historical_glyphs.items[0].selection_reason`, replace “The image visibly shows the 月-bearing form” with wording that identifies it as a seal-script-style redraw labeled 期, without asserting its visible components as verified. The attached image shows a composite whose identification as the described 其-and-月 form is not established by the cited textual evidence. Update `historical_glyphs.items[0].alt` to describe only visually confirmable shapes, not identify them as 其 and 月. The source supports the redraw’s label and its modern provenance, while the image itself supports the visible description (X-a037c708ab89ab5b98f3)."
+      ],
+      "article_hash": "b7103a6012b16bd3dd9858d5848de02ef9a8dde5a705fed633d2a8dca11bc0a3",
+      "dossier_hash": "3e82be4bb3c28f5ff6f49853b15e9e7a035554c54885fe850e20f9ac173daaca",
+      "reviewer": "gpt-6-luna:low:factual:01a0e122-7126-7e51-b470-61f296742de8"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `components[1].sound[1]`, the Old Chinese readings are labeled Baxter–Sagart 2014, but `*[g](r)ə` for 期 is supported by the supplied Baxter–Sagart row only for 期, while the dossier says no matching 其 row was supplied in that table; the cited `X-b7f2b504fad4f80316fc` instead gives Zhengzhang values `*kɯ` and `*ɡɯ` as a separate system. Correct the system label and readings to a same-system cited pair, or remove this comparison; keep the valid Middle Chinese and Modern Mandarin pairs."
+      ],
+      "article_hash": "b7103a6012b16bd3dd9858d5848de02ef9a8dde5a705fed633d2a8dca11bc0a3",
+      "dossier_hash": "3e82be4bb3c28f5ff6f49853b15e9e7a035554c54885fe850e20f9ac173daaca",
+      "reviewer": "gpt-6-luna:low:readability:01a0e122-ad93-7691-913f-0c8731615cfe"
+    }
+  ]
+}

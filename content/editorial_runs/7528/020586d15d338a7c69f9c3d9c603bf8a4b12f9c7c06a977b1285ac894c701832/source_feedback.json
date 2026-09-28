@@ -1,0 +1,25 @@
+{
+  "task": "Make only the concrete current learner/meaning corrections from the latest reviews, preserving expert sound tables, images and unrelated fields. For 教, distinguish the current component from the early phonetic component and include the cited reported early instruct use with uncertainty. For 用, state the proposed borrowing mechanism explicitly as unverified and preserve the unknown object-name limitation. Do not add a reconstructed object-name.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "In `learner.overview.text`, replace “the container’s name was thought to sound alike” with wording that presents the sound match as a proposal, not an established comparison. The same sentence says the name is unknown and the match unverified, but “was thought to sound alike” still implies a known proposed pronunciation. The evidence supports only a reported borrowing hypothesis whose phonetic basis cannot be checked (X-8023121006624975ee32, X-27b8ab4e2a5bad34ad7d)."
+      ],
+      "article_hash": "2bdeadca33870212dcf99be36c8335ec99d335eee05f9efe70d6d6cdc2880465",
+      "dossier_hash": "0e637471612ee1caec9eecb40d4b9353f93ce9cc79d809e1b6b73940586d0359",
+      "reviewer": "gpt-6-luna:low:factual:01a0e125-17e0-7af3-8b1e-50ebc6221ad7"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `learner.overview.text`, replace “the container’s name was thought to sound alike” with wording that makes this an unverified proposed mechanism: the graph may have been reused because the container’s name sounded similar to “use,” but the container’s name and the sound match are unknown. The current passive wording suggests an established sound proposal, while the evidence only reports borrowing and says the object’s name cannot be recovered or compared (X-8023121006624975ee32, X-27b8ab4e2a5bad34ad7d)."
+      ],
+      "article_hash": "2bdeadca33870212dcf99be36c8335ec99d335eee05f9efe70d6d6cdc2880465",
+      "dossier_hash": "0e637471612ee1caec9eecb40d4b9353f93ce9cc79d809e1b6b73940586d0359",
+      "reviewer": "gpt-6-luna:low:readability:01a0e125-4896-78b0-b049-68b79146e6a0"
+    }
+  ]
+}

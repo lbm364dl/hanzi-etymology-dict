@@ -1,0 +1,8 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "`components[1].origin_relation`: change `simplified_form` to `uncertain`. The standard supports 只 replacing 戠 in 识, but this is an internal replacement; it does not identify 只 as a simplified form of 戠. Preserve the supported replacement role and explanation.",
+    "`components[3].sound[2]`: change `component_reading` from `zhī` to `shì`. The exact local Unihan row for 戠 is `zhī`, but the component is scoped to traditional 識 and the local Unihan row for that host is `shí shì`; the current `shí shì` host value is supported, but `zhī` is not its cited local reading. This entry should report a valid comparison for the scoped host, or omit this Modern Mandarin pair if its plural host reading cannot be represented accurately.",
+    "`learner.overview.text`: revise “In traditional 識, 言 marks a speech-related category and 戠 supplies a compatible sound cue” because it uses expert terminology without explaining the construction. State plainly that 言 contributes a speech-related meaning and 戠 provides a sound cue; keep the existing qualified comparison available in the displayed component card."
+  ]
+}

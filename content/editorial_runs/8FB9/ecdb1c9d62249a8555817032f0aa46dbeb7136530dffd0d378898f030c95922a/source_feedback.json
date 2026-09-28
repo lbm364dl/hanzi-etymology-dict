@@ -1,0 +1,13 @@
+{
+  "findings": [
+    {
+      "role": "factual",
+      "finding": "For components[5], 辶 is the conventional positional form of 辵, so origin_relation should be full_form. Keep this shape relationship separate from whether 辵 has a semantic movement role in simplified 边."
+    },
+    {
+      "role": "readability",
+      "finding": "Qualify the role of 辶 in simplified 边. The sources support a movement analysis for traditional 邊 but do not independently establish the same component identity/role in 边."
+    }
+  ],
+  "task": "Resolve form identity and host-specific role separately. For the traditional 邊 component, preserve the disputed movement analysis while marking 辶 as the positional form of 辵 (origin_relation full_form). For the simplified 边 card, explain the conventional 辶/辵 shape relation but set the component role to unknown and remove any semantic_component_of edge to 边; do not transfer the traditional role. Keep 边 identified as the simplified form of 邊. Preserve the qualified 臱/邊 sound-series comparison and the separate limitation that this does not prove 𦤝 is 臱."
+}

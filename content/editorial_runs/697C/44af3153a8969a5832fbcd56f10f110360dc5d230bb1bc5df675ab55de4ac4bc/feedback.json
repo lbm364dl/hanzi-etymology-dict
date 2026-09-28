@@ -1,0 +1,25 @@
+{
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "In component 1, `origin_form: \"婁\"` with `origin_relation: \"simplified_form\"` misclassifies the direction: the visible form 娄 is the simplified counterpart of traditional 婁 (X-a1cf66ffc852853b635c). Change `origin_relation` to `earlier_form`; retain the existing `origin_form` and explanation."
+      ],
+      "article_hash": "d96df9d6cc61a5ebe0a7b03303f2eaddb625363f713467a253fdc4ef3e84f953",
+      "dossier_hash": "5a87fc4c56f27639327a26c24f0ee8281798f4f7589831264dcb8449c3a6bfc3",
+      "reviewer": "gpt-6-luna:low:factual:01a0e037-4847-78c3-9b42-231799a0e8d3"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `components[1]`, `娄` has `roles: [\"unknown\"]` and `sound: []`, but the cited evidence identifies it as the simplified counterpart of phonetic 婁 and supplies lóu for both 楼 and 樓 (E3, E9, X-a1cf66ffc852853b635c, X-0741cff399d1e7157f6f). Add the Modern Mandarin comparison `娄` lóu → `楼` lóu and classify its role as phonetic, with wording that limits this phonetic analysis to the evidence available for the simplified graph. Update the learner component card at index 1 to explain the sound contribution rather than saying its role is unestablished."
+      ],
+      "article_hash": "d96df9d6cc61a5ebe0a7b03303f2eaddb625363f713467a253fdc4ef3e84f953",
+      "dossier_hash": "5a87fc4c56f27639327a26c24f0ee8281798f4f7589831264dcb8449c3a6bfc3",
+      "reviewer": "gpt-6-luna:low:readability:01a0e037-76ae-7d60-955f-1d8180a51ca2"
+    }
+  ],
+  "instruction": "The factual request to change origin_form 婁 / form 娄 from simplified_form to earlier_form reverses the enum contract. Do not adopt it; sourced traditional-to-simplified correspondence is simplified_form. Independently investigate sound roles of 婁 in 樓 and 娄 in 楼, and include exact supported Modern Mandarin comparison. A modern reading match alone is not proof of an ancient role."
+}

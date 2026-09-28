@@ -1,0 +1,7 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "In `components[1]`, `origin_form: \"豭\"` paired with `origin_relation: \"uncertain\"` is misleading: the text says 豭 is a proposed sound element, not a proven graphic ancestor or full form of visible 豕. Set `origin_form` to empty (and `origin_relation` to `none`) unless a distinct cited source supports a graphic relationship; keep the 豭 sound comparison and its limitation, which are independently useful.",
+    "In `components[1].sound[0]`, the character-side reading is labeled `jiā` but cites only local Unihan rows, and the dossier notes that official character-specific Unicode pages could not be accessed. Add the available cited 家 kMandarin evidence (`X-0409b35879fca91127a2` or `X-7de52a92d20968d4b413`) to support the host reading, or remove the Modern Mandarin comparison if it cannot be cited reliably."
+  ]
+}

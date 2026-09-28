@@ -1,0 +1,30 @@
+{
+  "task": "Correct the reversed Middle Chinese readings: component 章 tsyang versus scoped host 商 syang in the Baxter–Sagart table. Verify exact local rows and cited source records, preserve separate Old Chinese comparisons without conflating columns. Keep learner card short and caveat supported phonetic proposal without repeating displayed readings.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "368632c63974d751d9d761877a70180b8214711571613829ab0fd16c839c0deb",
+      "dossier_hash": "c66ec4937c7ecbe54da5a6647a2f992b1707366c4baa43fc2fdf5fad87680595",
+      "reviewer": "gpt-6-luna:low:factual:01a0e081-f6d4-7612-aa7a-a22cc39ed900"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`components[1].sound[0].component_reading` and `components[1].sound[0].character_reading`: the Baxter–Sagart Middle Chinese readings are reversed. Change `component_reading` from `syang` to `tsyang` and `character_reading` from `tsyang` to `syang`, matching the supplied 章 and 商 rows in E8 and X-28a3e5727b84f1d4b046."
+      ],
+      "article_hash": "368632c63974d751d9d761877a70180b8214711571613829ab0fd16c839c0deb",
+      "dossier_hash": "c66ec4937c7ecbe54da5a6647a2f992b1707366c4baa43fc2fdf5fad87680595",
+      "reviewer": "gpt-6-luna:low:readability:01a0e082-22ce-72c1-bb7a-dd0cccc7a1ff"
+    }
+  ],
+  "validation": {
+    "role": "validation",
+    "verdict": "revise",
+    "findings": [
+      "Learner paragraph exceeds the 30-word hard limit (33 words): 'The received analysis treats this abbreviated part as a sound element, but the evidence does not verify how its visible form differs from 章; the similar readings fit the proposal without confirming it.'. Cut lower-priority details already explained in the expert, component, or history sections; aim for 25 words and keep only the main point and any essential caveat."
+    ]
+  }
+}

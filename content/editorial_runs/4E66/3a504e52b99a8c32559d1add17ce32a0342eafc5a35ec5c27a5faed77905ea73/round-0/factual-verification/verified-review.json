@@ -1,0 +1,6 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "In `components[1].sound[0]`, the system label combines Mandarin with Baxter–Sagart Middle Chinese and Old Chinese, but the cited readings mix Mandarin component/host readings (`zhě`/`shū`) with historical reconstructions. The text also incorrectly says the Old Chinese forms share initial `*t`: the supplied rows give 書 `*s-ta` and 者 `*tAʔ` (`X-4fdcedf6f079e5a590ba`, `X-3de4fd42c3bc2e6686a8`). Replace this with a valid comparison, such as a Mandarin pair labeled `Modern Mandarin` (`zhě`/`shū`, supported by `X-3de4fd42c3bc2e6686a8`, `X-f998a3f72bee285ecff0`, and local rows), or separate same-system historical comparisons. Add a cited `sound_limitation` stating that the available comparisons do not independently establish the historical phonetic relationship; the cited evidence says no checked matching Baxter–Sagart row for 者 was supplied (`X-4fdcedf6f079e5a590ba`, `X-3de4fd42c3bc2e6686a8`)."
+  ]
+}

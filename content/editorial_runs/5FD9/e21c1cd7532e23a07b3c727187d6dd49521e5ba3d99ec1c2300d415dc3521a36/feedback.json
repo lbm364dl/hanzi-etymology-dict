@@ -1,0 +1,25 @@
+{
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "components[1].sound[0]: Qualify *maŋ and *mˤaŋ as values reported by the local Baxter–Sagart dataset, not independently verified historical sound evidence. The current wording says the forms “offer a plausible historical sound comparison,” while X-e44b8137c07c83bfc356 identifies the local row as non-external evidence and X-e72e3c382f1b441dbe7c records that upstream and official records could not be verified. Keep the reported comparison, but state its limited provenance and do not present it as independently established."
+      ],
+      "article_hash": "7e0cd5b9ffb764752ba85900bfbd720d2b3669afb2915b575e356e4873005184",
+      "dossier_hash": "627c885fe847a3c839111377933e58eb7e93706e1765185e4f7dac17474e39d0",
+      "reviewer": "gpt-6-luna:low:factual:01a0e043-0526-7293-8b3e-4b6fa99ece33"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "components[1].sound: Add the available Modern Mandarin comparison for 亡 and 忙 with locally verified Unicode Unihan kMandarin readings. The dossier gives wáng and máng in E5, but records that the official rows were not verified (X-e72e3c382f1b441dbe7c, X-85104bbb02e5e3d5703e); retain the Old Chinese comparison and its separate sound_limitation."
+      ],
+      "article_hash": "7e0cd5b9ffb764752ba85900bfbd720d2b3669afb2915b575e356e4873005184",
+      "dossier_hash": "627c885fe847a3c839111377933e58eb7e93706e1765185e4f7dac17474e39d0",
+      "reviewer": "gpt-6-luna:low:readability:01a0e043-3ba5-7dc3-bad9-74bead8e2620"
+    }
+  ],
+  "instruction": "Resolve both comparisons against exact primary source rows. The local Baxter–Sagart TSV contains 亡 *maŋ and 忙 *mˤaŋ, with the 2014 table citation documented in RESEARCH.md. Inspect the actual rows and provenance; if upstream verification is needed, consult the official GSR-sorted table. A local dataset reading can document that system’s reported reconstruction, while it does not prove a historical derivation by itself. Also inspect actual local Unihan kMandarin rows for 亡 and 忙 and retain a supported modern pair; a failed web page lookup does not mean the local data is absent. Put citation provenance in evidence and keep reader prose neutral."
+}

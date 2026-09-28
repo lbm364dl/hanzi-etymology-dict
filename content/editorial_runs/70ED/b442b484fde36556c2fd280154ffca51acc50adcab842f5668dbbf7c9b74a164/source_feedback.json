@@ -1,0 +1,32 @@
+{
+  "task": "Review 灬/火 form correspondence against actual evidence. Do not label a conventional coexisting positional/full form earlier_form without chronology. Use full_form if the regular positional/full relationship is supported; otherwise accurately mark variant or uncertain rather than manufacture an earlier ancestor. Preserve meaning role and traditional 熱 埶 phonetic scope, real sound rows and qualified limitations. Resolve any validation error against the actual current article, not an obsolete saved draft.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "components[0].origin_relation is \"earlier_form\", but the cited evidence describes 灬 as a changed graphic form of 火 without establishing that 火 is a historical ancestor or replaced form in this relation. Change it to \"uncertain\"; keep the supported 火-to-灬 correspondence in the explanation. Evidence: X-f3121ab432535b58de5a, X-05b914aab52a20c03b09."
+      ],
+      "article_hash": "fe4cbb6d7f72410cb616db0c65e9c68c77acaaf2bfd917f23a7903f621b83ae6",
+      "dossier_hash": "b836a700a61ec250024dada3044d803607e7a16a0a2c5976d3b5521d905e9d6b",
+      "reviewer": "gpt-6-luna:low:factual:01a0e07d-e3f2-7931-80aa-97803fa3f617"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`components[0].origin_relation` is `earlier_form`, but the cited account describes the lower dots 灬 as a changed graphic form of 火, without asserting that 火 is an earlier component shape in 熱. Set `origin_relation` to `uncertain` and revise the component text so it reports the graphic correspondence without implying an unsupported chronological sequence (X-f3121ab432535b58de5a, X-05b914aab52a20c03b09)."
+      ],
+      "article_hash": "fe4cbb6d7f72410cb616db0c65e9c68c77acaaf2bfd917f23a7903f621b83ae6",
+      "dossier_hash": "b836a700a61ec250024dada3044d803607e7a16a0a2c5976d3b5521d905e9d6b",
+      "reviewer": "gpt-6-luna:low:readability:01a0e07e-2802-77d1-bba4-0717a2748b31"
+    }
+  ],
+  "validation": {
+    "role": "validation",
+    "verdict": "revise",
+    "findings": [
+      "A sound limitation requires a phonetic or unresolved component role"
+    ]
+  }
+}

@@ -6,6 +6,31 @@ import gzip
 from pathlib import Path
 
 
+def load_articles(directory=Path("content/entries"), dossier_directory=None, expected_language=None):
+    """Load approved prose for the exact character named by each file."""
+    articles = {}
+    for path in sorted(Path(directory).glob("*.json")):
+        article = json.loads(path.read_text(encoding="utf-8"))
+        if article.get("review", {}).get("status") != "approved":
+            continue
+        if expected_language is not None and article.get("language") != expected_language:
+            raise ValueError(f"Authored entry language must be {expected_language!r}: {path}")
+        character = article.get("character", "")
+        if len(character) != 1 or path.stem != f"{ord(character):04X}":
+            raise ValueError(f"Authored entry character does not match filename: {path}")
+        from pipeline.editorial import validate_published
+        dossier_path = (Path(dossier_directory) if dossier_directory is not None else Path(directory).parent / "dossiers") / path.name
+        current_dossier = json.loads(dossier_path.read_text(encoding="utf-8")) if dossier_path.exists() else None
+        validate_published(article, current_dossier=current_dossier)
+        articles[character] = {key: value for key, value in article.items() if key != "dossier"}
+        assets = article["dossier"].get("glyph_assets", [])
+        if assets:
+            articles[character]["display_glyphs"] = {
+                asset["glyph_id"]: "glyphs/editorial/" + Path(asset["path"]).name for asset in assets
+            }
+    return articles
+
+
 def compute_kokuji_set():
     """Return set of chars that are Japan-only (kokuji): in KANJIDIC2 but absent
     from all Chinese-sphere national standards (G=PRC, T=Taiwan, H=HK, V=Vietnam)
@@ -36,11 +61,21 @@ def compute_kokuji_set():
     }
 
 
-def build_kanji(kokuji_set=None):
+def build_kanji(kokuji_set=None, articles=None):
     """Build kanji site data: output/kanji_etymology.jsonl -> docs/kanji_data.json.gz"""
     docs = Path("docs")
     docs.mkdir(exist_ok=True)
+    # Shared canonical HSK 2021 character lists, independent of legacy HSK tags.
+    hsk_levels = json.loads(Path("content/hsk-levels.json").read_text(encoding="utf-8"))
+    (docs / "hsk-levels.json").write_text(json.dumps(hsk_levels, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+    jlpt_path = Path("content/jlpt-levels.json")
+    if jlpt_path.exists():
+        jlpt_levels = json.loads(jlpt_path.read_text(encoding="utf-8"))
+        (docs / "jlpt-levels.json").write_text(json.dumps(jlpt_levels, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     kokuji_set = kokuji_set or set()
+    articles = load_articles(Path("content/ja/entries"), expected_language="ja") if articles is None else articles
+    if any(article.get("language") != "ja" for article in articles.values()):
+        raise ValueError("Japanese site articles must have language='ja'")
 
     fpath = Path("output/kanji_etymology.jsonl")
     if not fpath.exists():
@@ -92,8 +127,6 @@ def build_kanji(kokuji_set=None):
             if gy: compact["gy"] = gy[:3]
 
             if r.get("formation_type_conflict"): compact["ftc"] = r["formation_type_conflict"]
-            if r.get("confidence"):           compact["conf"] = r["confidence"]
-            if r.get("verification_status"): compact["vs"] = r["verification_status"]
 
             # Japanese-specific
             if r.get("jlpt") is not None:    compact["jlpt"] = r["jlpt"]
@@ -116,6 +149,8 @@ def build_kanji(kokuji_set=None):
                     if r.get(total_key): compact[short + "t"] = r[total_key]
             if r["character"] in kokuji_set: compact["kokuji"] = True
 
+            if r["character"] in articles:
+                compact["article"] = articles[r["character"]]
             records.append(compact)
 
     data = json.dumps(records, ensure_ascii=False, separators=(",", ":"))
@@ -132,6 +167,18 @@ def main():
     docs = Path("docs")
     docs.mkdir(exist_ok=True)
 
+    articles = load_articles()
+    japanese_articles = load_articles(Path("content/ja/entries"), expected_language="ja")
+    print(f"  Approved authored entries: {len(articles)}")
+    print(f"  Approved Japanese authored entries: {len(japanese_articles)}")
+    # Content-addressed snapshots are covered by each entry's reviewed dossier.
+    import shutil
+    for article in [*articles.values(), *japanese_articles.values()]:
+        for display_path in article.get("display_glyphs", {}).values():
+            destination = docs / display_path
+            source = Path("content/glyph-assets") / destination.name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
     kokuji_set = compute_kokuji_set()
     print(f"  Kokuji set: {len(kokuji_set)} characters identified")
 
@@ -171,8 +218,6 @@ def main():
             gy = r.get("guangyun", [])
             if gy: compact["gy"] = gy[:3]
             if r.get("formation_type_conflict"): compact["ftc"] = r["formation_type_conflict"]
-            if r.get("confidence"): compact["conf"] = r["confidence"]
-            if r.get("verification_status"): compact["vs"] = r["verification_status"]
             if r.get("frequency_rank"): compact["fr"] = r["frequency_rank"]
             if r.get("hsk3_level"): compact["hsk"] = r["hsk3_level"]
             elif r.get("hsk_level"): compact["hsk"] = r["hsk_level"]
@@ -198,6 +243,8 @@ def main():
                 if rd.get(k): compact[sk] = rd[k]
             if r["character"] in kokuji_set: compact["kokuji"] = True
 
+            if r["character"] in articles:
+                compact["article"] = articles[r["character"]]
             records.append(compact)
 
     data = json.dumps(records, ensure_ascii=False, separators=(",", ":"))
@@ -233,7 +280,7 @@ def main():
         print(f"  Copied {n} Wikimedia seal SVGs to docs/glyphs/")
 
 
-    build_kanji(kokuji_set)
+    build_kanji(kokuji_set, japanese_articles)
 
 
 if __name__ == "__main__":

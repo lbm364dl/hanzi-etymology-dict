@@ -1,0 +1,27 @@
+{
+  "task": "Resolve formation type and sense-period qualifications from actual evidenced scope. A documented standardized simplification does not prove a specific original construction; retain competing ancestral analyses with appropriate certainty. Do not assert an independently verified Shang date for a secondary reported oracle-bone occurrence. Historical glyph visible features already belong in its caption: ensure useful accurate explanation without duplicating caption prose merely to fill history.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`formation.type` is `derived`, but the entry describes the early construction of 學 as competing and says the simplified graph’s shape does not establish its construction. Change it to `disputed`: the evidence supports competing analyses of 學, not a specific derivation for 学 (`X-d160e9b7a0c41effc9ad`, `X-b49814a18dfc7dd07746`, `X-26f51caf14329c9ea28f`)."
+      ],
+      "article_hash": "19d4cae9e460c2831333bc995bb6ca27846a9900c912057cace5dfa408c4e631",
+      "dossier_hash": "53c5125015d1d1deddd4d66ba3afe74c85bd6d69efa98dc36250e8795d8eda84",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0f9-e374-77d1-9f96-bf3cb74ba868"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`formation.type` is currently `derived`, but the entry states that the construction accounts concern 學 and that the graphic path from early 學 to 学 is unresolved. The supported simplified-counterpart relationship does not establish a formation for 学. Change the formation type to `disputed` or `unknown`, consistent with the schema and the evidence. Evidence: X-26f51caf14329c9ea28f, X-d160e9b7a0c41effc9ad, X-6a4306efe5b3dac18faf.",
+        "`meaning_history.senses[0].period` claims “Shang-period oracle-bone evidence,” while the evidence supports a source-reported oracle-bone occurrence but says its archaeological date and context were not independently established. Replace this with a qualified period label such as “oracle-bone script, as reported.” Evidence: X-98387e02450268ecfc14, X-a5651df93c9f63edaf6f.",
+        "`history[0].text` describes the glyph image but omits its visible features. Add that it shows crossing upper strokes and a broad curved lower form, while retaining that the tracing does not resolve the competing interpretations. Evidence: X-cce4bb846a45a243a6ab, X-a5651df93c9f63edaf6f."
+      ],
+      "article_hash": "19d4cae9e460c2831333bc995bb6ca27846a9900c912057cace5dfa408c4e631",
+      "dossier_hash": "53c5125015d1d1deddd4d66ba3afe74c85bd6d69efa98dc36250e8795d8eda84",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0fa-2e4d-7942-af0c-6a545669468e"
+    }
+  ]
+}

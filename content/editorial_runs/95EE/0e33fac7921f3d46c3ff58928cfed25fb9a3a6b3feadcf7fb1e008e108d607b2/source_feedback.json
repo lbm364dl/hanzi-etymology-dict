@@ -1,0 +1,35 @@
+{
+  "task": "Research exact same-system 門 and 問 readings and cite records supporting both. Preserve the received construction analysis and distinguish it from what reconstructed similarities can establish. Check evidence for ordinary simplification 問 to 问 and 門 to 门 before assigning scoped current roles. Do not create unsupported phonetic edges or mechanically erase a role solely because modern readings differ. Align certainty and learner explanation with actual evidence.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`components[1].sound[1].evidence_ids` cites `X-4adc83f2628f53b2ce9a`, which supplies only 問’s Baxter–Sagart reading and explicitly says it does not supply a 門 row; it cannot support the comparison’s 門 value `*mˤə[r]`. Replace or remove this historical comparison and cite evidence supporting both readings in the same system. Keep the valid Modern Mandarin pair and sound limitation.",
+        "`components[2].roles` and the `问-component-门` relationship assign a phonetic role to 门 in 问, while the evidence establishes that role only in the received analysis of traditional 問 (`E8`, `X-f02d6b0cc12a21f54d99`). Remove the simplified-host phonetic role and edge; retain the `simplified_from` relationship and current reading comparison."
+      ],
+      "article_hash": "489cd6cf93752b2caf48e7f2368a5b55807d7554279759a0ccff70db50b65b84",
+      "dossier_hash": "5086e1e76513b729eea8399f5336aedfe2494a817645c613ce04a6e8af2da75d",
+      "reviewer": "gpt-6-luna:low:factual:01a0e0e5-f8c5-7e43-8526-87fad1de0b29"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`components[1].sound[1]` cites `X-4adc83f2628f53b2ce9a` for a 門 Old Chinese reading, but that evidence explicitly supplies no 門 row; the dossier’s local Baxter–Sagart row gives 問 only. Remove this unsupported 門 comparison or cite evidence verifying both readings in the same system. Keep the supported Modern Mandarin pair and the separate sound limitation.",
+        "`components[1].text` and `learner.components[1].text` call 門 a phonetic element but do not explain the non-obvious sound mismatch. Briefly state that the received analysis assigns 門 that role, while the available readings do not demonstrate the historical correspondence. The existing caveat alone does not explain why the role is proposed despite the mismatch.",
+        "`relationships` gives both `問-component-門` and `问-component-门` certainty `probable`, while their cited evidence does not independently establish the historical sound correspondence. Change the edge certainty to `disputed` or add evidence that supports `probable`."
+      ],
+      "article_hash": "489cd6cf93752b2caf48e7f2368a5b55807d7554279759a0ccff70db50b65b84",
+      "dossier_hash": "5086e1e76513b729eea8399f5336aedfe2494a817645c613ce04a6e8af2da75d",
+      "reviewer": "gpt-6-luna:low:readability:01a0e0e6-409c-7932-8364-bdc2374db1bb"
+    }
+  ],
+  "validation": {
+    "role": "validation",
+    "verdict": "revise",
+    "findings": [
+      "Every supported component role requires a contextual relationship: '门' has role 'phonetic' in '问', but no matching 'phonetic_component_of' edge. Add a cited edge if the role is supported, or remove the unsupported role."
+    ]
+  }
+}
