@@ -486,6 +486,36 @@ class EditorialTests(unittest.TestCase):
             self.assertTrue(any(r["predicate"] == "pictorial_component_of" for r in inputs["article"]["relationships"]))
             self.assertEqual(inputs["article"]["meaning_history"]["senses"][0]["id"], article["meaning_history"]["senses"][0]["id"])
 
+    def test_targeted_patch_rejects_generated_edge_edits_and_repairs_source_sense(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA, assemble_article
+        article = copy.deepcopy(ARTICLE_V2)
+        dossier = {**copy.deepcopy(DOSSIER), 'glyph_research': {'historical_glyphs': GLYPHS}}
+        original = copy.deepcopy(article)
+        calls = []
+        def invoke(role, inputs, schema, directory):
+            calls.append(inputs)
+            paths = schema['properties']['edits']['items']['properties']['path']['enum']
+            for i, edge in enumerate(article['relationships']):
+                if edge['predicate'] == 'has_sense':
+                    self.assertNotIn(f'relationships/{i}/certainty', paths)
+            if len(calls) == 1:
+                edges = copy.deepcopy(article['relationships'])
+                next(e for e in edges if e['predicate'] == 'has_sense')['certainty'] = 'disputed'
+                return {'edits': [{'path': 'relationships', 'value_json': json.dumps(edges)}]}
+            self.assertIn('meaning_history', inputs['validation_findings'][0])
+            self.assertEqual(inputs['article']['relationships'], article['relationships'])
+            return {'edits': [
+                {'path': 'meaning_history/senses/0/certainty', 'value_json': '"disputed"'}]}
+        with tempfile.TemporaryDirectory() as temp:
+            result = apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                         WRITER_SCHEMA, temp, invoke)
+        assembled = assemble_article(result, dossier)
+        self.assertEqual(assembled['meaning_history']['senses'][0]['certainty'], 'disputed')
+        edge = next(e for e in assembled['relationships'] if e['predicate'] == 'has_sense')
+        self.assertEqual(edge['certainty'], 'disputed')
+        self.assertEqual(article, original)
+        self.assertEqual(len(calls), 2)
+
     def test_disputed_role_hypothesis_does_not_assert_a_known_role(self):
         dossier = {**copy.deepcopy(DOSSIER), "glyph_research": {"historical_glyphs": GLYPHS}}
         article = copy.deepcopy(ARTICLE_V2)

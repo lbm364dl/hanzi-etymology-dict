@@ -1043,8 +1043,14 @@ def local_primary_readings(inputs):
 def apply_article_patch(role, inputs, schema, directory, invoke):
     """Apply agent-authored targeted edits with schema and citation integrity checks."""
     article = inputs['article']
+    derived_predicates = {'has_sense', 'sense_developed_into', 'phonetic_loan_for'}
+    derived_edges = {edge['id']: edge for edge in article.get('relationships', [])
+                     if edge['predicate'] in derived_predicates}
     paths = {}
     def visit(value, parts=()):
+        if (len(parts) == 2 and parts[0] == 'relationships'
+                and isinstance(value, dict) and value.get('predicate') in derived_predicates):
+            return
         if parts and parts[0] not in ('character', 'language', 'historical_glyphs', 'meanings', 'changes'):
             paths['/'.join(map(str, parts))] = parts
         if isinstance(value, dict):
@@ -1074,6 +1080,13 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
         'Store citations only in the containing record evidence_ids array. When editing only '
         'a text field, preserve its existing evidence_ids; if support changes, edit that array '
         'as a separate nonoverlapping path. Never append [ref001, ref002] to prose.')
+    contract['meaning_relationship_instruction'] = (
+        'has_sense, sense_developed_into and phonetic_loan_for edges are read-only '
+        'generated views of meaning_history. Correct sense IDs, glosses, text, status, '
+        'certainty and citations in meaning_history, including referenced development '
+        'endpoints when renaming a sense. Direct generated-edge edits would be discarded '
+        'by assembly and are forbidden. A relationships array replacement may omit these '
+        'generated edges or preserve them unchanged; edit only authored graphic relationships.')
     patch_inputs = {**inputs, 'original_role':role, 'article_contract': contract}
     for attempt in range(3):
         patch_directory = Path(directory) if attempt == 0 else Path(directory)/f'patch-repair-{attempt}'
@@ -1096,6 +1109,14 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
                 citation_key = (parts[-2] if isinstance(parts[-1], int) and len(parts) > 1
                                 else parts[-1])
                 node[parts[-1]] = restore_citations(value, aliases, str(citation_key))
+            for edge in patched.get('relationships', []):
+                if (edge.get('predicate') in derived_predicates
+                        and edge != derived_edges.get(edge.get('id'))):
+                    # Reject the invalid array as a unit. Do not carry an uneditable
+                    # derived mutation into the next candidate and force its repair.
+                    patched['relationships'] = copy.deepcopy(article['relationships'])
+                    raise ValueError('Generated meaning relationships are read-only; '
+                                     'edit the corresponding meaning_history record instead')
             errors = list(Draft202012Validator(ARTICLE_V2_SCHEMA).iter_errors(patched))
             if errors:
                 raise ValidationError("; ".join(error.json_path + ": " + error.message
