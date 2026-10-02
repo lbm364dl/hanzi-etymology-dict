@@ -104,7 +104,11 @@ def _adopt(character, source, output, runner, root):
              'status': 'approved' if verified else 'needs_source_research'}
     editorial.write(job / 'status.json', state)
     if not verified:
-        return {'character': character, 'status': state['status'], 'job': str(job), 'findings': result['findings']}
+        sync = se._triage_and_sync_issues(job, source, runner)
+        state['issue_sync_status'] = sync['status']
+        editorial.write(job / 'status.json', state)
+        return {'character': character, 'status': state['status'], 'job': str(job),
+                'findings': result['findings'], 'issue_sync_status': sync['status']}
     if not valid_audit(job, audit, article, dossier):
         raise ValueError('Source coverage receipt does not bind the actual completed Luna low check')
     sync = se._triage_and_sync_issues(job, source, runner)

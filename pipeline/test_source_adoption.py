@@ -53,6 +53,28 @@ class SourceAdoptionTests(unittest.TestCase):
                                                                 'findings': ['Scan disagrees.']})
             self.assertFalse(se._published_matches(job, SOURCE, self.root))
 
+    def test_failed_source_check_tracks_findings_without_publishing(self):
+        class Locator(LocalSources):
+            def locate_sources(self, source, character, dossier):
+                return {'source_scan_images': [{'path': '/original.png', 'pdf_page': 123}]}
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+            def run(self, role, inputs, schema, directory):
+                result = {'verdict': 'revise', 'evidence_ids': ['source:1'],
+                          'findings': ['A material claim needs more research.']}
+                editorial.write(Path(directory) / 'result.json', result)
+                return result
+        before = self.entry.read_bytes()
+        with patch.object(se, '_load_source_tools', return_value=Locator()), \
+                patch.object(se, '_triage_and_sync_issues', return_value={'status': 'synced'}) as sync:
+            result = source_adoption.adopt('木', SOURCE, self.root / 'runs', Runner(), self.root)
+        self.assertEqual(result['status'], 'needs_source_research')
+        self.assertEqual(result['issue_sync_status'], 'synced')
+        sync.assert_called_once()
+        self.assertEqual(self.entry.read_bytes(), before)
+        self.assertFalse((self.root / 'content/source_coverage').exists())
+
     def test_book_title_without_used_page_evidence_cannot_be_adopted(self):
         source = {**SOURCE, 'title': 'Another book'}
         class Runner:
