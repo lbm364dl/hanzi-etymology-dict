@@ -2,16 +2,34 @@
   "pdf_page": 497,
   "printed_page": 484,
   "source_sha256": "cd2d1888199f1a005780526ec268e20c5cb162f83419a125fc426415981b75c7",
+  "source_rgb_pixel_sha256": "cd2d1888199f1a005780526ec268e20c5cb162f83419a125fc426415981b75c7",
   "source_png_file_sha256": "b6b9683afda761707143dd42b20a212e61fa9bdccb16d1bbe105280424eecdc8",
   "original_evidence_sha256": "937582a72653536f9a309d81f7cc395d52b2d649dff42c750022f573202856cd",
   "raw_text_sha256": "2631a7ca209d5fd072fd1c48d8e8976e64fc9bbf14d5a1f7a0919ae79fd2cc98",
-  "effective_evidence_sha256": "033e2a0ea6c67a8318fbecd18c089def376ce2a2bf8c145bcaf98d0fd27e72bd",
-  "effective_text_sha256": "cedfc14b085149f23b7e69082b99aebfb9f97d78408bfe5c1cbb30bb3abbd082",
-  "corrections_sha256": "523230e55330da8f9e73eb92661e898b783355873a95ff0401f304a0e4c68915",
-  "consumer_evidence_sha256": "033e2a0ea6c67a8318fbecd18c089def376ce2a2bf8c145bcaf98d0fd27e72bd",
-  "consumer_corpus_sha256": "619923ea952929b8529fdb32e2743c5df983b280d6a7abf2a4e6869595ddad2d",
+  "effective_evidence_sha256": "8f54971c427d8a3611ebeb5597b50dac290b632ab1d41486e1466861d1bc14bd",
+  "effective_text_sha256": "d5381bb26ea1a38f30360d6572087db96f1fb71639e91a23359ccc7e3d38dbdd",
+  "corrections_sha256": "6aaf5be393140138d8b10b5c9382fd76fcb0a07e18533ce5b9debfb3d750cc1e",
+  "consumer_evidence_sha256": "8f54971c427d8a3611ebeb5597b50dac290b632ab1d41486e1466861d1bc14bd",
+  "consumer_corpus_sha256": "83984a2447df89604338c85e851e37b1adfdd9bb5fe56346f726d516e7eabd7a",
   "consumer_pages": 1435,
   "whole_page_reviewed": false,
+  "consumer_corpus_publication_history": [
+    {
+      "previous_sha256": "1d8380e753206b54c446bc55c4c498bb1ea2b78ac7778e8a652c6d754af2eda1",
+      "published_sha256": "a4a55351f189573df9814bf28ff9e6811d2910ca6455841f9dfe7a2eeaff1474",
+      "change": "p1191 弋 correction"
+    },
+    {
+      "previous_sha256": "a4a55351f189573df9814bf28ff9e6811d2910ca6455841f9dfe7a2eeaff1474",
+      "published_sha256": "619923ea952929b8529fdb32e2743c5df983b280d6a7abf2a4e6869595ddad2d",
+      "change": "p355 爰 and p497 gallery metadata corrections"
+    },
+    {
+      "previous_sha256": "619923ea952929b8529fdb32e2743c5df983b280d6a7abf2a4e6869595ddad2d",
+      "published_sha256": "83984a2447df89604338c85e851e37b1adfdd9bb5fe56346f726d516e7eabd7a",
+      "change": "p497 行皃 literal correction"
+    }
+  ],
   "verified_text_spans": [
     {
       "start": 1028,
@@ -36,6 +54,12 @@
       "end": 1055,
       "before": "㤐",
       "after": "㤅"
+    },
+    {
+      "start": 1072,
+      "end": 1073,
+      "before": "兒",
+      "after": "皃"
     },
     {
       "start": 1077,
@@ -81,16 +105,24 @@
     "g018",
     "g019"
   ],
-  "source_crop_pixel_sha256": {
+  "gallery_crop_pixel_sha256": {
     "g015": "017e0550790e52c541e0e8e0dabdfd8edd487872697c6dc9df80b1c00f3f14ee",
     "g016": "69f6de8916612f665c51e580eaa84dc90050938033d188abfb858124216320b2",
     "g017": "300e3b5d237279665930d2867d8652c94f8945cf84bc694f37616631136414dd",
     "g018": "958c4a4eaa78a3beb3d51f8ca3adb1c756abf8017466536644c28653b12141b9",
     "g019": "8547a7347e5340955b05853370528c41b8675de36078639d70a414dc48562254"
   },
-  "corpus_rebuild": {
-    "previous_sha256": "a4a55351f189573df9814bf28ff9e6811d2910ca6455841f9dfe7a2eeaff1474",
-    "atomic_replace": true,
-    "race_check": "original corpus SHA-256 rechecked immediately before os.replace"
-  }
+  "quote_correction_source_crop_bounds": [
+    1230,
+    3270,
+    1490,
+    3410
+  ],
+  "quote_correction_source_crop_pixel_sha256": "642367b36a73862011a0852377f869184e837979002fa8c30db11a79446951c0",
+  "quote_anchor": "《说文》：“愛，行皃。从夂，㤅声。”",
+  "unresolved_occurrences": [
+    "raw/effective offset 1101 慁 identity",
+    "possible 夂/夊 instances",
+    "upper 憂 㤐 forms"
+  ]
 }

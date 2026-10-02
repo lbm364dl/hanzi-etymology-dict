@@ -210,6 +210,10 @@ class SourceEnrichmentTests(unittest.TestCase):
             research = copy.deepcopy(RESEARCH)
             research["evidence"] = [{key: value for key, value in source_evidence.items() if key != "id"}]
             editorial.write(Path(directory) / "initial-followup/research/result.json", research)
+            editorial.write(Path(directory) / "initial-followup/research/meta.json", {
+                "status": "complete", "role": "research", "model": "gpt-6-luna",
+                "reasoning": "low", "web_action_counts": {"search": 1},
+                "result_hash": editorial.digest(research)})
             reviews = [editorial.make_review(role, "pass", [], article, dossier, f"new-{role}")
                        for role in ("factual", "readability")]
             editorial.write(Path(directory) / "article.json", article)
@@ -322,6 +326,26 @@ class SourceEnrichmentTests(unittest.TestCase):
         editorial.write(job / "status.json", state)
         with self.assertRaisesRegex(ValueError, "require coordinator verification"):
             source_enrichment.publish_job(job, SOURCE, self.root)
+
+    def test_source_audit_requires_successful_hash_bound_research(self):
+        job = source_enrichment.job_path(self.output, SOURCE["id"], "木")
+        evidence = {"source": "字源", "field": "PDF page 123", "text": "A cited account."}
+        result = {"evidence": [evidence]}
+        stage = job / "initial-followup/research"
+        editorial.write(stage / "result.json", result)
+        dossier = {"evidence": [evidence]}
+        self.assertFalse(source_enrichment._capture_source_audit(job, SOURCE, dossier)["verified"])
+        receipt = {"status": "complete", "role": "research", "model": "gpt-6-luna",
+                   "reasoning": "low", "result_hash": editorial.digest(result),
+                   "web_action_counts": {"search": 1}}
+        for change in ({"status": "failed"}, {"result_hash": "altered"},
+                       {"web_action_counts": {}}, {"model": "other"}):
+            editorial.write(stage / "meta.json", {**receipt, **change})
+            self.assertFalse(source_enrichment._capture_source_audit(job, SOURCE, dossier)["verified"])
+        editorial.write(stage / "meta.json", receipt)
+        audit = source_enrichment._capture_source_audit(job, SOURCE, dossier)
+        self.assertTrue(audit["verified"])
+        self.assertEqual(audit["citations"][0]["research_receipt_hash"], editorial.digest(receipt))
 
     def test_source_audit_does_not_certify_unretained_or_unpaged_mentions(self):
         job = source_enrichment.job_path(self.output, SOURCE["id"], "木")

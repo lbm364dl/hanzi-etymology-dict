@@ -401,7 +401,16 @@ def _capture_source_audit(job, source, dossier):
     for path in dict.fromkeys(result_paths):
         try:
             raw = editorial.read(path)
+            receipt = editorial.read(path.parent / "meta.json")
         except (OSError, ValueError):
+            continue
+        if not (receipt.get("status") == "complete"
+                and receipt.get("role") == "research"
+                and receipt.get("model") == "gpt-6-luna"
+                and receipt.get("reasoning") == "low"
+                and receipt.get("result_hash") == editorial.digest(raw)
+                and any(receipt.get("web_action_counts", {}).get(action, 0)
+                        for action in ("search", "open_page", "open"))):
             continue
         for item in raw.get("evidence", []):
             source_label = str(item.get("source", ""))
@@ -412,7 +421,9 @@ def _capture_source_audit(job, source, dossier):
             retained = any(evidence.get("source") == source_label and evidence.get("field") == field
                            and evidence.get("text") == text for evidence in dossier.get("evidence", []))
             if identity_match and page_match and retained:
-                citations.append({"research_output": str(path.relative_to(root)), "source": source_label,
+                citations.append({"research_output": str(path.relative_to(root)),
+                                  "research_receipt_hash": editorial.digest(receipt),
+                                  "research_result_hash": editorial.digest(raw), "source": source_label,
                                   "field": field, "text": text})
     audit = {"source_id": source["id"], "source_hash": _research_source_hash(source),
              "verified": bool(citations), "citations": citations}

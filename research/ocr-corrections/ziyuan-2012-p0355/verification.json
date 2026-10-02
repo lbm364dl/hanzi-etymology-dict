@@ -2,6 +2,7 @@
   "pdf_page": 355,
   "printed_page": 343,
   "source_sha256": "dae2a85e30b830e9f1a86f5e1c7a082463646451e5fdf3924a5e0b388d1a2e92",
+  "source_rgb_pixel_sha256": "dae2a85e30b830e9f1a86f5e1c7a082463646451e5fdf3924a5e0b388d1a2e92",
   "source_png_file_sha256": "6a28580602e19d5a2361aa928e7921a5d0a511b0f2ee347e39e657e3ec455abf",
   "original_evidence_sha256": "17a3646d53c84618144b67e66862ad4cfb32a630b855febd70baefb43b964059",
   "raw_text_sha256": "80f03c5215bf09ecc68e8bd9c823399119ea62875f33e5a62dabe0181b201329",
@@ -9,16 +10,26 @@
   "effective_text_sha256": "abab61f6483f2c36eb7d3b7e8648ac67a7924107d0974919d3819c8ea6ced154",
   "corrections_sha256": "b272b57917617500209e57e329500aba47116fa14ad8c2ac7819cf04976e3066",
   "consumer_evidence_sha256": "0266ae4facfa959220f89a0f0c20f42d50605b0d9048a835f648c4e716e13fdc",
-  "consumer_corpus_sha256": "619923ea952929b8529fdb32e2743c5df983b280d6a7abf2a4e6869595ddad2d",
+  "consumer_corpus_sha256": "83984a2447df89604338c85e851e37b1adfdd9bb5fe56346f726d516e7eabd7a",
   "consumer_pages": 1435,
   "whole_page_reviewed": false,
-  "source_crop_bounds": [
-    215,
-    990,
-    410,
-    1175
+  "consumer_corpus_publication_history": [
+    {
+      "previous_sha256": "1d8380e753206b54c446bc55c4c498bb1ea2b78ac7778e8a652c6d754af2eda1",
+      "published_sha256": "a4a55351f189573df9814bf28ff9e6811d2910ca6455841f9dfe7a2eeaff1474",
+      "change": "p1191 弋 correction"
+    },
+    {
+      "previous_sha256": "a4a55351f189573df9814bf28ff9e6811d2910ca6455841f9dfe7a2eeaff1474",
+      "published_sha256": "619923ea952929b8529fdb32e2743c5df983b280d6a7abf2a4e6869595ddad2d",
+      "change": "p355 爰 and p497 gallery metadata corrections"
+    },
+    {
+      "previous_sha256": "619923ea952929b8529fdb32e2743c5df983b280d6a7abf2a4e6869595ddad2d",
+      "published_sha256": "83984a2447df89604338c85e851e37b1adfdd9bb5fe56346f726d516e7eabd7a",
+      "change": "p497 行皃 literal correction"
+    }
   ],
-  "source_crop_pixel_sha256": "0ade55d4e55eeaeed0a751f5c9f27154f3d4cd846c6af87d9754f5826021b297",
   "verified_spans": [
     {
       "start": 796,
@@ -28,9 +39,11 @@
       "anchor": "爱 yuán 匣纽、元部;云纽、元韵、雨元切。"
     }
   ],
-  "corpus_rebuild": {
-    "previous_sha256": "a4a55351f189573df9814bf28ff9e6811d2910ca6455841f9dfe7a2eeaff1474",
-    "atomic_replace": true,
-    "race_check": "original corpus SHA-256 rechecked immediately before os.replace"
-  }
+  "source_crop_bounds": [
+    215,
+    990,
+    410,
+    1175
+  ],
+  "source_crop_pixel_sha256": "0ade55d4e55eeaeed0a751f5c9f27154f3d4cd846c6af87d9754f5826021b297"
 }
