@@ -69,6 +69,10 @@ approvals. `pipeline.issues` synchronizes findings using stable markers, so reru
 existing issues and preserve human discussion. It never closes issues automatically.
 Registered sources can set `issue_parent_number`, `issue_milestone` and `issue_labels`;
 new findings become native subissues with kind labels and the configured milestone.
+Current job findings reopen a matching closed issue: a newly failed check must remain
+visible as active work. Historical manifest synchronization preserves closure. Neither
+path closes issues automatically or treats a new finding as proof that prior approvals
+were fabricated or invalid.
 GitHub workflow settings are kept separate from book identity, so relabeling work does not
 invalidate completed research. Edition or corpus identity changes still require new jobs.
 

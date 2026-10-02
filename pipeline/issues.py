@@ -111,7 +111,8 @@ def body(finding):
     return text
 
 
-def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, milestone=None, labels=(), parent_by_kind=None):
+def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, milestone=None, labels=(), parent_by_kind=None,
+         active_findings=False):
     """Create missing issues; preserve human discussion and never close by inference."""
     if not repository or len(repository.split('/')) != 2:
         raise ValueError('Repository must be owner/name')
@@ -141,6 +142,9 @@ def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, miles
             raise ValueError('Duplicate GitHub issue markers require reconciliation')
         if matches:
             issue = matches[0]
+            if active_findings and issue['state'].upper() == 'CLOSED':
+                invoke('issue', 'reopen', str(issue['number']), '--repo', repository)
+                issue['state'] = 'OPEN'
             # Preserve the original issue and discussion; append new evidence once.
             if issue.get('body', '').strip() != body(finding).strip():
                 update_marker = '<!-- hanzi-finding-update:' + editorial.digest(finding) + ' -->'

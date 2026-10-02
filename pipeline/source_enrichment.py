@@ -354,7 +354,7 @@ def _triage_and_sync_issues(job, source, runner):
                           parent_issue=source.get("issue_parent_number"),
                           milestone=source.get("issue_milestone"),
                           labels=source.get("issue_labels", []),
-                          parent_by_kind=source.get("issue_parent_by_kind", {}))
+                          parent_by_kind=source.get("issue_parent_by_kind", {}), active_findings=True)
     record = {"status": "synced", "repository": repository, "issues": receipts,
               "findings_hash": editorial.digest(findings)}
     editorial.write(Path(job) / "issue_sync.json", record)

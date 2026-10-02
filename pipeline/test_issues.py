@@ -8,6 +8,25 @@ from pipeline import editorial
 
 
 class IssueTests(unittest.TestCase):
+    def test_active_finding_reopens_closed_issue_but_archive_sync_does_not(self):
+        finding = dict(key='book:claim', kind='factual', title='Claim',
+                       details='New verification failed.', verification='Fresh reviews.')
+        calls = []
+        def invoke(*args):
+            calls.append(args)
+            if args[:2] == ('issue', 'list'):
+                return json.dumps([dict(number=3, url='https://github.com/owner/repo/issues/3',
+                                        body=body(finding), state='CLOSED')])
+            return ''
+        with tempfile.TemporaryDirectory() as temp:
+            receipt = Path(temp) / 'receipt.json'
+            archived = sync([finding], 'owner/repo', receipt, invoke)
+            self.assertEqual(archived[0]['state'], 'CLOSED')
+            self.assertFalse(any(c[:2] == ('issue', 'reopen') for c in calls))
+            active = sync([finding], 'owner/repo', receipt, invoke, active_findings=True)
+            self.assertEqual(active[0]['state'], 'OPEN')
+            self.assertEqual(sum(c[:2] == ('issue', 'reopen') for c in calls), 1)
+
     def test_existing_curated_parent_is_preserved(self):
         finding = dict(key='book:ocr', kind='ocr', title='OCR error', details='Scan issue.', verification='Check pixels.')
         calls = []
