@@ -217,6 +217,7 @@ def _published_matches(job, source, root):
     return (not _source_findings_pending(job)
             and audit_path.is_file()
             and editorial.read(audit_path).get("verified") is True
+            and _article_used_book_evidence(editorial.read(audit_path), article, dossier)
             and state.get("source_id") == source["id"]
             and _recorded_source_hash_matches(state.get("registry_source_hash"),
                 editorial.read(job / "source.json").get("registry_source"), source)
@@ -427,6 +428,14 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
     return record
 
 
+def _article_used_book_evidence(audit, article, dossier):
+    from pipeline.source_adoption import _used_ids
+    used = _used_ids(article)
+    return any(e.get('id') in used and all(e.get(k) == citation.get(k)
+               for k in ('source', 'field', 'text'))
+               for citation in audit.get('citations', []) for e in dossier.get('evidence', []))
+
+
 def _capture_source_audit(job, source, dossier):
     """Require research output to cite the configured book with page provenance."""
     root = Path(job)
@@ -435,6 +444,9 @@ def _capture_source_audit(job, source, dossier):
     book_id = source.get("book_id", "")
     pattern = re.compile(r"(?:\bPDF\s+page\b|\bprinted\s+page\b|\bpages?\b|\bpp?\.?\s*|頁|页)\s*\d+", re.I)
     citations = []
+    from pipeline.source_adoption import _used_ids
+    article_path = root / "article.json"
+    used = _used_ids(editorial.read(article_path)) if article_path.is_file() else set()
     for path in dict.fromkeys(result_paths):
         try:
             raw = editorial.read(path)
@@ -455,7 +467,7 @@ def _capture_source_audit(job, source, dossier):
             text = str(item.get("text", ""))
             identity_match = (title and title in source_label) or (book_id and book_id in source_label)
             page_match = bool(pattern.search(field) or pattern.search(text))
-            retained = any(evidence.get("source") == source_label and evidence.get("field") == field
+            retained = any(evidence.get("id") in used and evidence.get("source") == source_label and evidence.get("field") == field
                            and evidence.get("text") == text for evidence in dossier.get("evidence", []))
             if identity_match and page_match and retained:
                 citations.append({"research_output": str(path.relative_to(root)),
@@ -801,6 +813,8 @@ def publish_job(job, source, root=ROOT):
     if source.get("github_repo") and state.get("issue_sync_status") != "synced":
         raise ValueError("Issue tracking must sync successfully before publication")
     article, dossier = editorial.read(job / "article.json"), editorial.read(job / "dossier.json")
+    if not _article_used_book_evidence(audit, article, dossier):
+        raise ValueError("Registered book evidence is not cited by the article")
     reviews = editorial.read(job / "reviews.json")
     hashes = {"article_hash": editorial.digest(article), "dossier_hash": editorial.digest(dossier)}
     if state.get("article_hash") not in (None, hashes["article_hash"]) or state.get("dossier_hash") not in (None, hashes["dossier_hash"]):

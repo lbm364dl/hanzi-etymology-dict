@@ -207,6 +207,7 @@ class SourceEnrichmentTests(unittest.TestCase):
                 "source": "李學勤主編《字源》 (2012)", "field": "PDF page 123",
                 "text": "The book records a page-specific historical account."}
             dossier["evidence"].append(source_evidence)
+            article["summary"]["evidence_ids"].append(source_evidence["id"])
             research = copy.deepcopy(RESEARCH)
             research["evidence"] = [{key: value for key, value in source_evidence.items() if key != "id"}]
             editorial.write(Path(directory) / "initial-followup/research/result.json", research)
@@ -255,7 +256,8 @@ class SourceEnrichmentTests(unittest.TestCase):
         editorial.write(job / "reviews.json", reviews)
         with patch.object(source_enrichment, "_load_source_tools", return_value=LocalSources()):
             loc = LocalSources().locate_sources(SOURCE, "木", dossier)
-            audit = {"verified": True, "source_hash": editorial.digest(SOURCE), "citations": []}
+            audit = {"verified": True, "source_hash": editorial.digest(SOURCE),
+                     "citations": [{k: dossier["evidence"][0][k] for k in ("source", "field", "text")}]}
             editorial.write(job / "source_audit.json", audit)
             editorial.write(job / "status.json", {"status": "published", "source_id": SOURCE["id"],
                 "registry_source_hash": editorial.digest(SOURCE), "locator_hash": editorial.digest(loc),
@@ -286,7 +288,8 @@ class SourceEnrichmentTests(unittest.TestCase):
         editorial.write(job / "reviews.json", reviews)
         # Existing jobs stored a hash of the full registry object before issue
         # configuration was introduced. Keep that receipt bound to its snapshot.
-        audit = {"verified": True, "source_hash": editorial.digest(SOURCE), "citations": []}
+        audit = {"verified": True, "source_hash": editorial.digest(SOURCE),
+                     "citations": [{k: dossier["evidence"][0][k] for k in ("source", "field", "text")}]}
         editorial.write(job / "source_audit.json", audit)
         with patch.object(source_enrichment, "_load_source_tools", return_value=LocalSources()):
             locator = LocalSources().locate_sources(SOURCE, "木", dossier)
@@ -330,11 +333,12 @@ class SourceEnrichmentTests(unittest.TestCase):
 
     def test_source_audit_requires_successful_hash_bound_research(self):
         job = source_enrichment.job_path(self.output, SOURCE["id"], "木")
-        evidence = {"source": "字源", "field": "PDF page 123", "text": "A cited account."}
+        evidence = {"id": "X-book", "source": "字源", "field": "PDF page 123", "text": "A cited account."}
         result = {"evidence": [evidence]}
         stage = job / "initial-followup/research"
         editorial.write(stage / "result.json", result)
         dossier = {"evidence": [evidence]}
+        editorial.write(job / "article.json", {"text": "A sourced claim", "evidence_ids": ["X-book"]})
         self.assertFalse(source_enrichment._capture_source_audit(job, SOURCE, dossier)["verified"])
         receipt = {"status": "complete", "role": "research", "model": "gpt-6-luna",
                    "reasoning": "low", "result_hash": editorial.digest(result),
@@ -347,6 +351,8 @@ class SourceEnrichmentTests(unittest.TestCase):
         audit = source_enrichment._capture_source_audit(job, SOURCE, dossier)
         self.assertTrue(audit["verified"])
         self.assertEqual(audit["citations"][0]["research_receipt_hash"], editorial.digest(receipt))
+        editorial.write(job / "article.json", {"text": "No book citation", "evidence_ids": []})
+        self.assertFalse(source_enrichment._capture_source_audit(job, SOURCE, dossier)["verified"])
 
     def test_source_audit_does_not_certify_unretained_or_unpaged_mentions(self):
         job = source_enrichment.job_path(self.output, SOURCE["id"], "木")
