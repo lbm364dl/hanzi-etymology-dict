@@ -76,10 +76,22 @@ class SourceEnrichmentTests(unittest.TestCase):
             self.assertTrue(source_enrichment._source_findings_pending(job))
             result = {'findings': [{'key': 'rare-glyph', 'disposition': 'unresolved_identity_not_used'}]}
             editorial.write(job / 'source-resolution/result.json', result)
+            editorial.write(job / 'source-resolution/meta.json', {
+                'role': 'source_resolution', 'status': 'complete', 'model': 'gpt-6-luna',
+                'reasoning': 'low', 'result_hash': editorial.digest(result)})
             editorial.write(job / 'source_resolution.json', {
                 'findings_hash': editorial.digest(findings), 'article_hash': editorial.digest(article),
                 'dossier_hash': editorial.digest(dossier), 'result_hash': editorial.digest(result),
                 'model': 'gpt-6-luna', 'reasoning': 'low', 'review_path': 'source-resolution/result.json'})
+            self.assertFalse(source_enrichment._source_findings_pending(job))
+            result['findings'][0]['disposition'] = 'rejected_proposal_scan_matches_corpus'
+            editorial.write(job / 'source-resolution/result.json', result)
+            self.assertTrue(source_enrichment._source_findings_pending(job))
+            resolution = editorial.read(job / 'source_resolution.json')
+            editorial.write(job / 'source_resolution.json', {**resolution, 'result_hash': editorial.digest(result)})
+            editorial.write(job / 'source-resolution/meta.json', {
+                'role': 'source_resolution', 'status': 'complete', 'model': 'gpt-6-luna',
+                'reasoning': 'low', 'result_hash': editorial.digest(result)})
             self.assertFalse(source_enrichment._source_findings_pending(job))
             editorial.write(job / 'article.json', {**article, 'summary': 'Now cites a glyph.'})
             self.assertTrue(source_enrichment._source_findings_pending(job))

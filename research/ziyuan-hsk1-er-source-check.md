@@ -37,3 +37,15 @@ The general source policy now requires targeted crops, visible distinguishing st
 exact occurrences and retention of competing identities when a later attempt claims to
 resolve an earlier identity gap. Proposed corrections remain explicitly tagged until
 actual producer verification; an agent's interpretation is not a corpus repair.
+
+After the producer correction, a fresh research attempt again proposed the false reverse
+replacement 弋→戈. Its authored candidate received actual factual and readability passes,
+but the retained proposal correctly blocked source publication. The source-resolution
+contract now permits a separate actual scan check to reject a false proposal when the
+current corpus matches the original pixels. It still blocks actual unrepaired errors and
+unclear identities. Exact completed Luna low metadata and result hashes are checked; no
+coordinator verdict or edited article substitutes for this review. A check with both
+original pages and the exact targeted crop has been launched; no result is claimed yet.
+
+78 editorial/source-enrichment tests passed, including invalidation after changed result
+hashes and acceptance only after matching source-resolution metadata.

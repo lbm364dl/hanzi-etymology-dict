@@ -34,7 +34,10 @@ source-bound producer patches and their rebuilt consumer records.
 `pipeline.source_enrichment.resolve_source_findings(job, runner)` offers a separate scan-backed
 review of an exact already-approved candidate. It may release a retained unresolved identity
 only when that identity is not used to establish any article claim. The findings remain recorded,
-and the resolution is bound to exact article, dossier and finding hashes. Confirmed OCR errors
+and the resolution is bound to exact article, dossier and finding hashes. A separate scan
+check can also reject a false replacement proposal when the current corpus already matches
+the pixels; its exact completed Luna low result and metadata are required. Targeted original
+pixel crops may accompany the source scans. Confirmed OCR errors
 and material unresolved claims remain blocked for source repair or new research; this check
 does not replace factual/readability reviews.
 

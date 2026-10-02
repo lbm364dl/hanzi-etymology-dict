@@ -273,12 +273,21 @@ def _source_findings_pending(job):
     if not review_path.is_file() or editorial.digest(editorial.read(review_path)) != resolution.get("result_hash"):
         return True
     result = editorial.read(review_path)
+    meta_path = review_path.parent / 'meta.json'
+    if not meta_path.is_file():
+        return True
+    meta = editorial.read(meta_path)
+    if (meta.get('role') != 'source_resolution' or meta.get('status') != 'complete'
+            or meta.get('model') != 'gpt-6-luna' or meta.get('reasoning') != 'low'
+            or meta.get('result_hash') != editorial.digest(result)):
+        return True
     keys = [item["key"] for item in result["findings"]]
     return (len(keys) != len(set(keys)) or set(keys) != {item["key"] for item in findings["findings"]}
-            or any(item["disposition"] != "unresolved_identity_not_used" for item in result["findings"]))
+            or any(item["disposition"] not in ("unresolved_identity_not_used",
+                    "rejected_proposal_scan_matches_corpus") for item in result["findings"]))
 
 
-def resolve_source_findings(job, runner):
+def resolve_source_findings(job, runner, source_context=None):
     """Check whether retained uncertainty is immaterial; actual OCR errors stay blocked."""
     job = Path(job)
     if runner.model != "gpt-6-luna" or runner.reasoning != "low":
@@ -292,11 +301,13 @@ def resolve_source_findings(job, runner):
             "type": "object", "additionalProperties": False,
             "required": ["key", "disposition", "reason", "affected_paths"],
             "properties": {"key": {"type": "string"},
-                "disposition": {"enum": ["pending", "unresolved_identity_not_used"]},
+                "disposition": {"enum": ["pending", "unresolved_identity_not_used",
+                                          "rejected_proposal_scan_matches_corpus"]},
                 "reason": {"type": "string", "minLength": 1},
                 "affected_paths": {"type": "array", "items": {"type": "string"}}}}}}}
     inputs = {"article": article, "dossier": dossier, "findings": findings,
-              "feedback": {"source_scan_images": checkpoint["locator"].get("source_scan_images", [])}}
+              "feedback": {"source_scan_images": (
+                  list(checkpoint["locator"].get("source_scan_images", [])) + list(source_context or []))[:3]}}
     directory = job / "source-resolution"
     result = runner.run("source_resolution", inputs, schema, directory)
     keys = [item["key"] for item in result["findings"]]
