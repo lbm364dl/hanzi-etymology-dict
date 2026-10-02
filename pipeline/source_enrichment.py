@@ -25,7 +25,7 @@ ROOT = editorial.ROOT
 MAX_SELECTION = 10
 MAX_WORKERS = 3
 ISSUE_METADATA = {"github_repo", "tracking_issue_url", "issue_parent_number",
-                  "issue_milestone", "issue_labels"}
+                  "issue_milestone", "issue_labels", "issue_parent_by_kind"}
 
 SOURCE_POLICY = """
 SOURCE-SPECIFIC CHINESE ENRICHMENT:
@@ -262,7 +262,8 @@ def _triage_and_sync_issues(job, source, runner):
     receipts = issues.sync(findings, repository, Path(job) / "issue_receipts.json",
                           parent_issue=source.get("issue_parent_number"),
                           milestone=source.get("issue_milestone"),
-                          labels=source.get("issue_labels", []))
+                          labels=source.get("issue_labels", []),
+                          parent_by_kind=source.get("issue_parent_by_kind", {}))
     record = {"status": "synced", "repository": repository, "issues": receipts,
               "findings_hash": editorial.digest(findings)}
     editorial.write(Path(job) / "issue_sync.json", record)

@@ -8,6 +8,24 @@ from pipeline import editorial
 
 
 class IssueTests(unittest.TestCase):
+    def test_existing_curated_parent_is_preserved(self):
+        finding = dict(key='book:ocr', kind='ocr', title='OCR error', details='Scan issue.', verification='Check pixels.')
+        calls = []
+        def invoke(*args):
+            calls.append(args)
+            if args[:2] == ('issue', 'list'):
+                return json.dumps([dict(number=6, url='https://github.com/owner/repo/issues/6', body=body(finding), state='OPEN')])
+            if args[:2] == ('label', 'list') or args[-1].endswith('/sub_issues'):
+                return '[]'
+            if args[-1].endswith('/parent'):
+                return '{"number":5}'
+            return ''
+        with tempfile.TemporaryDirectory() as temp:
+            sync([finding], 'owner/repo', Path(temp) / 'receipt.json', invoke,
+                 parent_issue=1, parent_by_kind={'ocr': 5})
+        self.assertTrue(any(call[-1].endswith('/issues/5/sub_issues') for call in calls))
+        self.assertFalse(any('--method' in call for call in calls))
+
     def test_hierarchy_uses_database_id_and_preserves_labels_and_milestone(self):
         finding = dict(key='book:木:error', kind='ocr', title='OCR error', details='Observed scan issue.', verification='Verify pixels.')
         calls = []

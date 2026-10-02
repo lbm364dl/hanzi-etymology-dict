@@ -111,7 +111,7 @@ def body(finding):
     return text
 
 
-def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, milestone=None, labels=()):
+def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, milestone=None, labels=(), parent_by_kind=None):
     """Create missing issues; preserve human discussion and never close by inference."""
     if not repository or len(repository.split('/')) != 2:
         raise ValueError('Repository must be owner/name')
@@ -122,9 +122,9 @@ def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, miles
         raise ValueError('Duplicate finding keys')
     existing = json.loads(invoke('issue', 'list', '--repo', repository, '--state', 'all',
                                  '--limit', '1000', '--json', 'number,url,body,state'))
-    children = (json.loads(invoke('api', f'repos/{repository}/issues/{parent_issue}/sub_issues'))
-                if parent_issue is not None else [])
-    child_numbers = {item['number'] for item in children}
+    parents = set((parent_by_kind or {}).values()) | ({parent_issue} if parent_issue is not None else set())
+    child_numbers = {parent: {item['number'] for item in json.loads(
+        invoke('api', f'repos/{repository}/issues/{parent}/sub_issues'))} for parent in parents}
     if labels or parent_issue is not None:
         expected = set(labels) | {'kind:' + finding['kind'] for finding in findings}
         present = {item['name'] for item in json.loads(invoke('label', 'list', '--repo', repository,
@@ -134,6 +134,8 @@ def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, miles
                    '--description', 'Source enrichment finding classification')
     receipts = []
     for finding in findings:
+        target_parent = (parent_by_kind or {}).get(finding['kind'], parent_issue)
+        created = False
         matches = [item for item in existing if marker(finding) in item.get('body', '')]
         if len(matches) > 1:
             raise ValueError('Duplicate GitHub issue markers require reconciliation')
@@ -159,18 +161,30 @@ def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, miles
             issue = {'url': url, 'number': int(url.rstrip('/').split('/')[-1]), 'state': 'OPEN',
                      'body': body(finding)}
             existing.append(issue)
+            created = True
         if labels or parent_issue is not None or milestone:
             args = ['issue', 'edit', str(issue['number']), '--repo', repository]
             for label in [*labels, 'kind:' + finding['kind']]:
                 args.extend(['--add-label', label])
-            if milestone:
+            if milestone and issue['number'] != parent_issue:
                 args.extend(['--milestone', str(milestone)])
             invoke(*args)
-        if parent_issue is not None and issue['number'] != parent_issue and issue['number'] not in child_numbers:
+        attach = target_parent is not None and issue['number'] != target_parent and issue['number'] not in child_numbers[target_parent]
+        if attach and not created:
+            try:
+                existing_parent = json.loads(invoke('api', f"repos/{repository}/issues/{issue['number']}/parent"))
+            except subprocess.CalledProcessError as exc:
+                if '404' not in (exc.stderr or ''):
+                    raise
+                existing_parent = None
+            # Preserve a hierarchy curated by the user; new issues get configured parents.
+            if existing_parent:
+                attach = False
+        if attach:
             remote = json.loads(invoke('api', f"repos/{repository}/issues/{issue['number']}"))
-            invoke('api', '--method', 'POST', f'repos/{repository}/issues/{parent_issue}/sub_issues',
+            invoke('api', '--method', 'POST', f'repos/{repository}/issues/{target_parent}/sub_issues',
                    '-F', f"sub_issue_id={remote['id']}")
-            child_numbers.add(issue['number'])
+            child_numbers[target_parent].add(issue['number'])
         receipts.append({'key': finding['key'], 'kind': finding['kind'], 'url': issue['url'],
                          'number': issue['number'], 'state': issue['state'],
                          'finding_hash': editorial.digest(finding)})
