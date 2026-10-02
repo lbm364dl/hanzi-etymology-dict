@@ -1,0 +1,7 @@
+# Consulted book evidence in fresh continuations
+
+Failure class: a source job can complete genuine research yet leave its exact book records unused in the article. The subsequent fresh continuation preserved the draft and revise findings, but its automatic uncited-record feedback inspected only the new job audit. A new directory has no prior audit, so the exact consulted records were not automatically handed onward. This contributed to repeated citation omissions for 上、小、大.
+
+The continuation now writes `continuation_book_leads.json` with the previous audit hash and only records whose IDs and source/field/text exactly match retained dossier evidence. Missing IDs and mismatched claims are removed. The records are explicitly research leads requiring current-source verification. They do not create a new source audit, reuse approvals, or satisfy source completion. Writer feedback directs agents to cite supported claims in metadata after fresh verification; independent factual/readability reviews and article-used book checks remain required.
+
+Verification: all 15 `pipeline.test_source_enrichment` tests pass. The continuation contract test covers retained versus missing IDs, altered claim text, preservation of real draft provenance, and absence of inherited reviews/source certification. Live workers started before this change retain their original inputs; later continuations receive the new handoff.

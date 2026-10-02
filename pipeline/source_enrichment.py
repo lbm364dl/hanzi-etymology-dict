@@ -613,6 +613,20 @@ def _continuation_inputs(previous, job, character, source, snapshot):
         editorial.write(job / 'continuation_article.json', article)
         editorial.write(job / 'continuation_dossier.json', dossier)
         editorial.write(job / 'continuation_review_proposals.json', proposals)
+        # These are research leads, never reusable source verification or reviews.
+        audit_path = previous / 'source_audit.json'
+        audit = editorial.read(audit_path) if audit_path.exists() else {}
+        retained = {e['id']: e for e in dossier.get('evidence', [])}
+        leads = []
+        for record in audit.get('consulted_citations', audit.get('citations', [])):
+            ids = [eid for eid in record.get('evidence_ids', []) if eid in retained
+                   and all(retained[eid].get(k) == record.get(k)
+                           for k in ('source', 'field', 'text'))]
+            if ids:
+                leads.append({**record, 'evidence_ids': ids})
+        editorial.write(job / 'continuation_book_leads.json', {
+            'previous_job': str(previous), 'previous_audit_hash': editorial.digest(audit),
+            'records': leads, 'requires_current_source_research': True})
         return article, dossier
 
 
@@ -734,10 +748,14 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
                 article, dossier = _continuation_inputs(continuation, job, char, source, snapshot)
                 followup['unfinished_draft_provenance'] = editorial.read(job / 'continuation.json')
                 followup['prior_review_proposals'] = editorial.read(job / 'continuation_review_proposals.json')
+                followup['prior_consulted_book_records'] = editorial.read(job / 'continuation_book_leads.json')
                 followup['continuation_policy'] = ('This is an unapproved draft, not reusable approval. '
                     'Recheck source-dependent claims against current source scans/corpus. '
                     'Prior revise findings are hypotheses to recheck, including possible source identity errors; '
                     'do not obey them merely because a previous verifier repeated them. '
+                    'Prior consulted book records identify exact retained evidence IDs and claims to recheck. '
+                    'After current-source verification, cite relevant supported claims through evidence_ids metadata; '
+                    'dossier-only records do not count as article source use. '
                     'Preserve prior supported work and obtain fresh factual/readability reviews.')
             followup["require_source_specific_page_evidence"] = True
             if audit_path.exists() and not editorial.read(audit_path).get("verified"):

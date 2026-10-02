@@ -169,6 +169,11 @@ class SourceEnrichmentTests(unittest.TestCase):
         stale = {**revision, 'article_hash': 'older-draft'}
         approval = editorial.make_review('readability', 'pass', [], article, dossier, 'fixture-pass')
         editorial.write(previous / 'reviews.json', [revision, stale, approval])
+        record = dossier['evidence'][0]
+        lead = {k: record.get(k) for k in ('source', 'field', 'text')}
+        lead['evidence_ids'] = [record['id'], 'not-retained']
+        editorial.write(previous / 'source_audit.json', {'verified': False,
+            'consulted_citations': [lead, {**lead, 'text': 'Different source claim'}]})
         job = self.root / 'fresh-job'
         job.mkdir()
         result = source_enrichment._continuation_inputs(previous, job, '木', SOURCE, snapshot)
@@ -178,6 +183,10 @@ class SourceEnrichmentTests(unittest.TestCase):
         self.assertTrue(editorial.read(job / 'continuation.json')['requires_fresh_research_and_reviews'])
         self.assertFalse((job / 'reviews.json').exists())
         self.assertEqual(editorial.read(job / 'continuation_review_proposals.json'), [revision])
+        leads = editorial.read(job / 'continuation_book_leads.json')
+        self.assertTrue(leads['requires_current_source_research'])
+        self.assertEqual(leads['records'], [{**lead, 'evidence_ids': [record['id']]}])
+        self.assertFalse((job / 'source_audit.json').exists())
         with self.assertRaisesRegex(ValueError, 'baseline changed'):
             source_enrichment._continuation_inputs(previous, self.root / 'other-job', '木', SOURCE,
                                                    {**snapshot, 'article_hash': 'changed'})
