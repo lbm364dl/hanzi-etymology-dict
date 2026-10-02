@@ -46,6 +46,13 @@ and child processes before resuming: a saved `running` status does not prove liv
 terminated command wrapper can leave its agent child alive. Retain previous stage artifacts
 when recovering interrupted work.
 
+After a source repair, `run --continue-from /path/to/previous/character/job` can start a
+fresh single-character job from the previous unfinished draft. The previous coordinator
+and agents must have released their OS lock, and its canonical article/dossier baseline
+must still match. The harness validates and saves the draft with exact provenance hashes;
+it never copies review approvals. Current-source research and fresh independent reviews
+remain required. Keep the previous job directory as the record of earlier failures.
+
 `pipeline.source_adoption.adopt` can register book research already used by an approved
 article. It preserves the article, dossier and original factual/readability receipts, then
 requires a separate Luna low check against the original scans. Merely having book evidence

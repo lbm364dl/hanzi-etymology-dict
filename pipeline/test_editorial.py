@@ -963,7 +963,8 @@ class EditorialTests(unittest.TestCase):
                 return {"verdict": "pass", "findings": []}
         for finding in ("No reading correction is required.", "No clarification is required.",
                         "Retain these scoped cards; no removal is required.",
-                        "The current omission is not a required correction."):
+                        "The current omission is not a required correction.",
+                        "No change to this sense or its generated has_sense edge is required."):
             with self.subTest(finding=finding), tempfile.TemporaryDirectory() as root:
                 runner = ContractRunner(finding)
                 result = independent_review("readability", ARTICLE_V2, DOSSIER, Path(root), runner)

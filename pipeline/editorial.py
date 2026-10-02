@@ -1470,7 +1470,9 @@ def independent_review(role, article, dossier, directory, runner, context=None):
     no_change = re.compile(
         r"\bno (?:(?:reading|wording|citation) )?(?:correction|change|clarification|removal)(?:s)? "
         r"(?:is |are )?(?:needed|required)\b|\b(?:is|are) not (?:a )?"
-        r"(?:required|necessary) (?:correction|change)\b", re.I)
+        r"(?:required|necessary) (?:correction|change)\b|"
+        r"\bno (?:change|correction|clarification|removal)s?\b[^.!?\n]{0,240}"
+        r"\b(?:is|are) (?:needed|required)\b", re.I)
     if result["verdict"] == "revise" and any(no_change.search(f) for f in result["findings"]):
         review_dir = directory / (role + "-contract-repair")
         result = runner.run(role, {**inputs, "proposed_review": result,

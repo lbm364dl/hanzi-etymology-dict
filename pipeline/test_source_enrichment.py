@@ -124,6 +124,31 @@ class SourceEnrichmentTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "between 1 and 3"):
             source_enrichment.run(cohort, SOURCE, self.output, object(), workers=4, root=self.root)
 
+    def test_unfinished_draft_continuation_keeps_baseline_and_requires_fresh_gates(self):
+        previous = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        snapshot = editorial.read(previous / 'source.json')
+        article = editorial.read(previous / 'source_article.json')
+        dossier = editorial.read(previous / 'source_dossier.json')
+        article['summary']['text'] = 'Wood and trees.'
+        editorial.write(previous / 'article.json', article)
+        editorial.write(previous / 'dossier.json', dossier)
+        editorial.write(previous / 'status.json', {'status': 'needs_revision'})
+        job = self.root / 'fresh-job'
+        job.mkdir()
+        result = source_enrichment._continuation_inputs(previous, job, '木', SOURCE, snapshot)
+        self.assertEqual(result[0]['summary']['text'], 'Wood and trees.')
+        self.assertEqual(editorial.read(previous / 'source_article.json')['summary'],
+                         ARTICLE_V2['summary'])
+        self.assertTrue(editorial.read(job / 'continuation.json')['requires_fresh_research_and_reviews'])
+        self.assertFalse((job / 'reviews.json').exists())
+        with self.assertRaisesRegex(ValueError, 'baseline changed'):
+            source_enrichment._continuation_inputs(previous, self.root / 'other-job', '木', SOURCE,
+                                                   {**snapshot, 'article_hash': 'changed'})
+        with (previous / 'coordinator.lock').open('a') as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            with self.assertRaisesRegex(ValueError, 'live coordinator'):
+                source_enrichment._continuation_inputs(previous, job, '木', SOURCE, snapshot)
+
     def test_run_uses_source_locator_and_research_first_refine(self):
         job = source_enrichment.job_path(self.output, SOURCE["id"], "木")
         captured = {}

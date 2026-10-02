@@ -413,8 +413,47 @@ def prepare(cohort, source, output, limit=3, root=ROOT):
     return rows
 
 
+def _continuation_inputs(previous, job, character, source, snapshot):
+    """Freeze an unfinished draft, preserving canonical anchors and requiring new gates."""
+    previous, job = Path(previous).resolve(), Path(job).resolve()
+    if previous == job:
+        raise ValueError('Continuation requires a fresh source job directory')
+    with (previous / 'coordinator.lock').open('a') as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise ValueError('Previous source job still has a live coordinator or agent')
+        state = editorial.read(previous / 'status.json')
+        if state.get('status') not in ('failed', 'needs_revision', 'needs_source_refresh',
+                                       'needs_source_verification', 'needs_source_evidence',
+                                       'needs_source_research'):
+            raise ValueError('Continuation requires an unfinished terminal source job')
+        provenance = editorial.read(previous / 'source.json')
+        if (provenance.get('character') != character or provenance.get('source_id') != source['id']
+                or not _same_research_source(provenance['registry_source'], source)
+                or provenance.get('article_hash') != snapshot['article_hash']
+                or provenance.get('dossier_hash') != snapshot['dossier_hash']):
+            raise ValueError('Continuation source or canonical baseline changed')
+        article, dossier = editorial.read(previous / 'article.json'), editorial.read(previous / 'dossier.json')
+        if article.get('character') != character or dossier.get('character') != character:
+            raise ValueError('Continuation character identity differs')
+        editorial.validate_article(editorial.assemble_article(article, dossier), dossier)
+        receipt = {'previous_job': str(previous), 'article_hash': editorial.digest(article),
+                   'dossier_hash': editorial.digest(dossier), 'previous_state_hash': editorial.digest(state),
+                   'canonical_article_hash': snapshot['article_hash'],
+                   'canonical_dossier_hash': snapshot['dossier_hash'],
+                   'requires_fresh_research_and_reviews': True}
+        path = job / 'continuation.json'
+        if path.exists() and editorial.read(path) != receipt:
+            raise ValueError('Continuation inputs changed; preserve this job and start a fresh one')
+        editorial.write(path, receipt)
+        editorial.write(job / 'continuation_article.json', article)
+        editorial.write(job / 'continuation_dossier.json', dossier)
+        return article, dossier
+
+
 def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revisions=3,
-        publish_now=False, source_context=None):
+        publish_now=False, source_context=None, continuation=None):
     if not 1 <= workers <= MAX_WORKERS:
         raise ValueError(f"Workers must be between 1 and {MAX_WORKERS}")
     if not 1 <= limit <= MAX_SELECTION:
@@ -507,6 +546,14 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
                 if reusable:
                     return complete_approval(state)
             followup = feedback(source, located, source_context)
+            if continuation:
+                if len(cohort['characters']) != 1:
+                    raise ValueError('A continuation names one exact character job')
+                article, dossier = _continuation_inputs(continuation, job, char, source, snapshot)
+                followup['unfinished_draft_provenance'] = editorial.read(job / 'continuation.json')
+                followup['continuation_policy'] = ('This is an unapproved draft, not reusable approval. '
+                    'Recheck source-dependent claims against current source scans/corpus. '
+                    'Preserve prior supported work and obtain fresh factual/readability reviews.')
             followup["require_source_specific_page_evidence"] = True
             if audit_path.exists() and not editorial.read(audit_path).get("verified"):
                 followup["previous_source_audit_failed"] = (
@@ -636,6 +683,7 @@ def main():
     parser.add_argument("--command", default=json.dumps(editorial.DEFAULT_COMMAND), help="Custom command; stages remain gpt-6-luna/low")
     parser.add_argument("--publish-now", action="store_true")
     parser.add_argument("--scan-context", type=Path, help="JSON records with absolute path, pdf_page, optional printed_page")
+    parser.add_argument("--continue-from", type=Path, help="Unfinished terminal source job; fresh research and reviews required")
     parser.add_argument("--tracking-issue-url", help="Existing GitHub issue for this enrichment or source finding")
     args = parser.parse_args()
     if not 1 <= args.limit <= MAX_SELECTION:
@@ -685,7 +733,7 @@ def main():
                     result.append({"character": row, "status": "failed", "job": str(job), "error": str(exc)})
     else:
         result = run(cohort, source, args.output, runner, args.limit, args.workers, args.root,
-                     args.max_revisions, args.publish_now, context)
+                     args.max_revisions, args.publish_now, context, args.continue_from)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     if any(row.get("status") in ("failed", "needs_revision") for row in result):
         raise SystemExit(2)
