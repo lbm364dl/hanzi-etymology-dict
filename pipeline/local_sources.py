@@ -99,6 +99,15 @@ def locate_sources(registry, character, dossier):
             candidate = {key: page.get(key) for key in
                          ('page_id', 'pdf_page_1based', 'printed_page', 'source_scan',
                           'source_sha256', 'evidence_sha256', 'ocr_review_status')}
+            corrections = page.get('correction_provenance')
+            if corrections:
+                candidate['applied_ocr_corrections'] = {
+                    'original_evidence_sha256': page.get('original_evidence_sha256'),
+                    'corrections_sha256': corrections.get('corrections_sha256'),
+                    'text_patches': [{k: patch[k] for k in ('start', 'end', 'before', 'after')}
+                                     for patch in corrections.get('patches', [])],
+                    'scope': 'Applied producer overlay, not whole-page approval. Compare current corrected '
+                             'corpus text with original pixels before proposing another correction.'}
             candidate.update(match_type=('unverified_headword_line' if is_header else
                 'possible_continuation' if count == 0 else 'text_mention'),
                 headword_lines=lines, excerpt=text[max(0, anchor - 150):anchor + 1800])

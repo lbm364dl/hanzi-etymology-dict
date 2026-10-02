@@ -59,6 +59,7 @@ class SourceEnrichmentTests(unittest.TestCase):
     def test_locator_hash_ignores_only_redundant_pixel_metadata(self):
         located = {'source_scan_images': [{'pdf_page': 13, 'path': '/scan.png'}],
                    'source_leads': [{'candidates': [{'pdf_page_1based': 13, 'source_sha256': 'pixels'}]}]}
+        located['source_leads'][0]['candidates'][0]['evidence_sha256'] = 'effective'
         richer = copy.deepcopy(located)
         richer['source_scan_images'][0]['source_pixel_sha256'] = 'pixels'
         self.assertEqual(source_enrichment._locator_hash(located), source_enrichment._locator_hash(richer))
@@ -361,6 +362,13 @@ class SourceEnrichmentTests(unittest.TestCase):
         editorial.write(stage / "meta.json", {**receipt, "result_hash": editorial.digest(foreign_result)})
         editorial.write(job / "article.json", {"text": "A cited claim", "evidence_ids": ["X-book"]})
         self.assertFalse(source_enrichment._capture_source_audit(job, SOURCE, {"evidence": [foreign]})["verified"])
+
+    def test_page_provenance_can_live_in_reader_friendly_source_details(self):
+        self.assertTrue(source_enrichment._has_page_provenance({
+            'source': '李學勤主編《字源》 (2012), PDF p.718', 'field': 'headword explanation'}))
+        self.assertTrue(source_enrichment._has_page_provenance({'title': 'Book, printed p. 705'}))
+        self.assertFalse(source_enrichment._has_page_provenance({'source': 'Book (2012)', 'field': 'headword'}))
+        self.assertFalse(source_enrichment._book_identity_matches('香港教育局 字源考釋', SOURCE))
 
     def test_source_audit_does_not_certify_unretained_or_unpaged_mentions(self):
         job = source_enrichment.job_path(self.output, SOURCE["id"], "木")

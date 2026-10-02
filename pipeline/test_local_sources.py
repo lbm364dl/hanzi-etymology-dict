@@ -7,6 +7,22 @@ from pipeline.local_sources import locate_sources, search_forms, load_registry, 
 
 
 class LocalSourceTests(unittest.TestCase):
+    def test_locator_reports_applied_repairs_without_whole_page_approval(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'corpus'
+            page = {'book_id': 'book', 'pdf_page_1based': 1, 'text': '木 mù 纽、部;',
+                    'original_evidence_sha256': 'raw', 'evidence_sha256': 'effective',
+                    'correction_provenance': {'corrections_sha256': 'overlay', 'patches': [
+                        {'start': 0, 'end': 1, 'before': '未', 'after': '木'}]}}
+            path.write_text(json.dumps(page))
+            source = {'id': 'book', 'title': 'Book', 'book_id': 'book',
+                      'bibliography': 'Edition', 'corpus_path': str(path)}
+            result = locate_sources({'sources': [source]}, '木', {})
+            record = result['source_leads'][0]['candidates'][0]['applied_ocr_corrections']
+            self.assertEqual(record['text_patches'][0]['after'], '木')
+            self.assertEqual(record['corrections_sha256'], 'overlay')
+            self.assertIn('not whole-page approval', record['scope'])
+
     def test_absent_counterpart_metadata(self):
         self.assertEqual(search_forms('木', {'context': {'unverified_pipeline_metadata': {'variants': None}}}), ['木'])
 

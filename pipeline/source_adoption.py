@@ -63,8 +63,8 @@ def _adopt(character, source, output, runner, root):
     editorial.validate_reviews(article, dossier, reviews)
     used = _used_ids(article)
     citations = [item for item in dossier['evidence'] if item['id'] in used
-                 and source['title'] in item.get('source', '')
-                 and re.search(r'(?:PDF|printed).*?\bp\.?\s*\d+|頁\s*\d+|页\s*\d+', item.get('field', ''), re.I)]
+                 and se._book_identity_matches(item.get('source', ''), source)
+                 and se._has_page_provenance(item)]
     if not citations:
         raise ValueError('No used page-specific evidence from this registered book; research is required')
     if (job / 'status.json').exists() and editorial.read(job / 'status.json')['status'] not in ('prepared', 'needs_source_verification'):

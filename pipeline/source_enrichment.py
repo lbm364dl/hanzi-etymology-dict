@@ -42,6 +42,11 @@ def _locator_hash(located):
                               and candidate.get("pdf_page_1based") == scan.get("pdf_page")
                               for candidate in candidates):
             scan.pop("source_pixel_sha256")
+    for lead in value.get('source_leads', []):
+        for candidate in lead.get('candidates', []):
+            if candidate.get('evidence_sha256'):
+                # The exact effective evidence remains bound; this is a derived status reminder.
+                candidate.pop('applied_ocr_corrections', None)
     return editorial.digest(value)
 
 SOURCE_POLICY = """
@@ -432,6 +437,18 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
     return record
 
 
+def _book_identity_matches(label, source):
+    title, book_id = source.get('title', ''), source.get('book_id', '')
+    return bool((title and re.search(r"(?<!\w)" + re.escape(title) + r"(?!\w)", label))
+                or (book_id and book_id in label))
+
+
+def _has_page_provenance(evidence):
+    pattern = re.compile(r"(?:\bPDF\s+page\b|\bprinted\s+page\b|\bpages?\b|\bpp?\.?\s*|頁|页)\s*\d+", re.I)
+    return any(pattern.search(str(evidence.get(field, '')))
+               for field in ('source', 'field', 'text', 'title'))
+
+
 def _article_used_book_evidence(audit, article, dossier):
     from pipeline.source_adoption import _used_ids
     used = _used_ids(article)
@@ -470,8 +487,8 @@ def _capture_source_audit(job, source, dossier):
             source_label = str(item.get("source", ""))
             field = str(item.get("field", ""))
             text = str(item.get("text", ""))
-            identity_match = (title and re.search(r"(?<!\w)" + re.escape(title) + r"(?!\w)", source_label)) or (book_id and book_id in source_label)
-            page_match = bool(pattern.search(field) or pattern.search(text))
+            identity_match = _book_identity_matches(source_label, source)
+            page_match = _has_page_provenance(item)
             matching = [e for e in dossier.get("evidence", [])
                         if all(e.get(k) == item.get(k) for k in ("source", "field", "text"))]
             if identity_match and page_match and matching:
