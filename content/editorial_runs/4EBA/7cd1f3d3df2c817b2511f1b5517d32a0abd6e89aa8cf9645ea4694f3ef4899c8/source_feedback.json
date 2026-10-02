@@ -1,0 +1,85 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "人"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000711",
+          "pdf_page_1based": 711,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0711/source.png",
+          "source_sha256": "5c137e1d5e93898e65fb46a76cd7c21a82b658a91184c567c040190912771afe",
+          "evidence_sha256": "5ac564575de3eea9cc17f72bb2f202169539ea60710d38a8f84b0b3ae4092b45",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "人 rén 日组、真部;日组、真韵、如邻切。"
+          ],
+          "excerpt": "黹部 人部\n\n缁帛。(胡伟)\n\n粉 fěn 帮组、文部;非组、吻韵、方吻切。\n\n[glyph:g001]¹——粉\n《说文》小篆 楷书\n\n1《说文》161页。\n形声字。从黹,粉省声。本义指彩色花纹。《玉篇》:\n“粉,綵也。”《广韵·吻韵》:“粉,綵文。”(胡伟)\n\n人部\n\n人 rén 日组、真部;日组、真韵、如邻切。\n\n[glyph:g002]¹——[glyph:g003]²——[glyph:g004]³——[glyph:g005]⁴——[glyph:g006]⁵——[glyph:g007]⁶——[glyph:g008]⁷——[glyph:g009]⁸——[glyph:g010]⁹\n商 商 西周 西周 西周 战国 说文《小篆》 汉 汉\n\n[glyph:g011]¹⁰——人\n汉 楷书\n\n1-6、8、9、10《甲金篆》537页。7《说文》161页。\n象形字。像人的侧视形。本义指人。古文字或以像人首和像躯干的部分连写,或以像人首和像人臂的部分连写,两种写法在表义上没有区别。前一种写法是《说文》小篆的形体来源,后一种写法则在隶书中较多使用,同时像人下肢的部分后撇,最终演化成楷书的“人”字。(董莲池)\n\n保 bǎo 帮组、幽部;帮组、晧韵、博抱切。\n\n[glyph:g012]⁷\n西周\n|\n[glyph:g013]¹——[glyph:g014]²——[glyph:g015]⁴——[glyph:g016]⁵——[glyph:g017]⁶——[glyph:g018]¹²——[glyph:g019]¹³——保\n商 商 西周 西周 西周 《说文》小篆 汉 楷书\n| [glyph:g020]⁸——[glyph:g021]⁹\n| 战国 《说文》古文\n| |\n| [glyph:g022]¹⁰——[glyph:g023]¹⁴\n| 《说文》古文 汉\n|\n[glyph:g024]³ [glyph:g025]¹¹\n商 三体石经古文\n\n1-8、11、13、14《甲金篆》538~539页。\n9、10、12《说文》161页。\n会意字。较原始的写法作[glyph:g026],表示一个人把孩子背在背上,本义是负子于背。《书·召诰》:“保抱携持厥妇子。”(意谓男子背着、抱着、牵着、扶着他们的妻儿)以“保”与“抱”并提,用的即是此义。后由此引申出保养、保护诸动词义。《孟子·梁惠王上》:“古之人,若保赤子。”《左传·成公十三年》:“奸绝我好,伐我保城。”又引申指背负幼儿的衣物,其字后来写作“襁”。又引申指养育幼儿之人。《礼记·内则》:“择于诸母与可者……为保母。”《礼记·文王世子》:“入则有保,出则有师。”西周时又用作辅翼年幼的执政者或国子的官员之称。《书·君奭序》“召公为保”之“保”、《周礼·地官·保氏》之“保”。“保”字的形体演化,先是因其在构形上较原始的写法有明确表示背手于身后托子之形,后来便把这一部分简化,只在像幼子的形体下面加一斜划,保留以手托子的一点痕迹,用以与“仔”字相区别。西周金文在完成这一简化后,又在“子”形之左下加一饰划,以求对称,成为《说文》小篆的形体来源。“保”的动作因为与手有关,战国时期,又出现在“子”旁上部附加义符“爪”的写法,成为《说文》古文的形体来源。受形声化风气的影响,“保”也曾一度出现追加“缶”字标识其读音的写法,不过这种写法增加了书写上的繁琐,使用得并不广泛。隶变发生后,保字以小篆的构形结体,写作“保”。(董莲池)\n\n仁 rén 日组、真部;日组、真韵、如邻切。\n\n[glyph:g027]¹——[glyph:g028]²——[glyph:g029]³——[glyph:g030]⁶——[glyph:g031]⁸——[glyph:g032]⁹——[glyph:g033]¹⁰——[glyph:g034]¹¹——仁\n春秋 战国 战国 《说文》古文 秦 《说文》小篆 汉 汉 楷书\n\n[glyph:g035]⁴——[glyph:g036]⁷\n战国 《说文》古文\n|\n[glyph:g037]⁵\n战国\n\n1、3、8、10、11《甲金篆》539页。2、4、5《战文编》550页。6、7、9《说文》161页。\n会意字。从现有古文字材料看,“仁”字最早出现在春秋晚期的侯马盟书中。过去曾一度认为甲骨文已有“仁”字,后经学者考辨,是误识。在春秋战国文字中,“仁”字的形体,一种从尸从二,是《说文》古文[glyph:g038]的形体来\n\n698"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000581",
+          "pdf_page_1based": 581,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0581/source.png",
+          "source_sha256": "e1223fa1ec67a8085c3801afd0f19eb9db2b7e221d11d044a4d11fe135f66948",
+          "evidence_sha256": "98939550e78c03561704be79fa611b9a7a205c2248b46b9cf071a0e4fcc46241",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "貝部\n\n《银雀山》230页。\n形声字。始见于汉代。从貝,代声(字形3代旁加饰笔,形近于戈)。本义指借出。《广雅·释诂二》:“贷,借也。”《左传·昭公三年》:“以家量贷而以公量收之。”汉王符《潜夫论·忠贵》:“宁积粟腐仓而不忍贷人一斗。”引申指施与,给予。《说文》:“贷,施也。”段玉裁注:“谓我施人曰贷也。”《广雅·释诂三》:“贷,予也。”《左传·文公十六年》:“宋公子鲍礼于国人,宋饥,竭其粟而贷之。”明金声《程阿白书序》:“人来求书者,计钱与字,一字不多贷。”又引申指宽恕。三国蜀诸葛亮《为后帝伐魏诏》:“广宣恩威,贷其元帅,吊其残民。”《新唐书·张柬之传》:“(柬之)至州,持下以法,虽亲旧无所纵贷。”又引申指推卸。成语有“责无旁贷”。又指借人(参见下“貸”字条)。宋陆游《秋晓》:“贷米未回愁灶冷,读书有课待窗明。”新中国成立后,“貝”简化为“贝”,“貸”类推简化为“贷”。(冀小军)\n\n貸 tè 透纽、职部;透纽、德韵、他德切。\n\n[glyph:g001] [glyph:g002] [glyph:g003] [glyph:g004] [glyph:g005] 貸\n战国 战国 秦 汉 汉 楷书\n[glyph:g006]\n《说文》小篆\n\n1、2《包山》94页。3、5《篆隶表》415页。\n4《马王堆》260页。6《说文》130页。\n形声字。从貝,弋声(弋旁或加饰笔,形近于戈。《说文》小篆弋形稍讹)。《广韵·德韵》:“貸,假貸。”假貸,即今之借贷。《包山楚简》114号简:“州莫囂疥、州司马庚为州貸成异之黄金四益以翟(籴)种。”(州:地名。莫嚣:古书中作莫敖,楚官名。贼异:官府名。益:通“镒”,古代重量单位。翟:通“籴”。籴种:即购买种子)《汉书·主父偃传》:“家贫,假貸无所得。”《资治通鉴·唐纪五十三》:“左神策军吏李昱貸长安富人钱八千缗,满三岁不偿。”胡三省注:“貸,假貸也。”引申指乞求,向人求物。《说文》:“貸,从人求物也。”段玉裁注:“从人,犹向人也,谓向人求物曰貸也。”《荀子·儒效》:“今有人于此,屑然藏千溢之宝,虽行貸而食,人谓之富矣。”杨倞注:“行貸,行乞也。”“貸”字本兼指借入和借出二义。睡虎地秦墓竹简《法律答问》:“府中公金钱私貸用之,与盗同法。”此为借入义。又:“可(何)谓‘介人’?不当貸,貸之,是谓‘介人’。”(介:读为丐,《广雅·释诂三》:“丐,予也。”)此为借出义。后加“人”旁分化出“贷”字,以“貸”表示借入,以“贷”表示借出。清段玉裁《说文解字注》:“代、弋同声,古无去、入之别;求人施人,古无貸、贷之分。由貸字或作贷,因分其义,又分其声。”不过,这种分化并未成功。古书中常见以“贷”字表示借入或乞求的例子。《左传·文公十四年》:“公子商人骤施于国,而多聚士,尽其家,贷于公有司以继之。”陆德明释文:“贷,音待,又音式。”《史记·苏秦列传》:“初,苏秦之燕,贷人百钱为资,及得富贵,以百金偿之。”看来,人们似乎更喜欢用“贷”来代替“貸”字。清段玉裁《说文解字注》:“经史内貸、贷错出,恐皆俗增人旁。”说的就是这种情况。现在“貸”字已完全被“贷”所取代,借入和借出义都由“贷”字来表示了。(冀小军)\n\n賂(赂) lù 来纽、铎部;来纽、暮韵、洛故切。\n\n[glyph:g007] 賂 赂\n《说文》小篆 楷书 楷书\n\n1《说文》130页。\n形声字。从貝,各声。本义指赠送财物。《说文》:“賂,遗也。”《左传·桓公二年》:“以郜大鼎赂公。”又指赠送的财物。《左传·庄公二十八年》:“数之以王命,取赂而还。”亦泛指财物。汉司马迁《报任安书》:“家贫,货赂不足以自赎。”引申指行贿,以财物买通他人。《正字通·貝部》:“赂,有所属而私遗之。”《国语·晋语一》:“骊姬赂二五(晋献公的宠臣梁五和东关五),使言于公。”《晋书·谢安传》:“贼厚赂泓,使云‘南军已败’,泓伪许之。”新中国成立后,“貝”简化为“贝”,“賂”类推简化为“赂”。(冀小军)\n\n賸 yíng 喻纽、蒸部;以纽、证韵、以证切。\nshèng 船纽、蒸部;船纽、证韵、实证切。\n\n[glyph:g008] [glyph:g009] [glyph:g010] [glyph:g011] [glyph:g012] [glyph:g013] 賸\n西周 西周 春秋 战国 秦 《说文》小篆 楷书\n[glyph:g014] [glyph:g015] [glyph:g016] 賸\n西周 西周 《说文》小篆 楷书\n[glyph:g017] [glyph:g018] [glyph:g019] 滕\n西周 春秋 战国 楷书\n\n1、2、5、6"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000712",
+          "pdf_page_1based": 712,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0712/source.png",
+          "source_sha256": "5ce86c6de51edbcfee04046c87ae5cbc887c4cdfda8f0d4d9248e7c2c79dfb06",
+          "evidence_sha256": "01d1cd18ca03c4028f81a3fb9e13178ea86929598153f90ff2a17c2d59e29c7f",
+          "ocr_review_status": "unreviewed",
+          "match_type": "possible_continuation",
+          "headword_lines": [],
+          "excerpt": "朌 人 保 仁 企 仞 仕 佼 俅 佩\n\n源;另一种从心千声,是《说文》古文[glyph:g001]的形体来源。此外还有从身声、人声者。秦简从人,为《说文》正篆所本,隶、楷承之。《说文》:“仁,亲也。从人,从二。”本义是对人友善、相亲。《论语·颜渊》:“樊迟问仁。子曰:‘爱人。’”(董莲池)\n\n企 qǐ 溪纽、支部;溪纽、纸韵、丘弭切。\nqì 溪纽、支部;溪纽、寘韵、去智切。\n[glyph:g002]⁶\n《说文》古文\n[glyph:g003]¹ 商 [glyph:g004]² 商 [glyph:g005]³ 商 [glyph:g006]⁴ 《说文》小篆 [glyph:g007]⁵ 汉 企 楷书\n1、2、3《甲文编》339页。4、6《说文》161页。5《甲金篆》539页。\n会意字。商代甲骨文(字形1、2)作“人”形下有“止”(趾),会举踵意。《说文》:“企,举踵也。”“举踵”谓踮起脚后跟,此其本义。《老子》第二十四章:“企者不立,跨者不行。”是其用。举踵必竦身,呈张望状,因之引申有企望、企及等义。“企”之字形,早期古文字尚能看出人在止(趾)上,至《说文》小篆人形与足趾两个部件彻底割裂,许慎遂误解此字为“从人,止声”。(董莲池)\n\n仞 rèn 日纽、文部;日纽、震韵、而振切。\n[glyph:g008]¹ 《说文》小篆 [glyph:g009]² 汉 [glyph:g010]³ 汉 [glyph:g011]⁴ 汉 仞 楷书\n1《说文》161页。2、3、4《甲金篆》539页。\n形声字。古代长度单位用字。《说文》:“仞,伸臂一寻,八尺。从人,刃声。”《书·旅獒》:“为山九仞,功亏一篑。”孔传:“八尺曰仞。”清陶方琦《说文仞八尺考》云:“许君所用周尺也,故主八尺之说。”《仪礼·乡射礼》:“杠长三仞。”郑玄注:“七尺曰仞。”陶方琦认为郑注根据的是汉尺长度。(董莲池)\n\n仕 shì 从纽、之部;崇纽、止韵、徂里切。\n[glyph:g012]¹ 战国 [glyph:g013]² 战国 [glyph:g014]³ 《说文》小篆 [glyph:g015]⁴ 汉 仕 楷书\n1、2、4《甲金篆》539页。3《说文》161页。\n会意字。《说文》:“仕,学也。从人,从士。”据《说文》,本义指学习仕宦之事。引申指担当官职。《论语·微子》:“子路曰:‘不仕无义。长幼之节,不可废也;君臣之义,如之何其可废也?’”又《论语·公冶长》:“子使漆彫开仕。”(董莲池)\n\n佼 jiǎo 见纽、宵部;见纽、宵韵、古肴切。\njiǎo 匣纽、宵部;匣纽、巧韵、下巧切。\nxiáo\n[glyph:g016]¹ 《说文》小篆 佼 楷书\n1《说文》161页。\n会意字。《说文》:“佼,交也。从人,从交。”本义指交往。《管子·明法》:“群臣皆忘主而趋私佼矣。”又指超出一般,读上声。《资治通鉴·汉纪·世祖光武皇帝上之下》:“帝曰:‘卿所谓铁中铮铮,佣中佼佼者也。’”通“姣”,指“美好”。《诗·陈风·月出》:“佼人僚兮。”唐陆德明《经典释文》:“佼,字又作姣。古卯反。好也。”(董莲池)\n\n俅 qiú 群纽、幽部;群纽、尤韵、巨鸠切。\n[glyph:g017]¹ 《说文》小篆 俅 楷书\n1《说文》161页。\n形声字。《说文》:“俅,冠饰貌。从人,求声。《诗》曰:‘弁服俅俅。’”“冠饰貌”谓帽子上所缀装饰品的样子。(董莲池)\n\n佩 pèi 并纽、之部;并纽、队韵、蒲昧切。\n[glyph:g018]¹ 西周 [glyph:g019]² 西周 [glyph:g020]³ 《说文》小篆 [glyph:g021]⁴ 汉 佩 楷书\n1、2、4《甲金篆》540页。3《说文》161页。\n《说文》:“大带佩也。从人,从凡,从巾。佩必有巾,巾谓之饰。”据《说文》,构形是会意。所谓“大带佩”是说“佩是系在大带上的装饰品”。《诗·郑风·子衿》:“青青子佩,悠悠我思。”毛传:“佩,佩玉也。”《诗·郑风·女曰鸡鸣》:“知子之来之,杂佩以赠之。”毛传:“杂佩者,珩、璜、琚、瑀、衝牙之类。”又用作动词,表示佩带。《礼记·玉藻》“君子必佩玉。”引申指佩服、敬仰之意。西周至秦文字中,部件“凡”居于“人”右“巾”上,到了隶楷阶段,“凡”之左右两笔引长,遂成为今天使用的“佩”形。(董莲池)\n\n699"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0711/source.png",
+      "pdf_page": 711,
+      "source_pixel_sha256": "5c137e1d5e93898e65fb46a76cd7c21a82b658a91184c567c040190912771afe"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0712/source.png",
+      "pdf_page": 712,
+      "source_pixel_sha256": "5ce86c6de51edbcfee04046c87ae5cbc887c4cdfda8f0d4d9248e7c2c79dfb06"
+    }
+  ],
+  "require_source_specific_page_evidence": true
+}
