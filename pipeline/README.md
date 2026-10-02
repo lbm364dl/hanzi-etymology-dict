@@ -37,6 +37,10 @@ proposals are not established errors. Link repeated manifestations to the existi
 research gaps and validation failures; it saves proposed issue records without inventing
 approvals. `pipeline.issues` synchronizes findings using stable markers, so reruns reuse
 existing issues and preserve human discussion. It never closes issues automatically.
+Registered sources can set `issue_parent_number`, `issue_milestone` and `issue_labels`;
+new findings become native subissues with kind labels and the configured milestone.
+GitHub workflow settings are kept separate from book identity, so relabeling work does not
+invalidate completed research. Edition or corpus identity changes still require new jobs.
 
 ```bash
 python3 -m pipeline.issues research/source-enrichment-findings.json --repo lbm364dl/hanzi-etymology-dict --receipts research/source-enrichment-issues.json
