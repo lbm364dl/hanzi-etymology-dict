@@ -412,6 +412,13 @@ explain its known history where supported. Replacement identifies supported grap
 Pictorial and semantic are not interchangeable. Do not assign both just because pictures convey
 meaning. A composite formation typed semantic may have pictorial components. Explain the original
 meaning and how an altered visible component differs from its original form when evidence supports it.
+A dated example establishes an attested use, not automatically the earliest attestation or
+original meaning. Use earliest_attested only when the cited evidence establishes that priority;
+otherwise qualify the period and retain the appropriate historical or current status. Current
+senses require current-use evidence even when the same meaning also has an ancient example.
+For a historical glyph redraw, its period field identifies the depicted script style and its
+status as a redraw. A separately cited specimen does not establish that the displayed drawing
+reproduces that specimen unless the image-to-specimen connection has been verified.
 Keep the history useful to readers: explain the earliest supported meaning, older uses, and how
 meanings developed or a graph was borrowed for another word, where evidence allows. Distinguish
 meaning change from graphic change and phonetic borrowing. Do not invent a smooth semantic chain
