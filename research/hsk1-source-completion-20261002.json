@@ -2,15 +2,20 @@
   "scope": "All 300 HSK1 characters against registered digitised 字源; integrity or legacy approvals are not source completion.",
   "source_id": "ziyuan-2012",
   "characters_total": 300,
-  "verified_source_complete": 4,
+  "verified_source_complete": 5,
   "characters": [
     {
       "character": "爱",
       "verified_source_completion": false,
       "jobs": [
         {
-          "job": "runs/source-enrichment/ziyuan-2012/7231",
-          "recorded_status": "needs_source_refresh",
+          "job": "runs/source-enrichment-ziyuan/ai-edge-id-repaired/ziyuan-2012/7231",
+          "recorded_status": "needs_source_evidence",
+          "verified_source_completion": false
+        },
+        {
+          "job": "runs/source-enrichment-ziyuan/ai-edge-id-repaired/ziyuan-2012/7231/before-citation-integration/db0b25b886dafc2363c4e386e4c8f6e82f1fb6e36e57515bb10c1acf18cc80a8",
+          "recorded_status": "needs_source_evidence",
           "verified_source_completion": false
         },
         {
@@ -29,13 +34,18 @@
           "verified_source_completion": false
         },
         {
-          "job": "runs/source-enrichment-ziyuan/ai-recovery/ziyuan-2012/7231",
-          "recorded_status": "failed",
+          "job": "runs/source-enrichment-ziyuan/ai-enrichment-continued/ziyuan-2012/7231",
+          "recorded_status": "needs_revision",
           "verified_source_completion": false
         },
         {
-          "job": "runs/source-enrichment-ziyuan/ai-enrichment-continued/ziyuan-2012/7231",
-          "recorded_status": "needs_revision",
+          "job": "runs/source-enrichment-ziyuan/ai-final-adjudication/ziyuan-2012/7231",
+          "recorded_status": "needs_source_verification",
+          "verified_source_completion": false
+        },
+        {
+          "job": "runs/source-enrichment/ziyuan-2012/7231",
+          "recorded_status": "needs_source_refresh",
           "verified_source_completion": false
         }
       ]
@@ -111,11 +121,6 @@
       "verified_source_completion": true,
       "jobs": [
         {
-          "job": "runs/source-enrichment-ziyuan/bei-5907-source-resolution-final",
-          "recorded_status": "approved",
-          "verified_source_completion": false
-        },
-        {
           "job": "runs/source-enrichment-ziyuan/bei-5907-component-refine",
           "recorded_status": "needs_revision",
           "verified_source_completion": false
@@ -136,14 +141,14 @@
           "verified_source_completion": false
         },
         {
-          "job": "runs/source-enrichment-ziyuan/bei-5907-repair-5/ziyuan-2012/5907",
-          "recorded_status": "needs_revision",
-          "verified_source_completion": false
-        },
-        {
           "job": "runs/source-enrichment-ziyuan/bei-book-coverage/ziyuan-2012/5907",
           "recorded_status": "published",
           "verified_source_completion": true
+        },
+        {
+          "job": "runs/source-enrichment-ziyuan/bei-5907-repair-5/ziyuan-2012/5907",
+          "recorded_status": "needs_revision",
+          "verified_source_completion": false
         },
         {
           "job": "content/source_coverage/ziyuan-2012/5907",
@@ -316,28 +321,7 @@
     {
       "character": "的",
       "verified_source_completion": false,
-      "jobs": [
-        {
-          "job": "runs/source-enrichment/ziyuan-2012/7684",
-          "recorded_status": "needs_source_refresh",
-          "verified_source_completion": false
-        },
-        {
-          "job": "runs/source-enrichment-ziyuan/de-current-scope/ziyuan-2012/7684",
-          "recorded_status": "failed",
-          "verified_source_completion": false
-        },
-        {
-          "job": "runs/source-enrichment-ziyuan/de-research-retry/ziyuan-2012/7684",
-          "recorded_status": "failed",
-          "verified_source_completion": false
-        },
-        {
-          "job": "runs/source-enrichment-ziyuan/de-recovery/ziyuan-2012/7684",
-          "recorded_status": "failed",
-          "verified_source_completion": false
-        }
-      ]
+      "jobs": []
     },
     {
       "character": "等",
@@ -1402,16 +1386,21 @@
     },
     {
       "character": "小",
-      "verified_source_completion": false,
+      "verified_source_completion": true,
       "jobs": [
         {
-          "job": "runs/source-enrichment-ziyuan/third-expansion/ziyuan-2012/5C0F",
+          "job": "runs/source-enrichment-ziyuan/xiao-explicit-book-citation/ziyuan-2012/5C0F",
           "recorded_status": "published",
-          "verified_source_completion": false
+          "verified_source_completion": true
         },
         {
           "job": "runs/source-enrichment-ziyuan/book-citation-integration/ziyuan-2012/5C0F",
           "recorded_status": "needs_source_evidence",
+          "verified_source_completion": false
+        },
+        {
+          "job": "runs/source-enrichment-ziyuan/third-expansion/ziyuan-2012/5C0F",
+          "recorded_status": "published",
           "verified_source_completion": false
         }
       ]
@@ -1471,8 +1460,13 @@
       "verified_source_completion": false,
       "jobs": [
         {
-          "job": "runs/source-enrichment/ziyuan-2012/5B66",
-          "recorded_status": "needs_source_research",
+          "job": "runs/source-enrichment-ziyuan/xue-source-followup-page-citation/ziyuan-2012/5B66",
+          "recorded_status": "needs_revision",
+          "verified_source_completion": false
+        },
+        {
+          "job": "runs/source-enrichment-ziyuan/xue-source-followup-page-scope/ziyuan-2012/5B66",
+          "recorded_status": "approved",
           "verified_source_completion": false
         },
         {
@@ -1491,8 +1485,8 @@
           "verified_source_completion": false
         },
         {
-          "job": "runs/source-enrichment-ziyuan/xue-source-followup-page-citation/ziyuan-2012/5B66",
-          "recorded_status": "needs_revision",
+          "job": "runs/source-enrichment/ziyuan-2012/5B66",
+          "recorded_status": "needs_source_research",
           "verified_source_completion": false
         }
       ]
@@ -1656,13 +1650,7 @@
     {
       "character": "中",
       "verified_source_completion": false,
-      "jobs": [
-        {
-          "job": "runs/source-enrichment-ziyuan/third-expansion/ziyuan-2012/4E2D",
-          "recorded_status": "failed",
-          "verified_source_completion": false
-        }
-      ]
+      "jobs": []
     },
     {
       "character": "重",
