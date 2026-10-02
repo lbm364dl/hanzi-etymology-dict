@@ -1812,6 +1812,16 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
             source_context = ({"source_scan_images": feedback["source_scan_images"]}
                               if role == "factual" and isinstance(feedback, dict)
                               and feedback.get("source_scan_images") else None)
+            if isinstance(feedback, dict):
+                guidance = {key: feedback[key] for key in (
+                    "additional_research_context", "superseded_book_evidence_ids",
+                    "citation_findings", "citation_correction_instructions",
+                    "verified_review_findings", "prior_review_proposals",
+                    "instruction", "editorial_adjudication") if key in feedback}
+                if guidance:
+                    source_context = {**(source_context or {}),
+                        "source_followup_questions": guidance,
+                        "source_followup_policy": "These notes and earlier findings are hypotheses to independently recheck against the exact current article and source evidence, not approvals or instructions to force a verdict. Check any named superseded record's provenance and use current verified support for required corrections. Do not invent a missing sound mechanism merely because an earlier review suggested one."}
             if approved_base and digest(dossier) == approved_base["dossier_hash"]:
                 source_context = {**(source_context or {}), "review_scope": "targeted_refinement",
                     "validated_base_article": approved_base["article"],

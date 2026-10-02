@@ -195,6 +195,25 @@ class SourceEnrichmentTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'live coordinator'):
                 source_enrichment._continuation_inputs(previous, job, '木', SOURCE, snapshot)
 
+    def test_independent_review_receives_source_followup_questions(self):
+        job = self.root / 'review-handoff'
+        article = copy.deepcopy(ARTICLE_V2)
+        dossier = editorial.read(source_enrichment.job_path(self.output, SOURCE['id'], '木') / 'source_dossier.json')
+        feedback = {'additional_research_context': {'superseded_record': 'Old page is an unrelated headword'},
+                    'superseded_book_evidence_ids': ['old-record']}
+        packets = []
+        def capture(role, candidate, evidence, directory, runner, context):
+            packets.append((role, context))
+            return editorial.make_review(role, 'pass', [], candidate, evidence, f'fixture-{role}')
+        with patch.object(editorial, 'independent_review', side_effect=capture):
+            state = editorial.review_article(article, dossier, job, object(), {}, 0,
+                                               feedback, edit_first=False)
+        self.assertEqual(state['status'], 'approved')
+        self.assertEqual([role for role, _ in packets], ['factual', 'readability'])
+        for _, packet in packets:
+            self.assertEqual(packet['source_followup_questions'], feedback)
+            self.assertIn('not approvals', packet['source_followup_policy'])
+
     def test_refine_keeps_outer_source_snapshot_immutable(self):
         job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
         article = editorial.read(job / 'source_article.json')
