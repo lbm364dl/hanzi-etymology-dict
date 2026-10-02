@@ -431,6 +431,14 @@ A dated example establishes an attested use, not automatically the earliest atte
 original meaning. Use earliest_attested only when the cited evidence establishes that priority;
 otherwise qualify the period and retain the appropriate historical or current status. Current
 senses require current-use evidence even when the same meaning also has an ancient example.
+A consulted present-day authoritative dictionary entry can support a current listed sense
+in its identified language, unless the entry labels that sense obsolete or otherwise limits
+its usage. Do not demand a separate new physical attestation for an ordinary dictionary sense.
+Historical identifies a supported earlier use; it does not claim that the sense is obsolete.
+When a sense record describes present-day usage and cites current support, use current and
+qualify any historical examples separately. Imported multilingual gloss lists are leads:
+verify meanings in the entry's target language and do not carry Japanese-only senses into a
+Chinese learner explanation merely because shared-character metadata lists them.
 For a historical glyph redraw, its period field identifies the depicted script style and its
 status as a redraw. A separately cited specimen does not establish that the displayed drawing
 reproduces that specimen unless the image-to-specimen connection has been verified.
@@ -1818,6 +1826,8 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
                     "citation_findings", "citation_correction_instructions",
                     "verified_review_findings", "prior_review_proposals",
                     "instruction", "editorial_adjudication") if key in feedback}
+                if feedback.get('target_language'):
+                    guidance['target_language'] = feedback['target_language']
                 if guidance:
                     source_context = {**(source_context or {}),
                         "source_followup_questions": guidance,

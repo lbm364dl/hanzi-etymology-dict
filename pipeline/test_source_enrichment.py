@@ -315,6 +315,7 @@ class SourceEnrichmentTests(unittest.TestCase):
                                            FakeRunner(), root=self.root, research_context=extra_context)
         self.assertEqual(result[0]["status"], "approved")
         self.assertTrue(captured["research_first"])
+        self.assertEqual(captured['feedback']['target_language'], 'zh')
         self.assertEqual(captured['feedback']['additional_research_context'], extra_context)
         self.assertTrue(captured['feedback']['review_existing_glyphs'])
         self.assertEqual(editorial.read(job / 'research_context.json'), extra_context)

@@ -816,6 +816,9 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
                 if reusable:
                     return complete_approval(state)
             followup = feedback(source, located, source_context)
+            followup['target_language'] = (article.get('language')
+                or dossier.get('context', {}).get('target_language')
+                or cohort.get('language', 'zh'))
             if context_path.exists():
                 followup['additional_research_context'] = editorial.read(context_path)
                 if followup['additional_research_context'].get('review_existing_glyphs') is True:
