@@ -1440,7 +1440,7 @@ def curate_glyphs(dossier, directory, runner, context=None):
                 {"text": g["caption"], "evidence_ids": g["evidence_ids"]} for g in visual["items"]]], dossier)
             if not visual["items"] and not visual["limitations"]:
                 raise ValueError("Empty visual selection requires a cited limitation")
-            editable_fields = {"caption", "alt", "selection_reason", "evidence_ids"}
+            editable_fields = {"caption", "alt", "selection_reason", "evidence_ids", "period"}
             for selected in visual["items"]:
                 candidate = candidates[selected["id"]]
                 if any(selected[k] != candidate[k] for k in candidate if k not in editable_fields):

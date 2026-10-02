@@ -203,6 +203,7 @@ HISTORICAL_GLYPHS = obj({"items": array(GLYPH, maxItems=6), "limitations": array
 GLYPH_VISUAL_SCHEMA = obj({"items": array(obj({key: GLYPH["properties"][key]
     for key in ("id", "caption", "alt", "selection_reason", "evidence_ids")}), maxItems=6),
     "limitations": array(SECTION)})
+GLYPH_VISUAL_SCHEMA["properties"]["items"]["items"]["properties"]["period"] = TEXT
 NODE = obj({"kind": {"enum": ["character", "component", "sense"]}, "id": TEXT})
 RELATIONSHIP = obj({"id": TEXT, "subject": NODE, "object": NODE,
     "predicate": {"enum": ["semantic_component_of", "phonetic_component_of", "pictorial_component_of",
@@ -276,7 +277,8 @@ dossier evidence IDs may also be used. Do not invent evidence IDs or compute gue
 No images is valid only after actual searches fail to establish usable identity/reuse provenance;
 record real queries, inspected pages, failures, and a cited limitation. Return the supplied schema.
 """
-GLYPH_VISUAL_POLICY = """Inspect the attached image pixels in their supplied order, using the
+GLYPH_VISUAL_POLICY = """Period is an editable reader-facing label. When a period finding is supplied, return a supported corrected period alongside caption/alt/selection_reason; retain source identity, URLs, rights and image bytes. Distinguish script-style date from a verified specimen date.
+Inspect the attached image pixels in their supplied order, using the
 image manifest in the inputs to identify each glyph. These are snapshots of researched candidates.
 Choose the small set that actually helps explain this character; return historical_glyphs with
 items and limitations. Return only each chosen item's id, caption, alt, selection_reason and

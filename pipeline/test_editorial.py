@@ -1442,6 +1442,7 @@ class EditorialTests(unittest.TestCase):
                     assert inputs["allowed_ids"] == ["actual_oracle"]
                     assert inputs["previous_invalid_selection"]["items"][0]["id"] == "obsolete_candidate"
                     item["caption"] = "Corrected supported caption."
+                    item["period"] = "Modern redraw in oracle-script style."
                 return {"items": [item], "limitations": []}
         with tempfile.TemporaryDirectory() as root:
             runner = VisualRepairRunner()
@@ -1452,7 +1453,8 @@ class EditorialTests(unittest.TestCase):
             self.assertEqual([path.name for _, path in runner.seen], ["glyph_visual", "glyph_visual-repair-1"])
             self.assertEqual(result["glyph_assets"], dossier["glyph_assets"])
             result_item = result["glyph_research"]["historical_glyphs"]["items"][0]
-            self.assertEqual({k: v for k, v in result_item.items() if k != "caption"}, {k: v for k, v in candidate.items() if k != "caption"})
+            self.assertEqual({k: v for k, v in result_item.items() if k not in {"caption", "period"}}, {k: v for k, v in candidate.items() if k not in {"caption", "period"}})
+            self.assertEqual(result_item["period"], "Modern redraw in oracle-script style.")
             self.assertTrue((Path(root) / "glyph_visual/invalid-selection.json").exists())
             self.assertEqual(dossier["glyph_research"]["historical_glyphs"]["items"][0]["caption"], "fixture")
         with tempfile.TemporaryDirectory() as root:
