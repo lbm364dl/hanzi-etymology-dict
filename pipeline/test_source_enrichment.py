@@ -353,6 +353,12 @@ class SourceEnrichmentTests(unittest.TestCase):
         self.assertEqual(audit["citations"][0]["research_receipt_hash"], editorial.digest(receipt))
         editorial.write(job / "article.json", {"text": "No book citation", "evidence_ids": []})
         self.assertFalse(source_enrichment._capture_source_audit(job, SOURCE, dossier)["verified"])
+        foreign = {**evidence, "source": "香港教育局 字源考釋"}
+        foreign_result = {"evidence": [foreign]}
+        editorial.write(stage / "result.json", foreign_result)
+        editorial.write(stage / "meta.json", {**receipt, "result_hash": editorial.digest(foreign_result)})
+        editorial.write(job / "article.json", {"text": "A cited claim", "evidence_ids": ["X-book"]})
+        self.assertFalse(source_enrichment._capture_source_audit(job, SOURCE, {"evidence": [foreign]})["verified"])
 
     def test_source_audit_does_not_certify_unretained_or_unpaged_mentions(self):
         job = source_enrichment.job_path(self.output, SOURCE["id"], "木")

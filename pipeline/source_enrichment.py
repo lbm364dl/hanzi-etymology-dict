@@ -465,7 +465,7 @@ def _capture_source_audit(job, source, dossier):
             source_label = str(item.get("source", ""))
             field = str(item.get("field", ""))
             text = str(item.get("text", ""))
-            identity_match = (title and title in source_label) or (book_id and book_id in source_label)
+            identity_match = (title and re.search(r"(?<!\w)" + re.escape(title) + r"(?!\w)", source_label)) or (book_id and book_id in source_label)
             page_match = bool(pattern.search(field) or pattern.search(text))
             retained = any(evidence.get("id") in used and evidence.get("source") == source_label and evidence.get("field") == field
                            and evidence.get("text") == text for evidence in dossier.get("evidence", []))
