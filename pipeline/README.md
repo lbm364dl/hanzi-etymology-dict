@@ -56,6 +56,14 @@ must still match. The harness validates and saves the draft with exact provenanc
 it never copies review approvals. Current-source research and fresh independent reviews
 remain required. Keep the previous job directory as the record of earlier failures.
 
+Use `--research-context path/to/context.json` to hand new source leads and findings to
+the actual research agent. The JSON object is frozen in the job and passed as research
+tasks; it does not create verified dossier evidence or approvals. The researcher must
+consult those sources directly, check identity/scope and cite useful claims before
+authorship. Repeating a lead in a coordinating chat does not put it in a CLI research
+packet. Changed context requires a fresh source job. For an example, see
+`research/source-followups/ai-current-structure.json`.
+
 `pipeline.source_adoption.adopt` can register book research already used by an approved
 article. It preserves the article, dossier and original factual/readability receipts, then
 requires a separate Luna low check against the original scans. Merely having book evidence

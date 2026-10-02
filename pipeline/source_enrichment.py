@@ -273,6 +273,20 @@ def _source_findings_pending(job):
     if not review_path.is_file() or editorial.digest(editorial.read(review_path)) != resolution.get("result_hash"):
         return True
     result = editorial.read(review_path)
+    checks = resolution.get('literal_checks', [])
+    if checks:
+        observations = result.get('literal_observations', [])
+        if len(observations) != len(checks) or len({o['key'] for o in observations}) != len(checks):
+            return True
+        observed = {o['key']: o for o in observations}
+        dispositions = {f['key']: f['disposition'] for f in result['findings']}
+        for check in checks:
+            item = observed.get(check['key'], {})
+            if (item.get('current_corpus_literal') != check['current']
+                    or item.get('proposed_literal') != check['proposed']
+                    or dispositions.get(check['key']) != 'rejected_proposal_scan_matches_corpus'
+                    or item.get('observed_literal') != check['current']):
+                return True
     validation_path = job / 'source_resolution_validation.json'
     if validation_path.is_file():
         validation = editorial.read(validation_path)
@@ -293,7 +307,7 @@ def _source_findings_pending(job):
                     "rejected_proposal_scan_matches_corpus") for item in result["findings"]))
 
 
-def resolve_source_findings(job, runner, source_context=None):
+def resolve_source_findings(job, runner, source_context=None, literal_checks=None):
     """Check whether retained uncertainty is immaterial; actual OCR errors stay blocked."""
     job = Path(job)
     if runner.model != "gpt-6-luna" or runner.reasoning != "low":
@@ -314,7 +328,42 @@ def resolve_source_findings(job, runner, source_context=None):
     inputs = {"article": article, "dossier": dossier, "findings": findings,
               "feedback": {"source_scan_images": (
                   list(checkpoint["locator"].get("source_scan_images", [])) + list(source_context or []))[:3]}}
+    checks = list(literal_checks or [])
+    if checks:
+        registered = editorial.read(job / 'source.json')['registry_source']
+        needed = {check['pdf_page'] for check in checks}
+        pages = {}
+        with Path(registered['corpus_path']).open() as corpus:
+            for line in corpus:
+                page = json.loads(line)
+                if page.get('pdf_page_1based') in needed:
+                    pages[page['pdf_page_1based']] = page
+        for check in checks:
+            page = pages[check['pdf_page']]
+            start = check['text_offset']
+            if (check['current'] == check['proposed']
+                    or page['text'][start:start + len(check['current'])] != check['current']
+                    or page['source_sha256'] != check['source_pixel_sha256']
+                    or check['key'] not in {f['key'] for f in findings['findings']}):
+                raise ValueError('Literal source check must match the actual current corpus occurrence')
+        inputs['literal_checks'] = checks
+        inputs['literal_check_instruction'] = (
+            'The current_corpus_literal is a verified current text occurrence, not your scan reading. '
+            'Keep current corpus, proposed replacement and observed printed literal separate. '
+            'Read the targeted pixels; use unresolved if unclear. Reject a proposal only when '
+            'the observed literal equals the current corpus literal and differs from the proposal. '
+            'Your pixel_reason must agree with those fields; a contradictory rationale is not approval.')
+        schema['required'].append('literal_observations')
+        schema['properties']['literal_observations'] = {'type': 'array', 'items': {
+            'type': 'object', 'additionalProperties': False,
+            'required': ['key', 'current_corpus_literal', 'proposed_literal', 'observed_literal', 'pixel_reason'],
+            'properties': {field: {'type': 'string', 'minLength': 1} for field in
+                           ['key', 'current_corpus_literal', 'proposed_literal', 'observed_literal', 'pixel_reason']}}}
     directory = job / "source-resolution"
+    attempt = 1
+    while directory.exists():
+        directory = job / f'source-resolution-{attempt}'
+        attempt += 1
     result = runner.run("source_resolution", inputs, schema, directory)
     keys = [item["key"] for item in result["findings"]]
     if len(keys) != len(set(keys)) or set(keys) != {item["key"] for item in findings["findings"]}:
@@ -324,8 +373,8 @@ def resolve_source_findings(job, runner, source_context=None):
         raise ValueError("Source resolution differs from saved agent result")
     record = {"findings_hash": editorial.digest(findings), "article_hash": editorial.digest(article),
               "dossier_hash": editorial.digest(dossier), "result_hash": editorial.digest(result),
-              "review_path": "source-resolution/result.json", "model": runner.model,
-              "reasoning": runner.reasoning}
+              "review_path": str((directory / 'result.json').relative_to(job)), "model": runner.model,
+              "reasoning": runner.reasoning, "literal_checks": checks}
     editorial.write(job / "source_resolution.json", record)
     if not _source_findings_pending(job):
         state = editorial.read(job / "status.json")
@@ -477,7 +526,7 @@ def _continuation_inputs(previous, job, character, source, snapshot):
 
 
 def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revisions=3,
-        publish_now=False, source_context=None, continuation=None):
+        publish_now=False, source_context=None, continuation=None, research_context=None):
     if not 1 <= workers <= MAX_WORKERS:
         raise ValueError(f"Workers must be between 1 and {MAX_WORKERS}")
     if not 1 <= limit <= MAX_SELECTION:
@@ -523,6 +572,15 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
 
         try:
             snapshot = prepare_job(char, job, source, root)
+            context_path = job / 'research_context.json'
+            if research_context is not None:
+                if not isinstance(research_context, dict):
+                    raise ValueError('Research context must be an object of source leads and findings')
+                if context_path.exists() and editorial.read(context_path) != research_context:
+                    raise ValueError('Research context changed; use a fresh source job directory')
+                if not context_path.exists() and (job / 'source_checkpoint.json').exists():
+                    raise ValueError('New research context requires a fresh source job directory')
+                editorial.write(context_path, research_context)
             article = editorial.read(job / "source_article.json")
             dossier = editorial.read(job / "source_dossier.json")
             saved_source = snapshot.get("registry_source")
@@ -570,6 +628,13 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
                 if reusable:
                     return complete_approval(state)
             followup = feedback(source, located, source_context)
+            if context_path.exists():
+                followup['additional_research_context'] = editorial.read(context_path)
+                followup['additional_context_policy'] = (
+                    'These source leads and prior findings are research tasks, not preverified dossier evidence. '
+                    'Consult the referenced sources directly, check exact graph identity and scope, '
+                    'and add cited evidence for useful claims before authorship. Recheck reviewer hypotheses; '
+                    'modern structure does not establish historical roles. Record inaccessible sources as gaps.')
             if continuation:
                 if len(cohort['characters']) != 1:
                     raise ValueError('A continuation names one exact character job')
@@ -711,6 +776,7 @@ def main():
     parser.add_argument("--publish-now", action="store_true")
     parser.add_argument("--scan-context", type=Path, help="JSON records with absolute path, pdf_page, optional printed_page")
     parser.add_argument("--continue-from", type=Path, help="Unfinished terminal source job; fresh research and reviews required")
+    parser.add_argument("--research-context", type=Path, help="JSON object of additional source leads and findings to research directly")
     parser.add_argument("--tracking-issue-url", help="Existing GitHub issue for this enrichment or source finding")
     args = parser.parse_args()
     if not 1 <= args.limit <= MAX_SELECTION:
@@ -760,7 +826,8 @@ def main():
                     result.append({"character": row, "status": "failed", "job": str(job), "error": str(exc)})
     else:
         result = run(cohort, source, args.output, runner, args.limit, args.workers, args.root,
-                     args.max_revisions, args.publish_now, context, args.continue_from)
+                     args.max_revisions, args.publish_now, context, args.continue_from,
+                     editorial.read(args.research_context) if args.research_context else None)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     if any(row.get("status") in ("failed", "needs_revision") for row in result):
         raise SystemExit(2)

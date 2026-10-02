@@ -97,6 +97,20 @@ class SourceEnrichmentTests(unittest.TestCase):
                 'role': 'source_resolution', 'status': 'complete', 'model': 'gpt-6-luna',
                 'reasoning': 'low', 'result_hash': editorial.digest(result)})
             self.assertFalse(source_enrichment._source_findings_pending(job))
+            resolution = editorial.read(job / 'source_resolution.json')
+            resolution['literal_checks'] = [{'key': 'rare-glyph', 'current': '弋', 'proposed': '戈'}]
+            editorial.write(job / 'source_resolution.json', resolution)
+            self.assertTrue(source_enrichment._source_findings_pending(job))
+            result['literal_observations'] = [{'key': 'rare-glyph', 'current_corpus_literal': '弋',
+                'proposed_literal': '戈', 'observed_literal': '戈', 'pixel_reason': 'Fixture observation.'}]
+            for observed, expected in [('戈', True), ('弋', False)]:
+                result['literal_observations'][0]['observed_literal'] = observed
+                editorial.write(job / 'source-resolution/result.json', result)
+                editorial.write(job / 'source_resolution.json', {**resolution, 'result_hash': editorial.digest(result)})
+                editorial.write(job / 'source-resolution/meta.json', {
+                    'role': 'source_resolution', 'status': 'complete', 'model': 'gpt-6-luna',
+                    'reasoning': 'low', 'result_hash': editorial.digest(result)})
+                self.assertEqual(source_enrichment._source_findings_pending(job), expected)
             editorial.write(job / 'article.json', {**article, 'summary': 'Now cites a glyph.'})
             self.assertTrue(source_enrichment._source_findings_pending(job))
 
@@ -174,6 +188,8 @@ class SourceEnrichmentTests(unittest.TestCase):
     def test_run_uses_source_locator_and_research_first_refine(self):
         job = source_enrichment.job_path(self.output, SOURCE["id"], "木")
         captured = {}
+        extra_context = {'additional_source_leads': [{'url': 'https://example.org/primary-record',
+                                                     'scope_character': '木'}]}
 
         class FakeRunner:
             model = "gpt-6-luna"
@@ -205,9 +221,11 @@ class SourceEnrichmentTests(unittest.TestCase):
         with patch.object(source_enrichment, "_load_source_tools", return_value=LocalSources()), \
              patch.object(source_enrichment.editorial, "refine", side_effect=fake_refine):
             result = source_enrichment.run({"characters": ["木"]}, SOURCE, self.output,
-                                           FakeRunner(), root=self.root)
+                                           FakeRunner(), root=self.root, research_context=extra_context)
         self.assertEqual(result[0]["status"], "approved")
         self.assertTrue(captured["research_first"])
+        self.assertEqual(captured['feedback']['additional_research_context'], extra_context)
+        self.assertEqual(editorial.read(job / 'research_context.json'), extra_context)
         self.assertEqual(len(captured['runner'].inherited_lock_fds), 1)
         self.assertEqual(captured["feedback"]["source_leads"], LOCATED["source_leads"])
         self.assertTrue(captured["feedback"]["reuse_existing_glyph_candidates"])
@@ -220,7 +238,7 @@ class SourceEnrichmentTests(unittest.TestCase):
              patch.object(source_enrichment.editorial, "refine", side_effect=AssertionError("approved work reran")):
             resumed = source_enrichment.run({"characters": ["木"]}, SOURCE, self.output,
                                             FakeRunner(), root=self.root)
-        self.assertEqual(resumed[0]["status"], "approved")
+            self.assertEqual(resumed[0]["status"], "approved")
 
     def test_published_completion_requires_source_job_hashes_and_canonical_match(self):
         job = source_enrichment.job_path(self.output, SOURCE["id"], "木")
