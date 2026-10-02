@@ -392,11 +392,13 @@ class SourceEnrichmentTests(unittest.TestCase):
                 editorial.write(stage / name, value)
             return {'status': 'needs_revision'}
         with patch.object(editorial, 'refine', side_effect=fixture_refine) as refine, \
+                patch.object(editorial, 'validate_reviews') as validate, \
                 patch.object(source_enrichment, '_capture_source_audit', return_value=audit):
             state, result = source_enrichment._integrate_uncited_book_records(
                 job, SOURCE, object(), {'status': 'needs_source_evidence'}, audit, {}, 2)
             self.assertEqual(state['status'], 'needs_revision')
             self.assertEqual(refine.call_count, 1)
+            self.assertEqual(validate.call_count, 1)
             self.assertTrue(list((job / 'before-citation-integration').glob('*/reviews.json')))
             source_enrichment._integrate_uncited_book_records(
                 job, SOURCE, object(), state, audit, {}, 2)

@@ -244,9 +244,10 @@ def _published_matches(job, source, root):
 def _integrate_uncited_book_records(job, source, runner, state, audit, feedback, max_revisions):
     """One genuine editing/review pass over current research, without minting more IDs."""
     job = Path(job)
-    if state.get('status') not in ('approved', 'needs_source_evidence') or audit.get('verified') or not audit.get('consulted_citations'):
+    if state.get('status') not in ('approved', 'needs_source_evidence', 'needs_source_verification') or audit.get('verified') or not audit.get('consulted_citations'):
         return state, audit
     article, dossier = editorial.read(job / 'article.json'), editorial.read(job / 'dossier.json')
+    editorial.validate_reviews(article, dossier, editorial.read(job / 'reviews.json'))
     archive = job / 'before-citation-integration' / editorial.digest(article)
     for name in ('article.json', 'dossier.json', 'reviews.json', 'status.json'):
         if (job / name).exists():
