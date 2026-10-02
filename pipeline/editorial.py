@@ -533,6 +533,62 @@ PROMPTS['factual'] += (
     'Reject materially wrong provenance in a cited record even if the article wording '
     'it supports is otherwise accurate; preserve valid claims while correcting the scope.')
 
+PROMPTS['book_citation'] = (
+    'Author citation metadata for the supplied existing claims using the current book records. '
+    'Inspect each candidate claim and attach a current retained book evidence ID where its '
+    'exact record supports that claim. Preserve other valid citations. If supplied correction '
+    'instructions identify a superseded record, replace its citation only where the new record '
+    'supports the same precise claim. Never cite a record merely because it concerns the same '
+    'character. Return explicit edits of evidence_ids arrays, not prose edits. For a current '
+    'book record that supports no candidate claim, return its evidence ID in unsupported_records '
+    'and explain the specific support gap. These edits receive fresh independent reviews.')
+
+
+def author_book_citations(article, dossier, records, directory, runner, feedback=None):
+    candidates = {}
+    def visit(value, parts=()):
+        if isinstance(value, dict):
+            if 'evidence_ids' in value:
+                candidates['/'.join(map(str, (*parts, 'evidence_ids')))] = {
+                    'claim': {k: v for k, v in value.items() if k != 'evidence_ids'},
+                    'evidence_ids': value['evidence_ids']}
+            for key, child in value.items():
+                if key != 'historical_glyphs':
+                    visit(child, (*parts, key))
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                visit(child, (*parts, index))
+    visit(article)
+    known = [e['id'] for e in dossier['evidence']]
+    schema = {'type': 'object', 'additionalProperties': False,
+        'required': ['edits', 'unsupported_records'], 'properties': {
+            'edits': {'type': 'array', 'items': {'type': 'object', 'additionalProperties': False,
+                'required': ['path', 'evidence_ids'], 'properties': {
+                    'path': {'type': 'string', 'enum': list(candidates)},
+                    'evidence_ids': {'type': 'array', 'minItems': 1, 'uniqueItems': True,
+                        'items': {'type': 'string', 'enum': known}}}}},
+            'unsupported_records': {'type': 'array', 'items': {'type': 'object',
+                'additionalProperties': False, 'required': ['evidence_id', 'reason'],
+                'properties': {'evidence_id': {'type': 'string', 'enum': known},
+                    'reason': {'type': 'string', 'minLength': 1}}}}}}
+    result = runner.run('book_citation', {'candidate_claims': candidates,
+        'current_book_records': records,
+        'superseded_book_evidence_ids': (feedback or {}).get('superseded_book_evidence_ids', []),
+        'retained_evidence': dossier['evidence']}, schema, directory)
+    Draft202012Validator(schema).validate(result)
+    patched = copy.deepcopy(article)
+    seen = set()
+    for edit in result['edits']:
+        path = edit['path']
+        if path in seen:
+            raise ValueError('Duplicate book citation edit path')
+        seen.add(path)
+        node = patched
+        for key in path.split('/')[:-1]:
+            node = node[int(key)] if isinstance(node, list) else node[key]
+        node['evidence_ids'] = edit['evidence_ids']
+    return patched
+
 
 def digest(value):
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,

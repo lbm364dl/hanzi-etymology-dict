@@ -261,8 +261,10 @@ def _integrate_uncited_book_records(job, source, runner, state, audit, feedback,
             'put IDs in prose, or cite unrelated claims. If no record supports an article claim, '
             'retain a precise research gap. Obtain fresh independent factual and readability reviews.')}
     stage = job / 'citation-integration'
+    article = editorial.author_book_citations(article, dossier, audit['consulted_citations'],
+                                             stage / 'citation-author', runner, context)
     repaired = editorial.refine(article, dossier, stage, runner, max_revisions,
-                                context, research_first=False)
+                                context, research_first=False, edit_first=False)
     for name in ('article.json', 'dossier.json', 'reviews.json'):
         if (stage / name).exists():
             shutil.copy2(stage / name, job / name)

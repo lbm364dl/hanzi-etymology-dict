@@ -385,19 +385,42 @@ class SourceEnrichmentTests(unittest.TestCase):
                             ('reviews.json', []), ('status.json', {'status': 'needs_source_evidence'})]:
             editorial.write(job / name, value)
         audit = {'verified': False, 'consulted_citations': [{'evidence_ids': ['fixture-book']}]}
-        def fixture_refine(article, dossier, stage, runner, revisions, feedback, research_first):
+        def fixture_refine(article, dossier, stage, runner, revisions, feedback, research_first, edit_first):
             self.assertFalse(research_first)
+            self.assertFalse(edit_first)
             self.assertEqual(feedback['current_uncited_book_records'], audit['consulted_citations'])
             for name, value in [('article.json', article), ('dossier.json', dossier), ('reviews.json', [])]:
                 editorial.write(stage / name, value)
             return {'status': 'needs_revision'}
         with patch.object(editorial, 'refine', side_effect=fixture_refine) as refine, \
+                patch.object(editorial, 'author_book_citations', return_value=ARTICLE_V2), \
                 patch.object(editorial, 'validate_reviews') as validate, \
                 patch.object(source_enrichment, '_capture_source_audit', return_value=audit):
             state, result = source_enrichment._integrate_uncited_book_records(
                 job, SOURCE, object(), {'status': 'needs_source_evidence'}, audit, {}, 2)
             self.assertEqual(state['status'], 'needs_revision')
             self.assertEqual(refine.call_count, 1)
+
+    def test_book_citation_author_can_only_change_known_citation_arrays(self):
+        evidence_id = DOSSIER['evidence'][0]['id']
+        class FixtureRunner:
+            result = {'edits': [{'path': 'summary/evidence_ids', 'evidence_ids': [evidence_id]}],
+                      'unsupported_records': []}
+            def run(self, role, inputs, schema, directory):
+                self.schema = schema
+                return self.result
+        runner = FixtureRunner()
+        result = editorial.author_book_citations(ARTICLE_V2, DOSSIER, [], self.root / 'citation-author', runner)
+        self.assertEqual(result['summary']['text'], ARTICLE_V2['summary']['text'])
+        self.assertEqual(result['summary']['evidence_ids'], [evidence_id])
+        runner.result = {'edits': [{'path': 'summary/text', 'evidence_ids': [evidence_id]}],
+                         'unsupported_records': []}
+        with self.assertRaises(editorial.ValidationError):
+            editorial.author_book_citations(ARTICLE_V2, DOSSIER, [], self.root / 'bad-path', runner)
+        runner.result = {'edits': [{'path': 'summary/evidence_ids', 'evidence_ids': ['unknown-id']}],
+                         'unsupported_records': []}
+        with self.assertRaises(editorial.ValidationError):
+            editorial.author_book_citations(ARTICLE_V2, DOSSIER, [], self.root / 'bad-id', runner)
             self.assertEqual(validate.call_count, 1)
             self.assertTrue(list((job / 'before-citation-integration').glob('*/reviews.json')))
             source_enrichment._integrate_uncited_book_records(
