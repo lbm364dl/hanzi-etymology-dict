@@ -545,6 +545,7 @@ PROMPTS['book_citation'] = (
 
 
 def author_book_citations(article, dossier, records, directory, runner, feedback=None):
+    feedback = feedback or {}
     candidates = {}
     def visit(value, parts=()):
         if isinstance(value, dict):
@@ -559,6 +560,11 @@ def author_book_citations(article, dossier, records, directory, runner, feedback
             for index, child in enumerate(value):
                 visit(child, (*parts, index))
     visit(article)
+    allowed = feedback.get('allowed_citation_edit_paths')
+    if allowed is not None:
+        if not isinstance(allowed, list) or not allowed or not set(allowed) <= candidates.keys():
+            raise ValueError('Allowed citation paths must name existing evidence_ids arrays')
+        candidates = {path: candidates[path] for path in allowed}
     known = [e['id'] for e in dossier['evidence']]
     schema = {'type': 'object', 'additionalProperties': False,
         'required': ['edits', 'unsupported_records'], 'properties': {
@@ -573,7 +579,9 @@ def author_book_citations(article, dossier, records, directory, runner, feedback
                     'reason': {'type': 'string', 'minLength': 1}}}}}}
     result = runner.run('book_citation', {'candidate_claims': candidates,
         'current_book_records': records,
-        'superseded_book_evidence_ids': (feedback or {}).get('superseded_book_evidence_ids', []),
+        'superseded_book_evidence_ids': feedback.get('superseded_book_evidence_ids', []),
+        'correction_instructions': feedback.get('citation_correction_instructions', feedback.get('instruction', '')),
+        'citation_findings': feedback.get('citation_findings', []),
         'retained_evidence': dossier['evidence']}, schema, directory)
     Draft202012Validator(schema).validate(result)
     patched = copy.deepcopy(article)

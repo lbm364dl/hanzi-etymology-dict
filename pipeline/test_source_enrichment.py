@@ -195,6 +195,29 @@ class SourceEnrichmentTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'live coordinator'):
                 source_enrichment._continuation_inputs(previous, job, '木', SOURCE, snapshot)
 
+    def test_approved_continuation_requires_changed_source_inputs(self):
+        previous = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        snapshot = editorial.read(previous / 'source.json')
+        for name in ('article', 'dossier'):
+            editorial.write(previous / f'{name}.json', editorial.read(previous / f'source_{name}.json'))
+        current = source_enrichment._locator_hash(LocalSources().locate_sources(None, '木', None))
+        job = self.root / 'source-refresh'
+        job.mkdir()
+        with patch.object(source_enrichment, '_load_source_tools', return_value=LocalSources()):
+            for locator_hash in (current, None):
+                editorial.write(previous / 'status.json', {'status': 'approved', 'locator_hash': locator_hash})
+                with self.assertRaisesRegex(ValueError, 'unfinished terminal'):
+                    source_enrichment._continuation_inputs(previous, job, '木', SOURCE, snapshot)
+            approved = {'status': 'approved', 'locator_hash': 'prior-source-inputs'}
+            editorial.write(previous / 'status.json', approved)
+            source_enrichment._continuation_inputs(previous, job, '木', SOURCE, snapshot)
+        hold = editorial.read(previous / 'source-refresh-required.json')
+        self.assertEqual(hold['previous_state'], approved)
+        self.assertEqual(hold['current_locator_hash'], current)
+        self.assertEqual(editorial.read(previous / 'status.json')['status'], 'needs_source_refresh')
+        self.assertTrue(editorial.read(job / 'continuation.json')['requires_fresh_research_and_reviews'])
+        self.assertFalse((job / 'reviews.json').exists())
+
     def test_run_uses_source_locator_and_research_first_refine(self):
         job = source_enrichment.job_path(self.output, SOURCE["id"], "木")
         captured = {}
@@ -408,6 +431,7 @@ class SourceEnrichmentTests(unittest.TestCase):
                       'unsupported_records': []}
             def run(self, role, inputs, schema, directory):
                 self.schema = schema
+                self.inputs = inputs
                 return self.result
         runner = FixtureRunner()
         result = editorial.author_book_citations(ARTICLE_V2, DOSSIER, [], self.root / 'citation-author', runner)
@@ -421,6 +445,17 @@ class SourceEnrichmentTests(unittest.TestCase):
                          'unsupported_records': []}
         with self.assertRaises(editorial.ValidationError):
             editorial.author_book_citations(ARTICLE_V2, DOSSIER, [], self.root / 'bad-id', runner)
+        runner.result = {'edits': [], 'unsupported_records': []}
+        editorial.author_book_citations(ARTICLE_V2, DOSSIER, [], self.root / 'scoped', runner,
+            {'allowed_citation_edit_paths': ['summary/evidence_ids'],
+             'citation_correction_instructions': 'Remove the unsupported book citation here.',
+             'superseded_book_evidence_ids': [evidence_id]})
+        self.assertEqual(list(runner.inputs['candidate_claims']), ['summary/evidence_ids'])
+        self.assertEqual(runner.inputs['correction_instructions'], 'Remove the unsupported book citation here.')
+        self.assertEqual(runner.inputs['superseded_book_evidence_ids'], [evidence_id])
+        with self.assertRaisesRegex(ValueError, 'existing evidence_ids'):
+            editorial.author_book_citations(ARTICLE_V2, DOSSIER, [], self.root / 'bad-scope', runner,
+                                            {'allowed_citation_edit_paths': ['summary/text']})
             self.assertEqual(validate.call_count, 1)
             self.assertTrue(list((job / 'before-citation-integration').glob('*/reviews.json')))
             source_enrichment._integrate_uncited_book_records(

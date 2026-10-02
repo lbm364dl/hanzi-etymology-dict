@@ -602,6 +602,19 @@ def prepare(cohort, source, output, limit=3, root=ROOT):
     return rows
 
 
+def _hold_changed_source_inputs(job, state, located):
+    current_hash = _locator_hash(located)
+    if not state.get('locator_hash') or state['locator_hash'] == current_hash:
+        return state
+    editorial.write(Path(job) / 'source-refresh-required.json', {
+        'previous_state': state, 'current_locator_hash': current_hash,
+        'reason': 'Source inputs changed after research; prior exact reviews remain preserved, but fresh source research is required.'})
+    held = {**state, 'status': 'needs_source_refresh',
+            'source_refresh_required': 'source-refresh-required.json'}
+    editorial.write(Path(job) / 'status.json', held)
+    return held
+
+
 def _continuation_inputs(previous, job, character, source, snapshot):
     """Freeze an unfinished draft, preserving canonical anchors and requiring new gates."""
     previous, job = Path(previous).resolve(), Path(job).resolve()
@@ -613,16 +626,21 @@ def _continuation_inputs(previous, job, character, source, snapshot):
         except BlockingIOError:
             raise ValueError('Previous source job still has a live coordinator or agent')
         state = editorial.read(previous / 'status.json')
-        if state.get('status') not in ('failed', 'needs_revision', 'needs_source_refresh',
-                                       'needs_source_verification', 'needs_source_evidence',
-                                       'needs_source_research'):
-            raise ValueError('Continuation requires an unfinished terminal source job')
         provenance = editorial.read(previous / 'source.json')
         if (provenance.get('character') != character or provenance.get('source_id') != source['id']
                 or not _same_research_source(provenance['registry_source'], source)
                 or provenance.get('article_hash') != snapshot['article_hash']
                 or provenance.get('dossier_hash') != snapshot['dossier_hash']):
             raise ValueError('Continuation source or canonical baseline changed')
+        if state.get('status') == 'approved':
+            located = _load_source_tools().locate_sources(
+                {'schema_version': 1, 'sources': [source]}, character,
+                editorial.read(previous / 'source_dossier.json'))
+            state = _hold_changed_source_inputs(previous, state, located)
+        if state.get('status') not in ('failed', 'needs_revision', 'needs_source_refresh',
+                                       'needs_source_verification', 'needs_source_evidence',
+                                       'needs_source_research'):
+            raise ValueError('Continuation requires an unfinished terminal source job')
         article, dossier = editorial.read(previous / 'article.json'), editorial.read(previous / 'dossier.json')
         if article.get('character') != character or dossier.get('character') != character:
             raise ValueError('Continuation character identity differs')
@@ -889,6 +907,7 @@ def publish_job(job, source, root=ROOT):
     located = _load_source_tools().locate_sources({"schema_version": 1, "sources": [source]},
         saved["character"], editorial.read(job / "source_dossier.json"))
     if state.get("locator_hash") != _locator_hash(located):
+        _hold_changed_source_inputs(job, state, located)
         raise ValueError("Source inputs changed after research; new source research is required")
     audit_path = job / "source_audit.json"
     if not audit_path.is_file():

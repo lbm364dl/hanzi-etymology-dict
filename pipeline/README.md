@@ -72,6 +72,10 @@ and agents must have released their OS lock, and its canonical article/dossier b
 must still match. The harness validates and saves the draft with exact provenance hashes;
 it never copies review approvals. Current-source research and fresh independent reviews
 remain required. Keep the previous job directory as the record of earlier failures.
+An approved source job whose locator inputs changed is held as `needs_source_refresh`;
+its previous status is preserved in `source-refresh-required.json`. Such a job can
+also supply a continuation draft, requiring fresh research and reviews. Unchanged
+approved jobs cannot be continued through this route.
 
 Use `--research-context path/to/context.json` to hand new source leads and findings to
 the actual research agent. The JSON object is frozen in the job and passed as research
