@@ -174,6 +174,39 @@ def prepare_job(character, job, source, root=ROOT):
     return saved
 
 
+def recover_frozen_inputs(job, root=ROOT):
+    """Restore collided job inputs only from the exact unchanged canonical baseline."""
+    job = Path(job)
+    with (job / 'coordinator.lock').open('a') as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise ValueError('Cannot recover frozen inputs while a coordinator or agent is live')
+        saved = editorial.read(job / 'source.json')
+        article, dossier = _canonical(root, saved['character'])
+        if (editorial.digest(article) != saved['article_hash']
+                or editorial.digest(dossier) != saved['dossier_hash']):
+            raise ValueError('Canonical baseline changed; frozen inputs cannot be recovered')
+        previous = {name: editorial.read(job / name) for name in
+                    ('source_article.json', 'source_dossier.json')}
+        if (editorial.digest(previous['source_article.json']) == saved['article_hash']
+                and editorial.digest(previous['source_dossier.json']) == saved['dossier_hash']):
+            return {'status': 'unchanged'}
+        archive = job / 'frozen-input-recovery' / editorial.digest(previous)
+        archive.mkdir(parents=True, exist_ok=True)
+        for name in previous:
+            if not (archive / name).exists():
+                shutil.copy2(job / name, archive / name)
+        receipt = {'status': 'restored_exact_baseline', 'source_snapshot_hash': editorial.digest(saved),
+                   'article_hash': saved['article_hash'], 'dossier_hash': saved['dossier_hash'],
+                   'previous_inputs_hash': editorial.digest(previous),
+                   'archive': str(archive), 'creates_authorship_or_approval': False}
+        editorial.write(archive / 'recovery.json', receipt)
+        editorial.write(job / 'source_article.json', article)
+        editorial.write(job / 'source_dossier.json', dossier)
+        return receipt
+
+
 def feedback(source, located=None, source_context=None):
     value = {"reuse_existing_glyph_candidates": True,
         "source_enrichment": {"source": _research_source(source),
@@ -897,6 +930,7 @@ def publish_job(job, source, root=ROOT):
     if state.get("status") != "approved":
         raise ValueError("Only an approved source-enrichment job can be published")
     saved = editorial.read(job / "source.json")
+    prepare_job(saved['character'], job, source, root)
     if not _same_research_source(saved.get("registry_source", {}), source):
         raise ValueError("Job source provenance differs from requested source")
     if not _recorded_source_hash_matches(saved.get("registry_source_hash"), saved.get("registry_source"), source):

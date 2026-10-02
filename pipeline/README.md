@@ -76,6 +76,12 @@ An approved source job whose locator inputs changed is held as `needs_source_ref
 its previous status is preserved in `source-refresh-required.json`. Such a job can
 also supply a continuation draft, requiring fresh research and reviews. Unchanged
 approved jobs cannot be continued through this route.
+For old jobs affected by the editorial input collision, use
+`pipeline.source_enrichment.recover_frozen_inputs(job)` only after their
+coordinator and agent locks are released. It archives the collided files and
+restores the canonical baseline only when both original hashes still match;
+it never changes source identity, authored drafts or approvals. Publication
+also verifies the frozen snapshots and rejects a collision before writing.
 
 Use `--research-context path/to/context.json` to hand new source leads and findings to
 the actual research agent. The JSON object is frozen in the job and passed as research

@@ -147,6 +147,27 @@ class SourceEnrichmentTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "another source"):
             source_enrichment.prepare_job("木", job, {**SOURCE, "bibliography": "different edition"}, self.root)
 
+    def test_frozen_input_recovery_requires_exact_unchanged_baseline(self):
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        original = editorial.read(job / 'source_article.json')
+        collided = {**original, 'summary': {'text': 'A continuation draft', 'evidence_ids': []}}
+        editorial.write(job / 'source_article.json', collided)
+        snapshot = editorial.read(job / 'source.json')
+        with patch.object(source_enrichment, '_canonical', return_value=(collided, DOSSIER)):
+            with self.assertRaisesRegex(ValueError, 'baseline changed'):
+                source_enrichment.recover_frozen_inputs(job, self.root)
+        self.assertEqual(editorial.read(job / 'source_article.json'), collided)
+        with (job / 'coordinator.lock').open('a') as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            with self.assertRaisesRegex(ValueError, 'agent is live'):
+                source_enrichment.recover_frozen_inputs(job, self.root)
+        receipt = source_enrichment.recover_frozen_inputs(job, self.root)
+        self.assertEqual(editorial.read(Path(receipt['archive']) / 'source_article.json'), collided)
+        self.assertEqual(editorial.read(job / 'source_article.json'), original)
+        self.assertEqual(editorial.read(job / 'source.json'), snapshot)
+        self.assertFalse(receipt['creates_authorship_or_approval'])
+        self.assertEqual(source_enrichment.recover_frozen_inputs(job, self.root), {'status': 'unchanged'})
+
     def test_cohort_selection_is_bounded_and_workers_are_capped(self):
         cohort = {"characters": ["木", "水", "火", "土"]}
         # Only 木 is canonical in the fixture; other entries fail preparation independently.
@@ -310,6 +331,12 @@ class SourceEnrichmentTests(unittest.TestCase):
             resumed = source_enrichment.run({"characters": ["木"]}, SOURCE, self.output,
                                             FakeRunner(), root=self.root)
             self.assertEqual(resumed[0]["status"], "approved")
+        frozen = editorial.read(job / 'source_article.json')
+        editorial.write(job / 'source_article.json', {**frozen, 'summary': {'text': 'Overwritten draft'}})
+        with patch.object(source_enrichment, '_load_source_tools', return_value=LocalSources()):
+            with self.assertRaisesRegex(ValueError, 'snapshot hash mismatch'):
+                source_enrichment.publish_job(job, SOURCE, self.root)
+        self.assertEqual(source_enrichment._canonical(self.root, '木')[0], frozen)
 
     def test_published_completion_requires_source_job_hashes_and_canonical_match(self):
         job = source_enrichment.job_path(self.output, SOURCE["id"], "木")
