@@ -336,6 +336,10 @@ both uses, and whether the original object's name/pronunciation is actually reco
 A reconstruction of the pronoun alone does not establish the name of a depicted weapon/tool.
 Record that limit explicitly if the proposed sound match cannot be independently established.
 Distinguish a whole graph borrowed for another word from a sound component within a graph.
+Preserve the direction of graph borrowing: distinguish the graph proposed to be original,
+the word it first represented, the later word written with it, and any later differentiated
+graph. A statement that one character was another's original graph does not establish the
+reverse chronology. Keep attributed proposals distinct from attested uses.
 For a sound component, uncertainty about its earliest depicted object or original referent does
 not by itself invalidate independently supported readings or a phonetic role in a later compound.
 Keep these questions separate; require the original object's name only when the actual borrowing
@@ -438,6 +442,8 @@ was reused to write a different word because the words sounded alike or similar,
 that word. Identify both uses and show a supported sound comparison if available. If the old
 object-name or sound match is unknown, say that briefly and qualify the borrowing account;
 do not assign the pronoun's reconstructed reading to the depicted object without evidence.
+Maintain the source's borrowing direction in every short summary and learner account;
+compression must not reverse the original graph and its later differentiated spelling.
 The bare label phonetic loan is insufficient. Source specifics belong
 in citations; the main article should read as a self-contained explanation.
 For phonosemantic formations identify a meaning contribution (semantic or pictorial) and a
