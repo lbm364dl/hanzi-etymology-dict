@@ -50,6 +50,11 @@ The supplied source bibliography and corpus are research leads for this characte
 pre-verified evidence. Search the supplied corpus and inspect all relevant records. Confirm
 the actual headword, passage, page continuation, component identity and any cited rare glyph
 against the source scan where available. Distinguish provisional OCR from verified transcription.
+Before citing a crop as verification, confirm that the suspect printed occurrence and
+its adjacent anchor are actually inside the crop. A correct pixel hash verifies the
+image bytes, not coverage of the occurrence. A missing or clipped target remains unresolved
+until the original source bounds are corrected. Derive Unicode scalar labels from the
+literal string with codepoint tooling rather than recalling hexadecimal values.
 Do not repair or normalize questionable OCR by inference. For each unresolved scan or OCR issue,
     add a research gap beginning exactly `[SCAN VERIFICATION REQUIRED]` or
 `[OCR CORRECTION REQUIRED]`, followed by the exact
