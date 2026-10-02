@@ -635,7 +635,7 @@ class EditorialTests(unittest.TestCase):
                     assert result["limitations"][0]["evidence_ids"][0].startswith("X-")
                     if self.tamper:
                         result["items"] = [{**{k: "fixture" for k in
-                            ("id", "caption", "alt", "selection_reason")}, "evidence_ids": ["source:1"]}]
+                            ("id", "caption", "alt", "selection_reason", "period")}, "evidence_ids": ["source:1"]}]
                     return result
                 raise AssertionError(role)
         with tempfile.TemporaryDirectory() as root:
@@ -802,7 +802,7 @@ class EditorialTests(unittest.TestCase):
                 if role == "glyph_visual":
                     items = inputs["dossier"]["glyph_research"]["historical_glyphs"]["items"]
                     return {"items": [{key: item[key] for key in
-                        ("id", "caption", "alt", "selection_reason", "evidence_ids")} for item in items],
+                        ("id", "caption", "alt", "selection_reason", "evidence_ids", "period")} for item in items],
                         "limitations": []}
                 raise AssertionError(role)
 
@@ -1435,7 +1435,7 @@ class EditorialTests(unittest.TestCase):
             def run(self, role, inputs, schema, directory):
                 assert inputs["dossier"] == dossier
                 self.seen.append((copy.deepcopy(inputs), Path(directory)))
-                item = {k: candidate[k] for k in ("id", "caption", "alt", "selection_reason", "evidence_ids")}
+                item = {k: candidate[k] for k in ("id", "caption", "alt", "selection_reason", "evidence_ids", "period")}
                 if len(self.seen) == 1 or self.persistent:
                     item["id"] = "obsolete_candidate"
                 else:

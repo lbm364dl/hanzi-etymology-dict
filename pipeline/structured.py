@@ -204,6 +204,7 @@ GLYPH_VISUAL_SCHEMA = obj({"items": array(obj({key: GLYPH["properties"][key]
     for key in ("id", "caption", "alt", "selection_reason", "evidence_ids")}), maxItems=6),
     "limitations": array(SECTION)})
 GLYPH_VISUAL_SCHEMA["properties"]["items"]["items"]["properties"]["period"] = TEXT
+GLYPH_VISUAL_SCHEMA["properties"]["items"]["items"]["required"].append("period")
 NODE = obj({"kind": {"enum": ["character", "component", "sense"]}, "id": TEXT})
 RELATIONSHIP = obj({"id": TEXT, "subject": NODE, "object": NODE,
     "predicate": {"enum": ["semantic_component_of", "phonetic_component_of", "pictorial_component_of",
