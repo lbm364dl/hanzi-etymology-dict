@@ -877,6 +877,24 @@ class EditorialTests(unittest.TestCase):
                     with self.assertRaises(ValueError):
                         validate_published(entry)
 
+    def test_learner_requires_current_components_with_historical_cards_optional(self):
+        from pipeline.structured import validate_learner
+        from pipeline.editorial import validate_sections
+        article = copy.deepcopy(ARTICLE_V2)
+        historical = copy.deepcopy(article['components'][0])
+        historical['scope_character'] = '林'
+        article['components'].append(historical)
+        validate_learner(article, DOSSIER, validate_sections)
+        card = {**copy.deepcopy(article['learner']['components'][0]), 'component_index': 1}
+        article['learner']['components'].append(card)
+        validate_learner(article, DOSSIER, validate_sections)
+        article['learner']['components'] = [card]
+        with self.assertRaisesRegex(ValueError, 'current-form component'):
+            validate_learner(article, DOSSIER, validate_sections)
+        article['learner']['components'] = [card, card]
+        with self.assertRaisesRegex(ValueError, 'current-form component'):
+            validate_learner(article, DOSSIER, validate_sections)
+
     def test_add_learner_freezes_detail_and_needs_both_new_passes(self):
         class LearnerRunner:
             model = "fake"

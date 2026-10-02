@@ -155,7 +155,9 @@ each component explanation of 25 words or fewer, and an optional takeaway of 35 
 overview up to 45 words, component paragraph up to 30, or takeaway up to 40 when needed for
 clarity; these are the hard validation limits. Do not request revision solely for exceeding the
 editorial targets within those margins. Give one
-learner component card per detailed component using its zero-based component_index. Explain
+learner component card per current-form detailed component using its zero-based component_index.
+Historical components scoped to a different graph need no learner card; include one only
+when essential to the learner explanation, keeping full historical analysis in the expert account. Explain
 what that component contributes in plain language; roles and pronunciation comparisons already
 live in the canonical component data and will be displayed beside this text. Do not duplicate
 sound arrays or invent phonetic explanations. For a non-obvious sound match, briefly explain
@@ -401,14 +403,11 @@ def validate_learner(article, dossier, validate_sections):
     validate_reader_prose(sections)
     indices = [c["component_index"] for c in learner["components"]]
     all_indices = set(range(len(article["components"])))
-    if article.get("language") == "ja":
-        required = {i for i, component in enumerate(article["components"])
-                    if component_scope(component, article) == article["character"]}
-        if (len(indices) != len(set(indices)) or not set(indices) <= all_indices
-                or not required <= set(indices)):
-            raise ValueError("Japanese learner cards must cover each current-form component exactly once; historical cards are optional")
-    elif len(indices) != len(set(indices)) or set(indices) != all_indices:
-        raise ValueError("Learner cards must cover each detailed component exactly once")
+    required = {i for i, component in enumerate(article["components"])
+                if component_scope(component, article) == article["character"]}
+    if (len(indices) != len(set(indices)) or not set(indices) <= all_indices
+            or not required <= set(indices)):
+        raise ValueError("Learner cards must cover each current-form component exactly once; historical cards are optional")
     # Allow a small margin around editorial targets; one extra word is not a failed explanation.
     limits = [(learner["overview"], 45), *[(c, 30) for c in learner["components"]]]
     if learner["takeaway"] is not None:
@@ -726,7 +725,8 @@ Read components, summary, and learner cards together; a supported whole-tree des
 not need trunk/branches/roots repeated in every field. Require changes for incorrect or misleading
 claims, not merely because the same accurate description could be repeated elsewhere.
 Before claiming a learner card has no detailed component, count the actual components array and
-match its zero-based component_index; the validator already enforces exact coverage. Do not infer
+match its zero-based component_index; the validator enforces current-form coverage, with
+historically scoped cards optional. Do not infer
 a missing record from an abbreviated review excerpt or a prior revision's different array.
 The role array lists the supported roles across the explicitly described analyses; it cannot
 encode prose or certainty values. The cited component edges carry per-role certainty and the

@@ -465,7 +465,7 @@ assets while researching the new text evidence; omit the flag if the finding con
 
 New writer, revision and copy-editor outputs must include `learner`, independently cited and
 reviewed against the detailed account. Its `overview` is a cited paragraph of at most 40 words;
-`components` contains one cited explanation (at most 25 words) per detailed component, linked by
+`components` contains one cited explanation (at most 25 words) per current-form detailed component, linked by
 zero-based `component_index`; `takeaway` is a cited paragraph of at most 35 words or `null` when
 no essential present-meaning or borrowing caveat is needed. Existing component roles, forms and
 sound comparisons remain canonical; the learner layer does not duplicate pronunciation data.
