@@ -431,6 +431,9 @@ A dated example establishes an attested use, not automatically the earliest atte
 original meaning. Use earliest_attested only when the cited evidence establishes that priority;
 otherwise qualify the period and retain the appropriate historical or current status. Current
 senses require current-use evidence even when the same meaning also has an ancient example.
+The first attestation of a graph does not establish the first attestation of a particular
+sense. Verify the meaning in its attested context before transferring graph chronology to
+a sense record, and qualify any unresolved interpretation separately.
 A consulted present-day authoritative dictionary entry can support a current listed sense
 in its identified language, unless the entry labels that sense obsolete or otherwise limits
 its usage. Do not demand a separate new physical attestation for an ordinary dictionary sense.

@@ -11,6 +11,10 @@ support current listed senses in their identified language; historical does not
 mean extinct; current uses can have separately qualified ancient examples; imported
 multilingual glosses need language-specific verification. No historical-to-current
 semantic bridge is invented by a status label.
+The 水 smoke further exposed transfer of a graph's earliest appearance to a
+particular river/water sense. Guidance now explicitly requires meaning-context
+evidence before applying graph chronology to a sense record. The source's
+proposed original meaning and its actual attested contexts remain distinct.
 
 Source jobs pass the article/dossier/cohort target language (default Chinese for
 legacy HSK source jobs) to research/authorship and advisory review packets. An
