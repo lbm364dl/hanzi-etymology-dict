@@ -8,6 +8,26 @@ from pipeline import editorial
 
 
 class IssueTests(unittest.TestCase):
+    def test_paginated_hierarchy_and_unchanged_metadata_need_no_mutation(self):
+        finding = dict(key='book:ocr', kind='ocr', title='OCR', details='Exact occurrence.', verification='Scan check.')
+        calls = []
+        def invoke(*args):
+            calls.append(args)
+            if args[:2] == ('issue', 'list'):
+                return json.dumps([dict(number=42, url='https://github.com/owner/repo/issues/42',
+                    body=body(finding), state='OPEN', labels=[{'name':'scope:hsk1'}, {'name':'kind:ocr'}],
+                    milestone={'title':'Smoke', 'number':1})])
+            if args[:2] == ('label', 'list'):
+                return '[{"name":"scope:hsk1"},{"name":"kind:ocr"}]'
+            if args[-1].endswith('/sub_issues'):
+                self.assertIn('--paginate', args)
+                return '[{"number":2}]\n[{"number":42}]'
+            self.fail('Unexpected mutation or parent lookup: ' + repr(args))
+        with tempfile.TemporaryDirectory() as temp:
+            receipts = sync([finding], 'owner/repo', Path(temp)/'receipts.json', invoke,
+                            parent_issue=1, milestone='Smoke', labels=['scope:hsk1'])
+        self.assertEqual(receipts[0]['number'], 42)
+
     def test_active_finding_reopens_closed_issue_but_archive_sync_does_not(self):
         finding = dict(key='book:claim', kind='factual', title='Claim',
                        details='New verification failed.', verification='Fresh reviews.')

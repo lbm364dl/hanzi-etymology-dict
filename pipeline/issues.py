@@ -118,6 +118,20 @@ def body(finding):
     return text
 
 
+def _paginated_items(raw):
+    """gh api --paginate emits consecutive JSON arrays on older CLI versions."""
+    items = []
+    decoder = json.JSONDecoder()
+    while raw.strip():
+        raw = raw.lstrip()
+        page, end = decoder.raw_decode(raw)
+        if not isinstance(page, list):
+            raise ValueError('Expected a GitHub list response')
+        items.extend(page)
+        raw = raw[end:]
+    return items
+
+
 def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, milestone=None, labels=(), parent_by_kind=None,
          active_findings=False):
     """Create missing issues; preserve human discussion and never close by inference."""
@@ -129,10 +143,10 @@ def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, miles
     if len({finding['key'] for finding in findings}) != len(findings):
         raise ValueError('Duplicate finding keys')
     existing = json.loads(invoke('issue', 'list', '--repo', repository, '--state', 'all',
-                                 '--limit', '1000', '--json', 'number,url,body,state'))
+                                 '--limit', '1000', '--json', 'number,url,body,state,labels,milestone'))
     parents = set((parent_by_kind or {}).values()) | ({parent_issue} if parent_issue is not None else set())
-    child_numbers = {parent: {item['number'] for item in json.loads(
-        invoke('api', f'repos/{repository}/issues/{parent}/sub_issues'))} for parent in parents}
+    child_numbers = {parent: {item['number'] for item in _paginated_items(
+        invoke('api', '--paginate', f'repos/{repository}/issues/{parent}/sub_issues'))} for parent in parents}
     if labels or parent_issue is not None:
         expected = set(labels) | {'kind:' + finding['kind'] for finding in findings}
         present = {item['name'] for item in json.loads(invoke('label', 'list', '--repo', repository,
@@ -175,11 +189,16 @@ def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, miles
             created = True
         if labels or parent_issue is not None or milestone:
             args = ['issue', 'edit', str(issue['number']), '--repo', repository]
-            for label in [*labels, 'kind:' + finding['kind']]:
+            present_labels = {item['name'] for item in issue.get('labels', [])}
+            for label in sorted(set([*labels, 'kind:' + finding['kind']]) - present_labels):
                 args.extend(['--add-label', label])
-            if milestone and issue['number'] != parent_issue:
+            current_milestone = issue.get('milestone') or {}
+            same_milestone = str(milestone) in {
+                str(current_milestone.get('title')), str(current_milestone.get('number'))}
+            if milestone and issue['number'] != parent_issue and not same_milestone:
                 args.extend(['--milestone', str(milestone)])
-            invoke(*args)
+            if len(args) > 5:
+                invoke(*args)
         attach = target_parent is not None and issue['number'] != target_parent and issue['number'] not in child_numbers[target_parent]
         if attach and not created:
             try:
