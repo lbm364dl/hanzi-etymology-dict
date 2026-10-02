@@ -1,0 +1,109 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "大"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000922",
+          "pdf_page_1based": 922,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0922/source.png",
+          "source_sha256": "39d27aadd13bac4e3be35c52d356fd4eb8c105aa6c9ca7511f8aae4f17d53188",
+          "evidence_sha256": "dff78ec2caf0b2d4c2954f0246dbc1fef5a299e451073095fecc789c700fa77c",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "大 dà 定组、月部;定组、泰韵、徒盖切。"
+          ],
+          "excerpt": "”,并注:“大,各本作火,今正。此谓赤,非谓火也,赤之盛,故从二赤。”《诗·邶风·简兮》:“赫如渥赭,公言赐爵。”(舞师脸色红润如赭染,公爷赐酒一大杯)毛传:“赫,赤貌。”由赤色炽厚重引申为显著、显赫、显耀,又为大怒、盛怒,又为盛大、兴盛、炽盛;由显著、显耀引申为明亮。(郭小武 叶青)\n\n大 部\n\n大 dà 定组、月部;定组、泰韵、徒盖切。\ndài 定组、月部;定组、泰韵、徒盖切。\ntài 透组、泰韵、他盖切。\n\n[glyph:g023]⁵ [glyph:g025]⁷ [glyph:g026]⁸\n战国 战国 秦\n|\n[glyph:g019]¹ — [glyph:g020]² — [glyph:g021]³ — [glyph:g022]⁴ — [glyph:g024]⁶ — [glyph:g027]⁹ — [glyph:g028]¹⁰ — [glyph:g029]¹¹ — 大\n商 西周 春秋 春秋 战国 《说文》小篆 汉 汉 楷书\n\n1、2、6《甲金篆》707页。3、4、5、8、10、11《甲金篆》708页。7《类编》28页。9《说文》213页。\n象形字。像正面站立的人形。甲骨文、金文字形是一个两手伸开、两腿分立的正面人形,以后字形一脉相承。本义指大人,读作 dà。《说文》:“天大,地大,人亦大,故大象人形。”意为天大、地大,都无从比画作字,故像人形来表示大。如果加笔画特别强调“大”的头顶部位,则成为“天”字。“大”“天”“顶”“颠”原本是一组较\n\n907"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000923",
+          "pdf_page_1based": 923,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0923/source.png",
+          "source_sha256": "35cb09ade4691239baf7078e1f8829c80273ccebd6f30144cd752145b8a93c88",
+          "evidence_sha256": "876efe9ce6597e26e4b0164670ee1214b138eeef6cb2a55755708ba89c51cf61",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "大部\n\n近的同源字,而与“首”“頭”(头)则是一组较远的同源字。“大”字引申为大小之“大”,即在年龄、体积、面积、容量、数量、力量、声势、强度、程度、规模等方面超过一般或超过所比较的对象。甲骨文中有“大宗”、“大邑”、“大雨”、“大风”、“大吉”、“大出”、“大御”、“大室”、“大牢”等词语,金文中有“大命”、“大令”、“大政”、“大服”、“大福”、“大宗”、“大神”、“大钟”、“大夫”、“大父”、“大且(祖)”、“大兄”、“大师”、“大叔”、“大牢”、“大子”、“大室”、“大庙”、“大史”、“大保”、“大宰”、“小大猷”、“小大政”、“小大事”、“小大邦”等词语,这些“大”,一般读dà,但传统上也由有一些要读tài的,用同“太”,如“太牢”。又读作dài,用于“山大王”、“大夫(医生)”。(郭小武 叶青)\n\n奎 kuí 溪纽、支部;溪纽、齐韵、苦圭切。\n\n[glyph:g001] 西周 1\n[glyph:g002] 战国 2\n[glyph:g003] 秦 3\n[glyph:g004] 《说文》小篆 4\n[glyph:g005] 汉 5\n奎 楷书\n\n1、2、3、5《甲金篆》708页。4《说文》213页。\n\n形声字。从大,圭声。本义指两髀(bì,大腿)之间,即胯。《说文》:“奎,两髀之间。”段玉裁注:“奎与胯双声。奎宿十六星以像似得名。”《庄子·徐无鬼》:“濡需(苟安一时)者,豕虱是也;择疏鬣自以为广宫大囿;奎蹄曲隈(曲折隐蔽之处),乳间股脚,自以为安室利处。”二十八星宿之一,白虎七宿的第一宿,有星十六颗,因其形状似胯而命名为奎宿。古人因奎宿状亦似文字而认为它掌管文运和文章。(郭小武 叶青)\n\n夾 (夹) jiā 见纽、盍部;见纽、洽韵、古洽切。\njiá 见纽、盍部;见纽、帖韵、吉协切。\nxié 匣纽、盍部;匣纽、帖韵、檄颊切。\nxiá\ngā\n\n[glyph:g006] 商 1\n[glyph:g007] 西周 2\n[glyph:g008] 战国 3\n[glyph:g009] 秦 4\n[glyph:g010] 《说文》小篆 5\n[glyph:g011] 汉 6\n[glyph:g012] 汉 7\n[glyph:g013] 汉 8\n夾 楷书\n夹 楷书\n\n1《甲金篆》708页。2、3、4、6、7、8《甲金篆》709页。5《说文》213页。\n\n会意字。从大,从二人,从左右二人搀扶中间一人会意。古今字形均作“大”下两“人”。现代汉字简化时,据汉代草书将“夾”简化“夹”。本义为挟持、从左右相持,读作jiā。《说文》:“夾,持也。”《仪礼·既夕礼》:“荐马缨三就,入门,北面,交辔(pèi,缰绳),圉人(养马之人)夹牵之。”《墨子·杂守》:“守大门者二人,夹门而立。”由挟持引申为扶持、辅佐。也指从两个相对的方向向内用力,使物体固定不动,引申指夹东西的器具。由从左右扶持义引申为在两边的、左右相对的、掺杂等义。“夾”由二人挟持一人引申指里外两层,如“夹衣”、“夹裤”,这一意义后又作从“衣”、“夹”声的“裌”及从“衣”、“合”声的“袷”,读作jiá,现代汉字整理时,已将“裌”“袷”二字作为“夹”的异体字淘汰。又读作xié,用作“挟”的通假字;又读作xiá,用作“狹”的通假字;还读作gā,用于“夹肢窝”一词。(郭小武 叶青)\n\n奄 yǎn 影纽、谈部;影纽、琰韵、衣俭切。\nyān 影纽、盐韵、衣炎切。\n\n[glyph:g014] 西周 1\n[glyph:g015] 西周 2\n[glyph:g016] 秦 3\n[glyph:g017] 《说文》小篆 4\n[glyph:g018] 三国魏 5\n奄 楷书\n\n1、2、3、5《甲金篆》709页。4《说文》213页。\n\n会意字。从大,从申。本义为覆盖,读为yǎn。《说文》:“奄,覆也。大有余也。……从大,从申;申,展也。”意思是上面展开的大东西覆盖下面的物品。《淮南子·修务》:“万物至众,而知(智)不足以奄之。”高诱注:“奄,盖之也。”由覆盖引申为包括、拥有、占有、囊括等义。假借作副词,表示忽然、骤然、急速的意思。“奄”又读为yān,古代指被阉割的男子,这一意义后世作“阉”。金文字作上“[glyph:g019]”(闪电形,与“电”本为同一个字)、下“大”;秦简写成上“大”、下“申”;小篆与秦简结构位置一样,“申”的直笔变曲笔"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0922/source.png",
+      "pdf_page": 922,
+      "source_pixel_sha256": "39d27aadd13bac4e3be35c52d356fd4eb8c105aa6c9ca7511f8aae4f17d53188"
+    }
+  ],
+  "additional_research_context": {
+    "review_hypotheses": {
+      "factual": {
+        "verdict": "revise",
+        "findings": [
+          "`meaning_history.senses[1].status` is `historical`, but the cited bronze inscription is presented as an attested use of 大 meaning “big,” opposite 小, with no claim that this is merely a historical dictionary gloss. Set the sense status to `earliest_attested` if the source identifies this as the earliest documented corpus use, or retain `historical` and remove the unsupported earliest-attestation implication from `period`; the dossier does not establish a precise date or that this sense preceded every other early sense. Update the generated `has_sense` edge to match any status or citation change."
+        ]
+      },
+      "readability": {
+        "verdict": "revise",
+        "findings": [
+          "In `historical_glyphs.items[1].period`, “Early Western Zhou specimen is cited as a source” is misleading: the glyph is a modern redraw in Western Zhou style, and its cited source-image record identifies an early Western Zhou specimen without verifying that the redraw depicts that specimen. Replace this with wording that identifies the style and says it is a modern redraw; retain specimen provenance separately and qualify it as unverified. The attached image supports the caption’s broad description of a frontal figure, not a claim that this is the cited specimen. Evidence: X-613b3433916c7ff385f3, X-09e9d0f85820a5b2817a."
+        ]
+      }
+    },
+    "task": "Verify required factual/readability changes against exact source evidence. Distinguish older attestation from demonstrated priority, and modern script-style redraw from a verified depiction of a specific specimen. Preserve competing adult-figure and big-meaning proposals with exact evidence and qualified developments. Do not assume every prior finding is correct."
+  },
+  "additional_context_policy": "These source leads and prior findings are research tasks, not preverified dossier evidence. Consult the referenced sources directly, check exact graph identity and scope, and add cited evidence for useful claims before authorship. Recheck reviewer hypotheses; modern structure does not establish historical roles. Record inaccessible sources as gaps.",
+  "unfinished_draft_provenance": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/second-expansion/ziyuan-2012/5927",
+    "article_hash": "7e7887b9eeda90aca0e0374c2d175c13c7ab0f3b63cbeab85e2c99a83b97249f",
+    "dossier_hash": "3264da5a4c8c7d2fd0700c77911e6f48625cc310ebe021e95c55d949a50a40d8",
+    "previous_state_hash": "d1e63713b9c1cadd420cd88c621a11fa0cae687bccff27d6a67797d06f8b944c",
+    "canonical_article_hash": "6aef798726771913dece18ebcfe69c6ea6380bc616db99c73c2e402530e2e98e",
+    "canonical_dossier_hash": "bfc43c29f55a237ea32039dad8bb233ded80b6afe5da992284c4cb4ebf1f1033",
+    "requires_fresh_research_and_reviews": true,
+    "prior_review_proposals_hash": "978134f96e193e4fe2bd0fc7db41044465163bbc1524fb2fbc69a26b473a9bdb"
+  },
+  "prior_review_proposals": [
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `historical_glyphs.items[1].period`, replace “Early Western Zhou specimen is cited as a source” with wording that identifies the item as a modern redraw in Western Zhou bronze-script style. The field currently implies the displayed glyph is a particular early Western Zhou specimen, but the cited image provenance identifies an early Western Zhou source image without establishing that the redraw depicts that specimen (X-613b3433916c7ff385f3, X-09e9d0f85820a5b2817a)."
+      ],
+      "article_hash": "7e7887b9eeda90aca0e0374c2d175c13c7ab0f3b63cbeab85e2c99a83b97249f",
+      "dossier_hash": "3264da5a4c8c7d2fd0700c77911e6f48625cc310ebe021e95c55d949a50a40d8",
+      "reviewer": "gpt-6-luna:low:readability:01a0fe28-1dbe-7a83-b776-7b8a524d6a4d"
+    }
+  ],
+  "continuation_policy": "This is an unapproved draft, not reusable approval. Recheck source-dependent claims against current source scans/corpus. Prior revise findings are hypotheses to recheck, including possible source identity errors; do not obey them merely because a previous verifier repeated them. Preserve prior supported work and obtain fresh factual/readability reviews.",
+  "require_source_specific_page_evidence": true
+}
