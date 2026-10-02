@@ -1,0 +1,5 @@
+# 上 book enrichment (2026-10-02)
+
+The source job published with article hash `d494b9a259e4a23969351aad7fecd50b5ce2a6a1270c2d88264af7e6cb7bcd74` and dossier hash `0c15bcc75780a621710d6f4943fb9afab1c326e68f9c3f0142cf763fd867499c`. Authored prose is unchanged; the dossier now retains newly inspected book evidence. Independent factual and readability agents approved the exact candidate pair. Genuine research and review stage metadata and products are retained under `content/editorial_runs/4E0A/d494b9a259e4a23969351aad7fecd50b5ce2a6a1270c2d88264af7e6cb7bcd74/`. The previous receipt set is preserved under `content/review_history/editorial_runs/4E0A/`.
+
+The source audit cites inspected pages and has no pending tagged OCR findings. A primary-glyph provenance clarification remains open as issue #49: reading the book's reference leads does not mean its underlying inscription specimens have been verified. This publication is one entry's source enrichment, not certification of all 300 HSK1 entries.

@@ -2,711 +2,207 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "character",
-    "summary",
-    "formation",
-    "components",
-    "history",
-    "uncertainties",
-    "schema_version",
-    "meaning_history",
-    "relationships",
-    "learner"
+    "edits"
   ],
   "properties": {
-    "character": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 1
-    },
-    "summary": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "text",
-        "evidence_ids"
-      ],
-      "properties": {
-        "text": {
-          "type": "string",
-          "minLength": 1
-        },
-        "evidence_ids": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "formation": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "type",
-        "text",
-        "evidence_ids"
-      ],
-      "properties": {
-        "text": {
-          "type": "string",
-          "minLength": 1
-        },
-        "evidence_ids": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "string"
-          }
-        },
-        "type": {
-          "enum": [
-            "pictographic",
-            "indicative",
-            "semantic",
-            "phonosemantic",
-            "phonetic_loan",
-            "mixed",
-            "derived",
-            "disputed",
-            "unknown"
-          ]
-        }
-      }
-    },
-    "components": {
+    "edits": {
       "type": "array",
-      "minItems": 0,
       "items": {
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "form",
-          "origin_form",
-          "roles",
-          "form_status",
-          "text",
-          "evidence_ids",
-          "sound",
-          "origin_relation",
-          "scope_character",
-          "sound_limitation"
+          "path",
+          "value_json"
         ],
         "properties": {
-          "text": {
+          "path": {
             "type": "string",
-            "minLength": 1
-          },
-          "evidence_ids": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "string"
-            }
-          },
-          "form": {
-            "type": "string",
-            "minLength": 1
-          },
-          "origin_form": {
-            "type": "string"
-          },
-          "origin_relation": {
             "enum": [
-              "none",
-              "full_form",
-              "earlier_form",
-              "variant_form",
-              "simplified_form",
-              "uncertain"
+              "summary",
+              "summary/text",
+              "summary/evidence_ids",
+              "summary/evidence_ids/0",
+              "summary/evidence_ids/1",
+              "summary/evidence_ids/2",
+              "summary/evidence_ids/3",
+              "summary/evidence_ids/4",
+              "formation",
+              "formation/text",
+              "formation/evidence_ids",
+              "formation/evidence_ids/0",
+              "formation/evidence_ids/1",
+              "formation/evidence_ids/2",
+              "formation/evidence_ids/3",
+              "formation/type",
+              "components",
+              "history",
+              "history/0",
+              "history/0/text",
+              "history/0/evidence_ids",
+              "history/0/evidence_ids/0",
+              "history/0/evidence_ids/1",
+              "history/0/evidence_ids/2",
+              "history/0/evidence_ids/3",
+              "history/0/evidence_ids/4",
+              "history/0/evidence_ids/5",
+              "history/0/evidence_ids/6",
+              "history/0/evidence_ids/7",
+              "history/0/evidence_ids/8",
+              "history/0/evidence_ids/9",
+              "history/1",
+              "history/1/text",
+              "history/1/evidence_ids",
+              "history/1/evidence_ids/0",
+              "history/1/evidence_ids/1",
+              "history/1/evidence_ids/2",
+              "uncertainties",
+              "uncertainties/0",
+              "uncertainties/0/text",
+              "uncertainties/0/evidence_ids",
+              "uncertainties/0/evidence_ids/0",
+              "uncertainties/0/evidence_ids/1",
+              "uncertainties/0/evidence_ids/2",
+              "uncertainties/0/evidence_ids/3",
+              "uncertainties/0/evidence_ids/4",
+              "uncertainties/0/evidence_ids/5",
+              "uncertainties/0/evidence_ids/6",
+              "uncertainties/0/evidence_ids/7",
+              "uncertainties/1",
+              "uncertainties/1/text",
+              "uncertainties/1/evidence_ids",
+              "uncertainties/1/evidence_ids/0",
+              "uncertainties/1/evidence_ids/1",
+              "uncertainties/1/evidence_ids/2",
+              "uncertainties/1/evidence_ids/3",
+              "uncertainties/1/evidence_ids/4",
+              "uncertainties/1/evidence_ids/5",
+              "uncertainties/1/evidence_ids/6",
+              "uncertainties/1/evidence_ids/7",
+              "uncertainties/1/evidence_ids/8",
+              "uncertainties/1/evidence_ids/9",
+              "uncertainties/2",
+              "uncertainties/2/text",
+              "uncertainties/2/evidence_ids",
+              "uncertainties/2/evidence_ids/0",
+              "uncertainties/2/evidence_ids/1",
+              "uncertainties/2/evidence_ids/2",
+              "uncertainties/2/evidence_ids/3",
+              "uncertainties/2/evidence_ids/4",
+              "schema_version",
+              "meaning_history",
+              "meaning_history/senses",
+              "meaning_history/senses/0",
+              "meaning_history/senses/0/id",
+              "meaning_history/senses/0/gloss",
+              "meaning_history/senses/0/period",
+              "meaning_history/senses/0/certainty",
+              "meaning_history/senses/0/status",
+              "meaning_history/senses/0/text",
+              "meaning_history/senses/0/evidence_ids",
+              "meaning_history/senses/0/evidence_ids/0",
+              "meaning_history/senses/0/evidence_ids/1",
+              "meaning_history/senses/0/evidence_ids/2",
+              "meaning_history/senses/0/evidence_ids/3",
+              "meaning_history/senses/1",
+              "meaning_history/senses/1/id",
+              "meaning_history/senses/1/gloss",
+              "meaning_history/senses/1/period",
+              "meaning_history/senses/1/certainty",
+              "meaning_history/senses/1/status",
+              "meaning_history/senses/1/text",
+              "meaning_history/senses/1/evidence_ids",
+              "meaning_history/senses/1/evidence_ids/0",
+              "meaning_history/senses/1/evidence_ids/1",
+              "meaning_history/senses/2",
+              "meaning_history/senses/2/id",
+              "meaning_history/senses/2/gloss",
+              "meaning_history/senses/2/period",
+              "meaning_history/senses/2/certainty",
+              "meaning_history/senses/2/status",
+              "meaning_history/senses/2/text",
+              "meaning_history/senses/2/evidence_ids",
+              "meaning_history/senses/2/evidence_ids/0",
+              "meaning_history/senses/2/evidence_ids/1",
+              "meaning_history/developments",
+              "meaning_history/limitations",
+              "meaning_history/limitations/0",
+              "meaning_history/limitations/0/text",
+              "meaning_history/limitations/0/evidence_ids",
+              "meaning_history/limitations/0/evidence_ids/0",
+              "meaning_history/limitations/0/evidence_ids/1",
+              "meaning_history/limitations/0/evidence_ids/2",
+              "meaning_history/limitations/1",
+              "meaning_history/limitations/1/text",
+              "meaning_history/limitations/1/evidence_ids",
+              "meaning_history/limitations/1/evidence_ids/0",
+              "meaning_history/limitations/1/evidence_ids/1",
+              "meaning_history/limitations/1/evidence_ids/2",
+              "meaning_history/limitations/1/evidence_ids/3",
+              "relationships",
+              "relationships/0",
+              "relationships/0/id",
+              "relationships/0/subject",
+              "relationships/0/subject/kind",
+              "relationships/0/subject/id",
+              "relationships/0/object",
+              "relationships/0/object/kind",
+              "relationships/0/object/id",
+              "relationships/0/predicate",
+              "relationships/0/context_character",
+              "relationships/0/certainty",
+              "relationships/0/text",
+              "relationships/0/evidence_ids",
+              "relationships/0/evidence_ids/0",
+              "relationships/0/evidence_ids/1",
+              "relationships/0/evidence_ids/2",
+              "relationships/0/evidence_ids/3",
+              "relationships/1",
+              "relationships/1/id",
+              "relationships/1/subject",
+              "relationships/1/subject/kind",
+              "relationships/1/subject/id",
+              "relationships/1/object",
+              "relationships/1/object/kind",
+              "relationships/1/object/id",
+              "relationships/1/predicate",
+              "relationships/1/context_character",
+              "relationships/1/certainty",
+              "relationships/1/text",
+              "relationships/1/evidence_ids",
+              "relationships/1/evidence_ids/0",
+              "relationships/1/evidence_ids/1",
+              "relationships/2",
+              "relationships/2/id",
+              "relationships/2/subject",
+              "relationships/2/subject/kind",
+              "relationships/2/subject/id",
+              "relationships/2/object",
+              "relationships/2/object/kind",
+              "relationships/2/object/id",
+              "relationships/2/predicate",
+              "relationships/2/context_character",
+              "relationships/2/certainty",
+              "relationships/2/text",
+              "relationships/2/evidence_ids",
+              "relationships/2/evidence_ids/0",
+              "relationships/2/evidence_ids/1",
+              "learner",
+              "learner/overview",
+              "learner/overview/text",
+              "learner/overview/evidence_ids",
+              "learner/overview/evidence_ids/0",
+              "learner/overview/evidence_ids/1",
+              "learner/overview/evidence_ids/2",
+              "learner/overview/evidence_ids/3",
+              "learner/overview/evidence_ids/4",
+              "learner/components",
+              "learner/takeaway"
             ]
           },
-          "scope_character": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 1
-          },
-          "sound_limitation": {
-            "anyOf": [
-              {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "text",
-                  "evidence_ids"
-                ],
-                "properties": {
-                  "text": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "evidence_ids": {
-                    "type": "array",
-                    "minItems": 1,
-                    "items": {
-                      "type": "string",
-                      "minLength": 1
-                    }
-                  }
-                }
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "sound": {
-            "type": "array",
-            "minItems": 0,
-            "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "component_form",
-                "component_reading",
-                "character_reading",
-                "system",
-                "text",
-                "evidence_ids"
-              ],
-              "properties": {
-                "text": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "evidence_ids": {
-                  "type": "array",
-                  "minItems": 1,
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                "component_form": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "component_reading": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "character_reading": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "system": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          },
-          "roles": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "enum": [
-                "semantic",
-                "phonetic",
-                "pictorial",
-                "indicator",
-                "replacement",
-                "empty",
-                "unknown"
-              ]
-            }
-          },
-          "form_status": {
-            "enum": [
-              "preserved",
-              "variant",
-              "stylized",
-              "corruption",
-              "replacement",
-              "simplified",
-              "disputed",
-              "unknown"
-            ]
+          "value_json": {
+            "type": "string"
           }
         }
-      }
-    },
-    "history": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "text",
-          "evidence_ids"
-        ],
-        "properties": {
-          "text": {
-            "type": "string",
-            "minLength": 1
-          },
-          "evidence_ids": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    },
-    "uncertainties": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "text",
-          "evidence_ids"
-        ],
-        "properties": {
-          "text": {
-            "type": "string",
-            "minLength": 1
-          },
-          "evidence_ids": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    },
-    "schema_version": {
-      "type": "integer",
-      "const": 2
-    },
-    "meaning_history": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "senses",
-        "developments",
-        "limitations"
-      ],
-      "properties": {
-        "senses": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "id",
-              "gloss",
-              "period",
-              "certainty",
-              "status",
-              "text",
-              "evidence_ids"
-            ],
-            "properties": {
-              "id": {
-                "type": "string",
-                "minLength": 1
-              },
-              "gloss": {
-                "type": "string",
-                "minLength": 1
-              },
-              "period": {
-                "type": "string",
-                "minLength": 1
-              },
-              "certainty": {
-                "enum": [
-                  "established",
-                  "probable",
-                  "disputed"
-                ]
-              },
-              "status": {
-                "enum": [
-                  "earliest_attested",
-                  "historical",
-                  "current"
-                ]
-              },
-              "text": {
-                "type": "string",
-                "minLength": 1
-              },
-              "evidence_ids": {
-                "type": "array",
-                "minItems": 1,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          },
-          "minItems": 1
-        },
-        "developments": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "from_sense",
-              "to_sense",
-              "type",
-              "certainty",
-              "text",
-              "evidence_ids"
-            ],
-            "properties": {
-              "from_sense": {
-                "type": "string",
-                "minLength": 1
-              },
-              "to_sense": {
-                "type": "string",
-                "minLength": 1
-              },
-              "type": {
-                "enum": [
-                  "extension",
-                  "specialization",
-                  "metaphor",
-                  "metonymy",
-                  "phonetic_loan",
-                  "uncertain"
-                ]
-              },
-              "certainty": {
-                "enum": [
-                  "established",
-                  "probable",
-                  "disputed"
-                ]
-              },
-              "text": {
-                "type": "string",
-                "minLength": 1
-              },
-              "evidence_ids": {
-                "type": "array",
-                "minItems": 1,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          }
-        },
-        "limitations": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "text",
-              "evidence_ids"
-            ],
-            "properties": {
-              "text": {
-                "type": "string",
-                "minLength": 1
-              },
-              "evidence_ids": {
-                "type": "array",
-                "minItems": 1,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "learner": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "overview",
-        "components",
-        "takeaway"
-      ],
-      "properties": {
-        "overview": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "text",
-            "evidence_ids"
-          ],
-          "properties": {
-            "text": {
-              "type": "string",
-              "minLength": 1
-            },
-            "evidence_ids": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "type": "string",
-                "minLength": 1
-              }
-            }
-          }
-        },
-        "components": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "component_index",
-              "text",
-              "evidence_ids"
-            ],
-            "properties": {
-              "component_index": {
-                "type": "integer",
-                "minimum": 0
-              },
-              "text": {
-                "type": "string",
-                "minLength": 1
-              },
-              "evidence_ids": {
-                "type": "array",
-                "minItems": 1,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          },
-          "minItems": 0
-        },
-        "takeaway": {
-          "anyOf": [
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "text",
-                "evidence_ids"
-              ],
-              "properties": {
-                "text": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "evidence_ids": {
-                  "type": "array",
-                  "minItems": 1,
-                  "items": {
-                    "type": "string",
-                    "minLength": 1
-                  }
-                }
-              }
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      }
-    },
-    "relationships": {
-      "type": "array",
-      "minItems": 0,
-      "items": {
-        "anyOf": [
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "id",
-              "subject",
-              "object",
-              "predicate",
-              "context_character",
-              "certainty",
-              "text",
-              "evidence_ids"
-            ],
-            "properties": {
-              "id": {
-                "type": "string",
-                "minLength": 1
-              },
-              "subject": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "kind",
-                  "id"
-                ],
-                "properties": {
-                  "kind": {
-                    "type": "string",
-                    "const": "component"
-                  },
-                  "id": {
-                    "type": "string",
-                    "minLength": 1
-                  }
-                }
-              },
-              "object": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "kind",
-                  "id"
-                ],
-                "properties": {
-                  "kind": {
-                    "type": "string",
-                    "const": "character"
-                  },
-                  "id": {
-                    "type": "string",
-                    "minLength": 1
-                  }
-                }
-              },
-              "predicate": {
-                "enum": [
-                  "semantic_component_of",
-                  "phonetic_component_of",
-                  "pictorial_component_of",
-                  "indicator_component_of",
-                  "replacement_component_of",
-                  "empty_component_of"
-                ]
-              },
-              "context_character": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 1
-              },
-              "certainty": {
-                "enum": [
-                  "established",
-                  "probable",
-                  "disputed"
-                ]
-              },
-              "text": {
-                "type": "string",
-                "minLength": 1
-              },
-              "evidence_ids": {
-                "type": "array",
-                "minItems": 1,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "id",
-              "subject",
-              "object",
-              "predicate",
-              "context_character",
-              "certainty",
-              "text",
-              "evidence_ids"
-            ],
-            "properties": {
-              "id": {
-                "type": "string",
-                "minLength": 1
-              },
-              "subject": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "kind",
-                  "id"
-                ],
-                "properties": {
-                  "kind": {
-                    "type": "string",
-                    "const": "character"
-                  },
-                  "id": {
-                    "type": "string",
-                    "minLength": 1
-                  }
-                }
-              },
-              "object": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "kind",
-                  "id"
-                ],
-                "properties": {
-                  "kind": {
-                    "type": "string",
-                    "const": "character"
-                  },
-                  "id": {
-                    "type": "string",
-                    "minLength": 1
-                  }
-                }
-              },
-              "predicate": {
-                "enum": [
-                  "variant_of",
-                  "simplified_from",
-                  "derived_from",
-                  "phonetic_element_in"
-                ]
-              },
-              "context_character": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 1
-              },
-              "certainty": {
-                "enum": [
-                  "established",
-                  "probable",
-                  "disputed"
-                ]
-              },
-              "text": {
-                "type": "string",
-                "minLength": 1
-              },
-              "evidence_ids": {
-                "type": "array",
-                "minItems": 1,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            }
-          }
-        ]
       }
     }
   }

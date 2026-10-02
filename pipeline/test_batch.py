@@ -117,6 +117,16 @@ class BatchTests(unittest.TestCase):
             editorial.validate_research(research)
             retained = root / editorial.read(root / "content/provenance/6728.json")["retained_artifacts"]
             self.assertEqual(editorial.read(retained / "research/result.json"), RESEARCH)
+            prior_reviews = editorial.read(retained / "reviews.json")
+            editorial.write(job / "status.json", {"status": "approved"})
+            changed_reviews = [editorial.make_review(role, "pass", [], ARTICLE_V2, dossier,
+                               "fresh-" + role) for role in ("factual", "readability")]
+            editorial.write(job / "reviews.json", changed_reviews)
+            batch.publish_job(job, root)
+            archives = list((root / "content/review_history/editorial_runs/6728").glob("*/reviews.json"))
+            self.assertEqual(len(archives), 1)
+            self.assertEqual(editorial.read(archives[0]), prior_reviews)
+            self.assertEqual(editorial.read(retained / "reviews.json"), changed_reviews)
 
     def test_publication_can_retire_an_unreferenced_evidence_record(self):
         with tempfile.TemporaryDirectory() as temp:

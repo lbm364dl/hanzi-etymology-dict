@@ -1,6 +1,7 @@
 """Explicit, bounded, resumable per-character editorial cohorts."""
 from __future__ import annotations
 import argparse
+import hashlib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 import time
@@ -94,6 +95,13 @@ def publish_job(job, root=ROOT):
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(path, target)
     retained = content / "editorial_runs" / name[:-5] / editorial.digest(article)
+    # Unchanged prose may receive new research/reviews; preserve the previous receipt set.
+    if retained.exists():
+        manifest = {str(path.relative_to(retained)): hashlib.sha256(path.read_bytes()).hexdigest()
+                    for path in sorted(retained.rglob("*")) if path.is_file()}
+        prior = content / "review_history" / "editorial_runs" / name[:-5] / editorial.digest(manifest)
+        if not prior.exists():
+            shutil.copytree(retained, prior)
     # Keep exact model products/prompts/metadata; omit potentially large stdout/stderr logs.
     for path in job.rglob("*"):
         if path.is_file() and path.suffix in (".json", ".txt") and "attempts" not in path.relative_to(job).parts:
