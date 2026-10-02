@@ -53,8 +53,14 @@ against the source scan where available. Distinguish provisional OCR from verifi
 Do not repair or normalize questionable OCR by inference. For each unresolved scan or OCR issue,
     add a research gap beginning exactly `[SCAN VERIFICATION REQUIRED]` or
 `[OCR CORRECTION REQUIRED]`, followed by the exact
-suspect page/span and why it needs scan verification. Use other
-authoritative references to test the book's claims and preserve disagreements and precise
+suspect page/span and why it needs scan verification.
+If an earlier attempt could not identify a printed component, a later assertion that it was
+inspected does not by itself resolve the gap. Inspect a targeted original-resolution crop,
+record the distinguishing visible strokes and exact raw occurrence, and preserve competing
+identifications for an independent check. Keep proposed literal replacements tagged as
+`[OCR CORRECTION REQUIRED]` until a source-bound producer correction is actually verified;
+research must not claim that a corpus repair has occurred from its own proposed reading.
+Use other authoritative references to test the book's claims and preserve disagreements and precise
 uncertainty. Add only source-backed findings with page-specific provenance; retain all existing
 evidence unless a reviewed correction is necessary. Do not infer missing evidence from the
 existing article. Preserve the current historical glyph selection for this text-focused task.
