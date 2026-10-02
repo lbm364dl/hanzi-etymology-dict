@@ -1912,8 +1912,11 @@ def refine(article, dossier, directory, runner, max_revisions=3, feedback=None,
         state["base_article_hash"] = digest(base_article)
     if feedback is not None:
         write(directory / "source_feedback.json", feedback)
-    write(directory / "source_article.json", article)
-    write(directory / "source_dossier.json", dossier)
+    # An outer source-enrichment harness owns the immutable canonical snapshot.
+    # A continuation draft is a different input and must never replace it.
+    input_prefix = "refine_input" if (directory / "source.json").exists() else "source"
+    write(directory / f"{input_prefix}_article.json", article)
+    write(directory / f"{input_prefix}_dossier.json", dossier)
     write(directory / "dossier.json", dossier)
     write(directory / "status.json", state)
     try:

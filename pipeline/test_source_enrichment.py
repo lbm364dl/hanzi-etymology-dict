@@ -195,6 +195,19 @@ class SourceEnrichmentTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'live coordinator'):
                 source_enrichment._continuation_inputs(previous, job, '木', SOURCE, snapshot)
 
+    def test_refine_keeps_outer_source_snapshot_immutable(self):
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        article = editorial.read(job / 'source_article.json')
+        dossier = editorial.read(job / 'source_dossier.json')
+        draft = copy.deepcopy(article)
+        draft['summary']['text'] = 'A different continuation draft.'
+        with self.assertRaisesRegex(ValueError, 'nonnegative'):
+            editorial.refine(draft, dossier, job, object(), max_revisions=-1)
+        self.assertEqual(editorial.read(job / 'source_article.json'), article)
+        self.assertEqual(editorial.read(job / 'source_dossier.json'), dossier)
+        self.assertEqual(editorial.read(job / 'refine_input_article.json'), draft)
+        self.assertEqual(source_enrichment.prepare_job('木', job, SOURCE, self.root), self.snapshot)
+
     def test_approved_continuation_requires_changed_source_inputs(self):
         previous = source_enrichment.job_path(self.output, SOURCE['id'], '木')
         snapshot = editorial.read(previous / 'source.json')
