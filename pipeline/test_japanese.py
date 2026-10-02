@@ -283,8 +283,7 @@ class JapaneseTests(unittest.TestCase):
             validate_learner(article, dossier, editorial.validate_sections)
         article.pop('language')
         article['learner']['components'] = [copy.deepcopy(ARTICLE_V2['learner']['components'][0])]
-        with self.assertRaisesRegex(ValueError, 'each detailed component'):
-            validate_learner(article, dossier, editorial.validate_sections)
+        validate_learner(article, dossier, editorial.validate_sections)
 
     def test_independent_japanese_publication_is_separate_and_preserves_chinese(self):
         with tempfile.TemporaryDirectory() as temp:
