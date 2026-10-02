@@ -1,0 +1,24 @@
+{
+  "findings": [
+    "[factual] `learner.overview` and `summary` omit the current visible split 夂 above 田, although both current component cards identify those parts. State the split in the learner overview and explain it as modern structure without implying it is the ancient construction; the formation and source-scan account already distinguish those claims. Cite the relevant current-form evidence.",
+    "[factual] `learner.components[0]` and `[1]` spend their limited space disclaiming historical identity instead of giving a useful first reading of the visible parts. Explain what the current 夂 and 田 shapes contribute to the visible split, then keep the unresolved historical connection in expert prose. Do not assign them historical roles.",
+    "[factual] The `meaning_history.senses` entries for “cautious” and “all; entirely” have `certainty: established` but only historical dictionary attestations; `meaning_history.limitations` explicitly says the source evidence does not date their emergence or establish their history. Qualify certainty to match the claims actually made, and ensure the generated `has_sense` edges reflect the change.",
+    "[readability] `learner.overview` should explain the proposed account in learner-friendly terms: the traditional graph 備 is interpreted as a person carrying a container, while the shortened 备 is officially its simplified counterpart and its visible 夂-over-田 split is not established as that historical source. The current text opens with a cursive sound-element theory without explaining why it relates to the character’s meaning, and “sound-bearing form” is opaque. Keep the derivation qualified and cite the relevant evidence. (X-026ff28efe85e0fbba33; X-b2d21d562b570d18efc2; X-6c091eeb84d95825e19b; X-cb1cd8b63b7cd6604994)",
+    "[readability] `learner.components[0]` and `[1]` spend their short cards on what is *not* established and give no useful explanation of the visible parts. State plainly that 夂 is the upper part and 田 the lower part of modern 备, and that their historical roles are unresolved; the harvest/field mnemonic is not evidence. Keep the traditional 備 analysis in expert prose. (E1; X-6c091eeb84d95825e19b; X-e8240f25fdfa1e6a2b73; X-cb1cd8b63b7cd6604994)",
+    "[readability] `historical_glyphs.items[0].alt` describes a broad angular right-hand structure, but the supplied raster shows a seal-style 備 with a long curved left element and a distinct right-hand structure containing a central box-like form. Correct the alt text to match the image; retain its seal-style and traditional-graph scope. (X-2e612ab07fa7aa18d0bd; X-8bb83fc4e2b432c6741a)"
+  ],
+  "allowed_edit_paths": [
+    "summary/text",
+    "summary/evidence_ids",
+    "learner/overview/text",
+    "learner/overview/evidence_ids",
+    "learner/components/0/text",
+    "learner/components/0/evidence_ids",
+    "learner/components/1/text",
+    "learner/components/1/evidence_ids",
+    "meaning_history/senses/2/certainty",
+    "meaning_history/senses/3/certainty",
+    "relationships/6/certainty",
+    "relationships/7/certainty"
+  ]
+}
