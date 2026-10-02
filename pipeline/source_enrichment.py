@@ -18,6 +18,7 @@ import fcntl
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import json
+import shutil
 from pathlib import Path
 import re
 
@@ -238,6 +239,34 @@ def _published_matches(job, source, root):
             and state.get("dossier_hash") == editorial.digest(dossier)
             and editorial.digest(canonical_article) == editorial.digest(article)
             and editorial.digest(canonical_dossier) == editorial.digest(dossier))
+
+
+def _integrate_uncited_book_records(job, source, runner, state, audit, feedback, max_revisions):
+    """One genuine editing/review pass over current research, without minting more IDs."""
+    job = Path(job)
+    if state.get('status') not in ('approved', 'needs_source_evidence') or audit.get('verified') or not audit.get('consulted_citations'):
+        return state, audit
+    article, dossier = editorial.read(job / 'article.json'), editorial.read(job / 'dossier.json')
+    archive = job / 'before-citation-integration' / editorial.digest(article)
+    for name in ('article.json', 'dossier.json', 'reviews.json', 'status.json'):
+        if (job / name).exists():
+            archive.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(job / name, archive / name)
+    context = {**feedback, 'current_uncited_book_records': audit['consulted_citations'],
+        'citation_integration_policy': (
+            'Research has already returned the supplied exact page-specific book records. '
+            'Use the current retained evidence IDs on article claims that these records support. '
+            'Unchanged supported prose plus a citation is sufficient. Do not invent support, '
+            'put IDs in prose, or cite unrelated claims. If no record supports an article claim, '
+            'retain a precise research gap. Obtain fresh independent factual and readability reviews.')}
+    stage = job / 'citation-integration'
+    repaired = editorial.refine(article, dossier, stage, runner, max_revisions,
+                                context, research_first=False)
+    for name in ('article.json', 'dossier.json', 'reviews.json'):
+        if (stage / name).exists():
+            shutil.copy2(stage / name, job / name)
+    repaired_audit = _capture_source_audit(job, source, editorial.read(job / 'dossier.json'))
+    return repaired, repaired_audit
 
 
 def _capture_scan_findings(job, source):
@@ -775,6 +804,9 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
             scan_findings = _capture_scan_findings(job, source)
             final_dossier = editorial.read(job / "dossier.json")
             audit = _capture_source_audit(job, source, final_dossier)
+            state, audit = _integrate_uncited_book_records(
+                job, source, runner, state, audit, followup, max_revisions)
+            scan_findings = _capture_scan_findings(job, source)
             state.update(source_id=source["id"], registry_source_hash=_research_source_hash(source),
                          locator_hash=locator_hash, source_snapshot_hash=editorial.digest(snapshot),
                          source_audit_hash=editorial.digest(audit), tracking_issue_url=source.get("tracking_issue_url"))

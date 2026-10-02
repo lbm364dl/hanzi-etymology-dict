@@ -379,6 +379,29 @@ class SourceEnrichmentTests(unittest.TestCase):
         self.assertFalse(source_enrichment._has_page_provenance({'source': 'Book (2012)', 'field': 'headword'}))
         self.assertFalse(source_enrichment._book_identity_matches('香港教育局 字源考釋', SOURCE))
 
+    def test_uncited_book_integration_uses_current_research_and_fresh_reviews(self):
+        job = self.root / 'citation-job'
+        for name, value in [('article.json', ARTICLE_V2), ('dossier.json', DOSSIER),
+                            ('reviews.json', []), ('status.json', {'status': 'needs_source_evidence'})]:
+            editorial.write(job / name, value)
+        audit = {'verified': False, 'consulted_citations': [{'evidence_ids': ['fixture-book']}]}
+        def fixture_refine(article, dossier, stage, runner, revisions, feedback, research_first):
+            self.assertFalse(research_first)
+            self.assertEqual(feedback['current_uncited_book_records'], audit['consulted_citations'])
+            for name, value in [('article.json', article), ('dossier.json', dossier), ('reviews.json', [])]:
+                editorial.write(stage / name, value)
+            return {'status': 'needs_revision'}
+        with patch.object(editorial, 'refine', side_effect=fixture_refine) as refine, \
+                patch.object(source_enrichment, '_capture_source_audit', return_value=audit):
+            state, result = source_enrichment._integrate_uncited_book_records(
+                job, SOURCE, object(), {'status': 'needs_source_evidence'}, audit, {}, 2)
+            self.assertEqual(state['status'], 'needs_revision')
+            self.assertEqual(refine.call_count, 1)
+            self.assertTrue(list((job / 'before-citation-integration').glob('*/reviews.json')))
+            source_enrichment._integrate_uncited_book_records(
+                job, SOURCE, object(), state, audit, {}, 2)
+            self.assertEqual(refine.call_count, 1)
+
     def test_source_audit_does_not_certify_unretained_or_unpaged_mentions(self):
         job = source_enrichment.job_path(self.output, SOURCE["id"], "木")
         editorial.write(job / "initial-followup/research/result.json", {"evidence": [
