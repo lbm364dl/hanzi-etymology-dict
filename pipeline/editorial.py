@@ -939,6 +939,11 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
          'object_kind': branch['properties']['object']['properties']['kind']['const']}
         for branch in RELATIONSHIP['anyOf']],
         'instruction': 'These are the exact allowed relationship names and endpoint kinds. _component_of is a suffix, never a literal predicate. Unknown component roles create no invented unknown_component_of edge. Preserve scoped historical claims and supported graph links.'}
+    contract['citation_instruction'] = (
+        'Reader prose must contain no refNNN transport aliases or inline evidence ID lists. '
+        'Store citations only in the containing record evidence_ids array. When editing only '
+        'a text field, preserve its existing evidence_ids; if support changes, edit that array '
+        'as a separate nonoverlapping path. Never append [ref001, ref002] to prose.')
     patch_inputs = {**inputs, 'original_role':role, 'article_contract': contract}
     for attempt in range(3):
         patch_directory = Path(directory) if attempt == 0 else Path(directory)/f'patch-repair-{attempt}'
