@@ -281,6 +281,12 @@ record real queries, inspected pages, failures, and a cited limitation. Return t
 GLYPH_VISUAL_POLICY = """Period is an editable reader-facing label. When a period finding is supplied, return a supported corrected period alongside caption/alt/selection_reason; retain source identity, URLs, rights and image bytes. Distinguish script-style date from a verified specimen date.
 Inspect the attached image pixels in their supplied order, using the
 image manifest in the inputs to identify each glyph. These are snapshots of researched candidates.
+Describe visible topology before applying a familiar character template: distinguish a
+closed or U-shaped outline, upright arms, internal marks, forks and the points where lines
+join. Do not describe a central stem as extending below side arms when only its diagonal
+branches descend, or confuse the bottom of an outline with the ends of upright marks.
+Prior caption proposals and review descriptions are hypotheses; inspect the actual pixels
+again rather than repeating their geometry. Avoid stroke-order claims from a static redraw.
 Choose the small set that actually helps explain this character; return historical_glyphs with
 items and limitations. Return only each chosen item's id, caption, alt, selection_reason and
 evidence_ids. The harness attaches its unchanged image URL, source, period, tradition and rights
