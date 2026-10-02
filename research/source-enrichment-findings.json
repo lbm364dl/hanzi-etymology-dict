@@ -168,6 +168,33 @@
         "runs/source-enrichment-ziyuan/xue-reviewcurrent-3/round-1/revision/result.json"
       ],
       "verification": "Regression checks confirm exact predicate and endpoint contracts reach patch agents, unsupported predicates remain rejected, and repaired character candidates still obtain fresh factual/readability approvals. Targeted editorial/source suite passes 75 tests; 学 awaits regeneration and actual approvals."
+    },
+    {
+      "key": "ziyuan-2012:ocr:pdf-614-horse-identity",
+      "kind": "clarification",
+      "title": "Resolve the unidentified printed horse graph on 字源 PDF page 614",
+      "details": "Original scan inspection and independent Luna low recheck reject raw OCR 駒 in the prose after 此字也通作 on PDF614 / printed601. The producer now preserves this exact occurrence as [glyph:p001], with source-bound metadata rather than guessing Unicode. The corrected searchable corpus is verified. The remaining task is identifying the printed graph from visible strokes and authoritative character references; it is not a pending full-page OCR rerun.",
+      "evidence": [
+        "research/ocr-corrections/ziyuan-2012-p0614/ocr-corrections.json",
+        "research/ocr-corrections/ziyuan-2012-p0614/verification.json",
+        "research/ziyuan-hsk1-de-ocr.md",
+        "Source-pixel SHA-256: e5c3740499352373582e7a99de9e1114ed3590dd728207f268e6ffe5cd3cbf88"
+      ],
+      "verification": "Identify the exact printed graph through original pixels and authoritative references before proposing a Unicode replacement. Until then retain the occurrence-specific glyph reference. Source repair is complete; identity remains unresolved."
+    },
+    {
+      "key": "pipeline:source-worker:process-locks",
+      "kind": "pipeline",
+      "title": "Prevent duplicate source-stage writes after interrupted coordinators",
+      "details": "Two source-worker command wrappers terminated with exit143. The later wrapper left a Codex research child orphaned under systemd, so wrapper termination alone was insufficient to prove all work stopped. Coordinator recovery detected and terminated that exact orphan before retaining the detached replacement worker. Source jobs now hold an OS lock that is inherited by agent children; competing harnesses return already_running without stage mutation. Long runs retain logs and process metadata; process inspection remains the liveness evidence, rather than status files.",
+      "evidence": [
+        "pipeline/source_enrichment.py: process coordinator lock",
+        "pipeline/editorial.py: Runner inherited_lock_fds",
+        "pipeline/test_source_enrichment.py: test_live_coordinator_lock_prevents_duplicate_stage_writes",
+        "runs/source-enrichment-after-ocr/worker-process.json",
+        "research/source-worker-recovery-20261002.json"
+      ],
+      "verification": "Verify live-lock exclusion and actual inherited descriptor transport, then observe the detached source worker complete its current jobs. Targeted editorial/source tests pass 77 tests. Do not claim completion from a running status or restart while a confirmed live child still owns a stage."
     }
   ]
 }

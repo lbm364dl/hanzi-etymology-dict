@@ -1176,7 +1176,8 @@ class Runner:
 
             with (directory / "stdout.log").open("w") as stdout, (directory / "stderr.log").open("w") as stderr:
                 process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=stdout, stderr=stderr,
-                                           text=True, start_new_session=True)
+                                           text=True, start_new_session=True,
+                                           pass_fds=getattr(self, 'inherited_lock_fds', ()))
                 process.communicate(prompt, timeout=self.timeout)
                 if process.returncode:
                     raise RuntimeError(f"Agent exited with status {process.returncode}; see {directory / 'stderr.log'}")

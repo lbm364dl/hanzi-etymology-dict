@@ -1,6 +1,8 @@
 import copy
+import fcntl
 from pathlib import Path
 import tempfile
+import sys
 import unittest
 from unittest.mock import patch
 
@@ -26,6 +28,34 @@ class LocalSources:
 
 
 class SourceEnrichmentTests(unittest.TestCase):
+    def test_agent_child_inherits_live_source_lock(self):
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        lock_path = job / 'coordinator.lock'
+        with lock_path.open('a') as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            script = ('import os,fcntl,json,sys; from pathlib import Path; '
+                      f'os.fstat({lock.fileno()}); '
+                      'candidate=open(sys.argv[1],"a")\n'
+                      'try:\n fcntl.flock(candidate,fcntl.LOCK_EX|fcntl.LOCK_NB)\n'
+                      'except BlockingIOError:\n pass\n'
+                      'else:\n raise AssertionError("Parent source lock was lost")\n'
+                      'Path(sys.argv[2]).write_text(json.dumps(dict(inherited=True)))\n')
+            runner = editorial.Runner([sys.executable, '-c', script, str(lock_path), '{output}'],
+                                      model='fixture')
+            runner.inherited_lock_fds = (lock.fileno(),)
+            result = runner.run('prose_repair', {}, {'type': 'object'}, job / 'lock-test')
+            self.assertEqual(result, {'inherited': True})
+
+    def test_live_coordinator_lock_prevents_duplicate_stage_writes(self):
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        with (job / 'coordinator.lock').open('a') as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            with patch.object(source_enrichment, '_load_source_tools', return_value=LocalSources()):
+                rows = source_enrichment.run({'characters': ['木']}, SOURCE, self.output,
+                                             object(), root=self.root)
+            self.assertEqual(rows[0]['status'], 'already_running')
+            self.assertFalse((job / 'source_checkpoint.json').exists())
+
     def test_locator_hash_ignores_only_redundant_pixel_metadata(self):
         located = {'source_scan_images': [{'pdf_page': 13, 'path': '/scan.png'}],
                    'source_leads': [{'candidates': [{'pdf_page_1based': 13, 'source_sha256': 'pixels'}]}]}
@@ -131,6 +161,7 @@ class SourceEnrichmentTests(unittest.TestCase):
                                            FakeRunner(), root=self.root)
         self.assertEqual(result[0]["status"], "approved")
         self.assertTrue(captured["research_first"])
+        self.assertEqual(len(captured['runner'].inherited_lock_fds), 1)
         self.assertEqual(captured["feedback"]["source_leads"], LOCATED["source_leads"])
         self.assertTrue(captured["feedback"]["reuse_existing_glyph_candidates"])
         self.assertIn("OCR", captured["feedback"]["source_enrichment"]["record_ocr_uncertainty"])

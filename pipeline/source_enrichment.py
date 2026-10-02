@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import fcntl
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import json
@@ -419,7 +420,7 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
         else:
             rows[char] = {"character": char, "status": "deferred", "job": str(job)}
 
-    def process(char):
+    def process_unlocked(char, runner):
         job = job_path(output, source["id"], char)
 
         def sync_findings(state):
@@ -542,6 +543,23 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
                     editorial.write(job / "issue_sync.json", {"status": "pending",
                         "repository": source["github_repo"], "error": str(issue_exc)})
             return failure
+
+    def process(char):
+        job = job_path(output, source["id"], char)
+        job.mkdir(parents=True, exist_ok=True)
+        # An OS lock releases on coordinator exit and prevents two harnesses from
+        # writing the same stage outputs. A status file is never proof of liveness.
+        with (job / "coordinator.lock").open("a") as lock:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                return {"character": char, "status": "already_running", "job": str(job)}
+            try:
+                local_runner = copy.copy(runner)
+                local_runner.inherited_lock_fds = (lock.fileno(),)
+                return process_unlocked(char, local_runner)
+            finally:
+                fcntl.flock(lock, fcntl.LOCK_UN)
 
     if selected:
         with ThreadPoolExecutor(max_workers=workers) as pool:

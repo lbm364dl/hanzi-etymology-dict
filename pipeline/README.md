@@ -38,6 +38,14 @@ and the resolution is bound to exact article, dossier and finding hashes. Confir
 and material unresolved claims remain blocked for source repair or new research; this check
 does not replace factual/readability reviews.
 
+Source jobs acquire an OS coordinator lock before writing their stage files; agent subprocesses
+inherit that lock so an orphaned live agent still prevents duplicate writes after a coordinator
+exits. A second harness reports `already_running` without replacing the first job's status.
+For sustained runs, use a persistent process with captured logs. Inspect its actual process ID
+and child processes before resuming: a saved `running` status does not prove liveness, and a
+terminated command wrapper can leave its agent child alive. Retain previous stage artifacts
+when recovering interrupted work.
+
 ## GitHub findings
 
 Track material errors, mistakes, improvements and clarifications in GitHub issues. The current
