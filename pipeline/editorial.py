@@ -910,6 +910,8 @@ def citation_transport(inputs):
 
 
 def restore_citations(value, aliases, key=None):
+    if isinstance(value, str) and key == 'evidence_ids':
+        return aliases.get(value, value)
     if isinstance(value, dict):
         return {k: restore_citations(v, aliases, k) for k, v in value.items()}
     if isinstance(value, list):
@@ -1085,7 +1087,9 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
                     if not isinstance(node[parts[-1]], str): raise
                     # A model's verbatim prose is already an unambiguous string value.
                     value = edit['value_json']
-                node[parts[-1]] = restore_citations(value, aliases, str(parts[-1]))
+                citation_key = (parts[-2] if isinstance(parts[-1], int) and len(parts) > 1
+                                else parts[-1])
+                node[parts[-1]] = restore_citations(value, aliases, str(citation_key))
             errors = list(Draft202012Validator(ARTICLE_V2_SCHEMA).iter_errors(patched))
             if errors:
                 raise ValidationError("; ".join(error.json_path + ": " + error.message
