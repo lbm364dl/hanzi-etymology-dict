@@ -91,6 +91,26 @@ class IssueTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             body(dict(key='x', kind='ocr', title='Error', details='Text', verification=''))
 
+    def test_unknown_existing_key_is_repaired_before_sync(self):
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+            calls = 0
+            def run(self, role, inputs, schema, directory):
+                self.calls += 1
+                allowed = schema['properties']['findings']['items']['properties']['existing_key']['enum']
+                assert None in allowed and 'invented:key' not in allowed
+                if self.calls == 1:
+                    return {'findings': [{'existing_key': 'invented:key'}]}
+                assert 'unknown existing' in inputs['validation_error']
+                return {'findings': []}
+        with tempfile.TemporaryDirectory() as temp:
+            job = Path(temp)
+            editorial.write(job / 'status.json', {'character': '木'})
+            runner = Runner()
+            self.assertEqual(triage_job(job, {'id': 'book'}, runner), [])
+            self.assertEqual(runner.calls, 2)
+
     def test_triage_uses_verified_artifacts_and_exact_agent_settings(self):
         class Runner:
             model = 'gpt-6-luna'

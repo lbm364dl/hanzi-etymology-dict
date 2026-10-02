@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 from pathlib import Path
 import subprocess
@@ -49,10 +50,16 @@ def triage_job(job, source, runner):
               'task': 'Track material findings with evidence. Rejected proposals are not factual errors. '
                       'An OCR suspicion needs source verification; never guess a replacement. '
                       'Keep public issue text concise and paraphrase books instead of quoting passages.'}
+    known_by_key = {f["key"]: f for f in known}
+    schema = copy.deepcopy(FINDING_SCHEMA)
+    schema["properties"]["findings"]["items"]["properties"]["existing_key"]["enum"] = [None, *known_by_key]
     for attempt in range(3):
         stage = job / ('finding-triage' if attempt == 0 else f'finding-triage-repair-{attempt}')
         try:
-            result = runner.run('finding_triage', inputs, FINDING_SCHEMA, stage)
+            result = runner.run('finding_triage', inputs, schema, stage)
+            if any(item.get('existing_key') is not None and item['existing_key'] not in known_by_key
+                   for item in result['findings']):
+                raise ValueError('Triage selected an unknown existing finding key; choose a supplied key or null for a new finding')
             break
         except (ValueError, editorial.ValidationError) as exc:
             if attempt == 2:
