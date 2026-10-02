@@ -1,4 +1,5 @@
 import copy
+import gzip
 import json
 from pathlib import Path
 import sys
@@ -8,6 +9,81 @@ from unittest.mock import patch
 
 from pipeline.editorial import (Runner, ARTICLE_SCHEMA, REVIEW_SCHEMA, digest, make_review, publish,
                                 run, validate_article, validate_published, write, enrich_dossier, validate_research, research_dossier, refine, add_learner, independent_review, annotate_forms, curate_glyphs, local_primary_readings, local_baxter_sagart_rows, local_glyph_hints)
+from pipeline.editorial import summarize_web_activity, parse_codex_events, validate_new_reader_style, reuse_glyphs_for_text_followup
+
+
+class NewReaderStyleTests(unittest.TestCase):
+    def test_source_labels_and_workflow_remarks_are_rejected(self):
+        dossier = {"evidence": [{"source": "漢語多功能字庫, CUHK"},
+                                {"source": "李學勤主編《字源》"}]}
+        article = {"summary": {"text": "Half is one of two equal parts."},
+                   "meaning_history": {"senses": [{"text": "CUHK proposes a split meaning."}]}}
+        with self.assertRaisesRegex(ValueError, "Source name 'CUHK'"):
+            validate_new_reader_style(article, dossier)
+        article["meaning_history"]["senses"][0]["text"] = "字源 calls it original."
+        with self.assertRaisesRegex(ValueError, "Source name '字源'"):
+            validate_new_reader_style(article, dossier)
+        article["meaning_history"]["senses"][0]["text"] = "This dossier does not settle the date."
+        with self.assertRaisesRegex(ValueError, "Workflow term"):
+            validate_new_reader_style(article, dossier)
+        article["meaning_history"]["senses"][0]["text"] = "The date is unresolved."
+        validate_new_reader_style(article, dossier)
+
+    def test_text_followup_reuses_glyphs_only_without_visual_findings(self):
+        feedback = {"reuse_existing_glyph_candidates": True}
+        self.assertTrue(reuse_glyphs_for_text_followup(feedback, [
+            {"findings": ["Correct a sound comparison citation."]}]))
+        self.assertFalse(reuse_glyphs_for_text_followup(feedback, [
+            {"findings": ["The glyph caption overstates its provenance."]}]))
+
+
+class SiteArticleRefreshTests(unittest.TestCase):
+    def test_refresh_preserves_legacy_fields_and_other_characters(self):
+        from build_site import refresh_existing_site_articles
+        with tempfile.TemporaryDirectory() as temp:
+            archive = Path(temp) / "data.json.gz"
+            original = [{"c": "半", "d": ["half"], "py": "bàn", "article": {"old": True}},
+                        {"c": "教", "d": ["teach"], "py": "jiào"}]
+            with gzip.open(archive, "wt", encoding="utf-8") as stream:
+                json.dump(original, stream, ensure_ascii=False)
+            self.assertEqual(refresh_existing_site_articles(archive, {"半": {"new": True}}), 2)
+            with gzip.open(archive, "rt", encoding="utf-8") as stream:
+                refreshed = json.load(stream)
+            self.assertEqual(refreshed, [{"c": "半", "d": ["half"], "py": "bàn",
+                                         "article": {"new": True}}, original[1]])
+            with self.assertRaisesRegex(ValueError, "lack an approved source"):
+                refresh_existing_site_articles(archive, {})
+
+
+class ScopedRefinementTests(unittest.TestCase):
+    def test_exact_approved_base_scopes_fresh_reviews(self):
+        dossier = {**copy.deepcopy(DOSSIER), "glyph_research": {"historical_glyphs": GLYPHS},
+                   "glyph_assets": []}
+        base = copy.deepcopy(ARTICLE_V2)
+        reviews = [make_review(role, "pass", [], base, dossier, f"base-{role}")
+                   for role in ("factual", "readability")]
+        candidate = copy.deepcopy(base)
+        candidate["summary"]["text"] = "A tree with branches."
+        class Reviewer:
+            model = "fake"
+            def __init__(self): self.inputs = []
+            def run(self, role, inputs, schema, directory):
+                self.inputs.append((role, inputs))
+                return {"verdict": "pass", "findings": []}
+        with tempfile.TemporaryDirectory() as temp:
+            reviewer = Reviewer()
+            state = refine(candidate, dossier, temp, reviewer, 0, edit_first=False,
+                           approved_base={"article": base, "dossier": dossier, "reviews": reviews})
+            self.assertEqual(state["status"], "approved")
+            self.assertEqual([role for role, _ in reviewer.inputs], ["factual", "readability"])
+            self.assertEqual(reviewer.inputs[0][1]["review_scope"], "targeted_refinement")
+            self.assertEqual(reviewer.inputs[0][1]["changed_paths"], ["article.summary.text"])
+        altered = copy.deepcopy(dossier)
+        altered["context"]["note"] = "changed"
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaisesRegex(ValueError, "Approved base dossier differs"):
+                refine(candidate, altered, temp, Reviewer(), 0, edit_first=False,
+                       approved_base={"article": base, "dossier": dossier, "reviews": reviews})
 
 DOSSIER = {"character": "木", "context": {}, "evidence": [{"id": "source:1", "source": "test",
            "field": "etymology", "text": "A tree.", "kind": "source", "record_character": "木",
@@ -48,6 +124,110 @@ ARTICLE_V2["learner"] = {
 
 
 class EditorialTests(unittest.TestCase):
+    def test_chinese_text_refinement_reuses_verified_glyph_selection(self):
+        class ResearchOnlyRunner:
+            def run(self, role, inputs, schema, directory):
+                if role != "research":
+                    raise AssertionError(f"Unexpected glyph stage: {role}")
+                return copy.deepcopy(RESEARCH)
+
+        dossier = copy.deepcopy(DOSSIER)
+        dossier["context"]["target_language"] = "zh"
+        dossier["glyph_research"] = {"historical_glyphs": copy.deepcopy(GLYPHS)}
+        dossier["glyph_assets"] = []
+        with tempfile.TemporaryDirectory() as temp:
+            result = research_dossier(dossier, temp, ResearchOnlyRunner(),
+                {"reuse_existing_glyph_candidates": True})
+            self.assertEqual(result["glyph_research"], dossier["glyph_research"])
+            self.assertEqual(result["glyph_assets"], [])
+            self.assertTrue((Path(temp) / "dossier.json").exists())
+
+    def test_codex_jsonl_keeps_unicode_line_separator_inside_result(self):
+        event = {"type": "item.completed", "item": {"id": "web-1", "type": "web_search",
+                 "action": {"type": "search", "queries": ["學 字源"]},
+                 "results": [{"snippet": "before\u2028after"}]}}
+        events = parse_codex_events(json.dumps(event, ensure_ascii=False) + "\n")
+        self.assertEqual(len(events), 1)
+        self.assertEqual(summarize_web_activity(events)["web_search_calls"], 1)
+
+    def test_completed_web_search_keeps_started_action_when_completion_says_other(self):
+        events = [
+            {"type": "item.started", "item": {"id": "web-1", "type": "web_search",
+                "action": {"type": "search", "queries": ["學 字源"]}}},
+            {"type": "item.completed", "item": {"id": "web-1", "type": "web_search",
+                "action": {"type": "other"}, "results": [{"url": "https://example.org"}]}}
+        ]
+        self.assertEqual(summarize_web_activity(events), {
+            "web_tool_events": 1, "web_action_counts": {"search": 1},
+            "web_search_calls": 1, "web_search_queries": ["學 字源"]})
+
+    def test_started_web_search_without_completion_does_not_count(self):
+        events = [{"type": "item.started", "item": {"id": "web-1", "type": "web_search",
+                   "action": {"type": "search", "queries": ["學 字源"]}}}]
+        self.assertEqual(summarize_web_activity(events)["web_search_calls"], 0)
+
+    def test_research_scan_attachment_hash_changes_cache(self):
+        from pipeline.editorial import RESEARCH_SCHEMA
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            scan = root / "scan.png"
+            scan.write_bytes(b"original scan")
+            script = root / "agent.py"
+            script.write_text('import sys,json,pathlib\n'
+                              f'pathlib.Path(sys.argv[1]).write_text({json.dumps(json.dumps(RESEARCH))})\n')
+            runner = Runner([sys.executable, str(script), "{output}"], "fake")
+            inputs = {"dossier": DOSSIER, "feedback": {"source_scan_images": [
+                {"path": str(scan), "pdf_page": 277, "printed_page": 265}]}}
+            job = root / "research"
+            runner.run("research", inputs, RESEARCH_SCHEMA, job)
+            first = json.loads((job / "meta.json").read_text())["fingerprint"]
+            prompt = (job / "prompt.txt").read_text()
+            self.assertIn('"attached_source_scans"', prompt)
+            self.assertIn('"pdf_page": 277', prompt)
+            scan.write_bytes(b"changed scan")
+            runner.run("research", inputs, RESEARCH_SCHEMA, job)
+            second = json.loads((job / "meta.json").read_text())["fingerprint"]
+            self.assertNotEqual(first, second)
+
+    def test_factual_review_receives_source_scan_metadata(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            scan = root / "scan.png"
+            scan.write_bytes(b"source pixels")
+            script = root / "agent.py"
+            script.write_text('import sys,json,pathlib\n'
+                              'pathlib.Path(sys.argv[1]).write_text(json.dumps({"verdict":"pass","findings":[]}))\n')
+            runner = Runner([sys.executable, str(script), "{output}"], "fake")
+            runner.run("factual", {"article": ARTICLE, "dossier": DOSSIER,
+                "source_scan_images": [{"path": str(scan), "pdf_page": 277}]},
+                REVIEW_SCHEMA, root / "factual")
+            prompt = (root / "factual/prompt.txt").read_text()
+            inputs = json.JSONDecoder().raw_decode(prompt.split("\nINPUTS:\n", 1)[1])[0]
+            self.assertEqual(inputs["attached_source_scans"][0]["attachment_index"], 1)
+            self.assertEqual(inputs["attached_source_scans"][0]["pdf_page"], 277)
+            self.assertEqual(inputs["attached_images"], [])
+
+    def test_source_pixel_hash_is_distinct_from_attachment_file_hash(self):
+        import hashlib
+        from PIL import Image
+        from pipeline.editorial import source_scan_attachments
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'scan.png'
+            pixels = Image.new('RGB', (8, 8), 'white')
+            expected = hashlib.sha256(pixels.tobytes()).hexdigest()
+            scan = {'path': str(path), 'pdf_page': 1, 'source_pixel_sha256': expected}
+            pixels.save(path, compress_level=0)
+            first = source_scan_attachments([scan])[1][0]
+            pixels.save(path, compress_level=9)
+            second = source_scan_attachments([scan])[1][0]
+            self.assertNotEqual(first['sha256'], second['sha256'])
+            self.assertEqual(first['pixel_sha256'], second['pixel_sha256'])
+            self.assertNotEqual(first['sha256'], first['pixel_sha256'])
+            pixels.putpixel((0, 0), (0, 0, 0))
+            pixels.save(path)
+            with self.assertRaisesRegex(ValueError, 'decoded pixel hash'):
+                source_scan_attachments([scan])
+
     def test_local_glyph_leads_are_scoped_existing_files_and_unverified(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -180,6 +360,20 @@ class EditorialTests(unittest.TestCase):
                                      WRITER_SCHEMA, Path('/unused'), invoke)
         self.assertEqual(len(calls), 2)
         self.assertEqual(result['components'], article['components'])
+
+    def test_targeted_patch_defers_learner_length_to_narrow_repair(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
+        article = copy.deepcopy(ARTICLE_V2)
+        dossier = {**DOSSIER, 'glyph_research': {'historical_glyphs': article['historical_glyphs']}}
+        long_text = ' '.join(['tree'] * 31)
+        calls = []
+        def invoke(role, inputs, schema, directory):
+            calls.append(role)
+            return {'edits': [{'path': 'learner/components/0/text', 'value_json': long_text}]}
+        result = apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                     WRITER_SCHEMA, Path('/unused'), invoke)
+        self.assertEqual(calls, ['article_patch'])
+        self.assertEqual(result['learner']['components'][0]['text'], long_text)
 
     def test_editor_inputs_exclude_harness_derived_edges(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -591,6 +785,13 @@ class EditorialTests(unittest.TestCase):
             self.assertEqual(state["status"], "needs_revision")
             with self.assertRaises(ValueError):
                 publish(ARTICLE_V2, dossier, json.loads((Path(root) / "reviews.json").read_text()), Path(root) / "entries")
+        with tempfile.TemporaryDirectory() as root:
+            runner = RefiningRunner()
+            runner.calls = []
+            state = refine(copy.deepcopy(ARTICLE_V2), dossier, root, runner, 0,
+                           edit_first=False)
+            self.assertEqual(state["status"], "approved")
+            self.assertEqual(runner.calls, ["factual", "readability"])
         for change in [lambda a: a.update(character="水"),
                        lambda a: a["summary"].update(evidence_ids=["invented"])]:
             invalid = copy.deepcopy(old)

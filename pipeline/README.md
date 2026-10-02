@@ -2,6 +2,51 @@
 
 Entries are researched beyond the repository, written as neutral explanations, then independently reviewed for factual support and readability. The published article explains formation, meaningful component roles and graphic changes, followed by history and uncertainties. Source names belong in references; every explanatory section cites evidence.
 
+## Enriching approved entries with digitised books
+
+`pipeline.source_enrichment` processes existing approved entries for a newly available source;
+ordinary `pipeline.batch` readiness is not proof that an entry has consulted that source.
+Register digitised books in `research/digitised-sources.json`. Each registry record identifies
+the exact edition, book hash and consumer corpus; adding later books does not require changing
+character prompts or adding character-specific rules. Only 字源 is currently registered.
+
+```bash
+python3 -m pipeline.source_enrichment status --registry research/digitised-sources.json --source ziyuan-2012 --cohort content/cohorts/hsk3-2021-level-1.json
+python3 -m pipeline.source_enrichment run --registry research/digitised-sources.json --source ziyuan-2012 --cohort content/cohorts/hsk3-2021-level-1.json --limit 3
+```
+
+All agents introduced for this workflow, including findings triage, use `gpt-6-luna` with
+low reasoning. Jobs retain source and published-input snapshots, bounded locator leads,
+scan attachments, research, authored revisions and exact independent reviews. Header-like
+OCR lines, parenthetical counterparts and continuation pages are locator hypotheses, not
+verified headwords. Missing source access remains an explicit gap; external authoritative
+references can still improve an entry. Agents use reasoning to flag suspicious OCR, then
+verify replacements against scans. Corrections feed the book repository's source-bound
+layer and its rebuilt consumer corpus; raw OCR is preserved.
+
+## GitHub findings
+
+Track material errors, mistakes, improvements and clarifications in GitHub issues. The current
+work is [HSK1 book enrichment](https://github.com/lbm364dl/hanzi-etymology-dict/issues/1);
+`research/source-enrichment-issues.json` retains issue identities. An issue identifies the
+affected character or source page, actual evidence, and the check needed to verify a fix.
+Keep suspected OCR or scholarly disagreements explicitly uncertain. Rejected reviewer
+proposals are not established errors. Link repeated manifestations to the existing issue.
+
+`pipeline.issues.triage_job` invokes a separate Luna low agent over saved verified findings,
+research gaps and validation failures; it saves proposed issue records without inventing
+approvals. `pipeline.issues` synchronizes findings using stable markers, so reruns reuse
+existing issues and preserve human discussion. It never closes issues automatically.
+
+```bash
+python3 -m pipeline.issues research/source-enrichment-findings.json --repo lbm364dl/hanzi-etymology-dict --receipts research/source-enrichment-issues.json
+```
+
+Close an issue only after its required checks are demonstrated and the fixing artifacts are
+reviewable. Local repairs should be recorded as local progress until their published code or
+content is linked. Source OCR corrections and character publication have separate verification
+requirements even when tracked by the same issue.
+
 Install the harness dependencies with `python3 -m pip install -r pipeline/requirements.txt` (or use your existing project environment). Run commands from the repository root.
 
 ## Checked-in pilot
@@ -13,6 +58,18 @@ python3 -m pipeline.pilot check
 python3 -m pipeline.pilot publish
 python3 build_site.py
 python3 -m http.server 8000 --directory docs
+```
+
+When the upstream `sources/` files and full `output/hanzi_etymology.jsonl` are absent but
+`docs/data.json.gz` already contains the complete compiled legacy records, refresh only the
+approved Chinese article overlays with `python3 build_site.py --refresh-articles`. This
+validates each published article and dossier, preserves the legacy fields and all existing
+character records, and refuses missing or stale article records. Then regenerate the
+editorial graph and run the cohort audit:
+
+```bash
+python3 -m pipeline.graph --entries content/entries --output output/editorial-graph.json
+python3 -m pipeline.audit_cohort
 ```
 
 Open `http://localhost:8000` to browse the pilot. `publish` writes local artifacts; it does not deploy the site. See `content/README.md` for the evidence limitations and source attribution.
@@ -318,6 +375,35 @@ python3 -m pipeline.editorial refine runs/v2-smoke/4F86/article.json runs/refine
 
 The original feedback is snapshotted as `source_feedback.json`; it informs editing but never
 substitutes for fresh independent review.
+
+If a saved candidate already includes the verified corrections, use `refine ... --review-current`
+to send its exact article and adjacent dossier directly to fresh independent factual and
+readability review. This skips only the initial copy edit; validation, review, bounded repairs
+and publication gates still apply. For Chinese entries, a research follow-up preserves existing
+curated glyphs unless a finding concerns glyphs, captions, image rights or another visual issue.
+Do not combine `--review-current` with `--research-first`, since newly added evidence may require
+editing the candidate first.
+
+For a small correction to a candidate that already has genuine pass receipts, add
+`--approved-base-job <approved-job>` to `--review-current`. The harness verifies both base
+receipts and an identical dossier hash, computes every changed article path, and asks fresh
+factual and readability reviewers to assess those changes and their effects on the complete
+entry. The new receipts still bind the exact complete candidate and dossier. If research changes
+the dossier, later rounds revert to full review scope.
+
+Use `--research-first` when new source evidence is required before editing. For a small
+scan-backed follow-up, feedback may include `source_scan_images`: up to three objects with an
+absolute `path`, integer `pdf_page`, and an optional verified `printed_page`. The Codex research
+stage receives the exact source images as attachments and their SHA-256 values in its input.
+The images make a prior OCR passage inspectable; they do not certify the OCR or replace the
+researcher's page-specific source check. The research agent must distinguish its own scan
+inspection from a prior agent's note. A changed image changes the stage fingerprint.
+When the scan reveals an OCR error, record its exact page and span and correct the book
+repository's source-bound OCR layer, then rebuild its effective consumer corpus. A dossier
+note alone does not repair the source text later entries will search.
+For a Chinese text-focused refinement whose existing glyph selection and snapshots remain valid,
+set `reuse_existing_glyph_candidates: true` in feedback. The pipeline verifies and retains those
+assets while researching the new text evidence; omit the flag if the finding concerns image choice.
 
 ## Brief learner layer
 

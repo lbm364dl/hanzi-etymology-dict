@@ -1,0 +1,29 @@
+# 学 review adjudication: 子 and 《字源》 formation details
+
+This is an independent diagnosis of the conflicting final reviews in `runs/ziyuan-hsk1-smoke/5B66-component-repair/reviews.json`, not a publication approval. I read the job article and dossier, the four cited evidence records, and the scan for 《字源》 PDF page 277 (printed page 265). The source record says the scan was checked through the author credit and PDF page 278 was checked to bound the continuation.
+
+## What the records support
+
+- **Current 学:** X-26f51caf14329c9ea28f identifies 学 as the standardized simplified counterpart of 學. The visible lower 子 is therefore retained in the simplified graph. This record does not assign 子 a present semantic or phonetic role.
+- **Historical 子 in 學:** X-610bd9e85c3facdf4ef6 and X-8697fde04d836cb26632 report the CUHK account that bronze forms add 子, and preserve the distinct interpretation that it represents a child learner. The scan-checked 《字源》 entry (X-88ac70e7a8e7d9f630d1) says the Western Zhou form added 子 as a semantic element to highlight that the object of learning was a child. This supports an attributed historical proposal for that stage; it does not by itself establish an independent current role in 学.
+- **《字源》 competing formation proposals:** The inspected page explicitly presents associative readings of 商 forms as 升 + 冖 or 林 + 冖; phonosemantic readings with 爻 as sound and 升 or 冖 as the other element; and a separate 臼-based sound analysis, including forms whose unusual written components are preserved as glyph references in the evidence. It says these structures began to combine in 商 forms, and places the addition of 子 in 西周 forms. The page also says these are proposals and discusses further development. It does not settle one reconstruction. X-88ac70e7a8e7d9f630d1 is direct scan-checked evidence for what 《字源》 says, not independent corroboration of the analyses it attributes or presents.
+
+## Where the reviews conflict
+
+The factual reviewer asks for “qualified continuity” of 子’s child-learner contribution into 学, relying on the simplified-counterpart relation plus the historical analysis. The readability reviewer asks to keep the learner card to visible position and put the historical proposal in the expert account, because the evidence does not establish 子’s role in current 学. Both accept the historical proposal and the visible form. Their disagreement is whether retention of the same graph warrants carrying a historical semantic motivation forward as a current component role.
+
+The cited records establish continuity of **written form**, but do not explicitly establish continuity of **function**. The readability reviewer’s boundary is better supported by the evidence as currently recorded. A carefully qualified inference of continued semantic contribution is possible, but should be labeled as an inference and must not be presented as a fact established by these records.
+
+The readability reviewer also asks for the specific 《字源》 pairings. That request is substantively supported: the current formation paragraph compresses them to “交 or 臼 with other elements.” Greater specificity is useful, but unusual forms should not be converted into confident ordinary-character identities based on provisional OCR. The existing scan-bound evidence deliberately leaves drawing variants unresolved.
+
+## Recommended minimally scoped treatment
+
+For the learner component, describe 子 as the lower visible component retained in 学, and say its independent present-day function is not established by the inspected character-specific records. In the expert formation/history, attribute the proposal precisely: 《字源》 says a 子 element was added to Western Zhou forms of 學 to mark the child as the object of learning. Keep that proposal scoped to those historical forms; do not call it proof of a current semantic role. If an author chooses to state that this motivation plausibly remains legible in 学, label the continuity as an inference.
+
+For formation, retain the competing accounts and attribution. Name the supported pairings—升 + 冖 / 林 + 冖, 爻 as a proposed sound element with 升 or 冖, and the separate 臼-based proposal—but preserve unresolved rare components as page-bound glyph references or cautious descriptions. Cite X-88ac70e7a8e7d9f630d1 directly beside this account. Do not flatten these alternatives into a single consensus or use the 《字源》 account as an established reconstruction.
+
+## OCR and broader review instruction
+
+The source-corpus row remains marked `unreviewed`; its OCR includes obvious recognition noise elsewhere on the same page (for example, the stray Latin word “heat” in the 教 entry) and placeholder glyph IDs for difficult forms. For the 学 claims discussed here, however, the cited evidence records a direct check of the original scan pixels and its entry boundary, and I confirmed the relevant printed paragraph on the scan. Thus the reviewer dispute is not explained by an OCR typo in the 子 sentence. The rare glyph readings and source interpretations still need the scan-bound qualification already retained in the dossier.
+
+The recurring pipeline issue is a review-contract ambiguity: current-form component explanation and component-role validation can be read as requiring each visible part to receive a present-day functional role, even when the evidence supports only graphic identity and a historically scoped role. Clarify reviewer guidance to distinguish visible component identity, historical function, and current function; permit “role not established” for a current component while retaining a sourced historical account in expert prose. Also direct reviewers to request precision from scan-verified evidence without promoting unresolved OCR glyph identities. This is a general instruction improvement, not a 学-specific rule.

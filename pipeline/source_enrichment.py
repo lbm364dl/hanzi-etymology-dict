@@ -1,0 +1,576 @@
+"""Resumable, source-specific enrichment of already published editorial cohorts.
+
+Registry example::
+
+    {"schema_version": 1, "sources": [{"id": "ziyuan-2012",
+      "title": "字源", "bibliography": "李學勤主編《字源》, 2012.",
+      "book_id": "ziyuan-2012", "corpus_path": "/path/to/ziyuan-pages.jsonl"}]}
+
+Run from the repository root with ``python3 -m pipeline.source_enrichment prepare
+--registry sources.json --source ziyuan-2012 --cohort content/cohorts/hsk1.json``.
+The separate ``run``, ``publish``, and ``status`` actions resume that exact source job.
+"""
+from __future__ import annotations
+
+import argparse
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
+import json
+from pathlib import Path
+import re
+
+from pipeline import batch, editorial
+
+ROOT = editorial.ROOT
+MAX_SELECTION = 10
+MAX_WORKERS = 3
+ISSUE_METADATA = {"github_repo", "tracking_issue_url", "issue_parent_number",
+                  "issue_milestone", "issue_labels"}
+
+SOURCE_POLICY = """
+SOURCE-SPECIFIC CHINESE ENRICHMENT:
+The supplied source bibliography and corpus are research leads for this character, not
+pre-verified evidence. Search the supplied corpus and inspect all relevant records. Confirm
+the actual headword, passage, page continuation, component identity and any cited rare glyph
+against the source scan where available. Distinguish provisional OCR from verified transcription.
+Do not repair or normalize questionable OCR by inference. For each unresolved scan or OCR issue,
+    add a research gap beginning exactly `[SCAN VERIFICATION REQUIRED]` or
+`[OCR CORRECTION REQUIRED]`, followed by the exact
+suspect page/span and why it needs scan verification. Use other
+authoritative references to test the book's claims and preserve disagreements and precise
+uncertainty. Add only source-backed findings with page-specific provenance; retain all existing
+evidence unless a reviewed correction is necessary. Do not infer missing evidence from the
+existing article. Preserve the current historical glyph selection for this text-focused task.
+""".strip()
+
+
+def _load_source_tools():
+    # Kept lazy so CLI help and unit tests can import the module while the registry
+    # producer is being developed alongside this consumer.
+    from pipeline import local_sources
+    return local_sources
+
+
+def _source_registry(path):
+    return _load_source_tools().load_registry(path)
+
+
+def _source(registry, source_id):
+    sources = registry.get("sources", [])
+    for item in sources if isinstance(sources, list) else []:
+        if item.get("id") == source_id:
+            return item
+    raise ValueError(f"Unknown source: {source_id}")
+
+
+def _research_source(source):
+    """Identity of the researched book/corpus, excluding issue workflow settings."""
+    return {key: value for key, value in source.items() if key not in ISSUE_METADATA}
+
+
+def _research_source_hash(source):
+    return editorial.digest(_research_source(source))
+
+
+def _same_research_source(left, right):
+    return _research_source_hash(left) == _research_source_hash(right)
+
+
+def _recorded_source_hash_matches(recorded_hash, saved_source, current_source):
+    """Accept current identity hashes and legacy full hashes from the immutable snapshot."""
+    if not isinstance(saved_source, dict) or not _same_research_source(saved_source, current_source):
+        return False
+    compatible = {_research_source_hash(saved_source), _research_source_hash(current_source),
+                  editorial.digest(saved_source)}
+    return recorded_hash in compatible
+
+
+def load_cohort(path):
+    cohort = editorial.read(path)
+    chars = cohort.get("characters")
+    if not isinstance(chars, list) or not chars or any(not isinstance(c, str) or len(c) != 1 for c in chars):
+        raise ValueError("Cohort requires an explicit nonempty array of single characters")
+    if len(set(chars)) != len(chars):
+        raise ValueError("Cohort contains duplicate characters")
+    return cohort
+
+
+def job_path(output, source_id, character):
+    safe_id = "".join(c if c.isalnum() or c in "-_" else "_" for c in source_id)
+    return Path(output) / safe_id / f"{ord(character):04X}"
+
+
+def _canonical(root, character):
+    name = f"{ord(character):04X}.json"
+    ep = Path(root) / "content/entries" / name
+    dp = Path(root) / "content/dossiers" / name
+    if not ep.is_file() or not dp.is_file():
+        raise ValueError(f"No published article and dossier for {character}")
+    dossier = editorial.read(dp)
+    article = editorial.validate_published(editorial.read(ep), dossier)
+    return article, dossier
+
+
+def prepare_job(character, job, source, root=ROOT):
+    """Freeze exact published inputs and source identity for a resumable job."""
+    job = Path(job)
+    source_path, article_path, dossier_path = (job / "source.json", job / "source_article.json", job / "source_dossier.json")
+    if source_path.exists():
+        saved = editorial.read(source_path)
+        if (saved.get("source_id") != source["id"] or saved.get("character") != character
+                or not _recorded_source_hash_matches(saved.get("registry_source_hash"),
+                    saved.get("registry_source"), source)):
+            raise ValueError("Existing job is bound to another source or character")
+        if not article_path.exists() or not dossier_path.exists():
+            raise ValueError("Existing source job is missing its provenance snapshot")
+        if editorial.digest(editorial.read(article_path)) != saved.get("article_hash") or editorial.digest(editorial.read(dossier_path)) != saved.get("dossier_hash"):
+            raise ValueError("Source job snapshot hash mismatch")
+        return saved
+    article, dossier = _canonical(root, character)
+    job.mkdir(parents=True, exist_ok=True)
+    editorial.write(article_path, article)
+    editorial.write(dossier_path, dossier)
+    saved = {"character": character, "source_id": source["id"],
+             "registry_source": source,
+             "registry_source_hash": _research_source_hash(source),
+             "article_hash": editorial.digest(article), "dossier_hash": editorial.digest(dossier),
+             "prepared_at": datetime.now(timezone.utc).isoformat()}
+    editorial.write(source_path, saved)
+    editorial.write(job / "status.json", {**saved, "status": "prepared"})
+    return saved
+
+
+def feedback(source, located=None, source_context=None):
+    value = {"reuse_existing_glyph_candidates": True,
+        "source_enrichment": {"source": _research_source(source),
+            "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+            "preserve_existing_evidence": True,
+        "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."},
+        "task": ("Research this already published character with the supplied local scholarly source. "
+                 "Search and inspect the supplied corpus, verify the actual headword and relevant passage "
+                 "against scan images when available, and compare the book with other authoritative "
+                 "references. Preserve existing supported evidence and article content unless a precise "
+                 "source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. "
+                 "Cite at least one relevant finding from the named book with its exact page; "
+                 "if no relevant claim can be established, record a source-specific access or "
+                 "relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning "
+                 "exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, "
+                 "span, and reason.")}
+    if located:
+        value.update(located)
+    if source_context:
+        merged = list(value.get("source_scan_images", [])) + list(source_context)
+        value["source_scan_images"] = merged[:3]
+    return value
+
+
+def _published_matches(job, source, root):
+    job = Path(job)
+    status_path = job / "status.json"
+    if not status_path.exists():
+        return False
+    state = editorial.read(status_path)
+    required = ("article.json", "dossier.json", "reviews.json")
+    if state.get("status") != "published" or not all((job / n).is_file() for n in required):
+        return False
+    article, dossier, reviews = [editorial.read(job / n) for n in required]
+    try:
+        editorial.validate_reviews(article, dossier, reviews)
+        canonical_article, canonical_dossier = _canonical(root, article["character"])
+        located = _load_source_tools().locate_sources({"schema_version": 1, "sources": [source]}, article["character"], dossier)
+    except (ValueError, KeyError, OSError, editorial.ValidationError):
+        return False
+    audit_path = job / "source_audit.json"
+    return (audit_path.is_file()
+            and editorial.read(audit_path).get("verified") is True
+            and state.get("source_id") == source["id"]
+            and _recorded_source_hash_matches(state.get("registry_source_hash"),
+                editorial.read(job / "source.json").get("registry_source"), source)
+            and state.get("locator_hash") == editorial.digest(located)
+            and state.get("source_audit_hash") == editorial.digest(editorial.read(audit_path))
+            and _recorded_source_hash_matches(editorial.read(audit_path).get("source_hash"),
+                editorial.read(job / "source.json").get("registry_source"), source)
+            and state.get("article_hash") == editorial.digest(article)
+            and state.get("dossier_hash") == editorial.digest(dossier)
+            and editorial.digest(canonical_article) == editorial.digest(article)
+            and editorial.digest(canonical_dossier) == editorial.digest(dossier))
+
+
+def _capture_scan_findings(job, source):
+    """Promote explicitly tagged unresolved OCR gaps from every research attempt."""
+    root = Path(job)
+    paths = sorted(root.glob("**/research/result.json")) + sorted(root.glob("**/research-repair-*/result.json"))
+    gaps = []
+    markers = ("[SCAN VERIFICATION REQUIRED]", "[OCR CORRECTION REQUIRED]")
+    for path in dict.fromkeys(paths):
+        try:
+            result = editorial.read(path)
+        except (OSError, ValueError):
+            continue
+        for gap in result.get("gaps", []):
+            if isinstance(gap, str) and gap.startswith(markers):
+                gaps.append({"key": f"{source['id']}:{root.name}:{editorial.digest(gap)[:12]}",
+                    "kind": "ocr", "title": f"Verify {source.get('title', source['id'])} scan finding for {root.name}",
+                    "details": gap, "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+                    "evidence": [f"Source job: {root}", f"Research output: {path.relative_to(root)}"]})
+    # Stable de-duplication covers repeated gaps across research repair attempts.
+    unique = {item["key"]: item for item in gaps}
+    gaps = list(unique.values())
+    record = {"source_id": source["id"], "tracking_issue_url": source.get("tracking_issue_url"),
+              "requires_coordinator_verification": bool(gaps), "findings": gaps}
+    editorial.write(Path(job) / "source_findings.json", record)
+    return record
+
+
+def _capture_source_audit(job, source, dossier):
+    """Require research output to cite the configured book with page provenance."""
+    root = Path(job)
+    result_paths = sorted(root.glob("**/research/result.json")) + sorted(root.glob("**/research-repair-*/result.json"))
+    title = source.get("title", "")
+    book_id = source.get("book_id", "")
+    pattern = re.compile(r"(?:\bPDF\s+page\b|\bprinted\s+page\b|\bpages?\b|\bpp?\.?\s*|頁|页)\s*\d+", re.I)
+    citations = []
+    for path in dict.fromkeys(result_paths):
+        try:
+            raw = editorial.read(path)
+        except (OSError, ValueError):
+            continue
+        for item in raw.get("evidence", []):
+            source_label = str(item.get("source", ""))
+            field = str(item.get("field", ""))
+            text = str(item.get("text", ""))
+            identity_match = (title and title in source_label) or (book_id and book_id in source_label)
+            page_match = bool(pattern.search(field) or pattern.search(text))
+            retained = any(evidence.get("source") == source_label and evidence.get("field") == field
+                           and evidence.get("text") == text for evidence in dossier.get("evidence", []))
+            if identity_match and page_match and retained:
+                citations.append({"research_output": str(path.relative_to(root)), "source": source_label,
+                                  "field": field, "text": text})
+    audit = {"source_id": source["id"], "source_hash": _research_source_hash(source),
+             "verified": bool(citations), "citations": citations}
+    editorial.write(root / "source_audit.json", audit)
+    return audit
+
+
+def _triage_and_sync_issues(job, source, runner):
+    """Track material job findings when the registered source names a GitHub repository."""
+    repository = source.get("github_repo")
+    if not repository:
+        return {"status": "not_configured", "issues": []}
+    from pipeline import issues
+    findings = issues.triage_job(job, source, runner)
+    receipts = issues.sync(findings, repository, Path(job) / "issue_receipts.json",
+                          parent_issue=source.get("issue_parent_number"),
+                          milestone=source.get("issue_milestone"),
+                          labels=source.get("issue_labels", []))
+    record = {"status": "synced", "repository": repository, "issues": receipts,
+              "findings_hash": editorial.digest(findings)}
+    editorial.write(Path(job) / "issue_sync.json", record)
+    return record
+
+
+def status(cohort, source, output, root=ROOT):
+    rows = []
+    for char in cohort["characters"]:
+        job = job_path(output, source["id"], char)
+        if _published_matches(job, source, root):
+            value = "published"
+        elif (job / "source.json").is_file() and editorial.read(job / "source.json").get(
+                "registry_source_hash") and not _recorded_source_hash_matches(
+                    editorial.read(job / "source.json").get("registry_source_hash"),
+                    editorial.read(job / "source.json").get("registry_source"), source):
+            value = "stale"
+        elif (job / "status.json").exists():
+            state = editorial.read(job / "status.json")
+            value = state.get("status", "unknown")
+            if value == "published":
+                value = "stale"
+            elif value == "approved" and (not (job / "source_audit.json").is_file()
+                    or not editorial.read(job / "source_audit.json").get("verified")):
+                value = "needs_source_evidence"
+        else:
+            value = "pending"
+        rows.append({"character": char, "source": source["id"], "status": value, "job": str(job)})
+    return rows
+
+
+def prepare(cohort, source, output, limit=3, root=ROOT):
+    if limit < 1 or limit > MAX_SELECTION:
+        raise ValueError(f"Selection limit must be between 1 and {MAX_SELECTION}")
+    rows, selected = [], 0
+    for char in cohort["characters"]:
+        job = job_path(output, source["id"], char)
+        if _published_matches(job, source, root):
+            rows.append({"character": char, "status": "published", "job": str(job)})
+            continue
+        if selected >= limit:
+            rows.append({"character": char, "status": "deferred", "job": str(job)})
+            continue
+        try:
+            prepare_job(char, job, source, root)
+            rows.append({"character": char, "status": "prepared", "job": str(job)})
+        except Exception as exc:
+            rows.append({"character": char, "status": "failed", "job": str(job), "error": str(exc)})
+        selected += 1
+    return rows
+
+
+def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revisions=3,
+        publish_now=False, source_context=None):
+    if not 1 <= workers <= MAX_WORKERS:
+        raise ValueError(f"Workers must be between 1 and {MAX_WORKERS}")
+    if not 1 <= limit <= MAX_SELECTION:
+        raise ValueError(f"Selection limit must be between 1 and {MAX_SELECTION}")
+    rows = {}
+    selected = []
+    for char in cohort["characters"]:
+        job = job_path(output, source["id"], char)
+        if _published_matches(job, source, root):
+            rows[char] = {"character": char, "status": "published", "job": str(job)}
+        elif len(selected) < limit:
+            selected.append(char)
+        else:
+            rows[char] = {"character": char, "status": "deferred", "job": str(job)}
+
+    def process(char):
+        job = job_path(output, source["id"], char)
+
+        def sync_findings(state):
+            try:
+                issue_sync = _triage_and_sync_issues(job, source, runner)
+            except Exception as exc:
+                issue_sync = {"status": "pending", "repository": source.get("github_repo"),
+                              "error": str(exc)}
+                editorial.write(job / "issue_sync.json", issue_sync)
+            if issue_sync["status"] == "pending":
+                state["issue_sync_status"] = "pending"
+                editorial.write(job / "status.json", state)
+                return issue_sync
+            state["issue_sync_status"] = issue_sync["status"]
+            state["issue_receipts_hash"] = editorial.digest(issue_sync.get("issues", []))
+            editorial.write(job / "status.json", state)
+            return issue_sync
+
+        def complete_approval(state):
+            issue_sync = sync_findings(state)
+            if issue_sync["status"] == "pending":
+                return {"character": char, "status": "pending_issue_sync", "job": str(job),
+                        "error": issue_sync.get("error")}
+            if publish_now:
+                return publish_job(job, source, root)
+            return {"character": char, "status": "approved", "job": str(job)}
+
+        try:
+            snapshot = prepare_job(char, job, source, root)
+            article = editorial.read(job / "source_article.json")
+            dossier = editorial.read(job / "source_dossier.json")
+            saved_source = snapshot.get("registry_source")
+            if not _recorded_source_hash_matches(snapshot.get("registry_source_hash"), saved_source, source):
+                raise ValueError("Prepared job registry source changed; use a fresh source job directory")
+            located = _load_source_tools().locate_sources({"schema_version": 1, "sources": [source]}, char, dossier)
+            locator_hash = editorial.digest(located)
+            checkpoint_path = job / "source_checkpoint.json"
+            checkpoint = editorial.read(checkpoint_path) if checkpoint_path.exists() else {}
+            if checkpoint.get("registry_source_hash") and not _recorded_source_hash_matches(
+                    checkpoint.get("registry_source_hash"), saved_source, source):
+                raise ValueError("Source checkpoint belongs to another registered book/corpus")
+            if checkpoint.get("locator_hash") not in (None, locator_hash):
+                raise ValueError("Per-character source leads changed; prepare a fresh source job directory")
+            checkpoint = {"character": char, "source_id": source["id"],
+                "registry_source_hash": _research_source_hash(source), "snapshot_hash": editorial.digest(snapshot),
+                "locator": located, "locator_hash": locator_hash, "status": "research_pending",
+                "updated_at": datetime.now(timezone.utc).isoformat()}
+            # This durable packet survives editorial.refine replacing status.json at stage start.
+            editorial.write(checkpoint_path, checkpoint)
+            runner.profile_policy = SOURCE_POLICY
+            if getattr(runner, "model", "gpt-6-luna") != "gpt-6-luna" or getattr(runner, "reasoning", "low") != "low":
+                raise ValueError("Source enrichment requires gpt-6-luna with low reasoning")
+            findings_path = job / "source_findings.json"
+            if findings_path.exists() and editorial.read(findings_path).get("requires_coordinator_verification", False):
+                raise ValueError("Unresolved source/OCR finding requires coordinator verification before continuing")
+            state = editorial.read(job / "status.json")
+            audit_path = job / "source_audit.json"
+            if state.get("status") == "approved" and audit_path.is_file():
+                audit = editorial.read(audit_path)
+                candidate = editorial.read(job / "article.json")
+                candidate_dossier = editorial.read(job / "dossier.json")
+                try:
+                    editorial.validate_reviews(candidate, candidate_dossier, editorial.read(job / "reviews.json"))
+                    reusable = (audit.get("verified") is True
+                        and _recorded_source_hash_matches(audit.get("source_hash"), saved_source, source)
+                        and state.get("source_id") == source["id"]
+                        and _recorded_source_hash_matches(state.get("registry_source_hash"), saved_source, source)
+                        and state.get("locator_hash") == locator_hash
+                        and state.get("source_audit_hash") == editorial.digest(audit)
+                        and state.get("article_hash") == editorial.digest(candidate)
+                        and state.get("dossier_hash") == editorial.digest(candidate_dossier))
+                except (ValueError, KeyError, editorial.ValidationError):
+                    reusable = False
+                if reusable:
+                    return complete_approval(state)
+            followup = feedback(source, located, source_context)
+            followup["require_source_specific_page_evidence"] = True
+            if audit_path.exists() and not editorial.read(audit_path).get("verified"):
+                followup["previous_source_audit_failed"] = (
+                    "Prior research did not return page-specific evidence from this registered source. "
+                    "Inspect it and either cite a relevant page or state a specific source access/relevance gap.")
+            state = editorial.refine(article, dossier, job, runner, max_revisions,
+                                     followup, research_first=True)
+            scan_findings = _capture_scan_findings(job, source)
+            final_dossier = editorial.read(job / "dossier.json")
+            audit = _capture_source_audit(job, source, final_dossier)
+            state.update(source_id=source["id"], registry_source_hash=_research_source_hash(source),
+                         locator_hash=locator_hash, source_snapshot_hash=editorial.digest(snapshot),
+                         source_audit_hash=editorial.digest(audit), tracking_issue_url=source.get("tracking_issue_url"))
+            checkpoint.update(status="research_complete", source_audit_hash=editorial.digest(audit),
+                              updated_at=datetime.now(timezone.utc).isoformat())
+            editorial.write(checkpoint_path, checkpoint)
+            if state.get("status") == "approved" and not audit["verified"]:
+                state["status"] = "needs_source_evidence"
+                state["source_audit_error"] = "No page-specific evidence from the registered source was returned."
+            if scan_findings["requires_coordinator_verification"]:
+                state["source_verification_pending"] = True
+                if state.get("status") == "approved":
+                    state["status"] = "needs_source_verification"
+            editorial.write(job / "status.json", state)
+            if state.get("status") == "approved":
+                return complete_approval(state)
+            issue_sync = sync_findings(state)
+            if issue_sync["status"] == "pending":
+                return {"character": char, "status": "pending_issue_sync", "underlying_status": state.get("status"),
+                        "job": str(job), "error": issue_sync.get("error")}
+            return {"character": char, "status": state.get("status", "unknown"), "job": str(job)}
+        except Exception as exc:
+            research_results = list(job.glob("**/research/result.json")) + list(job.glob("**/research-repair-*/result.json"))
+            if research_results:
+                _capture_scan_findings(job, source)
+                _capture_source_audit(job, source, editorial.read(job / "dossier.json")
+                    if (job / "dossier.json").exists() else editorial.read(job / "source_dossier.json"))
+            failure = {"character": char, "status": "failed", "job": str(job), "error": str(exc)}
+            editorial.write(job / "source-enrichment-failure.json", failure)
+            if source.get("github_repo") and (job / "status.json").is_file():
+                try:
+                    _triage_and_sync_issues(job, source, runner)
+                except Exception as issue_exc:
+                    editorial.write(job / "issue_sync.json", {"status": "pending",
+                        "repository": source["github_repo"], "error": str(issue_exc)})
+            return failure
+
+    if selected:
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            futures = {char: pool.submit(process, char) for char in selected}
+            for char in selected:
+                rows[char] = futures[char].result()
+    return [rows[char] for char in cohort["characters"]]
+
+
+def publish_job(job, source, root=ROOT):
+    job = Path(job)
+    state = editorial.read(job / "status.json")
+    if state.get("status") != "approved":
+        raise ValueError("Only an approved source-enrichment job can be published")
+    saved = editorial.read(job / "source.json")
+    if not _same_research_source(saved.get("registry_source", {}), source):
+        raise ValueError("Job source provenance differs from requested source")
+    if not _recorded_source_hash_matches(saved.get("registry_source_hash"), saved.get("registry_source"), source):
+        raise ValueError("Job source registry hash is stale")
+    findings_path = job / "source_findings.json"
+    if findings_path.exists() and editorial.read(findings_path).get("requires_coordinator_verification", False):
+        raise ValueError("Source findings require coordinator verification")
+    audit_path = job / "source_audit.json"
+    if not audit_path.is_file():
+        raise ValueError("No source-specific audit was recorded")
+    audit = editorial.read(audit_path)
+    if (audit.get("verified") is not True
+            or not _recorded_source_hash_matches(audit.get("source_hash"), saved.get("registry_source"), source)
+            or state.get("source_audit_hash") != editorial.digest(audit)):
+        raise ValueError("Source-specific page evidence is missing or stale")
+    if source.get("github_repo") and state.get("issue_sync_status") != "synced":
+        raise ValueError("Issue tracking must sync successfully before publication")
+    article, dossier = editorial.read(job / "article.json"), editorial.read(job / "dossier.json")
+    reviews = editorial.read(job / "reviews.json")
+    hashes = {"article_hash": editorial.digest(article), "dossier_hash": editorial.digest(dossier)}
+    if state.get("article_hash") not in (None, hashes["article_hash"]) or state.get("dossier_hash") not in (None, hashes["dossier_hash"]):
+        raise ValueError("Approved status hashes do not match reviewed job artifacts")
+    result = batch.publish_job(job, root)
+    state = {**state, "status": "published", **hashes, "source_id": source["id"],
+             "registry_source_hash": _research_source_hash(source),
+             "locator_hash": state.get("locator_hash"), "published_at": datetime.now(timezone.utc).isoformat(),
+             "canonical_entry": str(Path(root) / "content/entries" / f"{ord(article['character']):04X}.json")}
+    editorial.write(job / "status.json", state)
+    return {"character": article["character"], "status": "published", "job": str(job), **hashes,
+            "batch_publication": str(result)}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("action", choices=("prepare", "run", "publish", "status"))
+    parser.add_argument("--registry", type=Path, required=True)
+    parser.add_argument("--source", required=True)
+    parser.add_argument("--cohort", type=Path, required=True)
+    parser.add_argument("--output", type=Path, default=ROOT / "runs/source-enrichment")
+    parser.add_argument("--root", type=Path, default=ROOT)
+    parser.add_argument("--limit", type=int, default=3)
+    parser.add_argument("--workers", type=int, default=1, help="Parallel character jobs, capped at 3")
+    parser.add_argument("--max-revisions", type=int, default=3)
+    parser.add_argument("--timeout", type=int, default=600)
+    parser.add_argument("--command", default=json.dumps(editorial.DEFAULT_COMMAND), help="Custom command; stages remain gpt-6-luna/low")
+    parser.add_argument("--publish-now", action="store_true")
+    parser.add_argument("--scan-context", type=Path, help="JSON records with absolute path, pdf_page, optional printed_page")
+    parser.add_argument("--tracking-issue-url", help="Existing GitHub issue for this enrichment or source finding")
+    args = parser.parse_args()
+    if not 1 <= args.limit <= MAX_SELECTION:
+        parser.error(f"--limit must be between 1 and {MAX_SELECTION}")
+    registry = _source_registry(args.registry)
+    source = _source(registry, args.source)
+    tracking_issue = args.tracking_issue_url or source.get("tracking_issue_url") or registry.get("tracking_issue_url")
+    if tracking_issue:
+        source = {**source, "tracking_issue_url": tracking_issue}
+    cohort = load_cohort(args.cohort)
+    context = editorial.read(args.scan_context) if args.scan_context else None
+    runner = editorial.Runner(json.loads(args.command), "gpt-6-luna", args.timeout, "low")
+    if args.action == "prepare":
+        result = prepare(cohort, source, args.output, args.limit, args.root)
+    elif args.action == "status":
+        result = status(cohort, source, args.output, args.root)
+    elif args.action == "publish":
+        result, published = [], 0
+        for row in cohort["characters"]:
+            job = job_path(args.output, source["id"], row)
+            approved = ((job / "status.json").exists()
+                        and editorial.read(job / "status.json").get("status") == "approved")
+            if approved and published >= args.limit:
+                result.append({"character": row, "status": "deferred", "job": str(job)})
+                continue
+            if approved:
+                try:
+                    state = editorial.read(job / "status.json")
+                    try:
+                        issue_sync = _triage_and_sync_issues(job, source, runner)
+                    except Exception as exc:
+                        issue_sync = {"status": "pending", "repository": source.get("github_repo"),
+                                      "error": str(exc)}
+                        editorial.write(job / "issue_sync.json", issue_sync)
+                    if issue_sync["status"] == "pending":
+                        state["issue_sync_status"] = "pending"
+                        editorial.write(job / "status.json", state)
+                        result.append({"character": row, "status": "pending_issue_sync", "job": str(job),
+                                       "error": issue_sync.get("error")})
+                        continue
+                    state["issue_sync_status"] = issue_sync["status"]
+                    state["issue_receipts_hash"] = editorial.digest(issue_sync.get("issues", []))
+                    editorial.write(job / "status.json", state)
+                    result.append(publish_job(job, source, args.root))
+                    published += 1
+                except Exception as exc:
+                    result.append({"character": row, "status": "failed", "job": str(job), "error": str(exc)})
+    else:
+        result = run(cohort, source, args.output, runner, args.limit, args.workers, args.root,
+                     args.max_revisions, args.publish_now, context)
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    if any(row.get("status") in ("failed", "needs_revision") for row in result):
+        raise SystemExit(2)
+
+
+if __name__ == "__main__":
+    main()

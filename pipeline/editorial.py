@@ -253,8 +253,31 @@ GLYPH_RESEARCH_SCHEMA["properties"]["historical_glyphs"] = HISTORICAL_GLYPHS
 
 RESEARCH_POLICY = """You are the external researcher for an evidence-grounded etymology dictionary.
 Read research/local-book-sources.md when available for acquired scholarly references and access
-instructions and scan budgets. The collection is still being digitised: use existing searchable
-exports or indexes, with at most three targeted relevant scan pages after efficient location.
+instructions and scan budgets. The provisional full-book 字源 OCR corpus is searchable; use it
+when its coverage includes a relevant headword or component, with at most three targeted relevant
+scan pages after efficient location. Search simplified and traditional forms separately. A text
+hit may be a quotation, running header or wrong OCR identity rather than the character's entry:
+identify the actual headword, inspect the original scan pixels for every book claim used, and
+check the passage's end and any continuation before paraphrasing it. Check unusual printed
+characters, sound components and historical glyph references against the scan; an OCR typo can
+change the analysis even when the surrounding prose looks fluent. Record exact book edition,
+PDF page, verified printed page if known, and which words/forms were checked against the scan.
+Unverified OCR remains a locator lead, not cited evidence or corroboration. A previous agent's
+scan-check note is a useful lead with its own provenance; do not state that you personally inspected
+the scan unless you actually opened its pixels in this invocation. If direct viewing fails, identify
+the prior check explicitly and record the access gap instead of silently upgrading the OCR.
+If the scan proves an OCR error, report its PDF page and exact erroneous span with the printed
+reading in the search audit or gaps so the coordinator can correct the book corpus's source-bound
+OCR layer and rebuild its consumer index. For uncertain printed identities, report the occurrence
+and uncertainty rather than a guessed Unicode replacement. Do not change the raw OCR response.
+The corpus source_sha256 hashes decoded RGB pixels; attachment sha256 hashes the encoded image
+file bytes. These hashes normally differ. Compare hashes only within the same hash kind; the
+harness validates supplied source_pixel_sha256 against decoded pixels before attaching scans.
+After a verified headword correction, check repeated references and the continuation page
+occurrence by occurrence. Do not replace normal particles or lookalikes through a global rule.
+When attached_source_scans is present, inspect the corresponding image attachments directly;
+their SHA-256 values bind the exact pixels. Cite only claims you can actually read from them,
+and keep unresolved glyph identities as source-bound images rather than guessed Unicode.
 Do not launch whole-book OCR, rendering, API digitisation or visual searching; record a locator
 gap and continue online when access is inefficient.
 When a meaningful grouped component may once have been an independently written whole graph,
@@ -448,9 +471,11 @@ the limitation reflects the evidence and research, rather than an omitted resear
 Return only JSON matching the supplied schema.
 """
 PROMPTS = {
+    "ocr_verification": "Independently verify proposed literal OCR corrections against the attached original scan pixels. A prior agent's proposal is a hypothesis. Compare each exact occurrence's visible strokes, including diacritics and extra strokes, with control occurrences on the same page. Do not infer a printed identity from meaning, pronunciation or a corrected headword elsewhere. Reject proposals when the scan agrees with raw OCR; retain uncertainty if pixels do not establish a replacement. Do not review etymological truth or certify the whole page. Give an explicit per-occurrence verdict and pixel-based reason in the supplied schema.",
+    "finding_triage": "Identify material errors, mistakes, improvements and clarifications from the supplied actual job artifacts for GitHub tracking. Proposed reviews that were rejected by their verification are not established errors. Retain verified required corrections, mechanical failures, source access gaps and OCR concerns with precise evidence and uncertainty. Include locally repaired findings so their fixes can be tracked, but do not claim an issue is closed or that a commit exists. Merge repeated manifestations of the same failure. Reuse a supplied existing finding key when it describes the same problem; otherwise give a stable concise English topic identifier. Never invent source inspection, reviewer approval, OCR replacements or problems. Return only the finding schema, with a concrete verification requirement for each issue. An empty findings array is correct if no material issue remains or arose.",
     "prose_repair": "Rewrite only the supplied reader-facing paragraphs so they explain the character directly. Preserve every substantive claim, uncertainty and qualification. Remove references to the dossier or workflow and inline citation labels; references remain attached separately. Return only the requested text edits, without changing facts or metadata.",
     "revision_plan": "Assess these verified findings and choose edit or research with a concrete reason tied to the existing evidence and required corrections.",
-    "article_patch": "Return targeted edits resolving only the supplied verified findings. Each edit selects an existing JSON path and puts the replacement value as JSON text in value_json (plain text is also accepted for existing string fields). Prefer the smallest field or component subfield; replace entire arrays only when their membership must change. Preserve unaffected fields, readings, citations, scopes and certainty exactly. Do not return an article rewrite. Component roles must remain nonempty: use unknown when no specific role is supported, never an empty role list. Treat component roles and contextual _component_of relationships as one correction: if changing a role, include the corresponding relationship edits in this same patch, preserving cited evidence and qualified certainty. Unknown roles must not retain edges assigning a specific role. Never leave an old edge contradicting a changed role or omit the edge required by a newly supported role. To remove a relationship replace the relationships array with its remaining records, never set an item to null. Changes receive complete schema, citation, graph and independent review afterward.",
+    "article_patch": "Return targeted edits resolving every supplied verified finding, including all affected learner cards and related component records. Before returning, check each finding against the proposed edits; do not fix one item while leaving another in the same finding unresolved. Each edit selects an existing JSON path and puts the replacement value as JSON text in value_json (plain text is also accepted for existing string fields). Prefer the smallest field or component subfield; replace entire arrays only when their membership must change. Preserve unaffected fields, readings, citations, scopes and certainty exactly. Do not return an article rewrite. Component roles must remain nonempty: use unknown when no specific role is supported, never an empty role list. Treat component roles and contextual _component_of relationships as one correction: if changing a role, include the corresponding relationship edits in this same patch, preserving cited evidence and qualified certainty. Unknown roles must not retain edges assigning a specific role. Never leave an old edge contradicting a changed role or omit the edge required by a newly supported role. If changing a component's scope_character to a historical host, include an evidence-supported graphic relationship linking that host to the entry in the same patch; otherwise retain the existing scope and clarify the historical subpart in prose. To remove a component, replace the components array with its remaining records, remove its learner card and matching component relationship, and update later learner component_index values; never set an array item to null. To remove a relationship replace the relationships array with its remaining records, never set an item to null. Changes receive complete schema, citation, graph and independent review afterward.",
     "component_sound": "Repair only the named component's sound comparisons and sound limitation using the cited evidence and verified findings. Return the supplied narrow schema. Preserve component roles, scopes and all other article fields; do not turn matching current readings into proof of historical phonetic formation.",
     "form_annotation": "Annotate only the origin_relation of each existing component. Distinguish full positional forms, historical ancestors/replaced forms, nonchronological variants, and explicitly simplified counterparts. Return one indexed annotation for every component with supporting evidence_ids chosen only from that component existing evidence_ids. Do not change any prose, forms or source data. Resolve supplied annotation-review findings.",
     "learner": "Write only the brief learner layer for the validated approved article. Preserve its claims and necessary uncertainty; use its cited evidence. Return the learner schema only. Resolve supplied learner-review findings. If a short claim lacks support, omit it rather than changing the approved detailed explanation.",
@@ -460,7 +485,7 @@ PROMPTS = {
     "analysis": "Identify supported claims, disagreements and limitations; cite their evidence. Resolve formation and component roles with the policy definitions: pictorial physical forms, semantic lexical categories, phonetic sound cues and positional indicators. Identify supported original meanings and altered forms.",
     "writer": "Write the entry using the analysis. Lead with a short accessible explanation, then history and uncertainties. Explain relationships rather than listing sources. A cited phonetic_element_in edge may record that this entry character is used as a sound element in another character; it does not make that other character a graphic component or ancestor of this entry.",
     "factual": "For v2, inspect image pixels only when attached_images lists actual attachments. An empty list means no glyph images are selected or attached; do not demand inspection of nonexistent images. The harness has verified the original bytes in dossier.glyph_assets and rendered SVG originals into these PNG attachments; inspecting those rendered attachments counts as inspecting the selected originals. A legacy dossier note saying images were not inspected refers to the initial imported packet, before glyph curation. An indivisible pictograph intentionally uses the whole character as its single pictorial component; do not demand a distinct internal component. Every finding must identify an actual field/claim in the article, not a claim merely mentioned in its source dossier. Verify glyph images against inspected originals, identity, period, redrawings versus artifacts, reuse rights and caption/prose coherence. Check sense developments and every graph edge for evidence, context and uncertainty. Independently audit every claim against its cited source excerpts. Reject unsupported chronology, invented phonology or semantic links, overstated certainty, citation mismatches, missing component roles, conflated pictorial versus semantic roles, invented decompositions and unsubstantiated corruption claims. Verify both readings in every sound comparison, the component's historical identity, and the labeled language/reconstruction system; reject mixed systems or a kun'yomi presented as an on'yomi sound derivation. Return pass only if there are no required corrections; otherwise revise with specific findings.",
-    "readability": "For v2, inspect the attached raster views when attached_images lists them. An empty list means there are no selected or attached glyphs; do not claim images exist or demand inspection of nonexistent images. These are rendered from the exact originals in dossier.glyph_assets; an old dossier note about uninspected images refers to the initial imported packet. A whole-graph pictograph is intentionally represented as one pictorial component. Reject decorative image dumps, unexplained captions, misleading chronology and meaning histories that conflate graph borrowing with semantic change. Check whether a reader can follow apparent contradictions and the evidence popups. Independently review whether this is a coherent explanation useful to a learner and an expert. Reject a source dump, source names in explanatory prose, unexplained jargon, contradictory framing, missing component explanations, or an opening that misleads. A sound component must show its pronunciation beside the character's and explain a non-obvious relationship directly in the component card. Return pass only if there are no required corrections; otherwise revise with specific findings.",
+    "readability": "For v2, inspect the attached raster views when attached_images lists them. An empty list means there are no selected or attached glyphs; do not claim images exist or demand inspection of nonexistent images. These are rendered from the exact originals in dossier.glyph_assets; an old dossier note about uninspected images refers to the initial imported packet. A whole-graph pictograph is intentionally represented as one pictorial component. Reject decorative image dumps, unexplained captions, misleading chronology and meaning histories that conflate graph borrowing with semantic change. Check whether a reader can follow apparent contradictions and the evidence popups. Independently review whether this is a coherent explanation useful to a learner and an expert. Audit every reader-facing text field, including meaning_history.senses and developments, uncertainties, limitations, relationship explanations, captions and learner cards; source names, 'source X says' framing and workflow statements about what researchers inspected belong outside explanatory prose. State the actual evidential limit in reader terms. Reject a source dump, source names in explanatory prose, unexplained jargon, contradictory framing, missing component explanations, or an opening that misleads. A sound component must show its pronunciation beside the character's and explain a non-obvious relationship directly in the component card. Return pass only if there are no required corrections; otherwise revise with specific findings.",
     "editor": "Edit this complete draft for a learner-facing dictionary. Resolve supplied review findings first. Preserve its supported claims, citations, senses, certainty and relationships, but make the explanation coherent, concise and natural. Put citations only in evidence_ids; remove bracketed ref-number markers from prose. Start by explaining what the character depicts or how it is constructed. Never mention the dossier, pipeline, agents, research run, what was or was not independently inspected, or data availability in the main prose. Do not repeatedly say reported, interpreted or the evidence does not establish; qualify only the specific uncertain inference once, and put detailed research limitations in limitations/uncertainties. Do not name sources in explanatory prose: attribution lives in citations. Avoid duplicating the same account in summary, formation, component and history. Use history for form history and meaning_history for meanings; examples should help understanding, not reproduce a research log. Give the reader the useful explanation supported by the research; do not turn modest gaps about dates into doubt about an otherwise supported basic meaning. Return the complete writer-schema article; the harness preserves curated glyphs and derives meaning edges.",
     "revision": "Make targeted changes to resolve the supplied review findings. Preserve supported, clear prose. Return the complete corrected article. Both reviewers will review it again.",
 }
@@ -932,17 +957,91 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
                     for error in errors[:8]))
             # Give the patch agent immediate feedback on role/edge, scope and citation
             # invariants, rather than spend a full review round on invalid metadata.
-            validate_article(assemble_article(patched, inputs['dossier']), inputs['dossier'])
+            try:
+                validate_article(assemble_article(patched, inputs['dossier']), inputs['dossier'])
+            except ValueError as exc:
+                # The outer review loop has a bounded learner-only repair stage. Let it
+                # shorten a valid patch instead of asking the patch agent to rewrite it.
+                if not str(exc).startswith("Learner paragraph exceeds"):
+                    raise
         except (ValueError, KeyError, IndexError, TypeError, ValidationError) as exc:
             if attempt == 2: raise
             article = patched
             patch_inputs = {**inputs, 'article': patched, 'original_role':role, 'previous_patch':result,
                 'validation_findings':[exc.message if isinstance(exc, ValidationError) else str(exc)],
-                'task':'Repair the supplied current candidate, retaining previous edits. Select distinct nonoverlapping '
-                       'paths with valid JSON replacement values; preserve unaffected fields.'}
+                'task':'Repair every listed validation finding in the supplied current candidate, retaining valid previous edits. '
+                       'If a learner paragraph exceeds its hard word limit, shorten that paragraph directly: keep the main '
+                       'meaning and essential caveat, move lower-priority detail to the expert account, and aim below 40 words '
+                       'for the overview, below 25 words for a component card, or below 35 words for a takeaway. '
+                       'For sound_limitation, use null or a complete cited object with text and evidence_ids, never a bare string. '
+                       'To remove an array item, replace the entire array with its remaining valid items; never set an item to null. '
+                       'Select distinct nonoverlapping paths with valid JSON replacement values; preserve unaffected fields.'}
             continue
         # Keep the writer contract; curation and derived edges are assembled separately.
         return {key:value for key,value in patched.items() if key in schema['properties']}
+
+
+def summarize_web_activity(events):
+    """Count completed Codex web actions, using their start event when completion says other."""
+    started = {item.get("id"): item for event in events if event.get("type") == "item.started"
+               for item in [event.get("item", {})] if item.get("type") == "web_search" and item.get("id")}
+    completed = [event.get("item", {}) for event in events if event.get("type") == "item.completed"
+                 and event.get("item", {}).get("type") == "web_search"]
+    actions = {}
+    queries = []
+    for item in completed:
+        action = item.get("action", {})
+        action_type = action.get("type", "search")
+        if action_type == "other":
+            beginning = started.get(item.get("id"), {})
+            action_type = beginning.get("action", {}).get("type", "other")
+            if action_type not in ("search", "open", "open_page"):
+                action_type = "other"
+        actions[action_type] = actions.get(action_type, 0) + 1
+        if action_type == "search":
+            beginning = started.get(item.get("id"), {})
+            terms = action.get("queries") or beginning.get("action", {}).get("queries")
+            if terms:
+                queries.extend(term for term in terms if term)
+            elif item.get("query"):
+                queries.append(item["query"])
+    return {"web_tool_events": len(completed), "web_action_counts": actions,
+            "web_search_calls": actions.get("search", 0), "web_search_queries": queries}
+
+
+def parse_codex_events(log_text):
+    """Parse JSONL records without splitting on Unicode line separators inside JSON strings."""
+    events = []
+    for line in log_text.split("\n"):
+        try:
+            events.append(json.loads(line))
+        except ValueError:
+            continue
+    return events
+
+
+def source_scan_attachments(scans, start_index=1):
+    if not isinstance(scans, list) or len(scans) > 3 or any(
+            not isinstance(scan, dict) or not isinstance(scan.get("path"), str)
+            or not isinstance(scan.get("pdf_page"), int) for scan in scans):
+        raise ValueError("Source scans require at most three path/page records")
+    paths = [Path(scan["path"]) for scan in scans]
+    if any(not path.is_file() for path in paths):
+        raise ValueError("Source scan image is missing")
+    records = [{**scan, "attachment_index": start_index + index,
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                "sha256_kind": "encoded_image_file_bytes"}
+               for index, (scan, path) in enumerate(zip(scans, paths))]
+    for path, record in zip(paths, records):
+        if record.get("source_pixel_sha256"):
+            from PIL import Image
+            with Image.open(path) as source_image:
+                actual = hashlib.sha256(source_image.convert("RGB").tobytes()).hexdigest()
+            if actual != record["source_pixel_sha256"]:
+                raise ValueError("Source scan decoded pixel hash mismatch")
+            record["pixel_sha256"] = actual
+            record["pixel_sha256_kind"] = "decoded_RGB_pixel_bytes"
+    return paths, records
 
 
 class Runner:
@@ -982,6 +1081,11 @@ class Runner:
         if role in ("analysis", "writer", "revision", "editor", "glyph_visual", "learner", "form_annotation", "component_sound", "article_patch"):
             inputs, citation_aliases = citation_transport(inputs)
         image_paths = []
+        if role in ("research", "ocr_verification") and isinstance(inputs.get("feedback"), dict):
+            scans = inputs["feedback"].get("source_scan_images", [])
+            if scans:
+                image_paths, records = source_scan_attachments(scans)
+                inputs = {**inputs, "attached_source_scans": records}
         if role in ("factual", "readability"):
             inputs = {**inputs, "attached_images": [], "schema_contract": {
                 "formation_types": FORMATION["properties"]["type"]["enum"],
@@ -998,11 +1102,18 @@ class Runner:
                  "source_url": asset["source_url"], "path": str(path),
                  "sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest()}
                 for index, (asset, path) in enumerate(zip(inputs["dossier"]["glyph_assets"], image_paths))]}
+        if role == "factual" and inputs.get("source_scan_images"):
+            scan_paths, records = source_scan_attachments(
+                inputs["source_scan_images"], len(image_paths) + 1)
+            image_paths.extend(scan_paths)
+            inputs = {**inputs, "attached_source_scans": records}
         scope = ""
         if inputs.get("review_scope") == "added_learner":
             scope = "\nSCOPE FOR THIS INVOCATION: The supplied validated_base_article and base_approval are an already approved detailed entry. Review only the added learner layer for factual support, readability and consistency with the unchanged detailed entry. Do not demand rewriting unchanged deeper prose or repeat its settled review. Reject contradictions introduced by the learner, unsupported new learner claims, missing essential caveats or confusing learner wording. Both reviews still bind the complete exact article and dossier."
         if inputs.get("review_scope") == "component_form_relations":
             scope = "\nSCOPE FOR THIS INVOCATION: The detailed entry and dossier are already approved and unchanged. Review only the added component origin_relation classifications and their cited support. Verify full positional forms versus historical ancestors versus nonchronological variants versus explicitly simplified counterparts; uncertain is required where evidence does not establish the relation. Do not request unrelated prose rewrites or learner additions. Both fresh reviews bind the entire resulting article and dossier."
+        if inputs.get("review_scope") == "targeted_refinement":
+            scope = "\nSCOPE FOR THIS INVOCATION: The supplied validated_base_article and base_approval received genuine factual and readability approval for this exact unchanged dossier. Review the listed changed_paths and their direct effects on meaning, citations, component and graph consistency. Do not reopen unchanged claims merely to request different wording or repeat a settled review. Reject any changed claim that lacks support, creates a contradiction or makes the article misleading. Both fresh reviews bind the complete exact candidate article and dossier."
         if inputs.get("verification_task"):
             scope += "\nVERIFICATION TASK: " + inputs["verification_task"]
         prompt = (REVISION_PLAN_POLICY if role == "revision_plan" else RESEARCH_POLICY if role == "research" else RESEARCH_POLICY + GLYPH_POLICY if role == "glyph_research" else GLYPH_VISUAL_POLICY if role == "glyph_visual" else POLICY + REVIEW_V2_POLICY + LEARNER_POLICY if role in ("factual", "readability") else POLICY if role == "form_annotation" else POLICY + LEARNER_POLICY if role == "learner" else POLICY + V2_POLICY + LEARNER_POLICY) + FORM_RELATION_POLICY + "\n" + ((self.profile_policy + "\n") if getattr(self, "profile_policy", "") else "") + PROMPTS[role] + scope + "\nINPUTS:\n" + json.dumps(inputs, ensure_ascii=False)
@@ -1070,34 +1181,12 @@ class Runner:
                 result = normalized
                 write(output, result)
             if Path(command[0]).name == "codex":
-                events = []
-                for line in (directory / "stdout.log").read_text().splitlines():
-                    try:
-                        events.append(json.loads(line))
-                    except ValueError:
-                        continue
-                items = [event.get("item", {}) for event in events if event.get("type") == "item.completed"]
+                events = parse_codex_events((directory / "stdout.log").read_text())
                 meta["agent_thread_ids"] = [event["thread_id"] for event in events if event.get("type") == "thread.started"]
-                web_items = [item for item in items if item.get("type") == "web_search"]
-                web_actions = {}
-                search_queries = []
-                for item in web_items:
-                    action = item.get("action", {})
-                    action_type = action.get("type", "search")
-                    web_actions[action_type] = web_actions.get(action_type, 0) + 1
-                    if action_type == "search":
-                        queries = action.get("queries", [])
-                        if queries:
-                            search_queries.extend(queries)
-                        elif item.get("query"):
-                            search_queries.append(item["query"])
-                meta["web_tool_events"] = len(web_items)
-                meta["web_action_counts"] = web_actions
-                meta["web_search_calls"] = sum(
-                    1 for item in web_items if item.get("action", {}).get("type", "search") == "search")
-                meta["web_search_queries"] = search_queries
+                meta.update(summarize_web_activity(events))
                 if role in ("research", "glyph_research") and not any(
-                        web_actions.get(action, 0) for action in ("search", "open_page", "open")):
+                        meta["web_action_counts"].get(action, 0)
+                        for action in ("search", "open_page", "open")):
                     raise RuntimeError("Research agent made no recorded web searches or source-page inspections; rerun this stage")
             Draft202012Validator(schema).validate(result)
             meta.update(status="complete", result_hash=digest(result))
@@ -1146,16 +1235,18 @@ def research_dossier(dossier, directory, runner, review_context=None):
         dossier["external_research"] = {
             "search_audit": earlier_audit.get("search_audit", []) + research["search_audit"],
             "gaps": earlier_audit.get("gaps", []) + research["gaps"]}
-    if (dossier.get("context", {}).get("target_language") == "ja"
-            and (review_context or {}).get("reuse_existing_glyph_candidates") is True
-            and dossier.get("source_reuse", {}).get("same_graph") is True
-            and dossier.get("glyph_research")):
-        # Reuse reviewed exact-graph candidates, but re-evaluate their relevance and captions
-        # for Japanese learners. Later research repairs take the full acquisition route.
+    reuse_glyphs = ((review_context or {}).get("reuse_existing_glyph_candidates") is True
+                    and dossier.get("glyph_research")
+                    and (dossier.get("context", {}).get("target_language") != "ja"
+                         or dossier.get("source_reuse", {}).get("same_graph") is True))
+    if reuse_glyphs:
+        # A text-focused Chinese refinement retains its reviewed image selection. An exact-graph
+        # Japanese reuse still needs a new visual assessment for that language.
         validate_glyph_assets(dossier)
         write(directory / "glyph_candidates.json", dossier["glyph_research"]["historical_glyphs"])
         write(directory / "glyph_assets.json", dossier.get("glyph_assets", []))
-        dossier = curate_glyphs(dossier, directory / "glyph_visual", runner, review_context)
+        if dossier.get("context", {}).get("target_language") == "ja":
+            dossier = curate_glyphs(dossier, directory / "glyph_visual", runner, review_context)
         write(directory / "dossier.json", dossier)
         return dossier
     asset_manifest_path = directory / "glyph_assets.json"
@@ -1462,7 +1553,58 @@ def repair_learner_length(article, dossier, directory, runner):
     return article
 
 
-def review_article(article, dossier, directory, runner, state, max_revisions, feedback=None, edit_first=True):
+def validate_new_reader_style(article, dossier):
+    """Catch source labels and workflow terms that belong in citations, not new prose."""
+    source_names = {item.get("source", "") for item in dossier.get("evidence", [])}
+    labels = {label for source in source_names
+              for label in [*re.findall(r"\b[A-Z]{2,8}\b", source),
+                            *re.findall(r"《([^》]{2,20})》", source)]}
+    fields = {"text", "caption", "alt", "selection_reason", "period"}
+
+    def check(value, path="article"):
+        if isinstance(value, dict):
+            for key, child in value.items():
+                if key in fields and isinstance(child, str):
+                    if re.search(r"\bdossier\b", child, re.I):
+                        raise ValueError(f"Workflow term in reader-facing {path}.{key}: {child[:120]}")
+                    for label in sorted(labels):
+                        pattern = re.escape(label)
+                        if label.isascii():
+                            pattern = rf"\b{pattern}\b"
+                        if re.search(pattern, child):
+                            raise ValueError(f"Source name {label!r} in reader-facing {path}.{key}: {child[:120]}")
+                elif key not in {"source", "source_title", "source_url", "rights_url", "image_url"}:
+                    check(child, f"{path}.{key}")
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                check(child, f"{path}[{index}]")
+
+    check(article)
+
+
+def reuse_glyphs_for_text_followup(feedback, reviews):
+    """Keep curated images when follow-up findings concern only text or sources."""
+    if not isinstance(feedback, dict) or feedback.get("reuse_existing_glyph_candidates") is not True:
+        return False
+    return not any(re.search(r"historical_glyphs|glyph|caption|image|visual|rights|asset", finding, re.I)
+                   for review in reviews for finding in review["findings"])
+
+
+def changed_article_paths(before, after, path="article"):
+    """Identify candidate changes for a scoped re-review of an approved base."""
+    if before == after:
+        return []
+    if isinstance(before, dict) and isinstance(after, dict):
+        return [changed for key in sorted(before.keys() | after.keys())
+                for changed in changed_article_paths(before.get(key), after.get(key), f"{path}.{key}")]
+    if isinstance(before, list) and isinstance(after, list) and len(before) == len(after):
+        return [changed for index, (old, new) in enumerate(zip(before, after))
+                for changed in changed_article_paths(old, new, f"{path}[{index}]")]
+    return [path]
+
+
+def review_article(article, dossier, directory, runner, state, max_revisions, feedback=None,
+                   edit_first=True, approved_base=None):
     """Shared copy-edit, independent-review and bounded repair gates."""
     edit_scope = ({"allowed_edit_paths": feedback["allowed_edit_paths"]}
                   if isinstance(feedback, dict) and feedback.get("allowed_edit_paths") else {})
@@ -1488,6 +1630,7 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
             article = repair_learner_length(article, dossier,
                 directory / f"round-{revision}", runner)
             validate_article(article, dossier)
+            validate_new_reader_style(article, dossier)
         except (ValueError, ValidationError) as exc:
             findings = [{"role": "validation", "verdict": "revise", "findings": [str(exc)]}]
             write(directory / "article.json", article)
@@ -1515,8 +1658,16 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
             continue
         reviews = []
         for role in ("factual", "readability"):
+            source_context = ({"source_scan_images": feedback["source_scan_images"]}
+                              if role == "factual" and isinstance(feedback, dict)
+                              and feedback.get("source_scan_images") else None)
+            if approved_base and digest(dossier) == approved_base["dossier_hash"]:
+                source_context = {**(source_context or {}), "review_scope": "targeted_refinement",
+                    "validated_base_article": approved_base["article"],
+                    "base_approval": approved_base["reviews"],
+                    "changed_paths": changed_article_paths(approved_base["article"], article)}
             reviews.append(independent_review(role, article, dossier,
-                directory / f"round-{revision}", runner))
+                directory / f"round-{revision}", runner, source_context))
         write(directory / "article.json", article)
         write(directory / "reviews.json", reviews)
         state["revision"] = revision
@@ -1534,8 +1685,10 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
             raise ValueError("Revision plan requires a concrete reason")
         write(plan_dir / "decision.json", plan)
         if plan["action"] == "research":
+            text_only_followup = reuse_glyphs_for_text_followup(feedback, reviews)
             dossier = research_dossier(dossier, directory / f"round-{revision}" / "followup",
-                                       runner, {"article": article, "reviews": reviews})
+                                       runner, {"article": article, "reviews": reviews,
+                                                "reuse_existing_glyph_candidates": text_only_followup})
             write(directory / "dossier.json", dossier)
             state["dossier_hash"] = digest(dossier)
         elif any("historical_glyphs" in finding for review in reviews
@@ -1582,12 +1735,29 @@ def run(dossier, directory, runner, max_revisions=3, research_context=None):
         write(directory / "status.json", state)
 
 
-def refine(article, dossier, directory, runner, max_revisions=3, feedback=None, research_first=False):
+def refine(article, dossier, directory, runner, max_revisions=3, feedback=None,
+           research_first=False, edit_first=True, approved_base=None):
     """Copy-edit researched v2 material through the same gates, without initial research."""
     directory = Path(directory)
     article, dossier = strip_inline_citation_aliases(copy.deepcopy(article)), copy.deepcopy(dossier)
+    if not edit_first and dossier.get("context", {}).get("target_language") != "ja":
+        if feedback is None:
+            feedback = {"reuse_existing_glyph_candidates": True}
+        elif isinstance(feedback, dict):
+            feedback = {"reuse_existing_glyph_candidates": True, **feedback}
     state = {"character": dossier.get("character"), "status": "running", "mode": "refine",
              "dossier_hash": digest(dossier), "source_article_hash": digest(article)}
+    if approved_base is not None:
+        if edit_first or research_first:
+            raise ValueError("Scoped base review requires an unchanged candidate and no initial research")
+        base_article = approved_base["article"]
+        base_dossier = approved_base["dossier"]
+        if digest(base_dossier) != digest(dossier):
+            raise ValueError("Approved base dossier differs from candidate dossier")
+        validate_reviews(base_article, base_dossier, approved_base["reviews"])
+        approved_base = {"article": base_article, "reviews": approved_base["reviews"],
+                         "dossier_hash": digest(base_dossier)}
+        state["base_article_hash"] = digest(base_article)
     if feedback is not None:
         write(directory / "source_feedback.json", feedback)
     write(directory / "source_article.json", article)
@@ -1623,7 +1793,8 @@ def refine(article, dossier, directory, runner, max_revisions=3, feedback=None, 
             write(directory / "dossier.json", dossier)
             state["dossier_hash"] = digest(dossier)
             state["initial_research"] = True
-        return review_article(article, dossier, directory, runner, state, max_revisions, feedback)
+        return review_article(article, dossier, directory, runner, state, max_revisions,
+                              feedback, edit_first=edit_first, approved_base=approved_base)
     except BaseException as exc:
         state.update(status="failed", error=str(exc))
         raise
@@ -1759,6 +1930,10 @@ def main():
     refinement.add_argument("job", type=Path)
     refinement.add_argument("--feedback", type=Path, help="JSON findings or review records to resolve in the first editing round")
     refinement.add_argument("--research-first", action="store_true", help="Supplement source evidence before editing and independent review")
+    refinement.add_argument("--review-current", action="store_true",
+                            help="Review the supplied candidate as-is before any new edit; revisions still repair review findings")
+    refinement.add_argument("--approved-base-job", type=Path,
+                            help="Scope fresh review to changes from an exact approved job with the same dossier; requires --review-current")
     learner_command = commands.add_parser("add-learner", help="Add a learner layer without rewriting approved detailed content")
     learner_command.add_argument("entry", type=Path)
     learner_command.add_argument("job", type=Path)
@@ -1795,6 +1970,10 @@ def main():
         elif args.action == "add-learner":
             state = add_learner(read(args.entry), args.job, runner, args.max_revisions)
         elif args.action == "refine":
+            if args.review_current and args.research_first:
+                parser.error("--review-current cannot be combined with --research-first")
+            if args.approved_base_job and not args.review_current:
+                parser.error("--approved-base-job requires --review-current")
             entry = read(args.entry)
             article = extract_article(entry)
             dossier = entry["dossier"] if "dossier" in entry else read(args.entry.parent / "dossier.json")
@@ -1803,8 +1982,17 @@ def main():
             if "review" in entry and (entry["review"].get("article_hash") != digest(article)
                     or entry["review"].get("dossier_hash") != digest(dossier)):
                 parser.error("Source entry integrity check failed")
+            base = None
+            if args.approved_base_job:
+                base_job = args.approved_base_job
+                if read(base_job / "status.json").get("status") != "approved":
+                    parser.error("Base job is not approved")
+                base = {"article": read(base_job / "article.json"),
+                        "dossier": read(base_job / "dossier.json"),
+                        "reviews": read(base_job / "reviews.json")}
             state = refine(article, dossier, args.job, runner, args.max_revisions,
-                           read(args.feedback) if args.feedback else None, args.research_first)
+                           read(args.feedback) if args.feedback else None, args.research_first,
+                           edit_first=not args.review_current, approved_base=base)
         else:
             state = run(read(args.job / "source_dossier.json"), args.job, runner, args.max_revisions)
         print(json.dumps(state, ensure_ascii=False))

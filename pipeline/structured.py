@@ -137,7 +137,9 @@ always the useful component split; a grouped upper shape may itself have a sourc
 A grouped component's form identifier must represent the whole group described, not just
 one of its subparts. If no verified literal form represents the group, retain accurate visible
 subcomponent records and explain their grouping in prose; do not silently label the entire
-upper assembly with a symbol for only its top strokes. Review the displayed symbol against
+upper assembly with a symbol for only its top strokes or concatenate subpart symbols into a
+new, unattested form identifier. Update component-indexed learner cards when splitting a group.
+Review the displayed symbol against
 the prose and graph scope, including retained enclosing or roof strokes.
 Do not describe current strokes using the appearance of historical predecessor elements.
 Separate visible identity, current function and historical function. Uncertainty in an ancient
@@ -302,11 +304,25 @@ V2_POLICY = """
 Produce schema_version 2. Keep history about written form; use meaning_history for word meanings.
 Give senses stable IDs scoped to this character (e.g. 木:tree); distinguish earliest attestation from
 hypothetical original meaning. Period can explicitly be 'dating unresolved'.
+Mark the ordinary present-day sense current even when its text also documents older attestations;
+historical is for a use that is no longer current or is discussed only as a historical use. An
+entry must not label its opening present meaning historical merely because the cited evidence
+includes older examples. Reviewers should check that the
+learner's stated current meaning has a matching current sense record.
+When changing a sense to current, cite evidence for present use as well as any older attestations;
+ancient examples alone do not support current status. Check the generated has_sense edge too.
+Do not create a sense node merely because one source proposes an original meaning when that
+word use is not independently attested. Explain the competing proposal in cited prose and
+limitations instead; a disputed proposed transition must not force a fabricated source sense
+or derived graph edge. Preserve the proposed analysis without presenting it as an attested use.
 Use earliest_attested for a sourced use in the earliest documented corpus or period, or one
 explicitly identified as the earliest attested use. Several senses may share that early period
 without established priority between them. An undated old dictionary or classical use alone
 is historical, not automatically earliest_attested. The label never establishes original meaning.
 Connect senses only when evidence supports the development; a list of modern glosses does not establish chronology.
+Do not create two sense records with the same use and overlapping teaching synonyms merely because
+different sources or periods word the gloss differently. Merge duplicate uses, preserving their
+attestations and citations in one sense; keep genuinely distinct uses separate.
 Distinguish borrowing the graph for another word from semantic extension. Include limitations
 where transitions are unknown.
 Keep each sense scoped to the entry character. A compound containing this character can be
@@ -544,6 +560,10 @@ def validate_v2(article, dossier, validate_sections):
                 raise ValueError("Graphic relationship must connect to this entry through cited graphic links")
 
 REVIEW_V2_POLICY = """
+When attached_source_scans is present, compare substantive book-based component and form claims
+with the exact image attachments, including ordinary lookalike characters inside fluent OCR.
+The research agent's statement that it inspected a scan does not replace this independent check.
+Report a mismatch against the cited claim and require corrected source evidence before approval.
 A visible grouped assembly may be represented by its accurate subcomponent records, with their
 joint relationship explained in prose, when no verified literal identifier represents the whole.
 When using subpart records, put the joint assembly explanation in the overview or formation,
@@ -551,7 +571,8 @@ and let each indexed card primarily explain its own part rather than repeat the 
 That is explicitly valid: do not require an additional group node or replacing those subparts
 merely because the source discusses the assembly as a unit. Judge whether the prose actually
 assigns the whole group to one subpart, rather than treating contextual mention of a neighbour
-as an overlapping component. Do not invent a whole-group glyph identifier.
+as an overlapping component. Do not invent a whole-group glyph identifier by concatenating
+separate subpart symbols; verify a literal group form before using it as one indexed component.
 For an explicitly sourced standardized abbreviation, a visibly preserved component and its
 sourced function in the fuller form can support a qualified inference of continuity, with
 probable contextual edge certainty. Do not demand that such a qualified inference be called
@@ -559,6 +580,10 @@ unknown solely because no source repeats the claim for the abbreviated spelling.
 exact retained form, source-supported whole-form relation and stated qualification. Replaced
 strokes do not inherit roles merely through visual similarity. This does not establish an
 ancient original function or turn a competing historical analysis into consensus.
+Keep graphic retention, historically attributed function and current function distinct in review
+findings. If only the earlier function is sourced, a learner card may name that earlier proposal
+at its historical scope while identifying the retained modern shape; it must not assert an
+unqualified present-day role. Do not demand a present function merely to fill every visible card.
 
 For formation.type, distinguish disputed object identity from disputed construction. Competing
 whole-picture accounts may still support pictographic; a pictographic dictionary account alongside
@@ -619,6 +644,9 @@ Equivalent separators between the same readings are not a factual discrepancy: s
 and shí shì enumerate the same values. Check the readings themselves, not a dataset's display
 delimiter. Usage explanations belong in prose rather than inside the reading fields.
 For v2, history covers the written form; meaning_history covers senses and lexical loans.
+Check each sense's status against its own cited evidence: a current sense needs evidence of
+present use, even when its paragraph also cites ancient attestations. Check the corresponding
+generated has_sense edge after any status or citation change.
 Read the whole entry before reporting missing information. Do not require a loan already
 explained in meaning_history to be duplicated in history, or demand that a stated limitation
 be repeated in every section. An empty history is acceptable when no additional supported
@@ -689,14 +717,28 @@ An empty historical_glyphs.items list requires a cited limitation. A limitation 
 why candidate forms could not be verified or selected, even when no images are displayed.
 Require reader-facing wording and accurate provenance, rather than removing that explanation.
 Identify glyph corrections with the historical_glyphs field path so they reach the curator.
+A selected historical or seal-style glyph illustrates its labeled form and tradition. Do not
+use that image as the visual standard for the modern printed graph or reject an accurate
+modern component description merely because the selected older rendering looks different.
+Check each component against the form named in its scope_character, and judge glyph captions
+against the depicted image and its documented status separately.
 Read components, summary, and learner cards together; a supported whole-tree description does
 not need trunk/branches/roots repeated in every field. Require changes for incorrect or misleading
 claims, not merely because the same accurate description could be repeated elsewhere.
+Before claiming a learner card has no detailed component, count the actual components array and
+match its zero-based component_index; the validator already enforces exact coverage. Do not infer
+a missing record from an abbreviated review excerpt or a prior revision's different array.
 The role array lists the supported roles across the explicitly described analyses; it cannot
 encode prose or certainty values. The cited component edges carry per-role certainty and the
 component text distinguishes competing accounts. The UI labels roles Proposed or Likely when
 the matching scoped edges are disputed or probable. Do not demand impossible prose annotations
 inside the role enum when the text and edges already qualify the competing analyses.
+An early component of the same entry graph can retain scope_character equal to the entry
+character when no separately attested whole historical host is identified. That scope does not
+claim the component is visible in today's printed form: read its text, form_status, cited edge
+certainty and learner card together. Require the overview to name current visible parts and the
+historical card to say it concerns an early analysis. Do not remove a sourced early sound role
+merely because its proposed continuity with a modern shape is disputed.
 A replacement_component_of edge with certainty disputed and text explicitly identifying a
 contested replacement proposal records that hypothesis, not an established corruption. Evaluate
 the predicate, certainty and full explanation together. Require a correction only if the proposal
