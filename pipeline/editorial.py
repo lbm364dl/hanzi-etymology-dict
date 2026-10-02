@@ -443,6 +443,12 @@ For every component, scope_character identifies the graph it belongs to: the ent
 current components, or an explicitly connected historical/traditional graph for historical components.
 Do not label components lost in simplification as current components. Component graph edges must
 target scope_character; context_character always identifies the entry. Explain the graphic connection.
+Before making a visual or decomposition claim, identify the exact host graph in the source:
+an attached traditional seal redraw does not depict the entry's modern simplified form.
+In IDS/decomposition records, distinguish the host's direct children from an internal
+component's own children; do not promote an internal subpart into the host's upper part.
+Official modern structure records support visible identity, not an ancient sound or meaning
+role. Verify both host identity and scope before proposing a correction to component metadata.
 When a regular standardized component shape represents the same meaning-bearing component in
 the same word, cite both its traditional meaning contribution and the exact simplification
 correspondence to explain that continuing contribution. Keep current and traditional shapes
