@@ -1,0 +1,21 @@
+[
+  {
+    "role": "factual",
+    "verdict": "pass",
+    "findings": [],
+    "article_hash": "a6758c12e17388ad67ee03485addcbfbd3910accb5b1b4c9315cad61d174627c",
+    "dossier_hash": "4f223a563e88b410cbed228f7d6f1fd86950186bd5c8413048d7c78596ea7133",
+    "reviewer": "gpt-6-luna:low:factual:01a0fe91-63f1-78c3-bd20-54ca1986cc4b"
+  },
+  {
+    "role": "readability",
+    "verdict": "revise",
+    "findings": [
+      "In `history[0]`, replace “The cited book scan contains the 愛(爱) entry” and the adjacent-page workflow detail with a reader-facing explanation of why no historical glyph is shown. The current wording describes research procedure, not 愛’s written history; the cited glyph limitation already explains that no specific historical form could be verified for illustration. Cite the limitation’s supporting evidence.",
+      "In `meaning_history.senses[0].text` and its generated `has_sense` relationship text, distinguish the transmitted Guodian wording “甚愛必大費” from the book’s report of an excavated spelling “甚㤅(愛)必大費.” State that the transcription does not independently establish the excavated graph’s identity. The current juxtaposition blurs those two kinds of evidence; cite X-7b5c3f21b58a4b4d56c0, X-cdb269bc3398e2feae0c, and X-0b88d77cc147f6e120cd."
+    ],
+    "article_hash": "a6758c12e17388ad67ee03485addcbfbd3910accb5b1b4c9315cad61d174627c",
+    "dossier_hash": "4f223a563e88b410cbed228f7d6f1fd86950186bd5c8413048d7c78596ea7133",
+    "reviewer": "gpt-6-luna:low:readability:01a0fe92-6790-7ae3-979b-6932cc63ff2e"
+  }
+]
