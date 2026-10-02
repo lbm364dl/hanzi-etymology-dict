@@ -8,7 +8,7 @@ import unittest
 from unittest.mock import patch
 
 from pipeline.editorial import (Runner, ARTICLE_SCHEMA, REVIEW_SCHEMA, digest, make_review, publish,
-                                run, validate_article, validate_published, write, enrich_dossier, validate_research, research_dossier, refine, add_learner, independent_review, annotate_forms, curate_glyphs, local_primary_readings, local_baxter_sagart_rows, local_glyph_hints)
+                                run, validate_article, validate_published, write, enrich_dossier, validate_research, research_dossier, refine, add_learner, independent_review, annotate_forms, curate_glyphs, local_primary_readings, local_baxter_sagart_rows, local_glyph_hints, repair_reader_prose)
 from pipeline.editorial import summarize_web_activity, parse_codex_events, validate_new_reader_style, reuse_glyphs_for_text_followup
 
 
@@ -28,6 +28,69 @@ class NewReaderStyleTests(unittest.TestCase):
             validate_new_reader_style(article, dossier)
         article["meaning_history"]["senses"][0]["text"] = "The date is unresolved."
         validate_new_reader_style(article, dossier)
+
+    def test_source_name_failure_gets_only_the_flagged_text_leaf_repaired(self):
+        dossier = {"evidence": [{"source": "李學勤主編《字源》"}]}
+        article = {
+            "formation": {"text": "《字源》 reports two competing analyses.",
+                          "evidence_ids": ["X-early-forms"]},
+            "summary": {"text": "Learning is the current meaning.",
+                        "evidence_ids": ["E-current"]},
+        }
+
+        class RepairRunner:
+            def __init__(self):
+                self.inputs = None
+
+            def run(self, role, inputs, schema, directory):
+                self.asserted_role = role
+                self.inputs = inputs
+                return {"edits": [{"field": "formation/text",
+                                   "text": "Early forms have competing component analyses."}]}
+
+        runner = RepairRunner()
+        repaired = repair_reader_prose(article, dossier, Path("unused"), runner)
+        self.assertEqual(runner.asserted_role, "prose_repair")
+        self.assertEqual([item["field"] for item in runner.inputs["paragraphs"]], ["formation/text"])
+        self.assertEqual(runner.inputs["paragraphs"][0]["evidence_ids"], ["X-early-forms"])
+        self.assertEqual(repaired["formation"]["evidence_ids"], ["X-early-forms"])
+        self.assertEqual(repaired["summary"], article["summary"])
+        validate_new_reader_style(repaired, dossier)
+
+    def test_clean_reader_text_does_not_invoke_prose_repair(self):
+        article = {"summary": {"text": "Learning is the current meaning.",
+                               "evidence_ids": ["E-current"]}}
+
+        class NeverRunner:
+            def run(self, *args, **kwargs):
+                raise AssertionError("Clean reader text must not trigger repair")
+
+        repaired = repair_reader_prose(article, {"evidence": []}, Path("unused"), NeverRunner())
+        self.assertEqual(repaired, article)
+
+    def test_source_name_in_summary_text_is_repaired_without_touching_metadata(self):
+        dossier = {"evidence": [{"source": "李學勤主編《字源》"}]}
+        article = {
+            "summary": {"text": "字源 calls the early form a learning graph.",
+                        "evidence_ids": ["X-learning"]},
+            "source_metadata": {"source_title": "字源", "evidence_ids": ["X-metadata"]},
+        }
+
+        class RepairRunner:
+            def __init__(self):
+                self.inputs = None
+
+            def run(self, role, inputs, schema, directory):
+                self.inputs = inputs
+                return {"edits": [{"field": "summary/text",
+                                   "text": "An early account treats learning as a proposed meaning."}]}
+
+        runner = RepairRunner()
+        repaired = repair_reader_prose(article, dossier, Path("unused"), runner)
+        self.assertEqual([item["field"] for item in runner.inputs["paragraphs"]], ["summary/text"])
+        self.assertEqual(repaired["summary"]["evidence_ids"], ["X-learning"])
+        self.assertEqual(repaired["source_metadata"], article["source_metadata"])
+        validate_new_reader_style(repaired, dossier)
 
     def test_text_followup_reuses_glyphs_only_without_visual_findings(self):
         feedback = {"reuse_existing_glyph_candidates": True}
@@ -877,6 +940,68 @@ class EditorialTests(unittest.TestCase):
                     with self.assertRaises(ValueError):
                         validate_published(entry)
 
+    def test_chinese_glyph_feedback_recurates_existing_candidates_without_reacquiring(self):
+        dossier = copy.deepcopy(DOSSIER)
+        dossier["context"]["target_language"] = "zh"
+        dossier["glyph_research"] = {"historical_glyphs": copy.deepcopy(GLYPHS)}
+        dossier["glyph_assets"] = []
+
+        class Runner:
+            def __init__(self):
+                self.roles = []
+            def run(self, role, inputs, schema, directory):
+                self.roles.append(role)
+                if role == "research":
+                    return copy.deepcopy(RESEARCH)
+                if role == "glyph_visual":
+                    self.visual_inputs = inputs
+                    return {"items": [], "limitations": copy.deepcopy(GLYPHS["limitations"])}
+                raise AssertionError(f"Glyph refresh unexpectedly invoked {role}")
+
+        runner = Runner()
+        with tempfile.TemporaryDirectory() as temp:
+            result = research_dossier(dossier, Path(temp), runner,
+                {"reuse_existing_glyph_candidates": True, "review_existing_glyphs": True,
+                 "reviews": [{"findings": ["Correct glyph caption provenance."]}]})
+        self.assertEqual(runner.roles, ["research", "glyph_visual"])
+        self.assertEqual(runner.visual_inputs["reviews"][0]["findings"],
+                         ["Correct glyph caption provenance."])
+        self.assertEqual(result["glyph_assets"], [])
+        self.assertEqual(result["glyph_research"]["historical_glyphs"]["items"], [])
+
+    def test_refine_routes_explicit_glyph_feedback_to_existing_visual_candidates(self):
+        dossier = copy.deepcopy(DOSSIER)
+        dossier["context"]["target_language"] = "zh"
+        dossier["glyph_research"] = {"historical_glyphs": copy.deepcopy(GLYPHS)}
+        dossier["glyph_assets"] = []
+
+        class Runner:
+            model = "fake"
+            def __init__(self):
+                self.visual_context = None
+            def run(self, role, inputs, schema, directory):
+                if role == "research":
+                    return copy.deepcopy(RESEARCH)
+                if role == "glyph_visual":
+                    self.visual_context = inputs
+                    return {"items": [], "limitations": copy.deepcopy(GLYPHS["limitations"])}
+                if role == "editor":
+                    return copy.deepcopy(inputs["article"])
+                if role in ("factual", "readability"):
+                    return {"verdict": "pass", "findings": []}
+                raise AssertionError(role)
+
+        runner = Runner()
+        feedback = {"reuse_existing_glyph_candidates": True,
+                    "review_existing_glyphs": True,
+                    "findings": ["Correct the displayed glyph caption's specimen attribution."]}
+        with tempfile.TemporaryDirectory() as temp:
+            state = refine(ARTICLE_V2, dossier, Path(temp), runner, max_revisions=0,
+                           feedback=feedback, research_first=True)
+        self.assertEqual(state["status"], "approved")
+        self.assertEqual(runner.visual_context["feedback"], feedback)
+        self.assertEqual(runner.visual_context["review_existing_glyphs"], True)
+
     def test_learner_requires_current_components_with_historical_cards_optional(self):
         from pipeline.structured import validate_learner
         from pipeline.editorial import validate_sections
@@ -894,6 +1019,31 @@ class EditorialTests(unittest.TestCase):
         article['learner']['components'] = [card, card]
         with self.assertRaisesRegex(ValueError, 'current-form component'):
             validate_learner(article, DOSSIER, validate_sections)
+
+    def test_learner_repair_packet_requires_only_current_host_components(self):
+        from pipeline import editorial
+        article = copy.deepcopy(ARTICLE_V2)
+        historical = copy.deepcopy(article['components'][0])
+        historical['scope_character'] = '林'
+        article['components'].append(historical)
+        article['learner']['components'] = [{**copy.deepcopy(article['learner']['components'][0]),
+                                             'component_index': 1}]
+        metadata_before = copy.deepcopy(article['components'])
+
+        class LearnerRunner:
+            def run(self, role, inputs, schema, directory):
+                self.inputs = inputs
+                return {"overview": copy.deepcopy(ARTICLE_V2["learner"]["overview"]),
+                        "components": [copy.deepcopy(ARTICLE_V2["learner"]["components"][0])],
+                        "takeaway": None}
+
+        runner = LearnerRunner()
+        repaired = editorial.repair_learner_length(article, DOSSIER, Path("unused"), runner)
+        self.assertEqual(runner.inputs["required_component_indices"], [0])
+        self.assertEqual(repaired["components"], metadata_before)
+        self.assertEqual([c["component_index"] for c in repaired["learner"]["components"]], [0])
+        from pipeline.structured import validate_learner
+        validate_learner(repaired, DOSSIER, editorial.validate_sections)
 
     def test_add_learner_freezes_detail_and_needs_both_new_passes(self):
         class LearnerRunner:
@@ -1017,6 +1167,24 @@ class EditorialTests(unittest.TestCase):
                 self.assertTrue((Path(root) / "factual/proposed-review.json").exists())
                 self.assertTrue((Path(root) / "factual-verification/verified-review.json").exists())
                 self.assertEqual(runner.calls[0]["article"], runner.calls[1]["article"])
+
+    def test_verifier_instructions_distinguish_priority_from_date_and_specimen_identity(self):
+        class Verifier:
+            model = "fake"
+            def __init__(self):
+                self.calls = []
+            def run(self, role, inputs, schema, directory):
+                self.calls.append(inputs)
+                return ({"verdict": "revise", "findings": ["Check priority and glyph provenance."]}
+                        if len(self.calls) == 1 else {"verdict": "pass", "findings": []})
+
+        with tempfile.TemporaryDirectory() as root:
+            verifier = Verifier()
+            independent_review("factual", ARTICLE_V2, DOSSIER, Path(root), verifier)
+            instruction = verifier.calls[1]["verification_task"]
+            self.assertIn("positive claim of priority", instruction)
+            self.assertIn("unknown precise date alone does not disqualify", instruction)
+            self.assertIn("image-to-specimen link is verified", instruction)
 
     def test_form_annotation_preserves_legacy_prose_and_requires_reviews(self):
         class Annotator:

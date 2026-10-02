@@ -21,7 +21,7 @@ from pipeline.glyph_assets import snapshot_glyph_assets, validate_glyph_assets
 from pipeline.xiaoxuetang import query_dossier as query_xiaoxuetang
 from pipeline.structured import (LEARNER, LEARNER_POLICY, MEANING_HISTORY, HISTORICAL_GLYPHS, RELATIONSHIP,
                                  GLYPH_POLICY, GLYPH_VISUAL_POLICY, GLYPH_VISUAL_SCHEMA, V2_POLICY, REVIEW_V2_POLICY, validate_v2, validate_reader_prose,
-                                 COMPONENT_SCOPE, SOUND_LIMITATION, validate_component_metadata, validate_learner,
+                                 COMPONENT_SCOPE, SOUND_LIMITATION, component_scope, validate_component_metadata, validate_learner,
                                  default_unihan_readings_path, _unihan_kmandarin_rows)
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -1272,7 +1272,8 @@ def research_dossier(dossier, directory, runner, review_context=None):
         validate_glyph_assets(dossier)
         write(directory / "glyph_candidates.json", dossier["glyph_research"]["historical_glyphs"])
         write(directory / "glyph_assets.json", dossier.get("glyph_assets", []))
-        if dossier.get("context", {}).get("target_language") == "ja":
+        if (dossier.get("context", {}).get("target_language") == "ja"
+                or (review_context or {}).get("review_existing_glyphs") is True):
             dossier = curate_glyphs(dossier, directory / "glyph_visual", runner, review_context)
         write(directory / "dossier.json", dossier)
         return dossier
@@ -1476,7 +1477,7 @@ def independent_review(role, article, dossier, directory, runner, context=None):
     if result["verdict"] == "revise":
         review_dir = directory / (role + "-verification")
         verification_inputs = {**inputs, "proposed_review": result,
-            "verification_task": "Independently verify the proposed review findings against the exact current article fields and cited evidence. A proposed finding is a hypothesis, not a fact. Check quoted readings, labels, directions and alleged contradictions directly. Discard demonstrably false or duplicate requests, but retain every actual required correction. Return pass with no findings only when no actual required corrections remain; otherwise return revise with supported concrete findings identifying the exact field and evidence. Findings must contain only changes still REQUIRED to the current article, never explanations of why a proposed correction was rejected or unnecessary. If all proposed findings are rejected and you identify no other required correction, verdict MUST be pass and findings MUST be empty. Do not assume that verification should pass. Preserve the supplied review scope."}
+            "verification_task": "Independently verify the proposed review findings against the exact current article fields and cited evidence. A proposed finding is a hypothesis, not a fact. Check quoted readings, labels, directions and alleged contradictions directly. Discard demonstrably false or duplicate requests, but retain every actual required correction. Return pass with no findings only when no actual required corrections remain; otherwise return revise with supported concrete findings identifying the exact field and evidence. Findings must contain only changes still REQUIRED to the current article, never explanations of why a proposed correction was rejected or unnecessary. If all proposed findings are rejected and you identify no other required correction, verdict MUST be pass and findings MUST be empty. Do not assume that verification should pass. Preserve the supplied review scope. Treat earliest_attested as a positive claim of priority: evidence must establish that priority, though an unknown precise date alone does not disqualify it. Do not reject a supported finding merely because it appropriately hedges a date. A displayed glyph redraw must not inherit the identity or date of a cited specimen unless the image-to-specimen link is verified."}
         result = runner.run(role, verification_inputs, REVIEW_SCHEMA, review_dir)
         make_review(role, result["verdict"], result["findings"], article, dossier, "verification-review")
         write(review_dir / "verified-review.json", result)
@@ -1508,17 +1509,17 @@ def independent_review(role, article, dossier, directory, runner, context=None):
 def repair_reader_prose(article, dossier, directory, runner):
     """Let an agent edit flagged text leaves, keeping evidence and metadata frozen."""
     targets = {}
+    source_names = reader_source_labels(dossier)
     def visit(value, path=()):
         if isinstance(value, dict):
             for key, item in value.items():
                 if key == "historical_glyphs":
                     continue  # Curated captions and limitations require the glyph curator.
-                if key == "text" and isinstance(item, str):
-                    try:
-                        validate_reader_prose([{"text": item}])
-                    except ValueError as exc:
+                if key in READER_PROSE_FIELDS and isinstance(item, str):
+                    finding = reader_prose_finding(item, source_names)
+                    if finding:
                         targets["/".join(map(str, (*path, key)))] = {
-                            "path": (*path, key), "text": item, "finding": str(exc),
+                            "path": (*path, key), "text": item, "finding": finding,
                             "evidence_ids": value.get("evidence_ids", []),
                         }
                 else:
@@ -1542,7 +1543,9 @@ def repair_reader_prose(article, dossier, directory, runner):
         raise ValueError("Reader-prose repair must edit every flagged field exactly once")
     repaired = copy.deepcopy(article)
     for edit in result["edits"]:
-        validate_reader_prose([{"text": edit["text"]}])
+        finding = reader_prose_finding(edit["text"], source_names)
+        if finding:
+            raise ValueError(f"Reader-prose repair left a reader-style violation in {edit['field']}: {finding}")
         path = targets[edit["field"]]["path"]
         node = repaired
         for key in path[:-1]:
@@ -1565,12 +1568,11 @@ def repair_learner_length(article, dossier, directory, runner):
             "article": article, "dossier": dossier,
             "review_scope": "learner_structure",
             "required_component_indices": [i for i, c in enumerate(article["components"])
-                if article.get("language") != "ja"
-                or c.get("scope_character", article["character"]) == article["character"]],
+                if component_scope(c, article) == article["character"]],
             "validation_findings": [finding],
             "task": "Edit only the learner layer to resolve the exact length or coverage error. "
-                    "Include each required_component_index exactly once; do not add historical "
-                    "component cards to a Japanese learner split. "
+                    "Include each required_component_index exactly once. Historical-only "
+                    "component cards are optional in every language. "
                     "Keep the overview at most 35 words and each component explanation at most "
                     "25 words. Preserve essential meaning, construction and uncertainty. "
                     "Do not repeat displayed readings or summarize expert alternative accounts. "
@@ -1582,26 +1584,43 @@ def repair_learner_length(article, dossier, directory, runner):
     return article
 
 
+READER_PROSE_FIELDS = {"text", "caption", "alt", "selection_reason", "period"}
+
+
+def reader_source_labels(dossier):
+    """Extract source labels that must stay in citations and source metadata."""
+    source_names = {item.get("source", "") for item in dossier.get("evidence", [])}
+    return {label for source in source_names
+            for label in [*re.findall(r"\b[A-Z]{2,8}\b", source),
+                          *re.findall(r"《([^》]{2,20})》", source)]}
+
+
+def reader_prose_finding(text, source_labels=()):
+    """Return the first shared reader-prose violation, or None for clean text."""
+    if re.search(r"\bref\d{3}\b", text):
+        return "Citation labels belong only in evidence_ids, not reader-facing prose"
+    if re.search(r"\bdossier\b", text, re.I):
+        return "Workflow term"
+    for label in sorted(source_labels):
+        pattern = re.escape(label)
+        if label.isascii():
+            pattern = rf"\b{pattern}\b"
+        if re.search(pattern, text):
+            return f"Source name {label!r}"
+    return None
+
+
 def validate_new_reader_style(article, dossier):
     """Catch source labels and workflow terms that belong in citations, not new prose."""
-    source_names = {item.get("source", "") for item in dossier.get("evidence", [])}
-    labels = {label for source in source_names
-              for label in [*re.findall(r"\b[A-Z]{2,8}\b", source),
-                            *re.findall(r"《([^》]{2,20})》", source)]}
-    fields = {"text", "caption", "alt", "selection_reason", "period"}
+    labels = reader_source_labels(dossier)
 
     def check(value, path="article"):
         if isinstance(value, dict):
             for key, child in value.items():
-                if key in fields and isinstance(child, str):
-                    if re.search(r"\bdossier\b", child, re.I):
-                        raise ValueError(f"Workflow term in reader-facing {path}.{key}: {child[:120]}")
-                    for label in sorted(labels):
-                        pattern = re.escape(label)
-                        if label.isascii():
-                            pattern = rf"\b{pattern}\b"
-                        if re.search(pattern, child):
-                            raise ValueError(f"Source name {label!r} in reader-facing {path}.{key}: {child[:120]}")
+                if key in READER_PROSE_FIELDS and isinstance(child, str):
+                    finding = reader_prose_finding(child, labels)
+                    if finding:
+                        raise ValueError(f"{finding} in reader-facing {path}.{key}: {child[:120]}")
                 elif key not in {"source", "source_title", "source_url", "rights_url", "image_url"}:
                     check(child, f"{path}.{key}")
         elif isinstance(value, list):
@@ -1717,7 +1736,8 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
             text_only_followup = reuse_glyphs_for_text_followup(feedback, reviews)
             dossier = research_dossier(dossier, directory / f"round-{revision}" / "followup",
                                        runner, {"article": article, "reviews": reviews,
-                                                "reuse_existing_glyph_candidates": text_only_followup})
+                                                "reuse_existing_glyph_candidates": text_only_followup,
+                                                "review_existing_glyphs": isinstance(feedback, dict) and feedback.get("review_existing_glyphs") is True})
             write(directory / "dossier.json", dossier)
             state["dossier_hash"] = digest(dossier)
         elif any("historical_glyphs" in finding for review in reviews
@@ -1818,6 +1838,7 @@ def refine(article, dossier, directory, runner, max_revisions=3, feedback=None,
             dossier = research_dossier(dossier, directory / "initial-followup", runner,
                 {"article": article, "feedback": feedback,
                  "reuse_existing_glyph_candidates": isinstance(feedback, dict) and feedback.get("reuse_existing_glyph_candidates") is True,
+                 "review_existing_glyphs": isinstance(feedback, dict) and feedback.get("review_existing_glyphs") is True,
                  "task": "Resolve the supplied evidence gaps before editing. Add accurate citable records for required claims; preserve existing supported content and source provenance."})
             write(directory / "dossier.json", dossier)
             state["dossier_hash"] = digest(dossier)
