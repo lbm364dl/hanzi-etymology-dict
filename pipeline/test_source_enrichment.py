@@ -133,6 +133,11 @@ class SourceEnrichmentTests(unittest.TestCase):
         editorial.write(previous / 'article.json', article)
         editorial.write(previous / 'dossier.json', dossier)
         editorial.write(previous / 'status.json', {'status': 'needs_revision'})
+        revision = editorial.make_review('factual', 'revise', ['Verify this exact draft claim.'],
+                                         article, dossier, 'fixture-review')
+        stale = {**revision, 'article_hash': 'older-draft'}
+        approval = editorial.make_review('readability', 'pass', [], article, dossier, 'fixture-pass')
+        editorial.write(previous / 'reviews.json', [revision, stale, approval])
         job = self.root / 'fresh-job'
         job.mkdir()
         result = source_enrichment._continuation_inputs(previous, job, '木', SOURCE, snapshot)
@@ -141,6 +146,7 @@ class SourceEnrichmentTests(unittest.TestCase):
                          ARTICLE_V2['summary'])
         self.assertTrue(editorial.read(job / 'continuation.json')['requires_fresh_research_and_reviews'])
         self.assertFalse((job / 'reviews.json').exists())
+        self.assertEqual(editorial.read(job / 'continuation_review_proposals.json'), [revision])
         with self.assertRaisesRegex(ValueError, 'baseline changed'):
             source_enrichment._continuation_inputs(previous, self.root / 'other-job', '木', SOURCE,
                                                    {**snapshot, 'article_hash': 'changed'})

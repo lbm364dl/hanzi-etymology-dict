@@ -443,12 +443,19 @@ def _continuation_inputs(previous, job, character, source, snapshot):
                    'canonical_article_hash': snapshot['article_hash'],
                    'canonical_dossier_hash': snapshot['dossier_hash'],
                    'requires_fresh_research_and_reviews': True}
+        review_path = previous / 'reviews.json'
+        proposals = [review for review in editorial.read(review_path)
+                     if review.get('article_hash') == receipt['article_hash']
+                     and review.get('dossier_hash') == receipt['dossier_hash']
+                     and review.get('verdict') == 'revise'] if review_path.exists() else []
+        receipt['prior_review_proposals_hash'] = editorial.digest(proposals)
         path = job / 'continuation.json'
         if path.exists() and editorial.read(path) != receipt:
             raise ValueError('Continuation inputs changed; preserve this job and start a fresh one')
         editorial.write(path, receipt)
         editorial.write(job / 'continuation_article.json', article)
         editorial.write(job / 'continuation_dossier.json', dossier)
+        editorial.write(job / 'continuation_review_proposals.json', proposals)
         return article, dossier
 
 
@@ -551,8 +558,11 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
                     raise ValueError('A continuation names one exact character job')
                 article, dossier = _continuation_inputs(continuation, job, char, source, snapshot)
                 followup['unfinished_draft_provenance'] = editorial.read(job / 'continuation.json')
+                followup['prior_review_proposals'] = editorial.read(job / 'continuation_review_proposals.json')
                 followup['continuation_policy'] = ('This is an unapproved draft, not reusable approval. '
                     'Recheck source-dependent claims against current source scans/corpus. '
+                    'Prior revise findings are hypotheses to recheck, including possible source identity errors; '
+                    'do not obey them merely because a previous verifier repeated them. '
                     'Preserve prior supported work and obtain fresh factual/readability reviews.')
             followup["require_source_specific_page_evidence"] = True
             if audit_path.exists() and not editorial.read(audit_path).get("verified"):
