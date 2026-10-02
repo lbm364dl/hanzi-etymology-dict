@@ -102,6 +102,7 @@ def publish_job(job, root=ROOT):
         prior = content / "review_history" / "editorial_runs" / name[:-5] / editorial.digest(manifest)
         if not prior.exists():
             shutil.copytree(retained, prior)
+        shutil.rmtree(retained)
     # Keep exact model products/prompts/metadata; omit potentially large stdout/stderr logs.
     for path in job.rglob("*"):
         if path.is_file() and path.suffix in (".json", ".txt") and "attempts" not in path.relative_to(job).parts:
