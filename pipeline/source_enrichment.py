@@ -354,6 +354,10 @@ def _source_findings_pending(job):
         return True
     result = editorial.read(review_path)
     checks = resolution.get('literal_checks', [])
+    rejected_keys = {f['key'] for f in result['findings']
+                     if f['disposition'] == 'rejected_proposal_scan_matches_corpus'}
+    if not rejected_keys <= {check['key'] for check in checks}:
+        return True
     if checks:
         observations = result.get('literal_observations', [])
         if len(observations) != len(checks) or len({o['key'] for o in observations}) != len(checks):
@@ -476,6 +480,18 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
             'required': ['key', 'observed_literal', 'pixel_reason'],
             'properties': {f: {'type': 'string', 'minLength': 1}
                            for f in ('key', 'observed_literal', 'pixel_reason')}}}
+    allowed_dispositions = ['pending', 'unresolved_identity_not_used']
+    if checks:
+        allowed_dispositions.append('rejected_proposal_scan_matches_corpus')
+    if repairs:
+        allowed_dispositions.append('applied_repair_scan_matches_corpus')
+    schema['properties']['findings']['items']['properties']['disposition']['enum'] = allowed_dispositions
+    inputs['disposition_policy'] = (
+        'A rejected replacement requires a supplied exact literal_checks occurrence and proposal. '
+        'An identity gap without such a proposal is not a rejected OCR replacement: '
+        'use unresolved_identity_not_used only after independently verifying no article claim '
+        'depends on that identity; otherwise pending. Applied repairs require supplied validated '
+        'producer/consumer checks. Retain every original finding.')
     directory = job / "source-resolution"
     attempt = 1
     while directory.exists():

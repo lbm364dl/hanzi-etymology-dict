@@ -97,7 +97,7 @@ class SourceEnrichmentTests(unittest.TestCase):
             editorial.write(job / 'source-resolution/meta.json', {
                 'role': 'source_resolution', 'status': 'complete', 'model': 'gpt-6-luna',
                 'reasoning': 'low', 'result_hash': editorial.digest(result)})
-            self.assertFalse(source_enrichment._source_findings_pending(job))
+            self.assertTrue(source_enrichment._source_findings_pending(job))
             resolution = editorial.read(job / 'source_resolution.json')
             resolution['literal_checks'] = [{'key': 'rare-glyph', 'current': '弋', 'proposed': '戈'}]
             editorial.write(job / 'source_resolution.json', resolution)
