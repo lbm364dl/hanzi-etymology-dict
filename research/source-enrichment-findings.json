@@ -156,6 +156,18 @@
         "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
       ],
       "key": "ziyuan-2012:爱:ziyuan-2012-ai-unihan-access"
+    },
+    {
+      "key": "pipeline:article-patch:relationship-contract",
+      "kind": "pipeline",
+      "title": "Give patch agents exact relationship names and endpoint kinds",
+      "details": "The 学 repair at runs/source-enrichment-ziyuan/xue-reviewcurrent-3/round-1/revision/result.json emitted literal _component_of predicates. The patch transport schema exposes paths and JSON strings, so its schema alone does not reveal the nested article relationship enum; the prompt used _component_of as shorthand. Article validation rejected the result before review. Every initial and repair packet now carries exact relationship predicates and endpoint kinds generated from the authoritative schema, with explicit instructions against literal suffixes and invented unknown-role edges. Existing approved prose is unchanged by this prompt fix.",
+      "evidence": [
+        "pipeline/editorial.py: apply_article_patch",
+        "pipeline/test_editorial.py: test_chinese_targeted_patch_preserves_unaffected_fields",
+        "runs/source-enrichment-ziyuan/xue-reviewcurrent-3/round-1/revision/result.json"
+      ],
+      "verification": "Regression checks confirm exact predicate and endpoint contracts reach patch agents, unsupported predicates remain rejected, and repaired character candidates still obtain fresh factual/readability approvals. Targeted editorial/source suite passes 75 tests; 学 awaits regeneration and actual approvals."
     }
   ]
 }

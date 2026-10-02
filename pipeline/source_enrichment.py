@@ -193,11 +193,13 @@ def _published_matches(job, source, root):
     try:
         editorial.validate_reviews(article, dossier, reviews)
         canonical_article, canonical_dossier = _canonical(root, article["character"])
-        located = _load_source_tools().locate_sources({"schema_version": 1, "sources": [source]}, article["character"], dossier)
+        located = _load_source_tools().locate_sources({"schema_version": 1, "sources": [source]},
+            article["character"], editorial.read(job / "source_dossier.json"))
     except (ValueError, KeyError, OSError, editorial.ValidationError):
         return False
     audit_path = job / "source_audit.json"
-    return (audit_path.is_file()
+    return (not _source_findings_pending(job)
+            and audit_path.is_file()
             and editorial.read(audit_path).get("verified") is True
             and state.get("source_id") == source["id"]
             and _recorded_source_hash_matches(state.get("registry_source_hash"),
@@ -562,6 +564,10 @@ def publish_job(job, source, root=ROOT):
     findings_path = job / "source_findings.json"
     if _source_findings_pending(job):
         raise ValueError("Source findings require coordinator verification")
+    located = _load_source_tools().locate_sources({"schema_version": 1, "sources": [source]},
+        saved["character"], editorial.read(job / "source_dossier.json"))
+    if state.get("locator_hash") != _locator_hash(located):
+        raise ValueError("Source inputs changed after research; new source research is required")
     audit_path = job / "source_audit.json"
     if not audit_path.is_file():
         raise ValueError("No source-specific audit was recorded")

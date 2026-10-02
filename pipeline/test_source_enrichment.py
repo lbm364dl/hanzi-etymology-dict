@@ -161,6 +161,15 @@ class SourceEnrichmentTests(unittest.TestCase):
                 "source_audit_hash": editorial.digest(audit),
                 "article_hash": editorial.digest(article), "dossier_hash": editorial.digest(dossier)})
             self.assertTrue(source_enrichment._published_matches(job, SOURCE, self.root))
+            editorial.write(job / "source_findings.json", {'requires_coordinator_verification': True,
+                                                            'findings': [{'key': 'new-source-error'}]})
+            self.assertFalse(source_enrichment._published_matches(job, SOURCE, self.root))
+            (job / "source_findings.json").unlink()
+            editorial.write(job / "status.json", {**editorial.read(job / "status.json"), "status": "approved"})
+            with patch.object(LocalSources, 'locate_sources', return_value={'changed': 'page evidence'}):
+                with self.assertRaisesRegex(ValueError, 'Source inputs changed'):
+                    source_enrichment.publish_job(job, SOURCE, self.root)
+            editorial.write(job / "status.json", {**editorial.read(job / "status.json"), "status": "published"})
             editorial.write(job / "status.json", {**editorial.read(job / "status.json"), "article_hash": "stale"})
             self.assertFalse(source_enrichment._published_matches(job, SOURCE, self.root))
             self.assertEqual(source_enrichment.status({"characters": ["木"]}, SOURCE, self.output,

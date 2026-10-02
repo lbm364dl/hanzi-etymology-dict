@@ -332,6 +332,13 @@ class EditorialTests(unittest.TestCase):
         before = copy.deepcopy(article)
         def invoke(role, inputs, schema, directory):
             self.assertEqual(role, 'article_patch')
+            branches = inputs['article_contract']['relationship_branches']
+            predicates = {p for branch in branches for p in branch['predicates']}
+            self.assertIn('semantic_component_of', predicates)
+            self.assertNotIn('_component_of', predicates)
+            self.assertNotIn('unknown_component_of', predicates)
+            self.assertTrue(any(branch['subject_kind'] == 'component' and
+                                branch['object_kind'] == 'character' for branch in branches))
             return {'edits': [{'path': 'summary/text', 'value_json': 'Trees and wood.'},
                               {'path': 'summary/evidence_ids', 'value_json': '["ref001"]'}]}
         result = apply_article_patch('revision', {'article': article, 'dossier': {**DOSSIER,

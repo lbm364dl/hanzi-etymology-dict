@@ -932,7 +932,13 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
             'properties':{'path':{'type':'string','enum':list(paths)},
                           'value_json':{'type':'string'}}}}}}
     _, aliases = citation_transport(inputs)
-    patch_inputs = {**inputs, 'original_role':role}
+    contract = {'relationship_branches': [
+        {'predicates': branch['properties']['predicate']['enum'],
+         'subject_kind': branch['properties']['subject']['properties']['kind']['const'],
+         'object_kind': branch['properties']['object']['properties']['kind']['const']}
+        for branch in RELATIONSHIP['anyOf']],
+        'instruction': 'These are the exact allowed relationship names and endpoint kinds. _component_of is a suffix, never a literal predicate. Unknown component roles create no invented unknown_component_of edge. Preserve scoped historical claims and supported graph links.'}
+    patch_inputs = {**inputs, 'original_role':role, 'article_contract': contract}
     for attempt in range(3):
         patch_directory = Path(directory) if attempt == 0 else Path(directory)/f'patch-repair-{attempt}'
         result = invoke('article_patch', patch_inputs, patch_schema, patch_directory)
@@ -968,7 +974,7 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
         except (ValueError, KeyError, IndexError, TypeError, ValidationError) as exc:
             if attempt == 2: raise
             article = patched
-            patch_inputs = {**inputs, 'article': patched, 'original_role':role, 'previous_patch':result,
+            patch_inputs = {**inputs, 'article': patched, 'original_role':role, 'article_contract': contract, 'previous_patch':result,
                 'validation_findings':[exc.message if isinstance(exc, ValidationError) else str(exc)],
                 'task':'Repair every listed validation finding in the supplied current candidate, retaining valid previous edits. '
                        'If a learner paragraph exceeds its hard word limit, shorten that paragraph directly: keep the main '
