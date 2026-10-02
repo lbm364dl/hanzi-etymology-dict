@@ -210,6 +210,21 @@
         "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
       ],
       "key": "ziyuan-2012:学:explanation-and-review"
+    },
+    {
+      "key": "ziyuan-2012:ocr-p0355-yuan-headword",
+      "kind": "ocr",
+      "title": "Correct 爱 OCR headword to 爰 on 字源 PDF355",
+      "details": "Fresh 愛 research found that the OCR headword 爱 yuán is actually printed 爰 yuán. Two independent targeted scan checks confirmed the literal substitution. The producer correction and rebuilt consumer corpus now contain 爰; raw OCR is preserved.",
+      "verification": "Check source-bound raw span [796,797), original page pixels and evidence hashes, producer effective correction, consumer page match and 1435-record corpus. Reviewable correction/verification artifacts are in research/ocr-corrections/ziyuan-2012-p0355, commit be6a2f7d, PR #8.",
+      "evidence": [
+        "字源 PDF355 / printed343",
+        "Source pixels dae2a85e30b830e9f1a86f5e1c7a082463646451e5fdf3924a5e0b388d1a2e92",
+        "Original evidence 17a3646d53c84618144b67e66862ad4cfb32a630b855febd70baefb43b964059",
+        "Effective consumer evidence 0266ae4facfa959220f89a0f0c20f42d50605b0d9048a835f648c4e716e13fdc",
+        "research/ocr-corrections/ziyuan-2012-p0355/verification.json",
+        "Character revisions remain separately tracked in #17, #27 and #28."
+      ]
     }
   ]
 }
