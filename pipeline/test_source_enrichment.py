@@ -352,7 +352,9 @@ class SourceEnrichmentTests(unittest.TestCase):
         self.assertTrue(audit["verified"])
         self.assertEqual(audit["citations"][0]["research_receipt_hash"], editorial.digest(receipt))
         editorial.write(job / "article.json", {"text": "No book citation", "evidence_ids": []})
-        self.assertFalse(source_enrichment._capture_source_audit(job, SOURCE, dossier)["verified"])
+        uncited = source_enrichment._capture_source_audit(job, SOURCE, dossier)
+        self.assertFalse(uncited["verified"])
+        self.assertEqual(uncited["consulted_citations"][0]["evidence_ids"], ["X-book"])
         foreign = {**evidence, "source": "香港教育局 字源考釋"}
         foreign_result = {"evidence": [foreign]}
         editorial.write(stage / "result.json", foreign_result)

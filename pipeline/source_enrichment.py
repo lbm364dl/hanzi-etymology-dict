@@ -448,6 +448,7 @@ def _capture_source_audit(job, source, dossier):
     book_id = source.get("book_id", "")
     pattern = re.compile(r"(?:\bPDF\s+page\b|\bprinted\s+page\b|\bpages?\b|\bpp?\.?\s*|頁|页)\s*\d+", re.I)
     citations = []
+    consulted = []
     from pipeline.source_adoption import _used_ids
     article_path = root / "article.json"
     used = _used_ids(editorial.read(article_path)) if article_path.is_file() else set()
@@ -471,15 +472,19 @@ def _capture_source_audit(job, source, dossier):
             text = str(item.get("text", ""))
             identity_match = (title and re.search(r"(?<!\w)" + re.escape(title) + r"(?!\w)", source_label)) or (book_id and book_id in source_label)
             page_match = bool(pattern.search(field) or pattern.search(text))
-            retained = any(evidence.get("id") in used and evidence.get("source") == source_label and evidence.get("field") == field
-                           and evidence.get("text") == text for evidence in dossier.get("evidence", []))
-            if identity_match and page_match and retained:
-                citations.append({"research_output": str(path.relative_to(root)),
-                                  "research_receipt_hash": editorial.digest(receipt),
-                                  "research_result_hash": editorial.digest(raw), "source": source_label,
-                                  "field": field, "text": text})
+            matching = [e for e in dossier.get("evidence", [])
+                        if all(e.get(k) == item.get(k) for k in ("source", "field", "text"))]
+            if identity_match and page_match and matching:
+                record = {"research_output": str(path.relative_to(root)),
+                          "research_receipt_hash": editorial.digest(receipt),
+                          "research_result_hash": editorial.digest(raw), "source": source_label,
+                          "field": field, "text": text,
+                          "evidence_ids": [e['id'] for e in matching]}
+                consulted.append(record)
+                if any(e['id'] in used for e in matching):
+                    citations.append(record)
     audit = {"source_id": source["id"], "source_hash": _research_source_hash(source),
-             "verified": bool(citations), "citations": citations}
+             "verified": bool(citations), "citations": citations, "consulted_citations": consulted}
     editorial.write(root / "source_audit.json", audit)
     return audit
 
@@ -719,9 +724,17 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
                     'Preserve prior supported work and obtain fresh factual/readability reviews.')
             followup["require_source_specific_page_evidence"] = True
             if audit_path.exists() and not editorial.read(audit_path).get("verified"):
-                followup["previous_source_audit_failed"] = (
-                    "Prior research did not return page-specific evidence from this registered source. "
-                    "Inspect it and either cite a relevant page or state a specific source access/relevance gap.")
+                previous_audit = editorial.read(audit_path)
+                if previous_audit.get('consulted_citations'):
+                    followup['verified_uncited_book_records'] = previous_audit['consulted_citations']
+                    followup['previous_source_audit_failed'] = (
+                        'Prior completed research read these exact book records, but the article did not cite them. '
+                        'Verify which current claims they support, then cite those evidence IDs at those claims '
+                        'through authorship and fresh reviews. Do not attach arbitrary citations.')
+                else:
+                    followup["previous_source_audit_failed"] = (
+                        "Prior research did not return retained page-specific evidence from this registered source. "
+                        "Inspect it and either cite a relevant page or state a specific source access/relevance gap.")
             state = editorial.refine(article, dossier, job, runner, max_revisions,
                                      followup, research_first=True)
             scan_findings = _capture_scan_findings(job, source)
@@ -735,7 +748,8 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
             editorial.write(checkpoint_path, checkpoint)
             if state.get("status") == "approved" and not audit["verified"]:
                 state["status"] = "needs_source_evidence"
-                state["source_audit_error"] = "No page-specific evidence from the registered source was returned."
+                state["source_audit_error"] = ("Verified book records remain uncited by the article."
+                    if audit.get("consulted_citations") else "No retained page-specific book evidence was returned.")
             if scan_findings["requires_coordinator_verification"]:
                 state["source_verification_pending"] = True
                 if state.get("status") == "approved":
