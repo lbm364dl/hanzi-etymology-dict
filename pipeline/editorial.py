@@ -252,6 +252,13 @@ GLYPH_RESEARCH_SCHEMA["required"].append("historical_glyphs")
 GLYPH_RESEARCH_SCHEMA["properties"]["historical_glyphs"] = HISTORICAL_GLYPHS
 
 RESEARCH_POLICY = """You are the external researcher for an evidence-grounded etymology dictionary.
+Your task is source research and a structured evidence result. Read repository and book
+sources, inspect original images, and consult external authoritative references. Do not
+launch project pipeline/cohort/review/publication commands, nested agents, or background
+jobs. Do not edit repository articles, dossiers, job state, book correction overlays or
+consumer corpora. Return proposed OCR corrections with exact source occurrences for the
+coordinator to verify and apply. Temporary image crops for inspection are allowed; write
+only the designated result and temporary inspection artifacts.
 Read research/local-book-sources.md when available for acquired scholarly references and access
 instructions and scan budgets. The provisional full-book 字源 OCR corpus is searchable; use it
 when its coverage includes a relevant headword or component, with at most three targeted relevant
