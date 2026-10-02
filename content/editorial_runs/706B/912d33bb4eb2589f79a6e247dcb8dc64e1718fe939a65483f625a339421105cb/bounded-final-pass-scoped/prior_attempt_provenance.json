@@ -1,0 +1,18 @@
+{
+  "source_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/fire-star-readjudication/ziyuan-2012/706B",
+  "prior_bounded_attempt": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/fire-star-readjudication/ziyuan-2012/706B/bounded-final-pass",
+  "prior_candidate_hash": "d42f6dd975f74a622cfcd2955475183173442bf5d9ce5ab21f58e8e25d6667cd",
+  "source_dossier_hash": "4d04b3d8c9f9184a408e297a0e81b70677c924e8aa5488ec2c173a10b64fbfb2",
+  "current_source_audit_hash": "b1e20f0f5e60e78109cf953fe87cc8c75c9f2ba53466a67a1d1cc177a003ea04",
+  "failed_attempt_status": {
+    "character": "火",
+    "status": "failed",
+    "mode": "refine",
+    "dossier_hash": "4d04b3d8c9f9184a408e297a0e81b70677c924e8aa5488ec2c173a10b64fbfb2",
+    "source_article_hash": "d42f6dd975f74a622cfcd2955475183173442bf5d9ce5ab21f58e8e25d6667cd",
+    "revision": 0,
+    "error": "$.relationships: [] should be non-empty"
+  },
+  "reason_for_scoped_retry": "The prior Luna revision attempted a generated relationships array and yielded an empty array rejected by validation; this pass scopes edits to source sense/limitation text so relationship edges regenerate from meaning_history.",
+  "creates_approval": false
+}
