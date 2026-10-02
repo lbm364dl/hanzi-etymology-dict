@@ -273,6 +273,12 @@ def _source_findings_pending(job):
     if not review_path.is_file() or editorial.digest(editorial.read(review_path)) != resolution.get("result_hash"):
         return True
     result = editorial.read(review_path)
+    validation_path = job / 'source_resolution_validation.json'
+    if validation_path.is_file():
+        validation = editorial.read(validation_path)
+        if (validation.get('result_hash') == editorial.digest(result)
+                and validation.get('status') == 'rejected'):
+            return True
     meta_path = review_path.parent / 'meta.json'
     if not meta_path.is_file():
         return True

@@ -1,0 +1,27 @@
+{
+  "actual_result": {
+    "findings": [
+      {
+        "key": "ziyuan-2012:4E8C:a150a91c0ac5",
+        "disposition": "rejected_proposal_scan_matches_corpus",
+        "reason": "The supplied scan of PDF p.1191 (printed p.1176) confirms the corpus reading 古文字从“戈”从“戈”每无别. In the second quoted component, the printed glyph has the same 戈 form and distinguishing strokes as the first; it is not 弋. The proposed OCR replacement is false. The 二 article does not use this rare-form passage, so it does not affect its claims.",
+        "affected_paths": [
+          "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1191/source.png",
+          "/tmp/hanzi-p1191-top.png",
+          "runs/source-enrichment-ziyuan/er-after-ocr/ziyuan-2012/4E8C",
+          "initial-followup/research/result.json"
+        ]
+      }
+    ]
+  },
+  "validation": {
+    "status": "rejected",
+    "result_hash": "b7dc0b6bdd25c95752f7231603512e0981826e7612b587c2d2b3a075b46e109d",
+    "reason": "The result disposition rejects the proposed 弋→戈 replacement, but its reason falsely says the current corpus and scan have 戈 in both positions. The actual independently verified producer/consumer span is 戈 followed by 弋. Contradictory rationale is not a clean source approval.",
+    "evidence": [
+      "research/ocr-corrections/ziyuan-2012-p1191/verification.json",
+      "research/ziyuan-hsk1-er-source-check.md"
+    ],
+    "requires_new_independent_check": true
+  }
+}
