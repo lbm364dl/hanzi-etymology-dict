@@ -199,6 +199,10 @@ def _published_matches(job, source, root):
     except (ValueError, KeyError, OSError, editorial.ValidationError):
         return False
     audit_path = job / "source_audit.json"
+    if audit_path.is_file() and editorial.read(audit_path).get('mode') == 'existing_approved_research':
+        from pipeline.source_adoption import valid_audit
+        if not valid_audit(job, editorial.read(audit_path), article, dossier):
+            return False
     return (not _source_findings_pending(job)
             and audit_path.is_file()
             and editorial.read(audit_path).get("verified") is True

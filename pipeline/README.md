@@ -46,6 +46,14 @@ and child processes before resuming: a saved `running` status does not prove liv
 terminated command wrapper can leave its agent child alive. Retain previous stage artifacts
 when recovering interrupted work.
 
+`pipeline.source_adoption.adopt` can register book research already used by an approved
+article. It preserves the article, dossier and original factual/readability receipts, then
+requires a separate Luna low check against the original scans. Merely having book evidence
+in a dossier is insufficient: the article must actually cite page-specific book evidence.
+The saved coverage result is bound to the exact article and dossier hashes and rechecked
+when calculating source completion. This avoids unnecessary rewriting while retaining a
+reviewable source check; entries without used book evidence still require enrichment.
+
 ## GitHub findings
 
 Track material errors, mistakes, improvements and clarifications in GitHub issues. The current
