@@ -646,6 +646,8 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
             followup = feedback(source, located, source_context)
             if context_path.exists():
                 followup['additional_research_context'] = editorial.read(context_path)
+                if followup['additional_research_context'].get('review_existing_glyphs') is True:
+                    followup['review_existing_glyphs'] = True
                 followup['additional_context_policy'] = (
                     'These source leads and prior findings are research tasks, not preverified dossier evidence. '
                     'Consult the referenced sources directly, check exact graph identity and scope, '

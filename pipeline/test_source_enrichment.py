@@ -188,7 +188,7 @@ class SourceEnrichmentTests(unittest.TestCase):
     def test_run_uses_source_locator_and_research_first_refine(self):
         job = source_enrichment.job_path(self.output, SOURCE["id"], "木")
         captured = {}
-        extra_context = {'additional_source_leads': [{'url': 'https://example.org/primary-record',
+        extra_context = {'review_existing_glyphs': True, 'additional_source_leads': [{'url': 'https://example.org/primary-record',
                                                      'scope_character': '木'}]}
 
         class FakeRunner:
@@ -229,6 +229,7 @@ class SourceEnrichmentTests(unittest.TestCase):
         self.assertEqual(result[0]["status"], "approved")
         self.assertTrue(captured["research_first"])
         self.assertEqual(captured['feedback']['additional_research_context'], extra_context)
+        self.assertTrue(captured['feedback']['review_existing_glyphs'])
         self.assertEqual(editorial.read(job / 'research_context.json'), extra_context)
         self.assertEqual(len(captured['runner'].inherited_lock_fds), 1)
         self.assertEqual(captured["feedback"]["source_leads"], LOCATED["source_leads"])
