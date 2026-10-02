@@ -525,6 +525,14 @@ PROMPTS['article_patch'] += (
     'the supported predicate and component role. Recheck the resulting edge, not just '
     'the replacement string; do not alter an unrelated sense edge at an old index.')
 
+PROMPTS['factual'] += (
+    ' For book evidence actually cited by the article, check the source details and '
+    'claimed page/entry boundaries as well as the quoted claim. A correct quotation '
+    'does not certify an incorrectly assigned continuation page. Check the printed '
+    'headword and where its account ends before a neighboring headword or author credit. '
+    'Reject materially wrong provenance in a cited record even if the article wording '
+    'it supports is otherwise accurate; preserve valid claims while correcting the scope.')
+
 
 def digest(value):
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
