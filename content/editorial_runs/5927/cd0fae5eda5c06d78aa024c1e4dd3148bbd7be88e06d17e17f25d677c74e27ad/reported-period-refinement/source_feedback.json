@@ -1,0 +1,17 @@
+{
+  "allowed_edit_paths": [
+    "meaning_history/senses/0/period",
+    "meaning_history/senses/0/text"
+  ],
+  "task": "Clarify only the bronze-use period and text to mark it as a source-reported occurrence whose particular vessel/date is not independently verified. Preserve its historical status and all existing citations.",
+  "source_scope": "The latest readability review asked that this be stated as a reported bronze-inscription use without implying a verified dated attestation. The evidence describes a reported use; specific vessel and date remain unverified. Use wording such as “Source-reported bronze inscription; specific vessel and date unverified” in period, and “A source reports a bronze inscription using 大 for ‘big,’ opposite 小; the specific vessel and date have not been independently verified.” in text. Do not change `meaning_history.senses/0/status` from `historical` to `earliest_attested`: the dossier itself says the vessel/date and primary inscription were not independently verified, and other oracle uses do not prove priority. `earliest_attested` would assert a priority the evidence explicitly does not establish. The generated `has_sense` edge has a confidence `certainty`, not a historical/current status field; it should be regenerated from the source-reported sense as usual.",
+  "preserve": "Do not change any other prose, IDs, graph records, glyph selections, captions or periods. The p.922 字源 record does not support the bronze use and must remain absent from this sense and its generated edge. Keep it only on graph claims that it supports. Retain the modern redraw style qualification.",
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0922/source.png",
+      "pdf_page": 922,
+      "printed_page": 907,
+      "source_pixel_sha256": "39d27aadd13bac4e3be35c52d356fd4eb8c105aa6c9ca7511f8aae4f17d53188"
+    }
+  ]
+}
