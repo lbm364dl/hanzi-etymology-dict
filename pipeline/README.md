@@ -58,6 +58,14 @@ and child processes before resuming: a saved `running` status does not prove liv
 terminated command wrapper can leave its agent child alive. Retain previous stage artifacts
 when recovering interrupted work.
 
+If completed research returns page-specific book records that an otherwise approved
+article does not cite, the harness runs one bounded editing pass over that current
+dossier in `citation-integration/`. The editor chooses supported claims and attaches
+their evidence IDs; fresh independent factual and readability reviews follow.
+The previous exact pair and receipts remain in `before-citation-integration/`.
+This avoids restarting research merely to adopt a newly generated evidence ID.
+It neither inserts citations automatically nor releases OCR/source blocks.
+
 After a source repair, `run --continue-from /path/to/previous/character/job` can start a
 fresh single-character job from the previous unfinished draft. The previous coordinator
 and agents must have released their OS lock, and its canonical article/dossier baseline
