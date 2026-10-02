@@ -13,7 +13,8 @@ class SourceProgressTests(unittest.TestCase):
             first, second = root / 'batch-one', root / 'batch-two'
             for location, character, source_id in (
                     (first, '木', 'book'), (second, '木', 'book'),
-                    (first, '水', 'book'), (second, '火', 'other-book')):
+                    (first, '水', 'book'), (second, '火', 'other-book'),
+                    (first, '土', 'book')):
                 job = location / f'{ord(character):04X}'
                 editorial.write(job / 'source.json', {'character': character, 'source_id': source_id})
                 editorial.write(job / 'status.json', {'status': 'published'})
