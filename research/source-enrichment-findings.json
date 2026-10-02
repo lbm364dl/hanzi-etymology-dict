@@ -90,6 +90,72 @@
         "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
       ],
       "verification": "Review and merge the pipeline fix, demonstrate equal decoded pixels are accepted across PNG encodings and changed decoded pixels rejected, and verify the affected source OCR occurrence separately. A hash-kind difference alone is not evidence of a changed scan."
+    },
+    {
+      "key": "pipeline:ocr-review:occurrence-context-overread",
+      "kind": "pipeline",
+      "title": "Bind OCR scan reviews to exact occurrences and reject contextual overreads",
+      "details": "A first scan review proposed eleven 的-to-旳 changes on PDF page 614 after correctly identifying the rare headword on page 613. Reinspection of original pixels and printed controls withdrew all eleven: the raw 的 forms match the page. A separate CLI response returned no occurrences, and another mapped offset 10 to an unrelated 昧 while claiming correct_raw. No proposed page-614 replacements were applied. The pipeline now supplies exact anchors and surrounding context, requires complete unique occurrence coverage, checks raw-text identity and verdict consistency, and preserves uncertain printed identities without guessed Unicode.",
+      "evidence": [
+        "research/ziyuan-hsk1-de-ocr.md",
+        "pipeline/ocr_verification.py",
+        "pipeline/test_ocr_verification.py",
+        "runs/source-enrichment-ziyuan/ocr614-independent-check/result.json",
+        "runs/source-enrichment-ziyuan/ocr614-independent-cropped-check/result.json"
+      ],
+      "verification": "Verify exact-anchor and occurrence-coverage regression tests, inspect the independent source recheck, and exercise the verifier on another contrasting page before expanding OCR repairs. Literal replacements still require original pixel evidence; these guards do not certify transcription correctness."
+    },
+    {
+      "kind": "ocr",
+      "title": "Verify the two 㤐 OCR occurrences in the 愛 entry",
+      "details": "The research report identifies two OCR readings of 㤐 in 字源 PDF p. 497 / printed p. 484 and reports that the supplied scan shows 㤅. However, the scan attachment and local scan file have a SHA-256 metadata discrepancy, and the report says it did not create a hash-bound correction. Treat the replacement as a reported but not yet source-identity-bound correction; raw OCR remains unchanged.",
+      "verification": "Resolve the scan identity and hash discrepancy, inspect both exact occurrences against the verified scan pixels, then record source-hash-bound corrections and confirm the rebuilt consumer index displays 㤅 at both locations. Do not close based on the report alone.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[0]",
+        "initial-followup/research/result.json: gaps[3]",
+        "字源 PDF p. 497 / printed p. 484",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:爱:ziyuan-2012-ai-glyph-correction"
+    },
+    {
+      "kind": "clarification",
+      "title": "Keep the disputed early sound analysis unresolved",
+      "details": "The article retains 兂 and 旡 as competing proposed sound elements in early 㤅, but research did not establish a same-system historical pronunciation comparison for either candidate and 㤅. Current Mandarin pairs are explicitly limited and do not prove the ancient sound role. Preserve the competing analyses and do not present either sound relation as established.",
+      "verification": "On any revision, check the cited research for independently supported historical readings in a common system; retain the disputed status and the limitation unless such evidence is supplied. Ensure current Mandarin comparisons remain labeled as modern and do not establish the ancient relationship.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[5]",
+        "current_article.components[1]",
+        "current_article.relationships[1]",
+        "current_article.relationships[2]",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:爱:ziyuan-2012-ai-sound-evidence-gap"
+    },
+    {
+      "kind": "clarification",
+      "title": "Qualify dating and earliest-attestation claims for 愛",
+      "details": "The research did not establish the exact earliest physical attestation or absolute date for the affection-related use. It reports a Zhongshan bronze example and transmitted literary examples, while noting that no artifact catalogue image or dated original witness was inspected. The article appropriately marks the period as dating unresolved; avoid upgrading that evidence into a precise earliest date.",
+      "verification": "Verify any future earliest-attested or dated claim against a dated witness or artifact catalogue and distinguish an interpreted inscriptional use from proof that the graph 㤅 itself meant ‘love’.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[6]",
+        "current_article.meaning_history.senses[0]",
+        "current_article.meaning_history.limitations[0]",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:爱:ziyuan-2012-ai-earliest-attestation"
+    },
+    {
+      "kind": "pipeline",
+      "title": "Record inaccessible Unihan pages as an external verification gap",
+      "details": "The research attempted the official Unihan URLs for 㤂, 旡 and 㤅, but each was inaccessible in the web session. Local kMandarin rows are available but were explicitly not treated as externally verified evidence. Do not cite the failed pages or imply that the local rows were verified from them.",
+      "verification": "If these readings are needed for external citations, obtain accessible official records or another authoritative source and verify the exact character and reading before updating evidence or citations.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[8]",
+        "local_primary_readings.unihan.rows",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:爱:ziyuan-2012-ai-unihan-access"
     }
   ]
 }

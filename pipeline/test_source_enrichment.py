@@ -26,6 +26,34 @@ class LocalSources:
 
 
 class SourceEnrichmentTests(unittest.TestCase):
+    def test_locator_hash_ignores_only_redundant_pixel_metadata(self):
+        located = {'source_scan_images': [{'pdf_page': 13, 'path': '/scan.png'}],
+                   'source_leads': [{'candidates': [{'pdf_page_1based': 13, 'source_sha256': 'pixels'}]}]}
+        richer = copy.deepcopy(located)
+        richer['source_scan_images'][0]['source_pixel_sha256'] = 'pixels'
+        self.assertEqual(source_enrichment._locator_hash(located), source_enrichment._locator_hash(richer))
+        richer['source_scan_images'][0]['source_pixel_sha256'] = 'changed'
+        self.assertNotEqual(source_enrichment._locator_hash(located), source_enrichment._locator_hash(richer))
+
+    def test_source_resolution_is_bound_to_findings_and_exact_article(self):
+        with tempfile.TemporaryDirectory() as temp:
+            job = Path(temp)
+            findings = {'requires_coordinator_verification': True, 'findings': [{'key': 'rare-glyph'}]}
+            article, dossier = {'character': '一'}, {'evidence': []}
+            editorial.write(job / 'source_findings.json', findings)
+            editorial.write(job / 'article.json', article)
+            editorial.write(job / 'dossier.json', dossier)
+            self.assertTrue(source_enrichment._source_findings_pending(job))
+            result = {'findings': [{'key': 'rare-glyph', 'disposition': 'unresolved_identity_not_used'}]}
+            editorial.write(job / 'source-resolution/result.json', result)
+            editorial.write(job / 'source_resolution.json', {
+                'findings_hash': editorial.digest(findings), 'article_hash': editorial.digest(article),
+                'dossier_hash': editorial.digest(dossier), 'result_hash': editorial.digest(result),
+                'model': 'gpt-6-luna', 'reasoning': 'low', 'review_path': 'source-resolution/result.json'})
+            self.assertFalse(source_enrichment._source_findings_pending(job))
+            editorial.write(job / 'article.json', {**article, 'summary': 'Now cites a glyph.'})
+            self.assertTrue(source_enrichment._source_findings_pending(job))
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

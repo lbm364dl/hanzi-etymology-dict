@@ -24,6 +24,20 @@ references can still improve an entry. Agents use reasoning to flag suspicious O
 verify replacements against scans. Corrections feed the book repository's source-bound
 layer and its rebuilt consumer corpus; raw OCR is preserved.
 
+`pipeline.ocr_verification.verify` checks proposed literal replacements through a separate
+Luna low scan reviewer. Each proposal carries a stable occurrence ID, exact raw-text offsets,
+an anchor and surrounding context. Incomplete coverage, duplicate IDs, wrong raw text and
+contradictory verdicts are rejected. Unresolved identities retain no guessed Unicode replacement.
+The output is an occurrence check, not approval of a whole page; the coordinator still validates
+source-bound producer patches and their rebuilt consumer records.
+
+`pipeline.source_enrichment.resolve_source_findings(job, runner)` offers a separate scan-backed
+review of an exact already-approved candidate. It may release a retained unresolved identity
+only when that identity is not used to establish any article claim. The findings remain recorded,
+and the resolution is bound to exact article, dossier and finding hashes. Confirmed OCR errors
+and material unresolved claims remain blocked for source repair or new research; this check
+does not replace factual/readability reviews.
+
 ## GitHub findings
 
 Track material errors, mistakes, improvements and clarifications in GitHub issues. The current

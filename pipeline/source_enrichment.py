@@ -13,6 +13,7 @@ The separate ``run``, ``publish``, and ``status`` actions resume that exact sour
 from __future__ import annotations
 
 import argparse
+import copy
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import json
@@ -26,6 +27,21 @@ MAX_SELECTION = 10
 MAX_WORKERS = 3
 ISSUE_METADATA = {"github_repo", "tracking_issue_url", "issue_parent_number",
                   "issue_milestone", "issue_labels", "issue_parent_by_kind"}
+
+
+def _locator_hash(located):
+    """Pixel hash labels repeat page identity already bound in candidate provenance."""
+    value = copy.deepcopy(located)
+    for scan in value.get("source_scan_images", []):
+        pixel_hash = scan.get("source_pixel_sha256")
+        candidates = [candidate for lead in value.get("source_leads", [])
+                      for candidate in lead.get("candidates", [])]
+        # Ignore only redundant metadata, never a new or conflicting source identity.
+        if pixel_hash and any(candidate.get("source_sha256") == pixel_hash
+                              and candidate.get("pdf_page_1based") == scan.get("pdf_page")
+                              for candidate in candidates):
+            scan.pop("source_pixel_sha256")
+    return editorial.digest(value)
 
 SOURCE_POLICY = """
 SOURCE-SPECIFIC CHINESE ENRICHMENT:
@@ -186,7 +202,7 @@ def _published_matches(job, source, root):
             and state.get("source_id") == source["id"]
             and _recorded_source_hash_matches(state.get("registry_source_hash"),
                 editorial.read(job / "source.json").get("registry_source"), source)
-            and state.get("locator_hash") == editorial.digest(located)
+            and state.get("locator_hash") == _locator_hash(located)
             and state.get("source_audit_hash") == editorial.digest(editorial.read(audit_path))
             and _recorded_source_hash_matches(editorial.read(audit_path).get("source_hash"),
                 editorial.read(job / "source.json").get("registry_source"), source)
@@ -219,6 +235,74 @@ def _capture_scan_findings(job, source):
     record = {"source_id": source["id"], "tracking_issue_url": source.get("tracking_issue_url"),
               "requires_coordinator_verification": bool(gaps), "findings": gaps}
     editorial.write(Path(job) / "source_findings.json", record)
+    return record
+
+
+def _source_findings_pending(job):
+    """Retain findings; only an exact independent resolution can release their gate."""
+    job = Path(job)
+    findings_path = job / "source_findings.json"
+    if not findings_path.exists():
+        return False
+    findings = editorial.read(findings_path)
+    if not findings.get("requires_coordinator_verification"):
+        return False
+    resolution_path = job / "source_resolution.json"
+    if not resolution_path.exists():
+        return True
+    resolution = editorial.read(resolution_path)
+    if (resolution.get("findings_hash") != editorial.digest(findings)
+            or resolution.get("article_hash") != editorial.digest(editorial.read(job / "article.json"))
+            or resolution.get("dossier_hash") != editorial.digest(editorial.read(job / "dossier.json"))
+            or resolution.get("model") != "gpt-6-luna" or resolution.get("reasoning") != "low"):
+        return True
+    review_path = job / resolution["review_path"]
+    if not review_path.is_file() or editorial.digest(editorial.read(review_path)) != resolution.get("result_hash"):
+        return True
+    result = editorial.read(review_path)
+    keys = [item["key"] for item in result["findings"]]
+    return (len(keys) != len(set(keys)) or set(keys) != {item["key"] for item in findings["findings"]}
+            or any(item["disposition"] != "unresolved_identity_not_used" for item in result["findings"]))
+
+
+def resolve_source_findings(job, runner):
+    """Check whether retained uncertainty is immaterial; actual OCR errors stay blocked."""
+    job = Path(job)
+    if runner.model != "gpt-6-luna" or runner.reasoning != "low":
+        raise ValueError("Source resolution requires gpt-6-luna low")
+    findings = editorial.read(job / "source_findings.json")
+    article, dossier = editorial.read(job / "article.json"), editorial.read(job / "dossier.json")
+    editorial.validate_reviews(article, dossier, editorial.read(job / "reviews.json"))
+    checkpoint = editorial.read(job / "source_checkpoint.json")
+    schema = {"type": "object", "additionalProperties": False, "required": ["findings"],
+        "properties": {"findings": {"type": "array", "items": {
+            "type": "object", "additionalProperties": False,
+            "required": ["key", "disposition", "reason", "affected_paths"],
+            "properties": {"key": {"type": "string"},
+                "disposition": {"enum": ["pending", "unresolved_identity_not_used"]},
+                "reason": {"type": "string", "minLength": 1},
+                "affected_paths": {"type": "array", "items": {"type": "string"}}}}}}}
+    inputs = {"article": article, "dossier": dossier, "findings": findings,
+              "feedback": {"source_scan_images": checkpoint["locator"].get("source_scan_images", [])}}
+    directory = job / "source-resolution"
+    result = runner.run("source_resolution", inputs, schema, directory)
+    keys = [item["key"] for item in result["findings"]]
+    if len(keys) != len(set(keys)) or set(keys) != {item["key"] for item in findings["findings"]}:
+        raise ValueError("Source resolution must assess every exact finding once")
+    # Runner retains the real output; no coordinator-authored verdict is substituted.
+    if editorial.read(directory / "result.json") != result:
+        raise ValueError("Source resolution differs from saved agent result")
+    record = {"findings_hash": editorial.digest(findings), "article_hash": editorial.digest(article),
+              "dossier_hash": editorial.digest(dossier), "result_hash": editorial.digest(result),
+              "review_path": "source-resolution/result.json", "model": runner.model,
+              "reasoning": runner.reasoning}
+    editorial.write(job / "source_resolution.json", record)
+    if not _source_findings_pending(job):
+        state = editorial.read(job / "status.json")
+        if state.get("status") == "needs_source_verification":
+            state.update(status="approved", source_verification_pending=False,
+                         article_hash=editorial.digest(article), dossier_hash=editorial.digest(dossier))
+            editorial.write(job / "status.json", state)
     return record
 
 
@@ -369,7 +453,7 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
             if not _recorded_source_hash_matches(snapshot.get("registry_source_hash"), saved_source, source):
                 raise ValueError("Prepared job registry source changed; use a fresh source job directory")
             located = _load_source_tools().locate_sources({"schema_version": 1, "sources": [source]}, char, dossier)
-            locator_hash = editorial.digest(located)
+            locator_hash = _locator_hash(located)
             checkpoint_path = job / "source_checkpoint.json"
             checkpoint = editorial.read(checkpoint_path) if checkpoint_path.exists() else {}
             if checkpoint.get("registry_source_hash") and not _recorded_source_hash_matches(
@@ -387,7 +471,7 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
             if getattr(runner, "model", "gpt-6-luna") != "gpt-6-luna" or getattr(runner, "reasoning", "low") != "low":
                 raise ValueError("Source enrichment requires gpt-6-luna with low reasoning")
             findings_path = job / "source_findings.json"
-            if findings_path.exists() and editorial.read(findings_path).get("requires_coordinator_verification", False):
+            if _source_findings_pending(job):
                 raise ValueError("Unresolved source/OCR finding requires coordinator verification before continuing")
             state = editorial.read(job / "status.json")
             audit_path = job / "source_audit.json"
@@ -476,7 +560,7 @@ def publish_job(job, source, root=ROOT):
     if not _recorded_source_hash_matches(saved.get("registry_source_hash"), saved.get("registry_source"), source):
         raise ValueError("Job source registry hash is stale")
     findings_path = job / "source_findings.json"
-    if findings_path.exists() and editorial.read(findings_path).get("requires_coordinator_verification", False):
+    if _source_findings_pending(job):
         raise ValueError("Source findings require coordinator verification")
     audit_path = job / "source_audit.json"
     if not audit_path.is_file():
