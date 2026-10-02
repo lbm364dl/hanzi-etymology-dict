@@ -506,6 +506,15 @@ PROMPTS = {
 }
 
 
+PROMPTS['article_patch'] += (
+    ' Locate each affected relationship by its subject, object, context and predicate '
+    'in the supplied current article before choosing an array path; indices can change '
+    'after earlier edits and derived meaning edges. When an ID explicitly names a role '
+    '(for example a :phonetic suffix), keep that descriptive label consistent with '
+    'the supported predicate and component role. Recheck the resulting edge, not just '
+    'the replacement string; do not alter an unrelated sense edge at an old index.')
+
+
 def digest(value):
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
                                      separators=(",", ":")).encode()).hexdigest()
