@@ -755,6 +755,8 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
             except Exception as exc:
                 issue_sync = {"status": "pending", "repository": source.get("github_repo"),
                               "error": str(exc)}
+                if getattr(exc, 'stderr', None):
+                    issue_sync['command_stderr'] = exc.stderr
                 editorial.write(job / "issue_sync.json", issue_sync)
             if issue_sync["status"] == "pending":
                 state["issue_sync_status"] = "pending"

@@ -8,6 +8,27 @@ from pipeline import editorial
 
 
 class IssueTests(unittest.TestCase):
+    def test_full_parent_reports_actionable_capacity_without_duplicate_or_post(self):
+        finding = dict(key='book:claim', kind='factual', title='Claim',
+                       details='A supported finding.', verification='Fresh review.')
+        calls = []
+        def invoke(*args):
+            calls.append(args)
+            if args[:2] == ('issue', 'list'):
+                return json.dumps([dict(number=500, url='https://github.com/owner/repo/issues/500',
+                                       body=body(finding), state='OPEN', labels=[{'name':'kind:factual'}])])
+            if args[:2] == ('label', 'list'):
+                return '[{"name":"kind:factual"}]'
+            if args[-1].endswith('/sub_issues'):
+                return json.dumps([{'number': n} for n in range(2, 102)])
+            if args[-1].endswith('/parent'):
+                return '{}'
+            self.fail('Unexpected mutation: ' + repr(args))
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaisesRegex(ValueError, 'configure a nested findings parent'):
+                sync([finding], 'owner/repo', Path(temp)/'receipt.json', invoke, parent_issue=1)
+        self.assertFalse(any(c[:2] == ('issue', 'create') or '--method' in c for c in calls))
+
     def test_paginated_hierarchy_and_unchanged_metadata_need_no_mutation(self):
         finding = dict(key='book:ocr', kind='ocr', title='OCR', details='Exact occurrence.', verification='Scan check.')
         calls = []

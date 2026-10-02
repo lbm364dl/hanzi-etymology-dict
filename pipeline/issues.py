@@ -211,6 +211,10 @@ def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, miles
             if existing_parent:
                 attach = False
         if attach:
+            if len(child_numbers[target_parent]) >= 100:
+                raise ValueError(f'GitHub parent #{target_parent} has 100 direct subissues; '
+                                 'configure a nested findings parent and retry the existing '
+                                 'issue marker without duplicating the finding')
             remote = json.loads(invoke('api', f"repos/{repository}/issues/{issue['number']}"))
             invoke('api', '--method', 'POST', f'repos/{repository}/issues/{target_parent}/sub_issues',
                    '-F', f"sub_issue_id={remote['id']}")
