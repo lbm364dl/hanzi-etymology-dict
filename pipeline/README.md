@@ -15,6 +15,20 @@ python3 -m pipeline.source_enrichment status --registry research/digitised-sourc
 python3 -m pipeline.source_enrichment run --registry research/digitised-sources.json --source ziyuan-2012 --cohort content/cohorts/hsk3-2021-level-1.json --limit 3
 ```
 
+Audit the entire cohort across all source batches and source-coverage jobs with
+the project environment (including the registered producer's verification dependencies):
+
+```bash
+python3 -m pipeline.source_progress --registry research/digitised-sources.json --source ziyuan-2012 --cohort content/cohorts/hsk3-2021-level-1.json --output research/hsk1-source-completion.json
+```
+
+The default roots are `runs/` and `content/source_coverage/`; repeat `--job-root`
+to audit other locations. The report uses the current exact source/publication
+gate for every candidate and counts each cohort character once. Legacy approvals,
+saved `published` labels, jobs for another book and archived input copies do not
+establish source completion. A later registered book gets its own audit by changing
+`--source`, with no character-specific rule changes.
+
 All agents introduced for this workflow, including findings triage, use `gpt-6-luna` with
 low reasoning. Jobs retain source and published-input snapshots, bounded locator leads,
 scan attachments, research, authored revisions and exact independent reviews. Header-like
