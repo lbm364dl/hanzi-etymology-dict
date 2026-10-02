@@ -57,6 +57,15 @@ class NewReaderStyleTests(unittest.TestCase):
         self.assertEqual(repaired["summary"], article["summary"])
         validate_new_reader_style(repaired, dossier)
 
+    def test_actual_evidence_id_in_prose_is_rejected(self):
+        article = {"formation": {"text": "An early proposal [X-source123].",
+                                  "evidence_ids": ["X-source123"]}}
+        dossier = {"evidence": [{"id": "X-source123", "source": "A source"}]}
+        with self.assertRaisesRegex(ValueError, "Evidence IDs"):
+            validate_new_reader_style(article, dossier)
+        article["formation"]["text"] = "An early proposal."
+        validate_new_reader_style(article, dossier)
+
     def test_clean_reader_text_does_not_invoke_prose_repair(self):
         article = {"summary": {"text": "Learning is the current meaning.",
                                "evidence_ids": ["E-current"]}}

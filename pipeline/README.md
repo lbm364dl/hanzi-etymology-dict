@@ -41,6 +41,15 @@ pixel crops may accompany the source scans. Confirmed OCR errors
 and material unresolved claims remain blocked for source repair or new research; this check
 does not replace factual/readability reviews.
 
+Applied literal OCR repairs can be checked through `resolve_source_findings(...,
+repair_checks=[...])`. Each check identifies the retained finding, producer page directory,
+raw start/end offsets, and original before/after literals. The actual producer correction
+validator and the current consumer page must agree. A separate original-scan review then
+observes the repaired literal; changed overlay or consumer evidence invalidates resolution.
+This preserves a real corrected finding rather than reclassifying it as a false proposal.
+Registered producers using this adapter provide `scripts/research_corrections.py` and its
+source-bound `load_effective` contract; other corpus formats need a corresponding adapter.
+
 Source jobs acquire an OS coordinator lock before writing their stage files; agent subprocesses
 inherit that lock so an orphaned live agent still prevents duplicate writes after a coordinator
 exits. A second harness reports `already_running` without replacing the first job's status.

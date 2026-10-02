@@ -1510,13 +1510,14 @@ def repair_reader_prose(article, dossier, directory, runner):
     """Let an agent edit flagged text leaves, keeping evidence and metadata frozen."""
     targets = {}
     source_names = reader_source_labels(dossier)
+    known_ids = {item["id"] for item in dossier.get("evidence", []) if item.get("id")}
     def visit(value, path=()):
         if isinstance(value, dict):
             for key, item in value.items():
                 if key == "historical_glyphs":
                     continue  # Curated captions and limitations require the glyph curator.
                 if key in READER_PROSE_FIELDS and isinstance(item, str):
-                    finding = reader_prose_finding(item, source_names)
+                    finding = reader_prose_finding(item, source_names, known_ids)
                     if finding:
                         targets["/".join(map(str, (*path, key)))] = {
                             "path": (*path, key), "text": item, "finding": finding,
@@ -1543,7 +1544,7 @@ def repair_reader_prose(article, dossier, directory, runner):
         raise ValueError("Reader-prose repair must edit every flagged field exactly once")
     repaired = copy.deepcopy(article)
     for edit in result["edits"]:
-        finding = reader_prose_finding(edit["text"], source_names)
+        finding = reader_prose_finding(edit["text"], source_names, known_ids)
         if finding:
             raise ValueError(f"Reader-prose repair left a reader-style violation in {edit['field']}: {finding}")
         path = targets[edit["field"]]["path"]
@@ -1595,12 +1596,15 @@ def reader_source_labels(dossier):
                           *re.findall(r"《([^》]{2,20})》", source)]}
 
 
-def reader_prose_finding(text, source_labels=()):
+def reader_prose_finding(text, source_labels=(), evidence_ids=()):
     """Return the first shared reader-prose violation, or None for clean text."""
     if re.search(r"\bref\d{3}\b", text):
         return "Citation labels belong only in evidence_ids, not reader-facing prose"
     if re.search(r"\bdossier\b", text, re.I):
         return "Workflow term"
+    for evidence_id in sorted(evidence_ids):
+        if re.search(r"(?<![\w-])" + re.escape(evidence_id) + r"(?![\w-])", text):
+            return "Evidence IDs belong only in evidence_ids, not reader-facing prose"
     for label in sorted(source_labels):
         pattern = re.escape(label)
         if label.isascii():
@@ -1613,12 +1617,13 @@ def reader_prose_finding(text, source_labels=()):
 def validate_new_reader_style(article, dossier):
     """Catch source labels and workflow terms that belong in citations, not new prose."""
     labels = reader_source_labels(dossier)
+    known_ids = {item["id"] for item in dossier.get("evidence", []) if item.get("id")}
 
     def check(value, path="article"):
         if isinstance(value, dict):
             for key, child in value.items():
                 if key in READER_PROSE_FIELDS and isinstance(child, str):
-                    finding = reader_prose_finding(child, labels)
+                    finding = reader_prose_finding(child, labels, known_ids)
                     if finding:
                         raise ValueError(f"{finding} in reader-facing {path}.{key}: {child[:120]}")
                 elif key not in {"source", "source_title", "source_url", "rights_url", "image_url"}:

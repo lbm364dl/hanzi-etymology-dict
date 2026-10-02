@@ -292,6 +292,23 @@ def _source_findings_pending(job):
                     or dispositions.get(check['key']) != 'rejected_proposal_scan_matches_corpus'
                     or item.get('observed_literal') != check['current']):
                 return True
+    repairs = resolution.get('applied_repairs', [])
+    repaired_keys = {f['key'] for f in result['findings']
+                     if f['disposition'] == 'applied_repair_scan_matches_corpus'}
+    if repaired_keys:
+        from pipeline import source_repairs
+        try:
+            registered = editorial.read(job / 'source.json')['registry_source']
+            observations = result.get('repair_observations', [])
+            observed = {o['key']: o for o in observations}
+            if len(observed) != len(observations) or set(observed) != repaired_keys or repaired_keys != {r['key'] for r in repairs}:
+                return True
+            for repair in repairs:
+                if (source_repairs.verify(registered, repair) != repair
+                        or observed.get(repair['key'], {}).get('observed_literal') != repair['after']):
+                    return True
+        except (OSError, ValueError, KeyError, ImportError):
+            return True
     validation_path = job / 'source_resolution_validation.json'
     if validation_path.is_file():
         validation = editorial.read(validation_path)
@@ -309,10 +326,10 @@ def _source_findings_pending(job):
     keys = [item["key"] for item in result["findings"]]
     return (len(keys) != len(set(keys)) or set(keys) != {item["key"] for item in findings["findings"]}
             or any(item["disposition"] not in ("unresolved_identity_not_used",
-                    "rejected_proposal_scan_matches_corpus") for item in result["findings"]))
+                    "rejected_proposal_scan_matches_corpus", "applied_repair_scan_matches_corpus") for item in result["findings"]))
 
 
-def resolve_source_findings(job, runner, source_context=None, literal_checks=None):
+def resolve_source_findings(job, runner, source_context=None, literal_checks=None, repair_checks=None):
     """Check whether retained uncertainty is immaterial; actual OCR errors stay blocked."""
     job = Path(job)
     if runner.model != "gpt-6-luna" or runner.reasoning != "low":
@@ -327,7 +344,7 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
             "required": ["key", "disposition", "reason", "affected_paths"],
             "properties": {"key": {"type": "string"},
                 "disposition": {"enum": ["pending", "unresolved_identity_not_used",
-                                          "rejected_proposal_scan_matches_corpus"]},
+                                          "rejected_proposal_scan_matches_corpus", "applied_repair_scan_matches_corpus"]},
                 "reason": {"type": "string", "minLength": 1},
                 "affected_paths": {"type": "array", "items": {"type": "string"}}}}}}}
     inputs = {"article": article, "dossier": dossier, "findings": findings,
@@ -364,6 +381,26 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
             'required': ['key', 'current_corpus_literal', 'proposed_literal', 'observed_literal', 'pixel_reason'],
             'properties': {field: {'type': 'string', 'minLength': 1} for field in
                            ['key', 'current_corpus_literal', 'proposed_literal', 'observed_literal', 'pixel_reason']}}}
+    repairs = []
+    if repair_checks:
+        from pipeline import source_repairs
+        registered = editorial.read(job / 'source.json')['registry_source']
+        repairs = [source_repairs.verify(registered, check) for check in repair_checks]
+        if len({r['key'] for r in repairs}) != len(repairs) or not {r['key'] for r in repairs} <= {f['key'] for f in findings['findings']}:
+            raise ValueError('Applied repairs must identify unique retained findings')
+        inputs['applied_repairs'] = repairs
+        inputs['applied_repair_instruction'] = (
+            'The original before→after proposal was a genuine error, now repaired. '
+            'Producer overlays and current consumer occurrences have been validated. '
+            'Independently inspect exact original pixels: report the printed literal, not a guess. '
+            'Use applied_repair_scan_matches_corpus only if observed_literal equals after. '
+            'Preserve original findings and report pending for unclear pixels or unsupported claims.')
+        schema['required'].append('repair_observations')
+        schema['properties']['repair_observations'] = {'type': 'array', 'items': {
+            'type': 'object', 'additionalProperties': False,
+            'required': ['key', 'observed_literal', 'pixel_reason'],
+            'properties': {f: {'type': 'string', 'minLength': 1}
+                           for f in ('key', 'observed_literal', 'pixel_reason')}}}
     directory = job / "source-resolution"
     attempt = 1
     while directory.exists():
@@ -379,7 +416,7 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
     record = {"findings_hash": editorial.digest(findings), "article_hash": editorial.digest(article),
               "dossier_hash": editorial.digest(dossier), "result_hash": editorial.digest(result),
               "review_path": str((directory / 'result.json').relative_to(job)), "model": runner.model,
-              "reasoning": runner.reasoning, "literal_checks": checks}
+              "reasoning": runner.reasoning, "literal_checks": checks, "applied_repairs": repairs}
     editorial.write(job / "source_resolution.json", record)
     if not _source_findings_pending(job):
         state = editorial.read(job / "status.json")
