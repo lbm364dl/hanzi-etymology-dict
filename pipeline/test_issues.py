@@ -169,6 +169,31 @@ class IssueTests(unittest.TestCase):
             self.assertEqual(runner.role, 'finding_triage')
             self.assertEqual(len(runner.inputs['actual_findings']), 1)
             self.assertNotIn('Rejected claim', str(runner.inputs['actual_findings']))
+
+    def test_triage_receives_exact_current_cited_and_review_referenced_evidence(self):
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+            def run(self, role, inputs, schema, directory):
+                self.inputs = inputs
+                return {'findings': []}
+        with tempfile.TemporaryDirectory() as temp:
+            job = Path(temp)
+            editorial.write(job/'status.json', {'character':'火', 'status':'approved'})
+            editorial.write(job/'article.json', {'summary':{'text':'Fire.', 'evidence_ids':['E1']}})
+            dossier = {'character':'火', 'evidence':[
+                {'id':'E1', 'text':'Current meaning from inspected dictionary.'},
+                {'id':'X-abc123', 'text':'Support mentioned by the retained review.'},
+                {'id':'E11', 'text':'Unrelated imported definition.'}]}
+            editorial.write(job/'dossier.json', dossier)
+            editorial.write(job/'round-0/factual-verification/verified-review.json',
+                            {'verdict':'revise', 'findings':['Inspect X-abc123 for this claim.']})
+            runner = Runner()
+            triage_job(job, {'id':'book'}, runner)
+            packet = runner.inputs['current_dossier_evidence']
+            self.assertEqual(packet['dossier_hash'], editorial.digest(dossier))
+            self.assertEqual([e['id'] for e in packet['evidence']], ['E1','X-abc123'])
+            self.assertEqual(packet['evidence'][0]['text'], dossier['evidence'][0]['text'])
             runner.reasoning = 'high'
             with self.assertRaises(ValueError):
                 triage_job(job, {'id': 'book'}, runner)

@@ -23,3 +23,18 @@ not hand-edit approved prose or recertify older entries.
 
 The remaining 290 HSK1 entries are still part of the objective. Finishing existing
 repairs before opening more batches changes work order, not the completion scope.
+
+## Backlog closure and missing triage context
+
+Rechecked published 备 pair 38e0231e/f22ac0e6 and 爱 pair 9a946442/4f223a56
+against current dossiers, exact real reviews, full article validation and compiled
+site exports. Closed actual resolved issues #4, #17, #41, #61 and #62 with full
+hash-bound verification comments. This repairs stale tracking of completed work;
+it does not count five additional characters or claim new prose was authored.
+
+Found a general cause of unnecessary issues: triage received article citations
+and review text but no actual dossier evidence, so it could not check newly added
+support and sometimes treated an unknown evidence ID as a gap. Triage now receives
+the exact current cited/review-referenced evidence contents and dossier hash. It
+excludes unrelated records and avoids E1/E11 prefix collisions. Ten issue tests
+pass, including this actual packet contract and capacity/parent preservation.

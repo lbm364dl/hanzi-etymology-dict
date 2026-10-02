@@ -44,9 +44,20 @@ def triage_job(job, source, runner):
     known_path = editorial.ROOT / 'research/source-enrichment-findings.json'
     known = editorial.read(known_path)['findings'] if known_path.is_file() else []
     character = state.get('character') or editorial.read(job / 'source.json')['character']
+    current_article = editorial.read(job / 'article.json') if (job / 'article.json').is_file() else None
+    dossier_path = job / 'dossier.json'
+    current_dossier = editorial.read(dossier_path) if dossier_path.is_file() else None
+    # A review mentions evidence IDs, not their source contents. Triage must see
+    # the actual support before calling a repaired claim an unresolved gap.
+    packet_text = json.dumps([current_article, records], ensure_ascii=False)
+    evidence_packet = None if current_dossier is None else {
+        'character': current_dossier.get('character'),
+        'dossier_hash': editorial.digest(current_dossier),
+        'evidence': [e for e in current_dossier.get('evidence', [])
+                     if re.search(r'(?<![\w-])' + re.escape(e['id']) + r'(?![\w-])', packet_text)]}
     inputs = {'character': character, 'source': source, 'job_state': state,
               'actual_findings': records, 'existing_findings': known,
-              'current_article': editorial.read(job / 'article.json') if (job / 'article.json').is_file() else None,
+              'current_article': current_article, 'current_dossier_evidence': evidence_packet,
               'task': 'Track material findings with evidence. Rejected proposals are not factual errors. '
                       'An OCR suspicion needs source verification; never guess a replacement. '
                       'Keep public issue text concise and paraphrase books instead of quoting passages.'}
