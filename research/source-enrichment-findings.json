@@ -25,19 +25,6 @@
       "verification": "Tests demonstrate that approved entries are selected for a new source, completed source jobs are skipped only when exact publication matches, stale source inputs are detected, and failed/revised jobs resume without fabricated approvals. Smoke-test contrasting real entries before expanding."
     },
     {
-      "key": "ziyuan-2012:学:explanation-and-review",
-      "kind": "factual",
-      "title": "Complete 学 enrichment while preserving modern decomposition and competing ancient analyses",
-      "details": "The scan-checked 字源 account of 學 adds competing early structural analyses, a source-bound rare printed graph, later 子 and reciprocal 學/教 use. Earlier drafts failed review concerning how to explain modern visible parts without assigning unsupported ancient functions. Preserve exact character/page identity: the separate 教-page 交/爻 OCR issue must not be transferred into 學, whose scan prints 爻 as a proposed phonetic in that analysis.",
-      "evidence": [
-        "字源 PDF page 277 / printed page 265",
-        "research/ziyuan-hsk1-xue-jiao.md",
-        "research/ziyuan-hsk1-xue-review-adjudication.md",
-        "Existing unpublished runs: runs/ziyuan-hsk1-smoke/5B66*"
-      ],
-      "verification": "Agent-authored repair, scan-backed citations and fresh independent factual/readability passes for the exact article and dossier; root publication and site integrity verification."
-    },
-    {
       "key": "ziyuan-2012:备:whole-character-simplification",
       "kind": "factual",
       "title": "Complete 备 enrichment without inventing a historical split or self-component",
@@ -195,6 +182,34 @@
         "research/source-worker-recovery-20261002.json"
       ],
       "verification": "Verify live-lock exclusion and actual inherited descriptor transport, then observe the detached source worker complete its current jobs. Targeted editorial/source tests pass 77 tests. Do not claim completion from a running status or restart while a confirmed live child still owns a stage."
+    },
+    {
+      "key": "ziyuan-2012:ocr-p1191-g001",
+      "kind": "ocr",
+      "title": "Verify 弋 identity in 二 continuation on PDF1191",
+      "details": "The raw corpus leaves a named component as [glyph:g001]. A research repair proposed 戈, conflicting with the coordinator’s targeted scan reading 弋. Preserve both claims and verify the distinguishing strokes at the exact occurrence before applying a producer correction. No correction has been applied.",
+      "verification": "Independently inspect source PNG crop (200,240,1430,760), raw codepoints [49,61), and source/evidence hashes recorded in the research note. Apply only a verified source-bound replacement, rebuild consumer corpus, and recheck any dependent authored claims through independent reviews.",
+      "evidence": [
+        "research/ziyuan-hsk1-er-source-check.md",
+        "字源 PDF1191 / printed1176",
+        "Source pixel SHA256 8044120a4e8d1b1354406fc3a1d0b12435d3e9418598361f97821ea3cd0f600f",
+        "Raw evidence SHA256 0b520661f625f7d08b410a89d4f9bea644df397db86447aae401ef22c41b8131",
+        "PR #8 commit f8aca27f"
+      ]
+    },
+    {
+      "kind": "factual",
+      "title": "Consider omitted 字源 proposals about learning and imitation",
+      "details": "The scan review found that the current explanation omits 字源’s proposed original meanings of learning and imitation/efficacy, reciprocal 學/教 usage, and report that early structures began combining in Shang forms. These should be considered as attributed, qualified proposals or reports; the scan verifies what 字源 says, not the underlying cited analyses.",
+      "verification": "Revise the authored account if supported by the dossier, preserving attribution, proposal status, and the distinction between 字源’s report and verification of its cited scholarship; obtain fresh factual and readability review for changed prose.",
+      "evidence": [
+        "source-coverage/verified-review.json: revise finding 2",
+        "字源 PDF pages 277–278 / printed pages 265–266",
+        "current_article.formation",
+        "current_article.meaning_history",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:学:explanation-and-review"
     }
   ]
 }
