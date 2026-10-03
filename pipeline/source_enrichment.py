@@ -282,7 +282,8 @@ def _published_matches(job, source, root):
     except (ValueError, KeyError, OSError, editorial.ValidationError):
         return False
     audit_path = job / "source_audit.json"
-    if audit_path.is_file() and editorial.read(audit_path).get('mode') == 'existing_approved_research':
+    if audit_path.is_file() and editorial.read(audit_path).get('mode') in (
+            'existing_approved_research', 'source_coverage_candidate'):
         from pipeline.source_adoption import valid_audit
         if not valid_audit(job, editorial.read(audit_path), article, dossier):
             return False
@@ -492,7 +493,18 @@ def _source_finding_class(finding):
             or 'proposed source-bound OCR correction' in text
             or ('raw OCR' in text and re.search(r'not use .{0,80}confirmed source text', text, re.I))):
         return 'transcription_correction'
-    if re.search(r'failed to open|not (?:directly )?inspected|was not inspected|not supplied|was not supplied', text, re.I):
+    if re.search(r'failed to open|not (?:directly )?inspected|(?:was|were|did) not '
+                  r'(?:directly )?inspect(?:ed|ing)?|not supplied|was not supplied|'
+                  r'this invocation (?:did not|has not) inspect|'
+                  r'this invocation.{0,80}directly inspected only', text, re.I):
+        return 'primary_access_gap'
+    absent_source = re.search(
+        r'\b(?:source|dataset|database|official page|reading(?:s)? source)\b.{0,180}'
+        r'(?:absent|unavailable|not available|not accessible|not supplied|not obtained)', text, re.I)
+    absent_source = absent_source or re.search(
+        r'\b(?:absent|unavailable|not available|not accessible|not supplied|not obtained)\b.{0,180}'
+        r'\b(?:source|dataset|database|official page|reading(?:s)? source)\b', text, re.I)
+    if absent_source:
         return 'primary_access_gap'
     identity_term = r'(?:\bidentit(?:y|ies)\b|\bidentification(?:s)?\b|\bUnicode scalar(?:s)?\b)'
     identity_gap = re.search(identity_term + r'.{0,120}(?:unresolved|unclear|not established|'
@@ -506,6 +518,9 @@ def _source_finding_class(finding):
                              r'(?:not (?:separately |individually |independently )?(?:identified|interpreted|checked|verified)|'
                              r'did not (?:separately |individually |independently )?(?:identify|interpret|check|verify)|'
                              r'not (?:all )?distinct enough to assign)', text, re.I)
+    specimen_gap = specimen_gap or re.search(
+        r'no claim (?:is|was) made.{0,220}\b(?:glyph|specimen|graph|form)s?\b.{0,140}'
+        r'(?:identified|interpreted|checked|verified)', text, re.I)
     if identity_gap or specimen_gap:
         return 'identity_gap'
     return 'other'
@@ -688,6 +703,14 @@ def _identity_support_valid(article, dossier, finding_result, observation):
                 and observation.get('support_reason'))
 
 
+def _source_gap_support_valid(article, dossier, finding_result, observation):
+    """A no-claim source-gap disposition must attest and bind the whole exact pair."""
+    return (observation.get('whole_candidate_reviewed') is True
+            and observation.get('reviewed_article_hash') == editorial.digest(article)
+            and observation.get('reviewed_dossier_hash') == editorial.digest(dossier)
+            and _identity_support_valid(article, dossier, finding_result, observation))
+
+
 def _validate_codex_object_schema(schema, path='$'):
     """Fail locally when strict Codex structured output would reject an object schema."""
     if isinstance(schema, dict):
@@ -775,6 +798,23 @@ def _source_findings_pending(job):
                        for key in identity_keys)):
             return True
     historical = _historical_checked_keys(job)
+    historical_keys = set().union(*historical.values()) if historical else set()
+    source_gap_keys = {f['key'] for f in result['findings']
+                       if f['disposition'] == 'source_gap_not_used'}
+    if source_gap_keys:
+        expected_source_gap_keys = {f['key'] for f in findings['findings']
+                                    if _source_finding_class(f) == 'primary_access_gap'}
+        observations = result.get('source_gap_observations', [])
+        observed = {o['key']: o for o in observations}
+        by_key = {f['key']: f for f in result['findings']}
+        dossier = editorial.read(job / 'dossier.json')
+        article = editorial.read(job / 'article.json')
+        if (not source_gap_keys <= expected_source_gap_keys
+                or bool(source_gap_keys & historical_keys)
+                or set(observed) != expected_source_gap_keys or len(observed) != len(observations)
+                or any(not _source_gap_support_valid(article, dossier, by_key[key], observed[key])
+                       for key in source_gap_keys)):
+            return True
     dispositions = {f['key']: f['disposition'] for f in result['findings']}
     for disposition, keys in historical.items():
         if any(dispositions.get(key) != disposition for key in keys):
@@ -851,6 +891,7 @@ def _source_findings_pending(job):
     keys = [item["key"] for item in result["findings"]]
     return (len(keys) != len(set(keys)) or set(keys) != {item["key"] for item in findings["findings"]}
             or any(item["disposition"] not in ("unresolved_identity_not_used",
+                    "source_gap_not_used",
                     "rejected_proposal_scan_matches_corpus", "applied_repair_scan_matches_corpus",
                     "verified_metadata_not_extracted", "verified_transcription_matches_corpus",
                     "verified_source_claim")
@@ -1048,7 +1089,7 @@ def revalidate_published_source_jobs(jobs, runner, root=ROOT, workers=1, republi
                 continue
             pending = _source_findings_pending(job)
             if not pending:
-                if (state.get('status') == 'approved' and state.get('published_at')
+                if (state.get('status') in ('approved', 'published') and state.get('published_at')
                         and state.get('canonical_entry')):
                     candidates.append((job, source, {'status': 'ready', 'action': 'publish_only',
                         'pair': pair, 'original_status': 'published', 'checks': {},
@@ -1074,7 +1115,8 @@ def revalidate_published_source_jobs(jobs, runner, root=ROOT, workers=1, republi
         if info['status'] != 'ready':
             return {'job': str(job), **{k: v for k, v in info.items() if k != 'checks'}}
         pair = info['pair']
-        attempt_dir = job / 'source-only-revalidation' / f'{pair[1][:12]}-{pair[2][:12]}'
+        attempt_root = job / 'source-only-revalidation' / f'{pair[1][:12]}-{pair[2][:12]}'
+        attempt_dir = attempt_root
         summary_path = attempt_dir / 'summary.json'
         lock_dir = Path(root) / 'runs' / '.locks'
         lock_dir.mkdir(parents=True, exist_ok=True)
@@ -1092,8 +1134,22 @@ def revalidate_published_source_jobs(jobs, runner, root=ROOT, workers=1, republi
                         return {'job': str(job), 'status': 'already_running',
                                 'lock': str(job / 'coordinator.lock')}
                     try:
-                        if summary_path.is_file():
-                            return {'job': str(job), **editorial.read(summary_path), 'status': 'already_attempted'}
+                        if attempt_root.exists():
+                            prior_summaries = [attempt_root / 'summary.json',
+                                               *sorted(attempt_root.glob('attempt-*/summary.json'))]
+                            prior_summaries = [path for path in prior_summaries if path.is_file()]
+                            latest = editorial.read(prior_summaries[-1]) if prior_summaries else {}
+                            terminal_success = latest.get('status') == 'published'
+                            terminal_nonpending = (not latest.get('pending')
+                                and latest.get('status') != 'failed'
+                                and info.get('action') != 'publish_only')
+                            if prior_summaries and (terminal_success or terminal_nonpending):
+                                return {'job': str(job), **latest, 'status': 'already_attempted'}
+                            attempt_number = 2
+                            while (attempt_root / f'attempt-{attempt_number:02d}').exists():
+                                attempt_number += 1
+                            attempt_dir = attempt_root / f'attempt-{attempt_number:02d}'
+                            summary_path = attempt_dir / 'summary.json'
                         attempt_dir.mkdir(parents=True, exist_ok=True)
                         current, current_dossier = editorial.read(job / 'article.json'), editorial.read(job / 'dossier.json')
                         reviews = editorial.read(job / 'reviews.json')
@@ -1108,6 +1164,9 @@ def revalidate_published_source_jobs(jobs, runner, root=ROOT, workers=1, republi
                         prior_receipt = job / 'source_resolution.json'
                         if prior_receipt.is_file():
                             shutil.copy2(prior_receipt, attempt_dir / 'prior-source-resolution.json')
+                        prior_status = job / 'status.json'
+                        if prior_status.is_file():
+                            shutil.copy2(prior_status, attempt_dir / 'prior-status.json')
                         editorial.write(attempt_dir / 'inputs.json', {
                             'article_hash': info['article_hash'], 'dossier_hash': info['dossier_hash'],
                             'reviews_hash': editorial.digest(reviews),
@@ -1139,6 +1198,10 @@ def revalidate_published_source_jobs(jobs, runner, root=ROOT, workers=1, republi
                                 and republish):
                             state = editorial.read(job / 'status.json')
                             if state.get('issue_sync_status') == 'synced':
+                                if state.get('status') == 'published':
+                                    state['status'] = 'approved'
+                                    state['source_revalidation_cleared_at'] = datetime.now(timezone.utc).isoformat()
+                                    editorial.write(job / 'status.json', state)
                                 summary['publication'] = _publish_job_locked(job, source, root)
                                 summary['status'] = summary['publication']['status']
                             else:
@@ -1174,6 +1237,9 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
     editorial.validate_reviews(article, dossier, editorial.read(job / "reviews.json"))
     checkpoint = editorial.read(job / "source_checkpoint.json")
     identity_checks = [f for f in findings['findings'] if _source_finding_class(f) == 'identity_gap']
+    source_gap_checks = [f for f in findings['findings']
+                         if _source_finding_class(f) == 'primary_access_gap']
+    article_path_pattern = r'^article(?:\.[A-Za-z_][A-Za-z0-9_]*|\[\d+\])+$'
     schema = {"type": "object", "additionalProperties": False, "required": ["findings"],
         "properties": {"findings": {"type": "array",
             "minItems": len(findings['findings']), "maxItems": len(findings['findings']), "items": {
@@ -1188,7 +1254,6 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
               "feedback": {"source_scan_images": (
                   list(checkpoint["locator"].get("source_scan_images", [])) + list(source_context or []))}}
     if identity_checks:
-        article_path_pattern = r'^article(?:\.[A-Za-z_][A-Za-z0-9_]*|\[\d+\])+$'
         schema['properties']['findings']['items']['properties']['affected_paths']['items'] = {
             'type': 'string', 'pattern': article_path_pattern}
         inputs['identity_gap_checks'] = identity_checks
@@ -1229,6 +1294,37 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
             'claim depends on or uses the unresolved identity. This empty inventory is bound to this exact pair and is '
             'not permitted for literal, applied-repair, metadata or transcription findings. Do not use this disposition '
             'for source access gaps or retained literal/repair checks.')
+    if source_gap_checks:
+        inputs['source_gap_checks'] = source_gap_checks
+        schema['required'].append('source_gap_observations')
+        schema['properties']['source_gap_observations'] = {'type': 'array',
+            'minItems': len(source_gap_checks), 'maxItems': len(source_gap_checks), 'items': {
+            'type': 'object', 'additionalProperties': False,
+            'required': ['key', 'independent_support', 'claim_paths', 'support_reason',
+                         'whole_candidate_reviewed', 'reviewed_article_hash', 'reviewed_dossier_hash'],
+            'properties': {'key': {'type': 'string', 'enum': [f['key'] for f in source_gap_checks]},
+                'independent_support': {'type': 'boolean'},
+                'whole_candidate_reviewed': {'type': 'boolean'},
+                'reviewed_article_hash': {'type': 'string', 'enum': [editorial.digest(article)]},
+                'reviewed_dossier_hash': {'type': 'string', 'enum': [editorial.digest(dossier)]},
+                'claim_paths': {'type': 'array', 'uniqueItems': True, 'items': {
+                    'type': 'object', 'additionalProperties': False,
+                    'required': ['article_path', 'claim_text', 'independent_evidence_ids'],
+                    'properties': {'article_path': {'type': 'string', 'pattern': article_path_pattern},
+                        'claim_text': {'type': 'string', 'minLength': 1},
+                        'independent_evidence_ids': {'type': 'array', 'minItems': 1,
+                            'uniqueItems': True, 'items': {'type': 'string'}}}}},
+                'support_reason': {'type': 'string', 'minLength': 1}}}}
+        inputs['source_gap_instruction'] = (
+            'For each primary-source access gap, inspect the attached source scans and the complete exact article and dossier. '
+            '`source_gap_not_used` is allowed only if no claim in this exact candidate depends on the missing observation. '
+            'If a claim does depend on it, report each exact article path, quote a literal substring from that field, and list '
+            'only independently supporting evidence IDs actually cited by that field; otherwise leave pending. For an empty '
+            'claim list, attest that the whole article and dossier were reviewed and set independent_support=true for that '
+            'independent exact-pair judgment; this does not assert a missing source fact. State explicitly that no article or dossier '
+            'claim depends on or uses this missing source observation. Echo the exact article and dossier hashes. Do not use this '
+            'disposition for OCR/transcription, printed-identity, literal or applied-repair findings. This does not verify or '
+            'reject an unread source; it only records whether this exact candidate depends on it.')
     checks = list(literal_checks or [])
     transcriptions = _verify_transcription_checks(job, list(transcription_checks or [])) if transcription_checks else []
     if transcriptions:
@@ -1369,6 +1465,8 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
     allowed_dispositions = ['pending']
     if identity_checks:
         allowed_dispositions.append('unresolved_identity_not_used')
+    if source_gap_checks:
+        allowed_dispositions.append('source_gap_not_used')
     if checks:
         allowed_dispositions.append('rejected_proposal_scan_matches_corpus')
     if repairs:
@@ -1443,6 +1541,21 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
             if dispositions[key] == 'unresolved_identity_not_used' and not _identity_support_valid(
                     article, dossier, next(f for f in result['findings'] if f['key'] == key), observed[key]):
                 raise ValueError('Identity disposition lacks exact independent article-claim support')
+    if source_gap_checks:
+        observations = result.get('source_gap_observations', [])
+        observed = {o['key']: o for o in observations}
+        dispositions = {f['key']: f['disposition'] for f in result['findings']}
+        if len(observed) != len(observations) or set(observed) != {f['key'] for f in source_gap_checks}:
+            raise ValueError('Source access gaps require independent claim-support observations')
+        source_gap_dispositions = {f['key'] for f in result['findings']
+                                   if f['disposition'] == 'source_gap_not_used'}
+        if not source_gap_dispositions <= {f['key'] for f in source_gap_checks}:
+            raise ValueError('Only an explicit primary-source access gap may use source_gap_not_used')
+        for source_gap in source_gap_checks:
+            key = source_gap['key']
+            if dispositions[key] == 'source_gap_not_used' and not _source_gap_support_valid(
+                    article, dossier, next(f for f in result['findings'] if f['key'] == key), observed[key]):
+                raise ValueError('Source-gap disposition lacks exact independent article-claim support')
     record = {"findings_hash": editorial.digest(findings), "article_hash": editorial.digest(article),
               "dossier_hash": editorial.digest(dossier), "result_hash": editorial.digest(result),
               "review_path": str((directory / 'result.json').relative_to(job)), "model": runner.model,
@@ -1963,6 +2076,11 @@ def _publish_job_locked(job, source, root=ROOT):
             or not _recorded_source_hash_matches(audit.get("source_hash"), saved.get("registry_source"), source)
             or state.get("source_audit_hash") != editorial.digest(audit)):
         raise ValueError("Source-specific page evidence is missing or stale")
+    if audit.get('mode') in ('existing_approved_research', 'source_coverage_candidate'):
+        from pipeline.source_adoption import valid_audit
+        candidate, dossier = editorial.read(job / 'article.json'), editorial.read(job / 'dossier.json')
+        if not valid_audit(job, audit, candidate, dossier):
+            raise ValueError('Source coverage receipt does not bind the exact completed Luna-low candidate review')
     if source.get("github_repo") and state.get("issue_sync_status") != "synced":
         raise ValueError("Issue tracking must sync successfully before publication")
     article, dossier = editorial.read(job / "article.json"), editorial.read(job / "dossier.json")

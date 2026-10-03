@@ -53,6 +53,9 @@ class SourceEnrichmentTests(unittest.TestCase):
                         'doubled forms are not all distinct enough to assign Unicode identities'):
             self.assertEqual(source_enrichment._source_finding_class({'kind': 'ocr', 'details': details}),
                              'identity_gap')
+        self.assertEqual(source_enrichment._source_finding_class({'details':
+            'No claim is made here that the rare glyph drawings have been individually identified.'}),
+            'identity_gap')
 
     def test_source_finding_classifier_keeps_unresolved_ocr_literals_out_of_identity_lane(self):
         self.assertEqual(source_enrichment._source_finding_class({'kind': 'ocr',
@@ -144,6 +147,160 @@ class SourceEnrichmentTests(unittest.TestCase):
             editorial.write(meta_path, {'role':'research','status':'complete','model':'gpt-6-luna',
                 'reasoning':'low','result_hash':'0'*64,'image_argument_manifest':[{'path':str(scan),'sha256':scan_hash}]})
             self.assertTrue(source_enrichment._source_findings_pending(job))
+
+    def test_source_gap_not_used_requires_exact_pair_and_supported_claim_inventory(self):
+        article = {'character': '一', 'summary': {'text': '一 has a supported entry.',
+            'evidence_ids': ['E1']}}
+        dossier = {'evidence': [{'id': 'E1', 'source': 'Dictionary', 'field': 'entry',
+                                 'text': 'Supports the entry.'}]}
+        no_claim = {'key': 'access', 'independent_support': True, 'whole_candidate_reviewed': True,
+            'reviewed_article_hash': editorial.digest(article), 'reviewed_dossier_hash': editorial.digest(dossier),
+            'claim_paths': [], 'support_reason': 'I reviewed the entire article and dossier; no article or dossier claim depends on or uses the missing source observation.'}
+        resolution_finding = {'key': 'access', 'affected_paths': []}
+        self.assertTrue(source_enrichment._source_gap_support_valid(article, dossier, resolution_finding, no_claim))
+        self.assertFalse(source_enrichment._source_gap_support_valid(article, dossier, resolution_finding,
+            {**no_claim, 'whole_candidate_reviewed': False}))
+        self.assertFalse(source_enrichment._source_gap_support_valid(article, dossier, resolution_finding,
+            {**no_claim, 'reviewed_article_hash': '0' * 64}))
+        dependent = {**no_claim, 'claim_paths': [{'article_path': 'article.summary',
+            'claim_text': '一 has a supported entry.', 'independent_evidence_ids': ['E2']}]}
+        self.assertFalse(source_enrichment._source_gap_support_valid(article, dossier,
+            {'key': 'access', 'affected_paths': ['article.summary']}, dependent))
+
+    def test_source_gap_not_used_cannot_downgrade_ocr_or_historical_check(self):
+        self.assertEqual(source_enrichment._source_finding_class({'key': 'ocr',
+            'details': '[OCR CORRECTION REQUIRED] The uninspected raw OCR span is wrong.'}),
+            'transcription_correction')
+        self.assertEqual(source_enrichment._source_finding_class({'key': 'scan-gap',
+            'details': 'This invocation did not inspect the continuation-page pixels.'}),
+            'primary_access_gap')
+        self.assertEqual(source_enrichment._source_finding_class({'details':
+            'The full Unihan readings source is absent in this checkout.'}), 'primary_access_gap')
+        self.assertEqual(source_enrichment._source_finding_class({'details':
+            'The local-primary Baxter–Sagart dataset is unavailable here.'}), 'primary_access_gap')
+        self.assertEqual(source_enrichment._source_finding_class({'details':
+            'This invocation directly inspected only PDF page 71, not the earlier page.'}),
+            'primary_access_gap')
+        with tempfile.TemporaryDirectory() as temp:
+            job = Path(temp)
+            article = {'character': '一', 'summary': {'text': '一 has a supported entry.',
+                'evidence_ids': ['E1']}}
+            dossier = {'evidence': [{'id': 'E1', 'source': 'Dictionary', 'field': 'entry',
+                                     'text': 'Supports the entry.'}]}
+            finding = {'key': 'access', 'kind': 'source',
+                'details': 'An external reference page was not directly inspected.'}
+            findings = {'requires_coordinator_verification': True, 'findings': [finding]}
+            result = {'findings': [{'key': 'access', 'disposition': 'source_gap_not_used',
+                    'affected_paths': []}],
+                'source_gap_observations': [{'key': 'access', 'independent_support': True,
+                    'whole_candidate_reviewed': True, 'reviewed_article_hash': editorial.digest(article),
+                    'reviewed_dossier_hash': editorial.digest(dossier), 'claim_paths': [],
+                    'support_reason': 'I reviewed the entire article and dossier; no article or dossier claim depends on or uses the missing source observation.'}]}
+            for name, value in [('article.json', article), ('dossier.json', dossier),
+                                ('source_findings.json', findings)]:
+                editorial.write(job / name, value)
+            result_path = job / 'source-resolution' / 'result.json'
+            editorial.write(result_path, result)
+            editorial.write(result_path.parent / 'meta.json', {'role': 'source_resolution',
+                'status': 'complete', 'model': 'gpt-6-luna', 'reasoning': 'low',
+                'result_hash': editorial.digest(result)})
+            editorial.write(job / 'source_resolution.json', {'findings_hash': editorial.digest(findings),
+                'article_hash': editorial.digest(article), 'dossier_hash': editorial.digest(dossier),
+                'result_hash': editorial.digest(result), 'review_path': 'source-resolution/result.json',
+                'model': 'gpt-6-luna', 'reasoning': 'low'})
+            self.assertFalse(source_enrichment._source_findings_pending(job))
+            # An active claim that is listed as affected but has no exact independently
+            # supported claim record must remain held, even though the finding is an
+            # access gap rather than an OCR literal.
+            dependent_result = copy.deepcopy(result)
+            dependent_result['findings'][0]['affected_paths'] = ['article.summary']
+            editorial.write(job / 'source-resolution/result.json', dependent_result)
+            editorial.write(job / 'source-resolution/meta.json', {'role': 'source_resolution',
+                'status': 'complete', 'model': 'gpt-6-luna', 'reasoning': 'low',
+                'result_hash': editorial.digest(dependent_result)})
+            editorial.write(job / 'source_resolution.json', {'findings_hash': editorial.digest(findings),
+                'article_hash': editorial.digest(article), 'dossier_hash': editorial.digest(dossier),
+                'result_hash': editorial.digest(dependent_result), 'review_path': 'source-resolution/result.json',
+                'model': 'gpt-6-luna', 'reasoning': 'low'})
+            self.assertTrue(source_enrichment._source_findings_pending(job))
+            with patch.object(source_enrichment, '_historical_checked_keys', return_value={
+                    'verified_transcription_matches_corpus': {'access'}}):
+                # Restore the otherwise valid no-claim output to isolate the historical
+                # receipt barrier from the affected-path check above.
+                editorial.write(job / 'source-resolution/result.json', result)
+                editorial.write(job / 'source-resolution/meta.json', {'role': 'source_resolution',
+                    'status': 'complete', 'model': 'gpt-6-luna', 'reasoning': 'low',
+                    'result_hash': editorial.digest(result)})
+                editorial.write(job / 'source_resolution.json', {'findings_hash': editorial.digest(findings),
+                    'article_hash': editorial.digest(article), 'dossier_hash': editorial.digest(dossier),
+                    'result_hash': editorial.digest(result), 'review_path': 'source-resolution/result.json',
+                    'model': 'gpt-6-luna', 'reasoning': 'low'})
+                self.assertTrue(source_enrichment._source_findings_pending(job))
+            ocr_finding = {'key': 'access', 'kind': 'ocr',
+                'details': '[OCR CORRECTION REQUIRED] A source-bound literal requires scan verification.'}
+            ocr_findings = {'requires_coordinator_verification': True, 'findings': [ocr_finding]}
+            ocr_result = {'findings': [{'key': 'access', 'disposition': 'source_gap_not_used',
+                    'affected_paths': []}], 'source_gap_observations': [result['source_gap_observations'][0]]}
+            editorial.write(job / 'source_findings.json', ocr_findings)
+            editorial.write(job / 'source-resolution/result.json', ocr_result)
+            editorial.write(job / 'source-resolution/meta.json', {'role': 'source_resolution',
+                'status': 'complete', 'model': 'gpt-6-luna', 'reasoning': 'low',
+                'result_hash': editorial.digest(ocr_result)})
+            editorial.write(job / 'source_resolution.json', {'findings_hash': editorial.digest(ocr_findings),
+                'article_hash': editorial.digest(article), 'dossier_hash': editorial.digest(dossier),
+                'result_hash': editorial.digest(ocr_result), 'review_path': 'source-resolution/result.json',
+                'model': 'gpt-6-luna', 'reasoning': 'low'})
+            self.assertTrue(source_enrichment._source_findings_pending(job))
+
+    def test_source_gap_not_used_requires_actual_source_scan_and_keeps_audit_gate(self):
+        from PIL import Image
+        import hashlib
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        article = editorial.read(job / 'source_article.json')
+        dossier = editorial.read(job / 'source_dossier.json')
+        reviews = [editorial.make_review(role, 'pass', [], article, dossier, 'source-gap-' + role)
+                   for role in ('factual', 'readability')]
+        for name, value in [('article.json', article), ('dossier.json', dossier),
+                            ('reviews.json', reviews),
+                            ('source_findings.json', {'requires_coordinator_verification': True,
+                                'findings': [{'key': 'unused-locator', 'kind': 'source',
+                                    'details': 'An unrelated locator page was not directly inspected.'}]})]:
+            editorial.write(job / name, value)
+        editorial.write(job / 'source_checkpoint.json', {'locator': {'source_scan_images': []}})
+        scan = self.root / 'unused-locator.png'
+        Image.new('RGB', (4, 4), 'white').save(scan)
+        with Image.open(scan) as image:
+            pixels = hashlib.sha256(image.convert('RGB').tobytes()).hexdigest()
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+            def run(self, role, inputs, schema, directory):
+                self_outer.assertEqual(role, 'source_resolution')
+                self_outer.assertIn('source_gap_observations', schema['required'])
+                self_outer.assertEqual(inputs['source_gap_checks'][0]['key'], 'unused-locator')
+                self_outer.assertTrue(any(item['path'] == str(scan) for item in
+                    inputs['feedback']['source_scan_images']))
+                result = {'findings': [{'key': 'unused-locator', 'disposition': 'source_gap_not_used',
+                    'reason': 'The unrelated locator was not used by the article.', 'affected_paths': []}],
+                    'source_gap_observations': [{'key': 'unused-locator', 'independent_support': True,
+                        'whole_candidate_reviewed': True,
+                        'reviewed_article_hash': editorial.digest(inputs['article']),
+                        'reviewed_dossier_hash': editorial.digest(inputs['dossier']), 'claim_paths': [],
+                        'support_reason': 'I reviewed the entire article and dossier; no article or dossier claim depends on or uses this missing source observation.'}]}
+                directory.mkdir(parents=True, exist_ok=True)
+                editorial.write(directory / 'result.json', result)
+                editorial.write(directory / 'meta.json', {'role': 'source_resolution',
+                    'status': 'complete', 'model': self.model, 'reasoning': self.reasoning,
+                    'result_hash': editorial.digest(result)})
+                return result
+        self_outer = self
+        scan_context = [{'path': str(scan), 'pdf_page': 900, 'source_pixel_sha256': pixels}]
+        editorial.write(job / 'status.json', {'status': 'approved'})
+        result = source_enrichment.resolve_source_findings(job, Runner(), source_context=scan_context)
+        self.assertEqual(result['model'], 'gpt-6-luna')
+        self.assertFalse(source_enrichment._source_findings_pending(job))
+        self.assertFalse((job / 'source_audit.json').exists(),
+            'Resolving an unused access gap must not stand in for the mandatory source adoption audit.')
 
     def test_unbound_historical_result_cannot_create_repair_obligation(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -556,6 +713,10 @@ class SourceEnrichmentTests(unittest.TestCase):
             'issue_sync_status': 'synced'})
         old_receipt = {'prior': 'preserved'}
         editorial.write(job / 'source_resolution.json', old_receipt)
+        pair_dir = job / 'source-only-revalidation' / (
+            f"{editorial.digest(article)[:12]}-{editorial.digest(dossier)[:12]}")
+        editorial.write(pair_dir / 'summary.json', {'status': 'failed',
+            'error': 'Prior attempt failed before a source verdict.'})
 
         class Runner:
             model = 'gpt-6-luna'
@@ -581,9 +742,8 @@ class SourceEnrichmentTests(unittest.TestCase):
         self.assertEqual(editorial.digest(editorial.read(job / 'article.json')), editorial.digest(article))
         self.assertEqual(editorial.digest(editorial.read(job / 'dossier.json')), editorial.digest(dossier))
         self.assertEqual(editorial.digest(editorial.read(job / 'reviews.json')), editorial.digest(reviews))
-        self.assertEqual(editorial.read(job / 'source-only-revalidation' /
-            f"{editorial.digest(article)[:12]}-{editorial.digest(dossier)[:12]}" /
-            'prior-source-resolution.json'), old_receipt)
+        self.assertEqual(editorial.read(pair_dir / 'summary.json')['status'], 'failed')
+        self.assertEqual(editorial.read(pair_dir / 'attempt-02' / 'prior-source-resolution.json'), old_receipt)
         self.assertEqual(editorial.read(job / 'source_resolution.json'), {'fresh': True})
 
     def test_source_only_revalidation_finalizes_helper_downgraded_published_job(self):
@@ -661,6 +821,47 @@ class SourceEnrichmentTests(unittest.TestCase):
         self.assertEqual(after, before)
         self.assertFalse(pair_dir.exists())
         self.assertEqual(editorial.read(job / 'source_resolution.json'), old_resolution)
+
+    def test_source_only_revalidation_republishes_published_pair_after_gate_clears(self):
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        article = editorial.read(job / 'source_article.json')
+        dossier = editorial.read(job / 'source_dossier.json')
+        reviews = [editorial.make_review(role, 'pass', [], article, dossier, 'republish-' + role)
+                   for role in ('factual', 'readability')]
+        for name, value in [('article.json', article), ('dossier.json', dossier),
+                            ('reviews.json', reviews),
+                            ('source_findings.json', {'requires_coordinator_verification': True,
+                                'findings': [{'key': 'identity', 'details': 'Identity unresolved.'}]}),
+                            ('source_resolution.json', {'verified': True})]:
+            editorial.write(job / name, value)
+        from pipeline.source_adoption import _used_ids
+        used = _used_ids(article)
+        audit = {'verified': True, 'source_hash': source_enrichment._research_source_hash(SOURCE),
+                 'citations': [e for e in dossier['evidence'] if e.get('id') in used]}
+        editorial.write(job / 'source_audit.json', audit)
+        prior_status = {'status': 'published', 'source_audit_hash': editorial.digest(audit),
+            'issue_sync_status': 'synced', 'published_at': '2026-10-02T12:00:00Z',
+            'canonical_entry': str(self.root / 'content/entries/6728.json')}
+        editorial.write(job / 'status.json', prior_status)
+
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+
+        def publish(candidate, source, root):
+            self.assertEqual(candidate, job)
+            self.assertEqual(editorial.read(job / 'status.json')['status'], 'approved')
+            return {'status': 'published', 'character': '木', 'job': str(job)}
+
+        with patch.object(source_enrichment, '_source_findings_pending', return_value=False), \
+             patch.object(source_enrichment, 'resolve_source_findings') as resolve, \
+             patch.object(source_enrichment, '_publish_job_locked', side_effect=publish):
+            rows = source_enrichment.revalidate_published_source_jobs([job], Runner(), self.root)
+        self.assertEqual(rows[0]['status'], 'published', rows[0])
+        resolve.assert_not_called()
+        attempt = job / 'source-only-revalidation' / (
+            f"{editorial.digest(article)[:12]}-{editorial.digest(dossier)[:12]}")
+        self.assertEqual(editorial.read(attempt / 'prior-status.json'), prior_status)
 
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -934,6 +1135,56 @@ class SourceEnrichmentTests(unittest.TestCase):
                                                       self.root)[0]['status'], 'pending')
             self.assertEqual(source_enrichment.status({"characters": ["木"]}, SOURCE, self.output,
                                                        self.root)[0]["status"], "stale")
+
+    def _write_candidate_coverage_audit(self, job, article, dossier):
+        result = {'verdict': 'pass', 'evidence_ids': ['source:1'], 'findings': []}
+        editorial.write(job / 'source-coverage/result.json', result)
+        editorial.write(job / 'source-coverage/meta.json', {'role': 'source_coverage',
+            'status': 'complete', 'model': 'gpt-6-luna', 'reasoning': 'low',
+            'result_hash': editorial.digest(result)})
+        audit = {'source_id': SOURCE['id'],
+            'source_hash': source_enrichment._research_source_hash(SOURCE),
+            'mode': 'source_coverage_candidate', 'verified': True,
+            'coverage_review_path': 'source-coverage',
+            'coverage_result_hash': editorial.digest(result),
+            'article_hash': editorial.digest(article), 'dossier_hash': editorial.digest(dossier),
+            'citations': [{k: dossier['evidence'][0][k] for k in ('source', 'field', 'text')}]}
+        editorial.write(job / 'source_audit.json', audit)
+        return audit
+
+    def test_candidate_coverage_audit_is_revalidated_for_completion_and_publish(self):
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        article, dossier = (editorial.read(job / 'source_article.json'),
+                            editorial.read(job / 'source_dossier.json'))
+        reviews = [editorial.make_review(role, 'pass', [], article, dossier,
+                                         f'candidate-coverage-{role}')
+                   for role in ('factual', 'readability')]
+        editorial.write(job / 'article.json', article)
+        editorial.write(job / 'dossier.json', dossier)
+        editorial.write(job / 'reviews.json', reviews)
+        audit = self._write_candidate_coverage_audit(job, article, dossier)
+        from pipeline.source_adoption import valid_audit
+        self.assertTrue(valid_audit(job, audit, article, dossier))
+        with patch.object(source_enrichment, '_load_source_tools', return_value=LocalSources()):
+            locator = LocalSources().locate_sources(SOURCE, '木', dossier)
+            editorial.write(job / 'status.json', {'status': 'published', 'source_id': SOURCE['id'],
+                'registry_source_hash': source_enrichment._research_source_hash(SOURCE),
+                'locator_hash': source_enrichment._locator_hash(locator),
+                'source_audit_hash': editorial.digest(audit),
+                'article_hash': editorial.digest(article), 'dossier_hash': editorial.digest(dossier)})
+            self.assertTrue(source_enrichment._published_matches(job, SOURCE, self.root))
+
+            # The outer audit hash alone is insufficient: the coverage stage is rechecked.
+            editorial.write(job / 'source-coverage/result.json',
+                {'verdict': 'revise', 'evidence_ids': ['source:1'], 'findings': ['material omission']})
+            self.assertFalse(source_enrichment._published_matches(job, SOURCE, self.root))
+
+            state = editorial.read(job / 'status.json')
+            state['status'] = 'approved'
+            state['source_audit_hash'] = editorial.digest(audit)
+            editorial.write(job / 'status.json', state)
+            with self.assertRaisesRegex(ValueError, 'coverage receipt does not bind'):
+                source_enrichment.publish_job(job, SOURCE, self.root)
 
     def test_metadata_only_issue_settings_preserve_legacy_published_identity(self):
         job = source_enrichment.job_path(self.output, SOURCE["id"], "木")
