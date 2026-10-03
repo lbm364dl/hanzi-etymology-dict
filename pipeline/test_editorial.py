@@ -652,6 +652,26 @@ class EditorialTests(unittest.TestCase):
         self.assertEqual(result['meaning_history'], before['meaning_history'])
         self.assertEqual(article, before)
 
+    def test_null_array_deletions_get_repair_feedback_without_corrupting_candidate(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA, assemble_article
+        for path, value in [('components/0', None), ('components', [None]),
+                            ('relationships', [None])]:
+            with self.subTest(path=path):
+                article = copy.deepcopy(ARTICLE_V2)
+                dossier = {**DOSSIER, 'glyph_research': {'historical_glyphs': article['historical_glyphs']}}
+                calls = []
+                def invoke(role, inputs, schema, directory):
+                    calls.append(inputs)
+                    if len(calls) == 1:
+                        return {'edits': [{'path': path, 'value_json': json.dumps(value)}]}
+                    self.assertIn('Null', inputs['validation_findings'][0])
+                    self.assertEqual(inputs['article'], article)
+                    return {'edits': []}
+                result = apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                             WRITER_SCHEMA, Path('/unused'), invoke)
+                self.assertEqual(len(calls), 2)
+                self.assertEqual(assemble_article(result, dossier), assemble_article(article, dossier))
+
     def test_indexed_citation_patch_expands_transport_alias(self):
         from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
         article = copy.deepcopy(ARTICLE_V2)

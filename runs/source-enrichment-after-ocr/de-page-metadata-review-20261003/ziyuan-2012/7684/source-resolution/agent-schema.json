@@ -1,0 +1,84 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "findings",
+    "metadata_observations"
+  ],
+  "properties": {
+    "findings": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "disposition",
+          "reason",
+          "affected_paths"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:的:de-page-613-print-page-metadata:p613",
+              "ziyuan-2012:的:de-page-613-print-page-metadata:p614"
+            ]
+          },
+          "disposition": {
+            "enum": [
+              "pending",
+              "unresolved_identity_not_used",
+              "verified_metadata_not_extracted"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affected_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "metadata_observations": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "observed_value",
+          "pixel_reason"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:的:de-page-613-print-page-metadata:p613",
+              "ziyuan-2012:的:de-page-613-print-page-metadata:p614"
+            ]
+          },
+          "observed_value": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pixel_reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

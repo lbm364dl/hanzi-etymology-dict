@@ -317,7 +317,7 @@ outside the source-enrichment harness. Do not mark a proposed replacement as an 
 The corpus source_sha256 hashes decoded RGB pixels; attachment sha256 hashes the encoded image
 file bytes. These hashes normally differ. Compare hashes only within the same hash kind; the
 harness validates supplied source_pixel_sha256 against decoded pixels before attaching scans.
-After a verified headword correction, check repeated references and the continuation page
+After a verified headword or component correction, check repeated references and the continuation page
 occurrence by occurrence. Do not replace normal particles or lookalikes through a global rule.
 When attached_source_scans is present, inspect the corresponding image attachments directly;
 their SHA-256 values bind the exact pixels. Cite only claims you can actually read from them,
@@ -1249,6 +1249,17 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
                             f"{exc.msg}; supply one complete {contract['patch_value_kinds'][edit['path']]} value") from exc
                     # A model's verbatim prose is already an unambiguous string value.
                     value = edit['value_json']
+                if value is None and (isinstance(parts[-1], int)
+                                      or isinstance(node[parts[-1]], list)):
+                    raise ValueError(f"Null cannot remove {edit['path']}; replace the containing array to delete an item")
+                def reject_null_items(candidate):
+                    if isinstance(candidate, list):
+                        if any(item is None for item in candidate):
+                            raise ValueError(f"Null array item in {edit['path']}; replace the array with only retained records")
+                        for item in candidate: reject_null_items(item)
+                    elif isinstance(candidate, dict):
+                        for item in candidate.values(): reject_null_items(item)
+                reject_null_items(value)
                 citation_key = (parts[-2] if isinstance(parts[-1], int) and len(parts) > 1
                                 else parts[-1])
                 node[parts[-1]] = restore_citations(value, aliases, str(citation_key))
