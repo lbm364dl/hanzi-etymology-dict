@@ -237,6 +237,42 @@ class ScopedRefinementTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'exact approved base article'):
                 refine(altered, dossier, temporary, EditorReviewer(), 0, approved_base=proof)
 
+    def test_author_feedback_does_not_become_independent_review_instructions(self):
+        dossier = {**copy.deepcopy(DOSSIER), 'glyph_research': {'historical_glyphs': GLYPHS},
+                   'glyph_assets': []}
+        feedback = {
+            'instruction': 'Repair the old component at index 4.',
+            'verified_review_findings': ['Old candidate had missing support.'],
+            'prior_review_proposals': ['Delete an earlier claim.'],
+            'citation_findings': ['Old citation was unsupported.'],
+            'citation_correction_instructions': 'Replace old citation.',
+            'editorial_adjudication': 'Previous verdict for a different candidate.',
+            'additional_research_context': {'source_url': 'https://example.org/source'},
+            'superseded_book_evidence_ids': ['retired-record'],
+            'source_scan_images': ['/tmp/fixture-source-scan.png'],
+        }
+        class Reviewer:
+            model = 'fixture'
+            def __init__(self): self.inputs = []
+            def run(self, role, inputs, schema, directory):
+                self.inputs.append((role, inputs))
+                if role == 'editor':
+                    return copy.deepcopy(inputs['article'])
+                return {'verdict': 'pass', 'findings': []}
+        with tempfile.TemporaryDirectory() as temporary:
+            runner = Reviewer()
+            result = refine(copy.deepcopy(ARTICLE_V2), dossier, temporary, runner, 0,
+                            feedback=feedback)
+            self.assertEqual(result['status'], 'approved')
+            self.assertEqual(runner.inputs[0][1]['feedback'], feedback)
+            for role, packet in runner.inputs[1:]:
+                self.assertEqual(packet['source_followup_questions'], {
+                    'additional_research_context': feedback['additional_research_context'],
+                    'superseded_book_evidence_ids': ['retired-record'],
+                })
+                if role == 'factual':
+                    self.assertEqual(packet['source_scan_images'], feedback['source_scan_images'])
+
     def test_generated_edges_are_not_authored_array_protection_targets(self):
         from pipeline.editorial import apply_article_patch
         edge = {'id': 'sense', 'predicate': 'has_sense'}

@@ -2055,10 +2055,7 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
                               and feedback.get("source_scan_images") else None)
             if isinstance(feedback, dict):
                 guidance = {key: feedback[key] for key in (
-                    "additional_research_context", "superseded_book_evidence_ids",
-                    "citation_findings", "citation_correction_instructions",
-                    "verified_review_findings", "prior_review_proposals",
-                    "instruction", "editorial_adjudication") if key in feedback}
+                    "additional_research_context", "superseded_book_evidence_ids") if key in feedback}
                 if feedback.get('target_language'):
                     guidance['target_language'] = feedback['target_language']
                 if guidance:
