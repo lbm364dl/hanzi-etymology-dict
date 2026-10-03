@@ -36,6 +36,16 @@ def fixture():
 
 
 class ComponentScopeTests(unittest.TestCase):
+    def test_shared_historical_graph_has_distinct_character_endpoints(self):
+        article, dossier = fixture()
+        edge = article['relationships'][1]
+        edge['predicate'] = 'shares_historical_graph_with'
+        edge['certainty'] = 'disputed'
+        validate_article(article, dossier)
+        edge['object']['id'] = edge['subject']['id']
+        with self.assertRaises(ValueError):
+            validate_article(article, dossier)
+
     def test_checked_in_unihan_hsk1_extract_is_the_fallback(self):
         with patch('pipeline.structured.UNIHAN_READINGS', Path('/missing/Unihan_Readings.txt')):
             self.assertEqual(default_unihan_readings_path(), UNIHAN_HSK1_READINGS)
