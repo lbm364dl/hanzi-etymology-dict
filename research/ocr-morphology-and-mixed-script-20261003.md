@@ -23,3 +23,21 @@ named identities bias conflicting reviews. This is not a universal rule about
 ancient graph etymology. It does not automatically certify images or modify OCR.
 Actual producer overlays and rebuilt consumer verification remain required;
 this note records the finding, not completion of the producer repair.
+
+## Applied producer and consumer verification
+
+The producer now repairs only raw offsets [1438,1439), 虐 → 虘. Its actual
+`research_corrections.load_effective(page-1109)` validator passes. Effective
+producer text at [1438,1440) is 虘钟, and the current consumer record ending
+`:001109` matches that complete effective text exactly. Raw OCR is preserved.
+
+- Decoded source scan: `f57b420e60d20032f8df525c5dcae08228f9a01195720435613d53d0c14df040`.
+- Original OCR evidence: `4ad1c5141bed8484c5d9088ce5888c2293aa5357267fc4ba04554e6f41620b56`.
+- Effective evidence: `83da0aaef5c5f850afd23793440be39bf5847b19a5f1d4cdec8fb68e8d6a6022`.
+
+The actual blind result is at `ocr-morphology-blind-comparison-highres/result.json`
+(directly in the stage, not a `review/` subdirectory). It explicitly identifies
+the target's closed right-side geometry and matches `right_control`. The
+producer's initial receipt path typo was reported for correction. Fresh source
+continuation and article reviews remain required; this verification does not
+claim the 好 article is published or the entire OCR page reviewed.
