@@ -293,6 +293,11 @@ If the scan proves an OCR error, report its PDF page and exact erroneous span wi
 reading in the search audit or gaps so the coordinator can correct the book corpus's source-bound
 OCR layer and rebuild its consumer index. For uncertain printed identities, report the occurrence
 and uncertainty rather than a guessed Unicode replacement. Do not change the raw OCR response.
+In gaps, prefix unresolved source-pixel or printed-identity checks with exactly
+`[SCAN VERIFICATION REQUIRED]`, and suspected or confirmed unrepaired OCR errors with
+`[OCR CORRECTION REQUIRED]`. Include the page, occurrence anchor and raw span when available.
+These prefixes route findings to the source-verification gate, including research follow-ups
+outside the source-enrichment harness. Do not mark a proposed replacement as an applied repair.
 The corpus source_sha256 hashes decoded RGB pixels; attachment sha256 hashes the encoded image
 file bytes. These hashes normally differ. Compare hashes only within the same hash kind; the
 harness validates supplied source_pixel_sha256 against decoded pixels before attaching scans.
