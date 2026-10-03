@@ -275,8 +275,12 @@ reasons will be checked against the images by the visual agent and independent r
 New evidence may be cited as new:1, new:2, etc., referring to its 1-based position in your returned
 evidence array; the harness replaces those local references with stable evidence IDs. Existing
 dossier evidence IDs may also be used. Do not invent evidence IDs or compute guessed hashes.
-No images is valid only after actual searches fail to establish usable identity/reuse provenance;
-record real queries, inspected pages, failures, and a cited limitation. Return the supplied schema.
+No images is valid after actual searches fail to establish usable identity/reuse
+provenance, or when the available forms do not illuminate the authored explanation.
+Availability alone is not a reason to display a decorative redraw. Record real queries,
+inspected pages, failures and a cited explanation of relevance or its limits. Do not
+omit a useful sourced candidate merely because a web tool cannot show its pixels;
+the independent visual stage can inspect its acquired snapshot. Return the supplied schema.
 """
 GLYPH_VISUAL_POLICY = """Period is an editable reader-facing label. When a period finding is supplied, return a supported corrected period alongside caption/alt/selection_reason; retain source identity, URLs, rights and image bytes. Distinguish script-style date from a verified specimen date.
 Inspect the attached image pixels in their supplied order, using the
