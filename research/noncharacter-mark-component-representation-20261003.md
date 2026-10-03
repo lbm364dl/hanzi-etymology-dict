@@ -1,0 +1,67 @@
+# Representing visible marks without guessing their glyph identity
+
+## Finding
+
+The 本 continuation exposed a data-model gap: reviewers correctly rejected both a disputed
+Han-character identity and the Unicode stroke symbol `㇐` as the component's asserted identity.
+The scanned current form supports a separate short horizontal mark below 木, while the
+transmitted explanations disagree about whether that mark should be read as 一 or 丅. The
+representation previously required every component's `form` and graph-node ID to be a literal
+Han character or radical. The writer therefore could either choose a disputed identity or omit
+an evidenced visible element, even when the prose accurately distinguished the observed mark
+from its historical interpretation.
+
+The initial source crop was also found to come from the neighboring 樹 paragraph. A separate
+provenance recheck identified the actual 本 paragraph on 字源 page 516 and retained its full-page
+and corrected-crop images. The source-crop error is character-specific and remains archived;
+the representation defect applies to any entry whose evidence identifies a visible noncharacter
+mark while leaving its historical glyph identity unresolved.
+
+## General contract
+
+Ordinary glyph components retain the existing literal `form` and `origin_form` semantics and
+literal relationship IDs. A positively identified visible noncharacter mark may instead use:
+
+- `element_kind: "noncharacter_mark"`;
+- empty `form` and `origin_form`;
+- an opaque `element_id` scoped to its exact host, such as `本:mark:lower-1`;
+- a concise `element_label` describing only the visible mark, such as “short horizontal mark.”
+
+This record still requires cited evidence, a scoped component relationship, and independent
+review. It cannot carry a phonetic role or a guessed reading. Reviewers must inspect the cited
+claim and any attached scan; they must not match words like “mark” or “stroke” automatically or
+force the label to match one competing historical reading. A label establishes neither the
+mark's function nor its ancient identity. The identifier is local to one scoped graph and must
+not be reused as a cross-entry glyph identity. Legacy records without the new fields continue to
+mean literal glyph components. The alternative is not a workaround for an unidentified rare
+character, an unread OCR graph, or a historical glyph specimen: retain occurrence-specific
+provenance and an explicit identity gap for those cases.
+
+## Verification receipts
+
+The initial input to `runs/source-enrichment-ziyuan/ben-current-source-repair-20261003/final-continuation-v1`
+was article `796c0e6fe919077246c6f843301d6cb3223be3bf221c3b62019016adf7455e20` and dossier
+`5cd6d76140bb8a4fbb2506e3ee2e9895169390e8364cc0ff74f6d7a6804f8cc4`. Its first author patch
+produced the exact reviewed candidate `36945d3ad0d6ead80adc45f7eeb75003e21165e457e433512282fd7e60212b8c`,
+with `㇐` in the component and corresponding edge. The `round-0/factual/result.json` and
+`round-0/factual-verification/verified-review.json` receipts both rejected that identity and
+asked to retain the observed short horizontal mark separately from the competing 一/丅 readings.
+The corresponding readability proposal and independent verification also revised the same
+㇐ candidate; their specific finding about the component edge differed. These four round-0
+review artifacts are not approvals. Later `reviews.json` binds article
+`5790ebde6018f23dda8dd113cae4d49c719cbcec34369a3d420a575e4e4434c6` (the subsequent candidate
+that restored `一`), not the initial input or the `㇐` candidate. The run ended failed on a
+component-role/edge mismatch. The attached original
+page 516 has SHA-256 `f732cc6b3e3988c9455fe2aa8c420cafa0adbc24c01aa76fb742a9f67a1df5b4`;
+the corrected 本 paragraph crop has SHA-256
+`659d8734e594e44132eba4096a31400f85405df57c9e10bb04c110daa107e26d`. Both stages remain
+revision findings, not approvals. The ㇐ candidate also received an independent learner finding:
+current evidence supports basis, not an unqualified current “source” meaning. This schema change
+does not resolve that separate editorial finding.
+
+## Scope
+
+The new schema and review instructions preserve supported visible parts without assigning
+unsupported historical component identities. They do not determine whether any particular
+mark is actually present; source inspection and fresh independent reviews remain required.
+No published entry was edited by this change.

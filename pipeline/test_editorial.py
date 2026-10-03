@@ -2240,6 +2240,11 @@ class EditorialTests(unittest.TestCase):
                 "    result={'verdict': 'revise', 'findings': ['Explain the graphic relationship.']}\n"
                 "else:\n"
                 "    result={'verdict': 'pass', 'findings': []}\n"
+                "if isinstance(result, dict) and 'components' in result:\n"
+                "    for component in result['components']:\n"
+                "        component.setdefault('element_kind', 'glyph')\n"
+                "        component.setdefault('element_id', '')\n"
+                "        component.setdefault('element_label', '')\n"
                 "pathlib.Path(output).write_text(json.dumps(result))\n"
             )
             runner = Runner([sys.executable, str(script), "{role}", "{output}"], "fake")

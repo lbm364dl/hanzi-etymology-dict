@@ -78,8 +78,10 @@ must support the classification; absent support requires uncertain rather than i
 Reviews must check this authored classification.
 """
 COMPONENT = {**SECTION, "required": ["form", "origin_form", "roles", "form_status", "text", "evidence_ids"],
-             "properties": {**SECTION["properties"], "form": {"type": "string", "minLength": 1},
+             "properties": {**SECTION["properties"], "form": {"type": "string"},
                  "origin_form": {"type": "string"}, "origin_relation": ORIGIN_RELATION,
+                 "element_kind": {"enum": ["glyph", "noncharacter_mark"]},
+                 "element_id": {"type": "string"}, "element_label": {"type": "string"},
                  "scope_character": COMPONENT_SCOPE, "sound_limitation": SOUND_LIMITATION,
                  # Optional in stored/legacy articles. Null in strict writer output means
                  # to retain the legacy scope-based membership rule.
@@ -136,6 +138,7 @@ for field in ("language", "japanese_usage"):
 WRITER_SCHEMA["required"].append("learner")
 WRITER_SCHEMA["properties"]["components"]["items"]["required"].extend(["origin_relation", "scope_character", "sound_limitation"])
 WRITER_SCHEMA["properties"]["components"]["items"]["required"].append("current_form_component")
+WRITER_SCHEMA["properties"]["components"]["items"]["required"].extend(["element_kind", "element_id", "element_label"])
 WRITER_SCHEMA["required"].remove("historical_glyphs")
 del WRITER_SCHEMA["properties"]["historical_glyphs"]
 WRITER_SCHEMA["properties"]["relationships"]["items"]["anyOf"] = WRITER_SCHEMA["properties"]["relationships"]["items"]["anyOf"][:2]
@@ -526,9 +529,15 @@ original formation no longer describes its current components, rather than imply
 replacement element necessarily retains a former phonetic role.
 Do not decompose indivisible pictographs into modern lookalikes: describe the whole pictorial form.
 An alternative interpretation of the whole graph belongs in expert prose, not as an extra
-self-component alongside an internal decomposition. For proposed strokes or marks, use a literal
-component identity only when the evidence identifies that graph; two unidentified marks are not
-automatically the single-stroke character ㇐ or the later dictionary component 二.
+self-component alongside an internal decomposition. For an inspected, positively identified visible noncharacter mark or indicator, use
+element_kind noncharacter_mark with a scoped opaque element_id and a concise element_label only
+when inspected evidence identifies the visible mark itself. Keep form and origin_form empty; do
+not identify it as a Han character merely because it resembles a stroke glyph or disputed textual
+analysis. Cite the visual identity claim, and describe competing historical interpretations in
+component prose and separately qualified relationships. Do not assign phonetic roles or readings
+to a noncharacter mark. This alternative cannot stand in for an unidentified rare character, a
+historical glyph specimen, or an unread OCR graph; keep their occurrence-specific provenance and
+identity gaps. Ordinary components remain element_kind glyph with literal forms.
 Distinguish true graphic corruption or replacement from regular variants, simplification and
 stylization. The label "corruption" requires evidence of an altered or misinterpreted original
 form. Explain known changes rather than reducing every difficult component to "unknown".

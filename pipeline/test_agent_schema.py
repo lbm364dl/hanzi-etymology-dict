@@ -38,7 +38,18 @@ class AgentSchemaTests(unittest.TestCase):
             'form': '木', 'origin_form': '', 'roles': ['pictorial'], 'form_status': 'preserved',
             'text': 'Whole graph.', 'evidence_ids': ['ref001'], 'origin_relation': 'none',
             'scope_character': '木', 'sound_limitation': None, 'sound': [],
+            'element_kind': 'glyph', 'element_id': '', 'element_label': '',
             'current_form_component': None})
+
+    def test_writer_schema_accepts_typed_noncharacter_mark_contract(self):
+        wire = agent_schema(WRITER_SCHEMA)['properties']['components']['items']
+        Draft202012Validator(wire).validate({
+            'form': '', 'origin_form': '', 'roles': ['indicator'], 'form_status': 'disputed',
+            'text': 'A short horizontal mark below 木 indicates the root.',
+            'evidence_ids': ['ref001'], 'origin_relation': 'none', 'scope_character': '本',
+            'sound_limitation': None, 'sound': [], 'current_form_component': True,
+            'element_kind': 'noncharacter_mark', 'element_id': '本:mark:lower-1',
+            'element_label': 'short horizontal mark'})
 
     def test_generated_schemas_have_required_properties_and_no_unsupported_uniqueness(self):
         def inspect(schema):

@@ -24,6 +24,20 @@ def component_scope(component, article):
     return component.get("scope_character", article["character"])
 
 
+def component_node_id(component):
+    """Return the graph identity while preserving literal-glyph IDs for legacy records."""
+    if component.get("element_kind") == "noncharacter_mark":
+        return component.get("element_id", "")
+    return component.get("form", "")
+
+
+def component_display_label(component):
+    """Reader label for a component node; only literal glyphs are character links."""
+    if component.get("element_kind") == "noncharacter_mark":
+        return component.get("element_label", "")
+    return component.get("form", "")
+
+
 def component_is_current_form(component, article):
     """Resolve explicit current membership, preserving the legacy scope-based default."""
     membership = component.get("current_form_component")
@@ -124,6 +138,26 @@ def validate_component_metadata(article, dossier, validate_sections):
         if not isinstance(scope, str) or len(scope) != 1 or not literal_form(scope):
             raise ValueError("Component scope_character must identify one literal host character")
         component_is_current_form(component, article)
+        kind = component.get("element_kind", "glyph")
+        element_id = component.get("element_id", "")
+        element_label = component.get("element_label", "")
+        if kind == "glyph":
+            if not literal_form(component.get("form", "")):
+                raise ValueError("Glyph components require a literal Han form")
+            if element_id or element_label:
+                raise ValueError("Glyph components must leave element_id and element_label empty")
+        elif kind == "noncharacter_mark":
+            if component.get("form", "") or component.get("origin_form", ""):
+                raise ValueError("A noncharacter mark must not claim a literal glyph form or origin_form")
+            if not isinstance(element_id, str) or not re.fullmatch(
+                    re.escape(scope) + r":mark:[a-z0-9]+(?:-[a-z0-9]+)*", element_id):
+                raise ValueError("Noncharacter mark element_id must be a stable <scope>:mark:<slug> ID")
+            if not isinstance(element_label, str) or not element_label.strip():
+                raise ValueError("Noncharacter marks require a concise visible element_label")
+            if "phonetic" in component["roles"] or component.get("sound"):
+                raise ValueError("An unidentified noncharacter mark cannot carry phonetic roles or readings")
+        else:
+            raise ValueError("element_kind must be glyph or noncharacter_mark")
         limitation = component.get("sound_limitation")
         if "phonetic" in component["roles"] and not component.get("sound") and limitation is None:
             raise ValueError("A phonetic component requires cited sound comparisons or sound_limitation")
@@ -394,8 +428,18 @@ Explain them as side/full forms, not as a chronological replacement. Use simplif
 source explicitly identifies the graph as the standardized simplified counterpart of a traditional
 form. An origin_form reference alone does not establish an earlier/later sequence; reserve that claim
 for supported history.
-Component form and origin_form contain only literal Han characters/radicals; origin_form is empty
-when no separate earlier form is established. Put explanations in text, never in either form field.
+For ordinary glyph components, form and origin_form contain only literal Han characters/radicals;
+origin_form is empty when no separate earlier form is established. For a positively identified
+visible noncharacter mark or indicator whose historical glyph identity is unresolved, use element_kind
+noncharacter_mark, empty form and origin_form, a scope-prefixed opaque element_id, and a concise
+element_label naming only the visible mark. Cite evidence that establishes this visible element;
+do not turn a stroke label into an ancient character identity or infer a reading. These opaque IDs
+are local to this exact scoped graph and do not identify components in other entries. Ordinary
+glyph records use element_kind glyph and empty element_id/element_label. Put explanations in text,
+never in form or origin_form. This alternative is only for an inspected, positively identified
+visible mark; it cannot stand in for an unidentified rare character, a historical glyph specimen,
+or an unread OCR graph. Record those with occurrence-specific source provenance and an explicit
+identity gap instead.
 Set scope_character to the actual containing character for every component. Use the entry character
 for its current components; a component explained only inside a traditional or historical graph
 uses that graph as scope_character. Include a cited graphic relationship connecting that host to
@@ -431,9 +475,11 @@ when they describe distinct facts. Otherwise sound_limitation is null. Never wri
 'not established' as a pronunciation.
 The limitation records missing pronunciation evidence, not permission to invent a phonetic role;
 the component and its graph edge still need evidence and appropriate certainty for that role.
-Character/component node IDs are canonical literal forms (Han characters or radical symbols),
-never display labels or slash-separated alternatives. Represent alternative analyses as separate
-components/edges, qualified as disputed. Sense IDs refer to this entry's sense IDs. Every
+Character node IDs are literal characters. Ordinary component node IDs are canonical literal forms
+(Han characters or radical symbols); a declared noncharacter mark uses only its exact scoped
+opaque element_id and its reader-facing element_label. Never use a display label or slash-separated
+alternatives as a glyph ID. Represent alternative analyses as separate components/edges, qualified
+as disputed. Sense IDs refer to this entry's sense IDs. Every
 edge is contextualized by this character, cited, explained, and marked established/probable/disputed.
 Use separate edges for competing analyses. A component role applies within the host character;
 do not assert that a component has that role everywhere. Do not create component-of-self edges for an indivisible whole-graph pictograph; its pictorial
@@ -528,6 +574,10 @@ def validate_v2(article, dossier, validate_sections):
     senses = unique(meanings["senses"], "sense")
     unique(glyphs["items"], "glyph")
     unique(relations, "relationship")
+    mark_ids = [component_node_id(component) for component in article["components"]
+                if component.get("element_kind") == "noncharacter_mark"]
+    if len(mark_ids) != len(set(mark_ids)):
+        raise ValueError("Noncharacter mark element_id values must be unique within their article")
     for sense in senses:
         if not sense.startswith(article["character"] + ":"):
             raise ValueError(f"Sense IDs must be scoped to the entry character: {sense!r} must start with {article['character'] + ':'!r}. Update its references in meaning_history.developments too; related-form history belongs in the cited prose.")
@@ -546,6 +596,8 @@ def validate_v2(article, dossier, validate_sections):
     if dossier.get("glyph_research", {}).get("historical_glyphs") != glyphs:
         raise ValueError("Historical glyphs must match the researched selection")
     for component in article["components"]:
+        if component.get("element_kind") == "noncharacter_mark":
+            continue
         for field in ("form", "origin_form"):
             if not all(any(term in unicodedata.name(char, "") for term in ("CJK", "KANGXI RADICAL", "IDEOGRAPHIC"))
                        for char in component[field]):
@@ -579,10 +631,13 @@ def validate_v2(article, dossier, validate_sections):
         for node in (edge["subject"], edge["object"]):
             if node["kind"] == "sense" and node["id"] not in senses:
                 raise ValueError("Relationship references an unknown sense")
-            if node["kind"] == "component" and not all(
-                    any(term in unicodedata.name(char, "") for term in ("CJK", "KANGXI RADICAL", "IDEOGRAPHIC"))
-                    for char in node["id"]):
-                raise ValueError("Component node IDs require canonical forms, not display labels or alternatives")
+            if node["kind"] == "component":
+                known_glyphs = {form for component in article["components"]
+                    for form in (component.get("form", ""), component.get("origin_form", "")) if form}
+                known_marks = {component_node_id(component) for component in article["components"]
+                    if component.get("element_kind") == "noncharacter_mark"}
+                if node["id"] not in known_glyphs | known_marks:
+                    raise ValueError("Component node IDs must identify a declared literal glyph or typed noncharacter mark")
             if node["kind"] == "character" and len(node["id"]) != 1:
                 raise ValueError("Character node must identify one character")
         pred = edge["predicate"]
@@ -594,7 +649,7 @@ def validate_v2(article, dossier, validate_sections):
         if pred.endswith("_component_of"):
             role = pred.removesuffix("_component_of")
             matches = [c for c in article["components"]
-                       if edge["subject"]["id"] in (c["form"], c["origin_form"])
+                       if edge["subject"]["id"] in (component_node_id(c), c["origin_form"])
                        and edge["object"] == {"kind": "character", "id": component_scope(c, article)}]
             if edge["subject"]["kind"] != "component" or not matches:
                 raise ValueError(f"Component edge must match a component and its explicit host scope: {edge['id']!r} links {edge['subject']['id']!r} to {edge['object']['id']!r}, but the declared component hosts are {[(c['form'], component_scope(c, article)) for c in article['components']]!r}. Represent a supported additional scoped component explicitly or remove an unrepresented/redundant edge; do not transfer roles between hosts.")
@@ -624,9 +679,9 @@ def validate_v2(article, dossier, validate_sections):
                 continue
             if not any(r["predicate"] == role + "_component_of" and
                        r["object"] == {"kind": "character", "id": scope} and
-                       r["subject"]["id"] in (component["form"], component["origin_form"])
+                       r["subject"]["id"] in (component_node_id(component), component["origin_form"])
                        for r in relations):
-                raise ValueError(f"Every supported component role requires a contextual relationship: {component['form']!r} has role {role!r} in {scope!r}, but no matching {role + '_component_of'!r} edge. Add a cited edge if the role is supported, or remove the unsupported role.")
+                raise ValueError(f"Every supported component role requires a contextual relationship: {component_display_label(component)!r} has role {role!r} in {scope!r}, but no matching {role + '_component_of'!r} edge. Add a cited edge if the role is supported, or remove the unsupported role.")
     for edge in relations:
         if edge["predicate"] in ("variant_of", "simplified_from", "derived_from", "shares_historical_graph_with"):
             if any(edge[k]["kind"] != "character" for k in ("subject", "object")) or edge["subject"]["id"] == edge["object"]["id"]:
@@ -649,6 +704,16 @@ When attached_source_scans is present, compare substantive book-based component 
 with the exact image attachments, including ordinary lookalike characters inside fluent OCR.
 The research agent's statement that it inspected a scan does not replace this independent check.
 Report a mismatch against the cited claim and require corrected source evidence before approval.
+When a component is element_kind noncharacter_mark, check that cited evidence establishes its
+visible mark identity rather than merely recording an unread graph or historical specimen, that
+form/origin_form stay empty, and that the opaque ID matches the exact
+host scope. Do not use this representation for an unidentified rare character, historical specimen,
+or unread OCR graph. Judge element_label only as a description of that visible mark; do not demand that it
+match one competing historical character reading. Conversely, a mark label cannot substitute
+for evidence about its current role or historical identity. Do not automatically match words such
+as “stroke” or “mark” in source paraphrases; inspect the cited claim and any attached pixels.
+Reject invented readings or phonetic roles on a noncharacter mark. Ordinary glyph components
+continue to use literal form IDs and their existing graph contract.
 For multi-column dictionary pages, check the cited headword and paragraph together, including
 any continuation in the next column of the same page. A nearby entry's correctly read words
 do not support the target entry. If prior readings conflict, request or inspect a bounded
