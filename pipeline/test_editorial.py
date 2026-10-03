@@ -12,6 +12,23 @@ from pipeline.editorial import (Runner, ARTICLE_SCHEMA, REVIEW_SCHEMA, digest, m
 from pipeline.editorial import summarize_web_activity, parse_codex_events, validate_new_reader_style, reuse_glyphs_for_text_followup
 
 
+class ResearchAuditURLSchemaTests(unittest.TestCase):
+    def test_audit_requires_web_urls_but_allows_failed_lookup(self):
+        from jsonschema import Draft202012Validator, ValidationError
+        from pipeline.editorial import RESEARCH_SCHEMA
+        validator = Draft202012Validator(RESEARCH_SCHEMA)
+        result = {'evidence': [], 'gaps': [], 'search_audit': [
+            {'query': 'actual lookup fixture', 'urls': [], 'outcome': 'Access failed'}]}
+        validator.validate(result)
+        for url in ('https://example.org/entry', 'http://example.org/entry'):
+            result['search_audit'][0]['urls'] = [url]
+            validator.validate(result)
+        for url in ('file:///tmp/source.png', '/tmp/source.png', 'source.png'):
+            result['search_audit'][0]['urls'] = [url]
+            with self.assertRaises(ValidationError):
+                validator.validate(result)
+
+
 class NewReaderStyleTests(unittest.TestCase):
     def test_source_labels_and_workflow_remarks_are_rejected(self):
         dossier = {"evidence": [{"source": "漢語多功能字庫, CUHK"},

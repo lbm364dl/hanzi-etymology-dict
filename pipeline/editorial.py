@@ -245,7 +245,7 @@ RESEARCH_SCHEMA = {"type": "object", "additionalProperties": False,
         "search_audit": {"type": "array", "minItems": 1, "items": {
             "type": "object", "additionalProperties": False, "required": ["query", "urls", "outcome"],
             "properties": {"query": {"type": "string", "minLength": 1},
-                "urls": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                "urls": {"type": "array", "items": {"type": "string", "minLength": 1, "pattern": "^https?://"}},
                 "outcome": {"type": "string", "minLength": 1}}}},
         "gaps": {"type": "array", "items": {"type": "string", "minLength": 1}}}}
 GLYPH_RESEARCH_SCHEMA = copy.deepcopy(RESEARCH_SCHEMA)
@@ -410,7 +410,10 @@ record does not mean no image of the character exists, but a local copy alone ca
 verified current file provenance or reuse terms. Record the actual lookup, not guessed metadata.
 Never fabricate a search, a URL, access date, or a claim from an inaccessible page or snippet.
 Record each real search and inspected URLs in search_audit, with access failures and unresolved
-questions in gaps. Do not equate missing repository data with unknown etymology. Clearly
+questions in gaps. The urls arrays contain only actual HTTP(S) web addresses from those
+lookups; local scan paths and file URLs belong in source evidence/access records, not the
+web-search audit. Use an empty urls array for a real failed lookup with no inspected web URL.
+Do not equate missing repository data with unknown etymology. Clearly
 separate source assertions, disputed analyses, and your deductions. Every evidence item needs
 its source, field, text, record_character, kind, actual URL, title and ISO access date.
 If external research cannot be performed, fail explicitly instead of pretending to research.
