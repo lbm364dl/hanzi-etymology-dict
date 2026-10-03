@@ -259,6 +259,13 @@ class SourceEnrichmentTests(unittest.TestCase):
             model = 'gpt-6-luna'
             reasoning = 'low'
             def run(self, role, inputs, schema, directory):
+                findings_validator = editorial.Draft202012Validator(schema['properties']['findings'])
+                finding = {'key': 'repair', 'disposition': 'pending',
+                           'reason': 'Fixture', 'affected_paths': []}
+                test.assertTrue(list(findings_validator.iter_errors([finding])))
+                findings_validator.validate([finding, {**finding, 'key': 'identity'}])
+                test.assertTrue(list(findings_validator.iter_errors([
+                    finding, {**finding, 'key': 'unknown'}])))
                 transport = schema['properties']['repair_observations']
                 validator = editorial.Draft202012Validator(transport)
                 valid = {'key':'repair', 'observed_literal':'皃', 'pixel_reason':'Fixture'}

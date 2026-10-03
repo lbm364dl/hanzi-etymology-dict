@@ -1,0 +1,113 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "findings",
+    "transcription_observations",
+    "repair_observations"
+  ],
+  "properties": {
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "disposition",
+          "reason",
+          "affected_paths"
+        ],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "disposition": {
+            "enum": [
+              "pending",
+              "unresolved_identity_not_used",
+              "applied_repair_scan_matches_corpus",
+              "verified_transcription_matches_corpus"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affected_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "transcription_observations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "observed_literal",
+          "pixel_reason"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:597D:2bce4fa87802"
+            ]
+          },
+          "observed_literal": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pixel_reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "repair_observations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "observed_literal",
+          "pixel_reason"
+        ],
+        "properties": {
+          "pixel_reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observed_literal": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 1
+          },
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:597D:62fb34c43330"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

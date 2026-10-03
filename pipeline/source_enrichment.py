@@ -522,10 +522,11 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
     editorial.validate_reviews(article, dossier, editorial.read(job / "reviews.json"))
     checkpoint = editorial.read(job / "source_checkpoint.json")
     schema = {"type": "object", "additionalProperties": False, "required": ["findings"],
-        "properties": {"findings": {"type": "array", "items": {
+        "properties": {"findings": {"type": "array",
+            "minItems": len(findings['findings']), "maxItems": len(findings['findings']), "items": {
             "type": "object", "additionalProperties": False,
             "required": ["key", "disposition", "reason", "affected_paths"],
-            "properties": {"key": {"type": "string"},
+            "properties": {"key": {"type": "string", "enum": [f['key'] for f in findings['findings']]},
                 "disposition": {"enum": ["pending", "unresolved_identity_not_used",
                                           "rejected_proposal_scan_matches_corpus", "applied_repair_scan_matches_corpus"]},
                 "reason": {"type": "string", "minLength": 1},
@@ -654,6 +655,9 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
         allowed_dispositions.append('verified_transcription_matches_corpus')
     schema['properties']['findings']['items']['properties']['disposition']['enum'] = allowed_dispositions
     inputs['disposition_policy'] = (
+        'Assess EVERY retained finding exactly once, including findings with no supplied '
+        'literal, repair, metadata or transcription check. Those supplied checks are '
+        'additional observation contracts, not a filter on the findings array. '
         'A rejected replacement requires a supplied exact literal_checks occurrence and proposal. '
         'An identity gap without such a proposal is not a rejected OCR replacement: '
         'use unresolved_identity_not_used only after independently verifying no article claim '
