@@ -677,6 +677,12 @@ Equivalent separators between the same readings are not a factual discrepancy: s
 and shí shì enumerate the same values. Check the readings themselves, not a dataset's display
 delimiter. Usage explanations belong in prose rather than inside the reading fields.
 For v2, history covers the written form; meaning_history covers senses and lexical loans.
+Before reporting a reversed glyph layout, identify the image by its attachment index and glyph
+ID, quote the exact current text that asserts the disputed direction, and compare it with
+visible landmarks in the upright attachment. A sentence saying only 'vertically arranged'
+does not assert which form is above. Do not infer a reversal from an earlier draft, a familiar
+character template, or a previous review. If no actual directional claim is wrong, do not
+request one or force extra geometric detail into otherwise accurate explanatory prose.
 Check each sense's status against its own cited evidence: a current sense needs evidence of
 present use, even when its paragraph also cites ancient attestations. Check the corresponding
 generated has_sense edge after any status or citation change.
