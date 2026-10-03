@@ -1,0 +1,37 @@
+{
+  "provenance": {
+    "source": "李學勤主編《字源》 2012 scan corpus",
+    "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+    "pdf_page_1based": 1259,
+    "printed_page": 1244,
+    "source_pixel_sha256": "96dcee517496798f7e960efeea99bda45f262e0be11f955cf734221c0ed1a957",
+    "raw_evidence_sha256": "effa2fbe364c8cf4abb42b8da025f0f28be0ed11f6b0660430fbe1d8a515c127",
+    "raw_ocr_path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1259/ocr.json",
+    "source_scan_path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1259/source.png",
+    "target_crop_path": "/home/catalin/hanzi-etymology-dict/research/ocr-corrections/ziyuan-p1259-hack-verification/target-crop.png",
+    "target_crop_sha256": "dc5a1f81a97b1b5901ca56fdae23a814254a6a6f115ebd667d88781e1f254688",
+    "raw_start": 1294,
+    "raw_end": 1301,
+    "raw_span": "发生hack在",
+    "proposed_printed_span": "发生在",
+    "check_scope": "single exact OCR insertion only; no other page transcription reviewed or proposed",
+    "parent_request": "/root requested source-pixel verification of ASCII insertion hack on PDF p.1259"
+  },
+  "occurrences_hash": "49729da4e737e2661b162ff7723b066a08e43369062f5a28c9d59a4e1702c76c",
+  "result": {
+    "occurrences": [
+      {
+        "id": "ziyuan-p1259-raw-hack-1294-1301",
+        "raw_text": "发生hack在",
+        "printed_text": "发生在",
+        "verdict": "confirmed_correction",
+        "reason": "In attachment 2, the supplied target crop labeled “target row with adjacent paragraph context,” the row beginning “应解释为三个半斗” continues through “其事必当发生在以斗为最常用的容量单位的背景下”. At the target position, the printed text reads “发生在”; no Latin letters appear between “生” and “在”. This confirms removal of the OCR insertion “hack” in the exact supplied occurrence. Attachment 1 shows the same paragraph and printed anchor, but its full-page scale is not needed to distinguish the letters in the target crop."
+      }
+    ]
+  },
+  "result_hash": "525fb49b8d24ba712d95574c67ff5f3a60d8acca1a333c4d473f1c548a1bacb0",
+  "review_directory": "runs/ocr-corrections/ziyuan-p1259-hack-verification/review",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "whole_page_reviewed": false
+}
