@@ -259,6 +259,12 @@ The original image attachments supplied to this worker are available for direct 
 inspection. Image tools and temporary crops can supplement them; an unavailable Python
 command alone does not establish that the attached scan is inaccessible. Distinguish
 actually inspected pixels from prior research summaries in the evidence you return.
+When correcting a source transcription or entry boundary, inspect all supplied article-used
+records concerning that same passage for the same error, not only the first named bad ID.
+Identify each independently confirmed affected record and the precise replacement support;
+preserve unrelated accurate records. A fresh correct record does not make an older incorrect
+paraphrase safe to cite alongside it. Report the affected IDs for the coordinator's existing
+retired_evidence_ids gate and fresh authorship/review; do not edit old provenance in place.
 Do not launch project pipeline/cohort/review/publication commands, nested agents, or background
 jobs. Do not edit repository articles, dossiers, job state, book correction overlays or
 consumer corpora. Return proposed OCR corrections with exact source occurrences for the

@@ -1,0 +1,7 @@
+# A source-boundary correction must cover related active records
+
+The 学 final check had replaced the first named wrong continuation record but still cited other earlier records asserting that PDF p.278 continued 學 or ended before 斆. The genuine fresh record X-1e8 instead establishes that 學 ends on PDF p.277, and p.278 continues the separate 斆 entry. Root compared the actual article citations and dossier text, held publication, and requested correction of every affected active record rather than another manual article patch.
+
+This is an incomplete retirement of related source paraphrases. The existing `retired_evidence_ids` schema and article citation validator already provide the necessary fail-closed gate. Research instructions now require checking all supplied article-used records for the same passage when an OCR/transcription/boundary correction is made, identifying each confirmed affected ID and exact replacement support. Accurate unrelated records remain available. Old records are preserved, not rewritten; a fresh dossier and authored citation changes require fresh independent reviews.
+
+No book interpretation is generalized to other characters and no string-based page-boundary detector is added. The source scan and explicit passage identity determine which records are affected. Source-completion count remains unchanged until the corrected exact pair clears all publication gates.
