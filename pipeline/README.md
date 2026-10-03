@@ -165,6 +165,13 @@ reviewable. Local repairs should be recorded as local progress until their publi
 content is linked. Source OCR corrections and character publication have separate verification
 requirements even when tracked by the same issue.
 
+After a successful publication, reconcile existing issues for that character or repaired
+source page against their individual verification requirements. Link the exact published
+pair, genuine review receipts and applicable build or source checks before closing each
+satisfied issue. A successful publication does not discharge unused OCR identity checks,
+and a triage result with no new findings does not close earlier issues. Record remaining
+requirements explicitly so resolved findings do not accumulate as apparent unfinished work.
+
 Install the harness dependencies with `python3 -m pip install -r pipeline/requirements.txt` (or use your existing project environment). Run commands from the repository root.
 
 ## Checked-in pilot
