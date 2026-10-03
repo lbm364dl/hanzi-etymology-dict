@@ -28,6 +28,18 @@ class AgentSchemaTests(unittest.TestCase):
         self.assertNotIn("learner", ARTICLE_V2_SCHEMA["required"])
         self.assertIn("learner", WRITER_SCHEMA["required"])
 
+    def test_current_membership_is_optional_in_storage_and_nullable_in_strict_writer(self):
+        component = ARTICLE_V2_SCHEMA['properties']['components']['items']
+        self.assertNotIn('current_form_component', component['required'])
+        self.assertIn('current_form_component', component['properties'])
+        wire = agent_schema(WRITER_SCHEMA)['properties']['components']['items']
+        self.assertIn('current_form_component', wire['required'])
+        Draft202012Validator(wire).validate({
+            'form': '木', 'origin_form': '', 'roles': ['pictorial'], 'form_status': 'preserved',
+            'text': 'Whole graph.', 'evidence_ids': ['ref001'], 'origin_relation': 'none',
+            'scope_character': '木', 'sound_limitation': None, 'sound': [],
+            'current_form_component': None})
+
     def test_generated_schemas_have_required_properties_and_no_unsupported_uniqueness(self):
         def inspect(schema):
             if isinstance(schema, dict):

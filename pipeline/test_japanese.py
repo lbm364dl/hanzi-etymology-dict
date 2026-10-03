@@ -120,7 +120,7 @@ class JapaneseTests(unittest.TestCase):
         self.assertEqual(result['summary']['text'], 'Verbatim model wording.')
         with patch.object(editorial.Runner, 'run', return_value={'edits':[
                 {'path':'components/0/roles','value_json':'not an array'}]}):
-            with self.assertRaises(json.JSONDecodeError):
+            with self.assertRaisesRegex(ValueError, 'Invalid JSON replacement'):
                 japanese.JapaneseRunner([]).run('revision', {'article':article,'dossier':dossier}, editorial.WRITER_SCHEMA, Path('/unused'))
 
     def test_allowed_patch_paths_constrain_model_schema(self):

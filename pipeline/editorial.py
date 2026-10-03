@@ -21,7 +21,8 @@ from pipeline.glyph_assets import snapshot_glyph_assets, validate_glyph_assets
 from pipeline.xiaoxuetang import query_dossier as query_xiaoxuetang
 from pipeline.structured import (LEARNER, LEARNER_POLICY, MEANING_HISTORY, HISTORICAL_GLYPHS, RELATIONSHIP,
                                  GLYPH_POLICY, GLYPH_VISUAL_POLICY, GLYPH_VISUAL_SCHEMA, V2_POLICY, REVIEW_V2_POLICY, validate_v2, validate_reader_prose,
-                                 COMPONENT_SCOPE, SOUND_LIMITATION, component_scope, validate_component_metadata, validate_learner,
+                                 COMPONENT_SCOPE, SOUND_LIMITATION, component_scope, component_is_current_form,
+                                 validate_component_metadata, validate_learner,
                                  default_unihan_readings_path, _unihan_kmandarin_rows)
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -78,6 +79,9 @@ COMPONENT = {**SECTION, "required": ["form", "origin_form", "roles", "form_statu
              "properties": {**SECTION["properties"], "form": {"type": "string", "minLength": 1},
                  "origin_form": {"type": "string"}, "origin_relation": ORIGIN_RELATION,
                  "scope_character": COMPONENT_SCOPE, "sound_limitation": SOUND_LIMITATION,
+                 # Optional in stored/legacy articles. Null in strict writer output means
+                 # to retain the legacy scope-based membership rule.
+                 "current_form_component": {"anyOf": [{"type": "boolean"}, {"type": "null"}]},
                  "sound": {"type": "array", "minItems": 1, "items": SOUND},
                  "roles": {"type": "array", "minItems": 1, "uniqueItems": True, "items": {
                      "enum": ["semantic", "phonetic", "pictorial", "indicator", "replacement", "empty", "unknown"]}},
@@ -129,6 +133,7 @@ for field in ("language", "japanese_usage"):
     del WRITER_SCHEMA["properties"][field]
 WRITER_SCHEMA["required"].append("learner")
 WRITER_SCHEMA["properties"]["components"]["items"]["required"].extend(["origin_relation", "scope_character", "sound_limitation"])
+WRITER_SCHEMA["properties"]["components"]["items"]["required"].append("current_form_component")
 WRITER_SCHEMA["required"].remove("historical_glyphs")
 del WRITER_SCHEMA["properties"]["historical_glyphs"]
 WRITER_SCHEMA["properties"]["relationships"]["items"]["anyOf"] = WRITER_SCHEMA["properties"]["relationships"]["items"]["anyOf"][:2]
@@ -344,7 +349,10 @@ behind simplified replacements. Follow one additional component level when it re
 formation question; keep this within the search budget below. A host entry alone may omit the
 component's explanation. Separate the current visible shape, historical identity, role in this
 host, and any documented graphic corruption: a modern mouth-like shape need not originate as
-mouth. Do not assign a component's standalone meaning or sound to every host automatically.
+mouth. Identify whether each proposed component is actually present in the current standard form
+or belongs only to an earlier analysis. Keep that evidence distinction separate from scope_character:
+an early analysis may concern the same named graph without its parts being current-form components.
+Do not assign a component's standalone meaning or sound to every host automatically.
 Follow bibliographic references to the underlying study when accessible. Record author, title,
 edition and page; page numbers from another edition are not interchangeable. Bibliographic leads
 in the input are discovery aids, not evidence that the cited pages were read. Seek lawful public
@@ -435,8 +443,11 @@ unknown roles with cited explanation where needed. Do not omit every component m
 the original formation cannot be settled. Distinguish flesh 月/⺼ from moon 月 when supported,
 and explain simplified replacement shapes without inventing an inherited sound or meaning role.
 For the learner's basic split, cover the actual current graph: do not leave a retained current
-component represented only by a card scoped to its traditional counterpart. When the same-word
-component correspondence is supported, explain it with the appropriate current scope and citations;
+component represented only by a card scoped to its traditional counterpart. Mark current_form_component
+true for each detailed component belonging to that form and false for historical-only components,
+even when they share scope_character with the entry. Use null when membership is not resolved, which
+preserves the legacy scope-based rule. This field does not change graph edges, roles, evidence or scope.
+When the same-word component correspondence is supported, explain it with the appropriate current scope and citations;
 reserve additional traditional-only component cards for expert comparison.
 never invent, shorten, rehash or reconstruct them. Citations must support the actual
 claim, not merely mention the character. Modern shape analysis is not proof of ancient origin.
@@ -567,7 +578,7 @@ PROMPTS = {
     "research": "Investigate this character externally and return sourced findings and a search audit.",
     "analysis": "Identify supported claims, disagreements and limitations; cite their evidence. Resolve formation and component roles with the policy definitions: pictorial physical forms, semantic lexical categories, phonetic sound cues and positional indicators. Identify supported original meanings and altered forms.",
     "writer": "Write the entry using the analysis. Lead with a short accessible explanation, then history and uncertainties. Explain relationships rather than listing sources. A cited phonetic_element_in edge may record that this entry character is used as a sound element in another character; it does not make that other character a graphic component or ancestor of this entry.",
-    "factual": "For v2, inspect image pixels only when attached_images lists actual attachments. An empty list means no glyph images are selected or attached; do not demand inspection of nonexistent images. The harness has verified the original bytes in dossier.glyph_assets and rendered SVG originals into these PNG attachments; inspecting those rendered attachments counts as inspecting the selected originals. A legacy dossier note saying images were not inspected refers to the initial imported packet, before glyph curation. An indivisible pictograph intentionally uses the whole character as its single pictorial component; do not demand a distinct internal component. Every finding must identify an actual field/claim in the article, not a claim merely mentioned in its source dossier. Verify glyph images against inspected originals, identity, period, redrawings versus artifacts, reuse rights and caption/prose coherence. Check sense developments and every graph edge for evidence, context and uncertainty. Independently audit every claim against its cited source excerpts. Reject unsupported chronology, invented phonology or semantic links, overstated certainty, citation mismatches, missing component roles, conflated pictorial versus semantic roles, invented decompositions and unsubstantiated corruption claims. Verify both readings in every sound comparison, the component's historical identity, and the labeled language/reconstruction system; reject mixed systems or a kun'yomi presented as an on'yomi sound derivation. Return pass only if there are no required corrections; otherwise revise with specific findings.",
+    "factual": "For v2, inspect image pixels only when attached_images lists actual attachments. An empty list means no glyph images are selected or attached; do not demand inspection of nonexistent images. The harness has verified the original bytes in dossier.glyph_assets and rendered SVG originals into these PNG attachments; inspecting those rendered attachments counts as inspecting the selected originals. A legacy dossier note saying images were not inspected refers to the initial imported packet, before glyph curation. An indivisible pictograph intentionally uses the whole character as its single pictorial component; do not demand a distinct internal component. Every finding must identify an actual field/claim in the article, not a claim merely mentioned in its source dossier. Verify glyph images against inspected originals, identity, period, redrawings versus artifacts, reuse rights and caption/prose coherence. Check sense developments and every graph edge for evidence, context and uncertainty. Independently audit every claim against its cited source excerpts. Distinguish current-form components from historical-only analyses using current_form_component when present; false is expert-only even if the scope matches the entry, while absent/null retains legacy scope-based behavior. This flag does not waive evidence, role or graph-edge checks. Reject unsupported chronology, invented phonology or semantic links, overstated certainty, citation mismatches, missing component roles, conflated pictorial versus semantic roles, invented decompositions and unsubstantiated corruption claims. Verify both readings in every sound comparison, the component's historical identity, and the labeled language/reconstruction system; reject mixed systems or a kun'yomi presented as an on'yomi sound derivation. Return pass only if there are no required corrections; otherwise revise with specific findings.",
     "readability": "For v2, inspect the attached raster views when attached_images lists them. An empty list means there are no selected or attached glyphs; do not claim images exist or demand inspection of nonexistent images. These are rendered from the exact originals in dossier.glyph_assets; an old dossier note about uninspected images refers to the initial imported packet. A whole-graph pictograph is intentionally represented as one pictorial component. Reject decorative image dumps, unexplained captions, misleading chronology and meaning histories that conflate graph borrowing with semantic change. Check whether a reader can follow apparent contradictions and the evidence popups. Independently review whether this is a coherent explanation useful to a learner and an expert. Audit every reader-facing text field, including meaning_history.senses and developments, uncertainties, limitations, relationship explanations, captions and learner cards; source names, 'source X says' framing and workflow statements about what researchers inspected belong outside explanatory prose. State the actual evidential limit in reader terms. Reject a source dump, source names in explanatory prose, unexplained jargon, contradictory framing, missing component explanations, or an opening that misleads. A sound component must show its pronunciation beside the character's and explain a non-obvious relationship directly in the component card. Return pass only if there are no required corrections; otherwise revise with specific findings.",
     "editor": "Edit this complete draft for a learner-facing dictionary. Resolve supplied review findings first. Preserve its supported claims, citations, senses, certainty and relationships, but make the explanation coherent, concise and natural. Put citations only in evidence_ids; remove bracketed ref-number markers from prose. Start by explaining what the character depicts or how it is constructed. Never mention the dossier, pipeline, agents, research run, what was or was not independently inspected, or data availability in the main prose. Do not repeatedly say reported, interpreted or the evidence does not establish; qualify only the specific uncertain inference once, and put detailed research limitations in limitations/uncertainties. Do not name sources in explanatory prose: attribution lives in citations. Avoid duplicating the same account in summary, formation, component and history. Use history for form history and meaning_history for meanings; examples should help understanding, not reproduce a research log. Give the reader the useful explanation supported by the research; do not turn modest gaps about dates into doubt about an otherwise supported basic meaning. Return the complete writer-schema article; the harness preserves curated glyphs and derives meaning edges.",
     "revision": "Make targeted changes to resolve the supplied review findings. Preserve supported, clear prose. Return the complete corrected article. Both reviewers will review it again.",
@@ -1875,7 +1886,7 @@ def repair_learner_length(article, dossier, directory, runner, review_context=No
             "article": article, "dossier": dossier,
             "review_scope": "learner_structure",
             "required_component_indices": [i for i, c in enumerate(article["components"])
-                if component_scope(c, article) == article["character"]],
+                if component_is_current_form(c, article)],
             "validation_findings": [finding],
             "required_correction_context": review_context or {},
             "task": "Edit only the learner layer to resolve the exact length or coverage error. "

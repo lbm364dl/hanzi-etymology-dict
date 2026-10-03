@@ -256,6 +256,7 @@ ARTICLE_V2["components"][0]["sound"] = []
 ARTICLE_V2["components"][0]["origin_relation"] = "none"
 ARTICLE_V2["components"][0]["scope_character"] = "木"
 ARTICLE_V2["components"][0]["sound_limitation"] = None
+ARTICLE_V2["components"][0]["current_form_component"] = None
 
 ARTICLE_V2["relationships"].append({"id": "tree-picture", "subject": {"kind": "component", "id": "木"},
     "predicate": "pictorial_component_of", "object": {"kind": "character", "id": "木"},
@@ -1280,6 +1281,44 @@ class EditorialTests(unittest.TestCase):
         article['learner']['components'] = [card, card]
         with self.assertRaisesRegex(ValueError, 'current-form component'):
             validate_learner(article, DOSSIER, validate_sections)
+
+    def test_explicit_membership_distinguishes_historical_record_at_same_host(self):
+        from pipeline.structured import validate_learner
+        from pipeline.editorial import validate_sections
+        article = copy.deepcopy(ARTICLE_V2)
+        article['components'][0]['current_form_component'] = True
+        historical = copy.deepcopy(article['components'][0])
+        historical['current_form_component'] = False
+        article['components'].append(historical)
+        # The card is for the current record; the old account stays fully represented.
+        article['learner']['components'] = [
+            {**copy.deepcopy(ARTICLE_V2['learner']['components'][0]), 'component_index': 0}]
+        validate_learner(article, DOSSIER, validate_sections)
+
+        # An explicitly historical-only entry may have no component cards at all.
+        article['components'] = [historical]
+        article['learner']['components'] = []
+        validate_learner(article, DOSSIER, validate_sections)
+
+        # Legacy omission keeps the previous entry-scope means current behavior.
+        historical.pop('current_form_component')
+        article['components'] = [historical]
+        with self.assertRaisesRegex(ValueError, 'current-form component'):
+            validate_learner(article, DOSSIER, validate_sections)
+
+    def test_historical_membership_does_not_bypass_component_edge_validation(self):
+        article = copy.deepcopy(ARTICLE_V2)
+        dossier = {**DOSSIER, 'glyph_research': {
+            'historical_glyphs': copy.deepcopy(article['historical_glyphs'])}}
+        article['components'][0]['current_form_component'] = False
+        article['components'][0]['roles'] = ['semantic']
+        article['relationships'][-1]['predicate'] = 'semantic_component_of'
+        article['learner']['components'] = []
+        validate_article(article, dossier)
+        article['relationships'] = [edge for edge in article['relationships']
+                                    if edge['id'] != 'tree-picture']
+        with self.assertRaisesRegex(ValueError, 'Every supported component role'):
+            validate_article(article, dossier)
 
     def test_learner_repair_packet_requires_only_current_host_components(self):
         from pipeline import editorial

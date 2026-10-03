@@ -24,6 +24,18 @@ def component_scope(component, article):
     return component.get("scope_character", article["character"])
 
 
+def component_is_current_form(component, article):
+    """Resolve explicit current membership, preserving the legacy scope-based default."""
+    membership = component.get("current_form_component")
+    if membership is None:
+        return component_scope(component, article) == article["character"]
+    if not isinstance(membership, bool):
+        raise ValueError("current_form_component must be true, false, or null")
+    if membership and component_scope(component, article) != article["character"]:
+        raise ValueError("A current-form component must be scoped to the entry character")
+    return membership
+
+
 UNIHAN_READINGS = Path(__file__).resolve().parents[1] / "sources/unihan/Unihan_Readings.txt"
 UNIHAN_HSK1_READINGS = Path(__file__).resolve().parent / "data/unihan-kmandarin-hsk1.tsv"
 
@@ -111,6 +123,7 @@ def validate_component_metadata(article, dossier, validate_sections):
         scope = component_scope(component, article)
         if not isinstance(scope, str) or len(scope) != 1 or not literal_form(scope):
             raise ValueError("Component scope_character must identify one literal host character")
+        component_is_current_form(component, article)
         limitation = component.get("sound_limitation")
         if "phonetic" in component["roles"] and not component.get("sound") and limitation is None:
             raise ValueError("A phonetic component requires cited sound comparisons or sound_limitation")
@@ -157,10 +170,11 @@ summary, formation, components, history and meaning_history. Aim for an overview
 each component explanation of 25 words or fewer, and an optional takeaway of 35 words or fewer. Allow an
 overview up to 45 words, component paragraph up to 30, or takeaway up to 40 when needed for
 clarity; these are the hard validation limits. Do not request revision solely for exceeding the
-editorial targets within those margins. Give one
-learner component card per current-form detailed component using its zero-based component_index.
-Historical components scoped to a different graph need no learner card; include one only
-when essential to the learner explanation, keeping full historical analysis in the expert account. Explain
+editorial targets within those margins. Give one learner component card per detailed component
+marked current_form_component=true using its zero-based component_index. A false value means the
+record is expert-only historical analysis and needs no card, even when scoped to the entry; include
+one only when essential to the learner explanation. An absent or null value retains the legacy
+scope-based rule. Keep full historical analysis in the expert account. Explain
 what that component contributes in plain language; roles and pronunciation comparisons already
 live in the canonical component data and will be displayed beside this text. Do not duplicate
 sound arrays or invent phonetic explanations. For a non-obvious sound match, briefly explain
@@ -387,7 +401,12 @@ for its current components; a component explained only inside a traditional or h
 uses that graph as scope_character. Include a cited graphic relationship connecting that host to
 the entry. Component edges point to their declared host, while context_character remains the entry.
 Do not transfer a historical component's role to the modern entry merely because it appears in
-the same article. Learner cards keep the indices of these scoped canonical components.
+the same article. Set current_form_component true only for parts of the entry's current standard
+form. Set it false for expert-only historical analyses that are not current-form parts, including
+when their scope_character happens to equal the entry; use null when this distinction is unknown.
+An absent or null value preserves the legacy default that entry-scoped components are current.
+This field controls learner-card coverage only; it does not change citations, component roles,
+scope, or graph-edge requirements. Learner cards keep the indices of current-form components.
 Components describe forms within this character's graph or a cited graphic variant of it. When this
 character serves as a phonetic element in a separate host character, record that role only with a
 directed phonetic_element_in relationship; do not add a component scoped to that host. Explain the
@@ -395,8 +414,11 @@ sound evidence and readings in the relationship text and cite them there.
 When the entry character itself is a standardized simplified form, a variant, or a later graph,
 record the supported character-to-character relation in relationships (for example, simplified_from).
 Do not create a component whose form is the entry character just to explain that whole-character
-relationship. If research does not support a distinct internal component split, use components: []
-and learner.components: []; explain the whole graph in the overview, formation, and history instead.
+relationship. If research does not support a distinct internal current-form split, do not invent current
+components. Use current_form_component=false for any sourced historical-only analyses you retain;
+the learner component list may be empty. If no component analyses are supported at all, use
+components: [] and learner.components: []; explain the whole graph in the overview, formation,
+and history instead.
 If a related historical graph has a supported internal breakdown, components may be scoped to that
 historical host and must have its cited graphic relationship.
 When the historical pronunciation is unknown but the component and host have current readings,
@@ -446,7 +468,7 @@ def validate_learner(article, dossier, validate_sections):
     indices = [c["component_index"] for c in learner["components"]]
     all_indices = set(range(len(article["components"])))
     required = {i for i, component in enumerate(article["components"])
-                if component_scope(component, article) == article["character"]}
+                if component_is_current_form(component, article)}
     if (len(indices) != len(set(indices)) or not set(indices) <= all_indices
             or not required <= set(indices)):
         raise ValueError("Learner cards must cover each current-form component exactly once; historical cards are optional")
@@ -810,8 +832,11 @@ not need trunk/branches/roots repeated in every field. Require changes for incor
 claims, not merely because the same accurate description could be repeated elsewhere.
 Before claiming a learner card has no detailed component, count the actual components array and
 match its zero-based component_index; the validator enforces current-form coverage, with
-historically scoped cards optional. Do not infer
-a missing record from an abbreviated review excerpt or a prior revision's different array.
+historically scoped cards optional. When current_form_component is present, use it to identify
+learner-required records: false means historical-only even when scope_character equals the entry;
+true means the record must be entry-scoped and have one card. Absent or null keeps the old
+scope-based rule. This membership field changes no component claim, citation, edge, role or scope
+validation. Do not infer a missing record from an abbreviated review excerpt or a prior revision's different array.
 The role array lists the supported roles across the explicitly described analyses; it cannot
 encode prose or certainty values. The cited component edges carry per-role certainty and the
 component text distinguishes competing accounts. The UI labels roles Proposed or Likely when

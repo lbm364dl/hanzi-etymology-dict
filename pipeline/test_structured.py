@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 from pipeline.editorial import validate_article
 from pipeline.structured import (UNIHAN_HSK1_READINGS, default_unihan_readings_path,
-                                 validate_modern_mandarin_sound)
+                                 component_is_current_form, validate_modern_mandarin_sound)
 from pipeline.test_editorial import ARTICLE_V2, DOSSIER, GLYPHS
 
 
@@ -159,6 +159,27 @@ class ComponentScopeTests(unittest.TestCase):
             component.pop('sound_limitation', None)
         dossier = {**copy.deepcopy(DOSSIER), 'glyph_research': {'historical_glyphs': GLYPHS}}
         validate_article(article, dossier)
+
+    def test_current_membership_override_is_independent_of_scope(self):
+        article, _ = fixture()
+        component = article['components'][0]
+        self.assertFalse(component_is_current_form(component, article))
+        component['current_form_component'] = None
+        self.assertFalse(component_is_current_form(component, article))
+        component['current_form_component'] = False
+        self.assertFalse(component_is_current_form(component, article))
+        component['scope_character'] = '爱'
+        component['current_form_component'] = True
+        self.assertTrue(component_is_current_form(component, article))
+        component['current_form_component'] = False
+        self.assertFalse(component_is_current_form(component, article))
+        component['current_form_component'] = 'yes'
+        with self.assertRaisesRegex(ValueError, 'current_form_component'):
+            component_is_current_form(component, article)
+        component['current_form_component'] = True
+        component['scope_character'] = '愛'
+        with self.assertRaisesRegex(ValueError, 'scoped to the entry'):
+            component_is_current_form(component, article)
 
     def test_unknown_sound_has_separate_cited_limitation(self):
         article, dossier = fixture()
