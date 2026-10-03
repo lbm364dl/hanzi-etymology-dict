@@ -38,6 +38,13 @@ Both accept any positive integer. `--agents` independently limits active model p
 through inherited OS slots shared across workers; waiting stages record
 `waiting_for_agent_slot`, not an active model PID. Use the same slot capacity across live
 supervisors sharing a repository. Without `--agents`, capacity follows `--workers`.
+For a live increase, an additional supervisor with a larger capacity can use the
+additional numbered slots while existing supervisors continue within their smaller
+range. Select initially disjoint work and plan a handoff before their queues overlap:
+character locks prevent simultaneous work, but an already running supervisor does
+not continuously refresh completion receipts from another queue. The dashboard's
+active process count measures actual concurrency; configured workers include jobs
+waiting for model slots.
 Each character still runs separate Luna low research,
 authorship and independent factual/readability stages. Increase concurrency after a small
 live smoke run; the machine's available memory and service throughput determine the useful
@@ -47,7 +54,7 @@ setting, rather than a hardcoded three-character cap.
 python3 -m pipeline.source_enrichment run \
   --registry research/digitised-sources.json --source ziyuan-2012 \
   --cohort content/cohorts/hsk3-2021-level-1.json \
-  --output runs/source-enrichment-scale-20261003 --limit 300 --workers 24 --agents 12 --publish-now
+  --output runs/source-enrichment-scale-20261003 --limit 300 --workers 24 --agents 24 --publish-now
 ```
 
 The durable manifest is `OUTPUT/SOURCE/queue.json`. It records every character, attempt,
