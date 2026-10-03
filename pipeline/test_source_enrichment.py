@@ -28,6 +28,140 @@ class LocalSources:
 
 
 class SourceEnrichmentTests(unittest.TestCase):
+    def test_codex_wire_schema_requires_every_nested_object_property(self):
+        schema = {'type': 'object', 'additionalProperties': False, 'required': ['rows'],
+                  'properties': {'rows': {'type': 'array', 'items': {
+                      'type': 'object', 'additionalProperties': False, 'required': ['key'],
+                      'properties': {'key': {'type': 'string'}, 'hash': {'type': 'string'}}}}}}
+        with self.assertRaisesRegex(ValueError, 'rows.items.*hash'):
+            source_enrichment._validate_codex_object_schema(editorial.agent_schema(schema))
+        schema['properties']['rows']['items']['required'].append('hash')
+        source_enrichment._validate_codex_object_schema(editorial.agent_schema(schema))
+
+    def test_identity_gap_classifier_handles_identity_qualified_by_other_nouns(self):
+        for details in ('the printed special component identity is unresolved',
+                        'the printed unit identity remains unclear',
+                        'its exact Unicode identity is not established'):
+            self.assertEqual(source_enrichment._source_finding_class({'kind': 'ocr', 'details': details}),
+                             'identity_gap')
+
+    def test_verified_source_claim_requires_hash_bound_luna_research_and_pixels(self):
+        from PIL import Image
+        import hashlib
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        page = self.root / 'primary-table.png'
+        Image.new('RGB', (8, 8), 'white').save(page)
+        with Image.open(page) as im:
+            pixel_hash = hashlib.sha256(im.convert('RGB').tobytes()).hexdigest()
+        file_hash = hashlib.sha256(page.read_bytes()).hexdigest()
+        finding = {'key': 'access-gap', 'kind': 'ocr', 'title': 'Primary table not directly inspected',
+                   'details': 'The primary source table was not directly inspected.'}
+        editorial.write(job / 'source_findings.json', {'requires_coordinator_verification': True,
+                                                        'findings': [finding]})
+        result = {'evidence': [{'kind': 'primary_source_scan_inspection',
+            'source': f'Official table scan; decoded RGB pixel SHA-256 {pixel_hash}',
+            'field': 'table row', 'text': 'The scan lists the claimed counterpart.'}]}
+        result_path = self.root / 'research-result.json'
+        meta_path = self.root / 'research-meta.json'
+        editorial.write(result_path, result)
+        meta = {'role': 'research', 'status': 'complete', 'model': 'gpt-6-luna', 'reasoning': 'low',
+                'result_hash': editorial.digest(result), 'image_argument_manifest': [
+                    {'path': str(page), 'sha256': file_hash}]}
+        editorial.write(meta_path, meta)
+        check = {'key': 'access-gap', 'research_result_path': str(result_path),
+                 'research_meta_path': str(meta_path), 'evidence_indices': [0],
+                 'source_pixel_sha256s': [pixel_hash]}
+        scans = [{'path': str(page), 'pdf_page': 900, 'source_pixel_sha256': pixel_hash}]
+        normalized = source_enrichment._verify_source_claim_checks(job, [check], scans)
+        self.assertEqual(normalized[0]['research_result_hash'], editorial.digest(result))
+        with self.assertRaisesRegex(ValueError, 'exact attached source scan'):
+            source_enrichment._verify_source_claim_checks(job, [
+                {**check, 'source_pixel_sha256s': ['0' * 64]}], scans)
+        bad_meta = {**meta, 'result_hash': 'f' * 64}
+        editorial.write(meta_path, bad_meta)
+        with self.assertRaisesRegex(ValueError, 'completed Luna-low research'):
+            source_enrichment._verify_source_claim_checks(job, [check], scans)
+
+    def test_verified_source_claim_resolution_gate_rechecks_all_proof(self):
+        from PIL import Image
+        import hashlib
+        with tempfile.TemporaryDirectory() as temp:
+            job = Path(temp)
+            scan = job / 'official-table.png'
+            Image.new('RGB', (6, 6), 'white').save(scan)
+            with Image.open(scan) as im:
+                pixel_hash = hashlib.sha256(im.convert('RGB').tobytes()).hexdigest()
+            scan_hash = hashlib.sha256(scan.read_bytes()).hexdigest()
+            result_path, meta_path = job/'research/result.json', job/'research/meta.json'
+            research = {'evidence': [{'kind': 'primary_source_scan_inspection',
+                'source': f'official table, pixel SHA-256 {pixel_hash}', 'field': 'row', 'text': 'Observed pair.'}]}
+            editorial.write(result_path, research)
+            editorial.write(meta_path, {'role':'research', 'status':'complete', 'model':'gpt-6-luna',
+                'reasoning':'low', 'result_hash':editorial.digest(research), 'image_argument_manifest':[
+                    {'path':str(scan), 'sha256':scan_hash}]})
+            finding = {'key':'access', 'kind':'ocr', 'title':'Table not directly inspected',
+                'details':'Primary source table was not directly inspected.'}
+            findings = {'requires_coordinator_verification':True, 'findings':[finding]}
+            article, dossier = {'character':'木'}, {'evidence':[]}
+            editorial.write(job/'source_findings.json', findings)
+            editorial.write(job/'article.json', article)
+            editorial.write(job/'dossier.json', dossier)
+            scans = [{'path':str(scan), 'pdf_page':900, 'source_pixel_sha256':pixel_hash}]
+            check = {'key':'access', 'research_result_path':str(result_path),
+                'research_meta_path':str(meta_path), 'evidence_indices':[0],
+                'source_pixel_sha256s':[pixel_hash]}
+            checks = source_enrichment._verify_source_claim_checks(job, [check], scans)
+            resolution_result = {'findings':[{'key':'access', 'disposition':'verified_source_claim',
+                'reason':'The actual primary table scan resolves the recorded access gap.', 'affected_paths':['article.summary']}],
+                'source_claim_observations':[{'key':'access','supported':True,
+                    'support_reason':'The exact entry is visible.'}]}
+            editorial.write(job/'source-resolution/result.json', resolution_result)
+            editorial.write(job/'source-resolution/meta.json', {'role':'source_resolution','status':'complete',
+                'model':'gpt-6-luna','reasoning':'low','result_hash':editorial.digest(resolution_result)})
+            editorial.write(job/'source_resolution.json', {'findings_hash':editorial.digest(findings),
+                'article_hash':editorial.digest(article), 'dossier_hash':editorial.digest(dossier),
+                'result_hash':editorial.digest(resolution_result), 'model':'gpt-6-luna','reasoning':'low',
+                'review_path':'source-resolution/result.json','source_claim_checks':checks,
+                'source_scan_images':scans})
+            self.assertFalse(source_enrichment._source_findings_pending(job))
+            editorial.write(meta_path, {'role':'research','status':'complete','model':'gpt-6-luna',
+                'reasoning':'low','result_hash':'0'*64,'image_argument_manifest':[{'path':str(scan),'sha256':scan_hash}]})
+            self.assertTrue(source_enrichment._source_findings_pending(job))
+
+    def test_unbound_historical_result_cannot_create_repair_obligation(self):
+        with tempfile.TemporaryDirectory() as temp:
+            job = Path(temp)
+            key = 'previously-repaired'
+            finding = {'key':key,'kind':'ocr','details':'Its Unicode identity remains unresolved.'}
+            findings = {'requires_coordinator_verification':True,'findings':[finding]}
+            article = {'character':'一','summary':{'text':'一 is a sourced character.','evidence_ids':['E1']}}
+            dossier = {'evidence':[{'id':'E1','source':'Dictionary','field':'entry','text':'Supports 一.'}]}
+            result = {'findings':[{'key':key,'disposition':'unresolved_identity_not_used',
+                'reason':'The old correction is unnecessary.','affected_paths':['article.summary']}],
+                'identity_observations':[{'key':key,'independent_support':True,'claim_paths':[
+                    {'article_path':'article.summary','claim_text':'一 is a sourced character.',
+                     'independent_evidence_ids':['E1']}], 'support_reason':'The independent dictionary supports it.'}]}
+            editorial.write(job/'source_findings.json',findings)
+            editorial.write(job/'article.json',article)
+            editorial.write(job/'dossier.json',dossier)
+            old = {'findings':[{'key':key,'disposition':'applied_repair_scan_matches_corpus'}]}
+            editorial.write(job/'source-resolution-1/result.json',old)
+            editorial.write(job/'source-resolution-1/meta.json',{'role':'source_resolution','status':'complete',
+                'model':'gpt-6-luna','reasoning':'low','result_hash':editorial.digest(old)})
+            editorial.write(job/'source-resolution-2/result.json',result)
+            editorial.write(job/'source-resolution-2/meta.json',{'role':'source_resolution','status':'complete',
+                'model':'gpt-6-luna','reasoning':'low','result_hash':editorial.digest(result)})
+            editorial.write(job/'source_resolution.json',{'findings_hash':editorial.digest(findings),
+                'article_hash':editorial.digest(article),'dossier_hash':editorial.digest(dossier),
+                'result_hash':editorial.digest(result),'model':'gpt-6-luna','reasoning':'low',
+                'review_path':'source-resolution-2/result.json'})
+            self.assertEqual(source_enrichment._historical_checked_keys(job), {
+                'rejected_proposal_scan_matches_corpus': set(),
+                'applied_repair_scan_matches_corpus': set(),
+                'verified_metadata_not_extracted': set(),
+                'verified_transcription_matches_corpus': set()})
+            self.assertFalse(source_enrichment._source_findings_pending(job))
+
     def test_research_feedback_preserves_additional_source_pages(self):
         located = {**copy.deepcopy(LOCATED), 'source_scan_images': [
             {'path': '/page-1.png', 'pdf_page': 1}]}
@@ -91,13 +225,21 @@ class SourceEnrichmentTests(unittest.TestCase):
     def test_source_resolution_is_bound_to_findings_and_exact_article(self):
         with tempfile.TemporaryDirectory() as temp:
             job = Path(temp)
-            findings = {'requires_coordinator_verification': True, 'findings': [{'key': 'rare-glyph'}]}
-            article, dossier = {'character': '一'}, {'evidence': []}
+            findings = {'requires_coordinator_verification': True, 'findings': [{
+                'key': 'rare-glyph', 'kind': 'ocr', 'details': 'Its Unicode identity remains unresolved.'}]}
+            article = {'character': '一', 'summary': {'text':'一 is a sourced character.', 'evidence_ids':['E1']}}
+            dossier = {'evidence': [{'id':'E1','source':'Dictionary','field':'entry','text':'Supports 一.'}]}
             editorial.write(job / 'source_findings.json', findings)
             editorial.write(job / 'article.json', article)
             editorial.write(job / 'dossier.json', dossier)
             self.assertTrue(source_enrichment._source_findings_pending(job))
-            result = {'findings': [{'key': 'rare-glyph', 'disposition': 'unresolved_identity_not_used'}]}
+
+            result = {'findings': [{'key': 'rare-glyph', 'disposition': 'unresolved_identity_not_used',
+                    'affected_paths':['article.summary']}],
+                'identity_observations':[{'key':'rare-glyph','independent_support':True,
+                    'claim_paths':[{'article_path':'article.summary','claim_text':'一 is a sourced character.',
+                                    'independent_evidence_ids':['E1']}],
+                    'support_reason':'The actual summary cites the dictionary independently of the unidentified specimen.'}]}
             editorial.write(job / 'source-resolution/result.json', result)
             editorial.write(job / 'source-resolution/meta.json', {
                 'role': 'source_resolution', 'status': 'complete', 'model': 'gpt-6-luna',
@@ -136,6 +278,33 @@ class SourceEnrichmentTests(unittest.TestCase):
                 self.assertEqual(source_enrichment._source_findings_pending(job), expected)
             editorial.write(job / 'article.json', {**article, 'summary': 'Now cites a glyph.'})
             self.assertTrue(source_enrichment._source_findings_pending(job))
+
+    def test_identity_no_claim_inventory_requires_exact_pair_and_explicit_review(self):
+        article = {'character': '边', 'formation': {'text': '边 derives from 边.', 'evidence_ids': ['E1']}}
+        dossier = {'evidence': [{'id': 'E1', 'source': 'Dictionary', 'field': 'entry',
+                                'text': 'Supports the current character.'}]}
+        finding = {'key': 'identity', 'affected_paths': []}
+        observation = {
+            'key': 'identity', 'independent_support': True, 'claim_paths': [],
+            'whole_candidate_reviewed': True,
+            'reviewed_article_hash': editorial.digest(article),
+            'reviewed_dossier_hash': editorial.digest(dossier),
+            'support_reason': ('No article or dossier claim depends on or uses this unresolved identity; '
+                               'I reviewed the entire candidate.')}
+        self.assertTrue(source_enrichment._identity_support_valid(article, dossier, finding, observation))
+        for field, value in [
+                ('whole_candidate_reviewed', False),
+                ('reviewed_article_hash', '0' * 64),
+                ('reviewed_dossier_hash', '0' * 64),
+                ('support_reason', 'No article claim depends on it.'),
+                ('independent_support', False)]:
+            bad = {**observation, field: value}
+            self.assertFalse(source_enrichment._identity_support_valid(article, dossier, finding, bad), field)
+        contradictory = {**finding, 'affected_paths': ['article.formation']}
+        self.assertFalse(source_enrichment._identity_support_valid(article, dossier, contradictory, observation))
+        for invalid in ('article.summary.trailing!', 'article.summary[bad]', 'article..summary'):
+            with self.assertRaises(ValueError):
+                source_enrichment._article_path_node(article, invalid)
 
     def test_verified_missing_page_metadata_requires_exact_observation_and_current_pixels(self):
         import hashlib

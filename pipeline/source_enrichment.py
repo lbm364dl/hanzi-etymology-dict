@@ -16,6 +16,7 @@ import argparse
 import copy
 import fcntl
 from datetime import datetime, timezone
+import hashlib
 import json
 import shutil
 from pathlib import Path
@@ -426,6 +427,269 @@ def _verify_transcription_checks(job, checks):
     return normalized
 
 
+def _verify_source_claim_checks(job, checks, scans):
+    """Bind a research-gap disposition to an actual Luna research result and its scans."""
+    job = Path(job)
+    findings = {f['key']: f for f in editorial.read(job / 'source_findings.json')['findings']}
+    if len({c.get('key') for c in checks}) != len(checks):
+        raise ValueError('Source claim checks require unique retained findings')
+    attached = {s.get('source_pixel_sha256'): s for s in scans
+                if isinstance(s, dict) and s.get('source_pixel_sha256')}
+    normalized = []
+    for check in checks:
+        key = check.get('key')
+        finding = findings.get(key)
+        result_path = Path(check.get('research_result_path', ''))
+        meta_path = Path(check.get('research_meta_path', ''))
+        gap_text = ' '.join(str(finding.get(k, '')) for k in ('title', 'details', 'verification')) if finding else ''
+        if (not finding or not result_path.is_file() or not meta_path.is_file()
+                or finding.get('kind') != 'ocr'
+                or not re.search(r'failed to open|not (?:directly )?inspected|was not inspected|not supplied|was not supplied',
+                                 gap_text, re.I)):
+            raise ValueError('Source claim check requires a retained primary-source access gap and research artifacts')
+        result, meta = editorial.read(result_path), editorial.read(meta_path)
+        if (meta.get('role') != 'research' or meta.get('status') != 'complete'
+                or meta.get('model') != 'gpt-6-luna' or meta.get('reasoning') != 'low'
+                or meta.get('result_hash') != editorial.digest(result)):
+            raise ValueError('Source claim check requires completed Luna-low research bound to its result')
+        indices, pixels = check.get('evidence_indices'), check.get('source_pixel_sha256s')
+        evidence, manifest = result.get('evidence', []), meta.get('image_argument_manifest', [])
+        manifest_by_path = {str(Path(item.get('path', '')).resolve()): item for item in manifest}
+        if (not isinstance(indices, list) or not indices or len(indices) != len(set(indices))
+                or not isinstance(pixels, list) or len(pixels) != len(indices)
+                or any(type(i) is not int or i < 0 or i >= len(evidence) for i in indices)):
+            raise ValueError('Source claim check must name exact research evidence records')
+        bindings = []
+        for index, pixel in zip(indices, pixels):
+            record = evidence[index]
+            if record.get('kind') != 'primary_source_scan_inspection' or not isinstance(pixel, str):
+                raise ValueError('Source claim evidence must be a primary scan inspection')
+            scan = attached.get(pixel)
+            if not scan:
+                raise ValueError('Source claim evidence requires its exact attached source scan')
+            editorial.source_scan_attachments([scan])
+            scan_path = Path(scan['path']).resolve()
+            manifest_entry = manifest_by_path.get(str(scan_path))
+            file_hash = hashlib.sha256(scan_path.read_bytes()).hexdigest()
+            if (not manifest_entry or manifest_entry.get('sha256') != file_hash
+                    or pixel not in json.dumps(record, ensure_ascii=False)):
+                raise ValueError('Research evidence is not bound to the attached pixels')
+            bindings.append({'evidence_index': index, 'source_pixel_sha256': pixel,
+                             'scan_path': str(scan_path), 'scan_file_sha256': file_hash,
+                             'pdf_page': scan.get('pdf_page')})
+        normalized.append({'key': key, 'research_result_path': str(result_path.resolve()),
+            'research_meta_path': str(meta_path.resolve()), 'research_result_hash': editorial.digest(result),
+            'research_meta_file_sha256': hashlib.sha256(meta_path.read_bytes()).hexdigest(),
+            'evidence_indices': indices, 'source_pixel_sha256s': pixels, 'scan_bindings': bindings,
+            'research_evidence': [evidence[i] for i in indices]})
+    return normalized
+
+
+def _source_finding_class(finding):
+    """Classify only explicit retained finding language; never infer OCR disposition from plausibility."""
+    text = ' '.join(str(finding.get(k, '')) for k in ('title', 'details', 'verification'))
+    if re.search(r'failed to open|not (?:directly )?inspected|was not inspected|not supplied|was not supplied', text, re.I):
+        return 'primary_access_gap'
+    if re.search(r'\bidentity\b.{0,45}(?:unresolved|unclear|not established)', text, re.I):
+        return 'identity_gap'
+    if ('[OCR CORRECTION REQUIRED]' in text or 'raw provisional OCR span' in text
+            or 'proposed source-bound OCR correction' in text):
+        return 'transcription_correction'
+    return 'other'
+
+
+def _historical_checked_keys(job):
+    """Find prior check classes only from exact, completed, re-verifiable receipts."""
+    job = Path(job)
+    required = {'rejected_proposal_scan_matches_corpus': set(),
+                'applied_repair_scan_matches_corpus': set(),
+                'verified_metadata_not_extracted': set(),
+                'verified_transcription_matches_corpus': set()}
+    for path in job.rglob('source_resolution.json'):
+        try:
+            receipt = editorial.read(path)
+            result_path = (job / receipt['review_path']).resolve()
+            if not result_path.is_relative_to(job.resolve()):
+                continue
+            result = editorial.read(result_path)
+            meta = editorial.read(result_path.parent / 'meta.json')
+            findings = editorial.read(job / 'source_findings.json')
+            article = editorial.read(job / 'article.json')
+            dossier = editorial.read(job / 'dossier.json')
+            if (receipt.get('findings_hash') != editorial.digest(findings)
+                    or receipt.get('article_hash') != editorial.digest(article)
+                    or receipt.get('dossier_hash') != editorial.digest(dossier)
+                    or receipt.get('result_hash') != editorial.digest(result)
+                    or meta.get('role') != 'source_resolution' or meta.get('status') != 'complete'
+                    or meta.get('model') != 'gpt-6-luna' or meta.get('reasoning') != 'low'
+                    or meta.get('result_hash') != editorial.digest(result)):
+                continue
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+        result_items = {item.get('key'): item for item in result.get('findings', [])
+                        if isinstance(item, dict)}
+        if len(result_items) != len(result.get('findings', [])):
+            continue
+        checks_by_field = [
+            ('literal_checks', 'literal_observations', 'rejected_proposal_scan_matches_corpus'),
+            ('applied_repairs', 'repair_observations', 'applied_repair_scan_matches_corpus'),
+            ('metadata_checks', 'metadata_observations', 'verified_metadata_not_extracted'),
+            ('transcription_checks', 'transcription_observations', 'verified_transcription_matches_corpus')]
+        for check_field, observation_field, disposition in checks_by_field:
+            checks = receipt.get(check_field, [])
+            if not checks:
+                continue
+            keys = {check.get('key') for check in checks if isinstance(check, dict)}
+            observations = result.get(observation_field, [])
+            observed = {item.get('key'): item for item in observations if isinstance(item, dict)}
+            if (len(keys) != len(checks) or len(observed) != len(observations)
+                    or keys != set(observed)
+                    or any(result_items.get(key, {}).get('disposition') != disposition for key in keys)):
+                continue
+            try:
+                if check_field == 'literal_checks':
+                    _verify_literal_checks(job, checks)
+                    for check in checks:
+                        item = observed[check['key']]
+                        if (item.get('current_corpus_literal') != check.get('current')
+                                or item.get('proposed_literal') != check.get('proposed')
+                                or item.get('observed_literal') != check.get('current')):
+                            raise ValueError('Prior literal observation does not match its exact check')
+                elif check_field == 'applied_repairs':
+                    from pipeline import source_repairs
+                    registered = editorial.read(job / 'source.json')['registry_source']
+                    for check in checks:
+                        if (source_repairs.verify(registered, check) != check
+                                or observed[check['key']].get('observed_literal') != check.get('after')):
+                            raise ValueError('Prior repair proof no longer matches the source')
+                elif check_field == 'metadata_checks':
+                    _verify_missing_page_metadata(job, checks)
+                    for check in checks:
+                        if observed[check['key']].get('observed_value') != check.get('expected_value'):
+                            raise ValueError('Prior metadata observation differs from its check')
+                else:
+                    _verify_transcription_checks(job, checks)
+                    for check in checks:
+                        if observed[check['key']].get('observed_literal') != check.get('current'):
+                            raise ValueError('Prior transcription observation differs from its check')
+            except (OSError, ValueError, KeyError, ImportError, TypeError):
+                continue
+            required[disposition].update(keys)
+    return required
+
+
+def _verify_literal_checks(job, checks):
+    """Validate exact current corpus spans and original source pixels for literal checks."""
+    job = Path(job)
+    source = editorial.read(job / 'source.json')['registry_source']
+    keys = {f['key'] for f in editorial.read(job / 'source_findings.json')['findings']}
+    needed = {item.get('pdf_page') for item in checks}
+    pages = {}
+    with Path(source['corpus_path']).open() as corpus:
+        for line in corpus:
+            page = json.loads(line)
+            number = page.get('pdf_page_1based')
+            if number in needed:
+                if number in pages:
+                    raise ValueError('Literal source page identity is ambiguous')
+                pages[number] = page
+    scans = []
+    for check in checks:
+        page = pages.get(check.get('pdf_page'), {})
+        offset, current, proposed = (check.get('text_offset'), check.get('current'),
+                                    check.get('proposed'))
+        if (check.get('key') not in keys or type(offset) is not int or offset < 0
+                or not isinstance(current, str) or not current
+                or not isinstance(proposed, str) or not proposed or proposed == current
+                or page.get('text', '')[offset:offset + len(current)] != current
+                or page.get('source_sha256') != check.get('source_pixel_sha256')
+                or not page.get('source_scan')):
+            raise ValueError('Literal check is not bound to its current corpus occurrence')
+        scans.append({'path': page['source_scan'], 'pdf_page': check['pdf_page'],
+                      'source_pixel_sha256': check['source_pixel_sha256']})
+    editorial.source_scan_attachments(scans)
+    return checks
+
+
+def _article_path_node(article, path):
+    if (not isinstance(path, str)
+            or not re.fullmatch(r'article(?:\.[A-Za-z_][A-Za-z0-9_]*|\[\d+\])+', path)):
+        raise ValueError('Independent support must name an exact article path')
+    tokens = re.findall(r'[^.\[\]]+|\[\d+\]', path[len('article.'):])
+    node = article
+    for token in tokens:
+        if token.startswith('['):
+            node = node[int(token[1:-1])]
+        else:
+            node = node[token]
+    return node
+
+
+def _identity_support_valid(article, dossier, finding_result, observation):
+    paths = observation.get('claim_paths', [])
+    by_path = {item.get('article_path'): item for item in paths}
+    if len(by_path) != len(paths):
+        return False
+    if set(finding_result.get('affected_paths', [])) != set(by_path):
+        return False
+    if not paths:
+        # An empty affected-claim inventory is a substantive independent judgment,
+        # not a shortcut. Bind it to the exact complete candidate pair and require
+        # the reviewer to attest that both article and dossier were checked.
+        return bool(
+            observation.get('independent_support') is True
+            and observation.get('whole_candidate_reviewed') is True
+            and observation.get('reviewed_article_hash') == editorial.digest(article)
+            and observation.get('reviewed_dossier_hash') == editorial.digest(dossier)
+            and re.search(r'no (?:(?:article or dossier)|(?:article and dossier)|candidate) claim.{0,120}(?:depend|rely|use)',
+                          str(observation.get('support_reason', '')), re.I)
+            and re.search(r'(?:article (?:and|or) dossier|both (?:the )?article and dossier|entire candidate)',
+                          str(observation.get('support_reason', '')), re.I)
+        )
+    dossier_ids = {e.get('id') for e in dossier.get('evidence', [])}
+    for path, item in by_path.items():
+        try:
+            node = _article_path_node(article, path)
+        except (KeyError, IndexError, TypeError, ValueError):
+            return False
+        cited = set()
+        text_parts = []
+        def collect(value):
+            if isinstance(value, dict):
+                cited.update(value.get('evidence_ids', []))
+                if isinstance(value.get('text'), str):
+                    text_parts.append(value['text'])
+                for child in value.values():
+                    if isinstance(child, (dict, list)):
+                        collect(child)
+            elif isinstance(value, list):
+                for child in value:
+                    collect(child)
+        collect(node)
+        ids = item.get('independent_evidence_ids', [])
+        if (not item.get('claim_text') or not any(item['claim_text'] in text for text in text_parts)
+                or not ids or len(ids) != len(set(ids))
+                or not set(ids) <= cited or not set(ids) <= dossier_ids):
+            return False
+    return bool(observation.get('independent_support') is True
+                and observation.get('support_reason'))
+
+
+def _validate_codex_object_schema(schema, path='$'):
+    """Fail locally when strict Codex structured output would reject an object schema."""
+    if isinstance(schema, dict):
+        if schema.get('type') == 'object' and isinstance(schema.get('properties'), dict):
+            required = schema.get('required')
+            if not isinstance(required, list) or not set(schema['properties']) <= set(required):
+                missing = sorted(set(schema['properties']) - set(required or []))
+                raise ValueError(f'Codex strict schema requires every object property at {path}: {missing}')
+        for key, value in schema.items():
+            _validate_codex_object_schema(value, f'{path}.{key}')
+    elif isinstance(schema, list):
+        for index, value in enumerate(schema):
+            _validate_codex_object_schema(value, f'{path}[{index}]')
+
+
 def _source_findings_pending(job):
     """Retain findings; only an exact independent resolution can release their gate."""
     job = Path(job)
@@ -463,6 +727,50 @@ def _source_findings_pending(job):
                 return True
         except (OSError, ValueError, KeyError, ImportError):
             return True
+    source_claim_keys = {f['key'] for f in result['findings']
+                         if f['disposition'] == 'verified_source_claim'}
+    source_claims = resolution.get('source_claim_checks', [])
+    if source_claim_keys or source_claims:
+        try:
+            verified = _verify_source_claim_checks(job, source_claims,
+                                                   resolution.get('source_scan_images', []))
+            observations = result.get('source_claim_observations', [])
+            observed = {o['key']: o for o in observations}
+            if (verified != source_claims
+                    or source_claim_keys != {c['key'] for c in verified}
+                    or set(observed) != source_claim_keys or len(observed) != len(observations)):
+                return True
+            for check in verified:
+                item = observed[check['key']]
+                if item.get('supported') is not True:
+                    return True
+        except (OSError, ValueError, KeyError, TypeError):
+            return True
+    identity_keys = {f['key'] for f in result['findings']
+                     if f['disposition'] == 'unresolved_identity_not_used'}
+    if identity_keys:
+        expected_identity_keys = {f['key'] for f in findings['findings']
+                                  if _source_finding_class(f) == 'identity_gap'}
+        observations = result.get('identity_observations', [])
+        observed = {o['key']: o for o in observations}
+        by_key = {f['key']: f for f in result['findings']}
+        dossier = editorial.read(job / 'dossier.json')
+        article = editorial.read(job / 'article.json')
+        if (not identity_keys <= expected_identity_keys
+                or set(observed) != expected_identity_keys or len(observed) != len(observations)
+                or any(not _identity_support_valid(article, dossier, by_key[key], observed[key])
+                       for key in identity_keys)):
+            return True
+    historical = _historical_checked_keys(job)
+    dispositions = {f['key']: f['disposition'] for f in result['findings']}
+    for disposition, keys in historical.items():
+        if any(dispositions.get(key) != disposition for key in keys):
+            return True
+    if any(item['disposition'] == 'verified_source_claim'
+           and _source_finding_class(next((f for f in findings['findings']
+                                           if f['key'] == item['key']), {})) != 'primary_access_gap'
+           for item in result['findings']):
+        return True
     metadata_keys = {f['key'] for f in result['findings']
                      if f['disposition'] == 'verified_metadata_not_extracted'}
     metadata_checks = resolution.get('metadata_checks', [])
@@ -531,12 +839,28 @@ def _source_findings_pending(job):
     return (len(keys) != len(set(keys)) or set(keys) != {item["key"] for item in findings["findings"]}
             or any(item["disposition"] not in ("unresolved_identity_not_used",
                     "rejected_proposal_scan_matches_corpus", "applied_repair_scan_matches_corpus",
-                    "verified_metadata_not_extracted", "verified_transcription_matches_corpus")
+                    "verified_metadata_not_extracted", "verified_transcription_matches_corpus",
+                    "verified_source_claim")
                    for item in result["findings"]))
 
 
+def refresh_source_resolution_status(job):
+    """Keep the saved status aligned with the current exact source-resolution gate."""
+    job = Path(job)
+    pending = _source_findings_pending(job)
+    state_path = job / 'status.json'
+    if state_path.is_file():
+        state = editorial.read(state_path)
+        if state.get('status') in ('approved', 'needs_source_verification'):
+            desired = 'needs_source_verification' if pending else 'approved'
+            if state.get('status') != desired or state.get('source_verification_pending') != pending:
+                state.update(status=desired, source_verification_pending=pending)
+                editorial.write(state_path, state)
+    return pending
+
+
 def resolve_source_findings(job, runner, source_context=None, literal_checks=None, repair_checks=None,
-                            metadata_checks=None, transcription_checks=None):
+                            metadata_checks=None, transcription_checks=None, source_claim_checks=None):
     """Check whether retained uncertainty is immaterial; actual OCR errors stay blocked."""
     job = Path(job)
     if runner.model != "gpt-6-luna" or runner.reasoning != "low":
@@ -545,6 +869,7 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
     article, dossier = editorial.read(job / "article.json"), editorial.read(job / "dossier.json")
     editorial.validate_reviews(article, dossier, editorial.read(job / "reviews.json"))
     checkpoint = editorial.read(job / "source_checkpoint.json")
+    identity_checks = [f for f in findings['findings'] if _source_finding_class(f) == 'identity_gap']
     schema = {"type": "object", "additionalProperties": False, "required": ["findings"],
         "properties": {"findings": {"type": "array",
             "minItems": len(findings['findings']), "maxItems": len(findings['findings']), "items": {
@@ -558,6 +883,48 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
     inputs = {"article": article, "dossier": dossier, "findings": findings,
               "feedback": {"source_scan_images": (
                   list(checkpoint["locator"].get("source_scan_images", [])) + list(source_context or []))}}
+    if identity_checks:
+        article_path_pattern = r'^article(?:\.[A-Za-z_][A-Za-z0-9_]*|\[\d+\])+$'
+        schema['properties']['findings']['items']['properties']['affected_paths']['items'] = {
+            'type': 'string', 'pattern': article_path_pattern}
+        inputs['identity_gap_checks'] = identity_checks
+        schema['required'].append('identity_observations')
+        schema['properties']['identity_observations'] = {'type': 'array',
+            'minItems': len(identity_checks), 'maxItems': len(identity_checks), 'items': {
+            'type': 'object', 'additionalProperties': False,
+            'required': ['key', 'independent_support', 'claim_paths', 'support_reason',
+                         'whole_candidate_reviewed', 'reviewed_article_hash', 'reviewed_dossier_hash'],
+                'properties': {'key': {'type': 'string', 'enum': [f['key'] for f in identity_checks]},
+                'independent_support': {'type': 'boolean'},
+                'whole_candidate_reviewed': {'type': 'boolean'},
+                'reviewed_article_hash': {'type': 'string', 'enum': [editorial.digest(article)]},
+                'reviewed_dossier_hash': {'type': 'string', 'enum': [editorial.digest(dossier)]},
+                'claim_paths': {'type': 'array', 'uniqueItems': True, 'items': {
+                    'type': 'object', 'additionalProperties': False,
+                    'required': ['article_path', 'claim_text', 'independent_evidence_ids'],
+                    'properties': {'article_path': {'type': 'string',
+                            'pattern': article_path_pattern},
+                        'claim_text': {'type': 'string', 'minLength': 1},
+                        'independent_evidence_ids': {'type': 'array', 'minItems': 1,
+                            'uniqueItems': True, 'items': {'type': 'string'}}}}},
+                'support_reason': {'type': 'string', 'minLength': 1}}}}
+        inputs['identity_gap_instruction'] = (
+            'For each printed-identity gap, independently decide whether this exact article makes a claim that '
+            'depends on assigning the unresolved occurrence a Unicode identity. `unresolved_identity_not_used` '
+            'is allowed only when the identity remains unresolved, no claim depends on that identity, and you '
+            'inventory every affected claim path and its existing independent evidence IDs. `affected_paths` must '
+            'exactly match the article paths you report. For each path, quote a literal substring from that exact '
+            'field and copy only evidence IDs present in that field’s own evidence_ids array; do not borrow an ID from '
+            'a neighboring formation/uncertainty/component record. Use a path such as '
+            '`article.formation`, `article.components[5]`, or `article.uncertainties[0]` (no quote or text after it); '
+            'the IDs must independently support the quoted claim without relying on the unresolved specimen. If you cannot identify such support, leave the '
+            'finding pending. If neither the exact article nor dossier makes a claim that depends on this identity, '
+            'you may report an empty affected_paths and empty claim_paths inventory only after reviewing the complete '
+            'article and dossier. Set whole_candidate_reviewed=true and echo the exact reviewed_article_hash and '
+            'reviewed_dossier_hash supplied by the packet. In support_reason explicitly state that no article or dossier '
+            'claim depends on or uses the unresolved identity. This empty inventory is bound to this exact pair and is '
+            'not permitted for literal, applied-repair, metadata or transcription findings. Do not use this disposition '
+            'for source access gaps or retained literal/repair checks.')
     checks = list(literal_checks or [])
     transcriptions = _verify_transcription_checks(job, list(transcription_checks or [])) if transcription_checks else []
     if transcriptions:
@@ -632,7 +999,13 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
             'Keep current corpus, proposed replacement and observed printed literal separate. '
             'Read the targeted pixels; use unresolved if unclear. Reject a proposal only when '
             'the observed literal equals the current corpus literal and differs from the proposal. '
-            'Your pixel_reason must agree with those fields; a contradictory rationale is not approval.')
+            'For every finding with a literal_observation, its reason must state the final observed literal '
+            'and agree with current_corpus_literal, proposed_literal and observed_literal. If the pixels reject '
+            'the proposal, describe the proposal only as rejected; do not say the scan shows the rejected literal. '
+            'If the pixels support the proposal, do not describe the current corpus literal as printed. Label any '
+            'earlier mistaken hypothesis as a prior proposal, never as the scan reading. Before returning, cross-check '
+            'each finding disposition and reason against its exact observation; if they differ or the pixels do not '
+            'establish a literal, use pending. A contradictory rationale is not approval.')
         schema['required'].append('literal_observations')
         schema['properties']['literal_observations'] = {'type': 'array',
             'minItems': len(checks), 'maxItems': len(checks), 'items': {
@@ -668,6 +1041,27 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
                            'observed_literal': {'type': ['string', 'null'], 'minLength': 1,
                                'maxLength': max(max(len(r['before']), len(r['after'])) for r in repairs)},
                            'key': {'type': 'string', 'enum': [repair['key'] for repair in repairs]}}}}
+    claim_checks = _verify_source_claim_checks(
+        job, list(source_claim_checks or []), inputs['feedback']['source_scan_images']) if source_claim_checks else []
+    if claim_checks:
+        inputs['source_claim_checks'] = claim_checks
+        inputs['source_claim_check_instruction'] = (
+            'A source-claim check concerns a retained primary-source ACCESS gap, not an OCR identity or replacement. '
+            'The attached research result/meta and source pages are provenance-bound, but their conclusions are not '
+            'preapproved. Independently inspect the named original page images and compare the exact source entry '
+            'with the finding and candidate claim. Return one observation per check. Use verified_source_claim only '
+            'when the primary source directly resolves that access gap and supports the affected claim; use the exact '
+            'evidence indices and pixel hashes bound to that finding (the schema fixes those values). Otherwise leave the finding pending. '
+            'Never use this disposition for a scan transcription, unresolved printed identity, or inference absent from '
+            'the cited page. This does not assert an ancient etymology, change OCR, or resolve unrelated findings.')
+        schema['required'].append('source_claim_observations')
+        schema['properties']['source_claim_observations'] = {'type': 'array',
+            'minItems': len(claim_checks), 'maxItems': len(claim_checks),
+            'items': {'type': 'object', 'additionalProperties': False,
+                'required': ['key', 'supported', 'support_reason'],
+                'properties': {'key': {'type': 'string', 'enum': [c['key'] for c in claim_checks]},
+                    'supported': {'type': 'boolean'},
+                    'support_reason': {'type': 'string', 'minLength': 1}}}}
     allowed_dispositions = ['pending', 'unresolved_identity_not_used']
     if checks:
         allowed_dispositions.append('rejected_proposal_scan_matches_corpus')
@@ -677,6 +1071,8 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
         allowed_dispositions.append('verified_metadata_not_extracted')
     if transcriptions:
         allowed_dispositions.append('verified_transcription_matches_corpus')
+    if claim_checks:
+        allowed_dispositions.append('verified_source_claim')
     schema['properties']['findings']['items']['properties']['disposition']['enum'] = allowed_dispositions
     inputs['disposition_policy'] = (
         'Assess EVERY retained finding exactly once, including findings with no supplied '
@@ -697,10 +1093,12 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
         'field and explain which necessary support depends on the unresolved '
         'occurrence; do not substitute a scan-file path for a claim location. '
         'Preserve the printed identity gap even when independent support makes '
-        'it immaterial to this exact article.')
+        'it immaterial to this exact article. A primary-source access gap may be resolved '
+        'as verified_source_claim only under the exact source_claim_checks and scan-observation contract.')
     scans = inputs['feedback']['source_scan_images']
     if not scans:
         raise ValueError('Source resolution requires original source scan attachments')
+    _validate_codex_object_schema(editorial.agent_schema(schema))
     # Check availability and supplied pixel bindings before spending a review call.
     editorial.source_scan_attachments(scans)
     directory = job / "source-resolution"
@@ -715,18 +1113,43 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
     # Runner retains the real output; no coordinator-authored verdict is substituted.
     if editorial.read(directory / "result.json") != result:
         raise ValueError("Source resolution differs from saved agent result")
+    if claim_checks:
+        observations = result.get('source_claim_observations', [])
+        observed = {o['key']: o for o in observations}
+        dispositions = {f['key']: f['disposition'] for f in result['findings']}
+        if len(observed) != len(observations) or set(observed) != {c['key'] for c in claim_checks}:
+            raise ValueError('Source claim checks require one independent observation per finding')
+        for check in claim_checks:
+            item = observed[check['key']]
+            if dispositions[check['key']] == 'verified_source_claim':
+                if item.get('supported') is not True:
+                    raise ValueError('Verified source claim lacks a matching independent observation')
+            elif item.get('supported') is True:
+                raise ValueError('A supported source claim must use its verified disposition')
+    if identity_checks:
+        observations = result.get('identity_observations', [])
+        observed = {o['key']: o for o in observations}
+        dispositions = {f['key']: f['disposition'] for f in result['findings']}
+        if len(observed) != len(observations) or set(observed) != {f['key'] for f in identity_checks}:
+            raise ValueError('Identity findings require independent claim-support observations')
+        for identity_finding in identity_checks:
+            key = identity_finding['key']
+            if dispositions[key] == 'unresolved_identity_not_used' and not _identity_support_valid(
+                    article, dossier, next(f for f in result['findings'] if f['key'] == key), observed[key]):
+                raise ValueError('Identity disposition lacks exact independent article-claim support')
     record = {"findings_hash": editorial.digest(findings), "article_hash": editorial.digest(article),
               "dossier_hash": editorial.digest(dossier), "result_hash": editorial.digest(result),
               "review_path": str((directory / 'result.json').relative_to(job)), "model": runner.model,
               "reasoning": runner.reasoning, "literal_checks": checks, "applied_repairs": repairs,
-              "metadata_checks": metadata, "transcription_checks": transcriptions}
+              "metadata_checks": metadata, "transcription_checks": transcriptions,
+              "source_claim_checks": claim_checks,
+              "source_scan_images": inputs['feedback']['source_scan_images'] if claim_checks else []}
     editorial.write(job / "source_resolution.json", record)
-    if not _source_findings_pending(job):
-        state = editorial.read(job / "status.json")
-        if state.get("status") == "needs_source_verification":
-            state.update(status="approved", source_verification_pending=False,
-                         article_hash=editorial.digest(article), dossier_hash=editorial.digest(dossier))
-            editorial.write(job / "status.json", state)
+    pending = refresh_source_resolution_status(job)
+    state = editorial.read(job / 'status.json')
+    if not pending and state.get('status') == 'approved':
+        state.update(article_hash=editorial.digest(article), dossier_hash=editorial.digest(dossier))
+        editorial.write(job / 'status.json', state)
     return record
 
 
