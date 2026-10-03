@@ -6,6 +6,7 @@ import re
 import shutil
 
 from pipeline import editorial, source_enrichment as se
+from pipeline.source_scan_binding import used_mismatches
 
 
 def _used_ids(value):
@@ -26,6 +27,9 @@ def valid_audit(job, audit, article, dossier):
     if stage not in ('source-coverage', 'source-coverage-adjudication'):
         return False
     try:
+        source = editorial.read(job / 'source.json')['registry_source']
+        if used_mismatches(source, article, dossier):
+            return False
         result = editorial.read(job / stage / 'result.json')
         meta = editorial.read(job / stage / 'meta.json')
         if stage == 'source-coverage-adjudication':
@@ -43,7 +47,7 @@ def valid_audit(job, audit, article, dossier):
                                    'initial_result_hash': editorial.digest(initial),
                                    'final_result_hash': editorial.digest(result)}):
                 return False
-    except (OSError, ValueError):
+    except (OSError, ValueError, KeyError):
         return False
     return (audit.get('article_hash') == editorial.digest(article)
             and audit.get('dossier_hash') == editorial.digest(dossier)
@@ -130,6 +134,9 @@ def _adopt(character, source, output, runner, root, source_context=None):
                  and se._has_page_provenance(item)]
     if not citations:
         raise ValueError('No used page-specific evidence from this registered book; research is required')
+    binding_errors = used_mismatches(source, article, dossier)
+    if binding_errors:
+        raise ValueError('Existing cited scan provenance requires fresh research and reviews: ' + str(binding_errors))
     if (job / 'status.json').exists() and editorial.read(job / 'status.json')['status'] not in ('prepared', 'needs_source_verification'):
         raise ValueError('Preserve existing source work; adopt into a fresh source job')
     snapshot = se.prepare_job(character, job, source, root)

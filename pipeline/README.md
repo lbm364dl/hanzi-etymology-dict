@@ -92,6 +92,10 @@ that preserves size and mtime. Source repairs are a separate producer transactio
 raw OCR and exact independent scan receipts, serialize shared overlay/corpus writes, rebuild
 and verify consumer evidence before any dependent character can pass its source gates.
 Attention states are genuine unfinished work, not completed entries or invented approvals.
+An explicit single-page citation's scan SHA-256 must match that PDF page in the
+registered corpus. A hash from another page cannot be overridden by supplied
+scan context or a passing coverage review. Mismatched authored provenance requires
+fresh research and independent reviews; cached adoption receipts remain invalid.
 
 ### Continuing failed editorial stages
 

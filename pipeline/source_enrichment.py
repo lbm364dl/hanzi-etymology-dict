@@ -275,6 +275,8 @@ def _published_matches(job, source, root):
         return False
     article, dossier, reviews = [editorial.read(job / n) for n in required]
     try:
+        if _source_scan_binding_errors(source, article, dossier):
+            return False
         editorial.validate_reviews(article, dossier, reviews)
         canonical_article, canonical_dossier = _canonical(root, article["character"])
         located = _load_source_tools().locate_sources({"schema_version": 1, "sources": [source]},
@@ -1588,6 +1590,11 @@ def _book_identity_matches(label, source):
                 or (book_id and book_id in label))
 
 
+def _source_scan_binding_errors(source, article, dossier):
+    from pipeline.source_scan_binding import used_mismatches
+    return used_mismatches(source, article, dossier)
+
+
 def _has_page_provenance(evidence):
     pattern = re.compile(r"(?:\bPDF\s+page\b|\bprinted\s+page\b|\bpages?\b|\bpp?\.?\s*|頁|页)\s*\d+", re.I)
     return any(pattern.search(str(evidence.get(field, '')))
@@ -2094,6 +2101,9 @@ def _publish_job_locked(job, source, root=ROOT):
     if source.get("github_repo") and state.get("issue_sync_status") != "synced":
         raise ValueError("Issue tracking must sync successfully before publication")
     article, dossier = editorial.read(job / "article.json"), editorial.read(job / "dossier.json")
+    binding_errors = _source_scan_binding_errors(source, article, dossier)
+    if binding_errors:
+        raise ValueError('Cited scan provenance differs from its registered PDF page: ' + str(binding_errors))
     if not _article_used_book_evidence(audit, article, dossier):
         raise ValueError("Registered book evidence is not cited by the article")
     reviews = editorial.read(job / "reviews.json")
