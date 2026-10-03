@@ -335,6 +335,10 @@ class Collector:
             finished_epoch = _parse_time(meta.get("finished_at"))
             elapsed_end = (finished_epoch if finished_epoch is not None else now)
             modified = file_stat.st_mtime if file_stat else 0
+            failure = {}
+            if state == 'failed':
+                from pipeline.agent_failures import failure_metadata
+                failure = failure_metadata(RuntimeError(meta.get('error', '')), path.parent)
             row = {"role": meta.get("role"), "status": state, "model": meta.get("model"),
                    "reasoning": meta.get("reasoning"), "path": _relative(path.parent, self.root),
                    "pid": process.get("pid") if process else None,
@@ -347,7 +351,10 @@ class Collector:
                        if elapsed_start is not None and not (liveness == "stale" and finished_epoch is None) else None,
                    "updated_at": datetime.fromtimestamp(modified, timezone.utc).isoformat()
                        if modified else None,
-                   "liveness": liveness, "error": _compact(meta.get("error"))}
+                   "liveness": liveness, "error": _compact(meta.get("error")),
+                   "failure_kind": meta.get('failure_kind', failure.get('failure_kind')),
+                   "transport_diagnostics": meta.get('transport_diagnostics',
+                                                     failure.get('transport_diagnostics', []))}
             metas.append((modified, row,
                           str(output_path), process))
         metas.sort(key=lambda item: (item[0], item[1]["path"]))

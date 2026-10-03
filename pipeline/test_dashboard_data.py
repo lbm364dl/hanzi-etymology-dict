@@ -58,6 +58,21 @@ class DashboardDataTests(unittest.TestCase):
             self.assertEqual(queue['finished_at'],120)
             self.assertEqual(queue['error'],'timeout')
 
+    def test_failed_stage_exposes_observed_transport_without_rewriting_receipt(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp); job=root/'runs/source/ziyuan-2012/672C'; stage=job/'research'
+            save(job/'source.json',{'character':'本','source_id':'ziyuan-2012'})
+            save(stage/'meta.json',{'role':'research','status':'failed',
+                 'started_at':100,'finished_at':700,'error':'process timed out'})
+            (stage/'stderr.log').write_text('failed to lookup address information: Try again')
+            original=(stage/'meta.json').read_bytes()
+            snapshot=Collector(root,proc_root=root/'no-proc').snapshot()
+            observed=snapshot['jobs'][0]['stage_history'][0]
+            self.assertEqual(observed['transport_diagnostics'],['dns_lookup_failed'])
+            self.assertEqual(observed['elapsed_seconds'],600)
+            self.assertEqual(observed['status'],'failed')
+            self.assertEqual((stage/'meta.json').read_bytes(),original)
+
     def test_snapshot_joins_queue_jobs_live_proc_source_and_issue_summaries(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
