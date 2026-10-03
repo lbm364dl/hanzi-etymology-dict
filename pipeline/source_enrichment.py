@@ -674,6 +674,11 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
         'occurrence; do not substitute a scan-file path for a claim location. '
         'Preserve the printed identity gap even when independent support makes '
         'it immaterial to this exact article.')
+    scans = inputs['feedback']['source_scan_images']
+    if not scans:
+        raise ValueError('Source resolution requires original source scan attachments')
+    # Check availability and supplied pixel bindings before spending a review call.
+    editorial.source_scan_attachments(scans)
     directory = job / "source-resolution"
     attempt = 1
     while directory.exists():

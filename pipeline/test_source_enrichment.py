@@ -276,8 +276,16 @@ class SourceEnrichmentTests(unittest.TestCase):
                 validator.validate([{**valid, 'observed_literal':None}])
                 raise RuntimeError('Transport checked')
         with patch('pipeline.source_repairs.verify', return_value={'key':'repair', 'before':'兒', 'after':'皃'}):
-            with self.assertRaisesRegex(RuntimeError, 'Transport checked'):
+            with self.assertRaisesRegex(ValueError, 'requires original source scan'):
                 source_enrichment.resolve_source_findings(job, Runner(), repair_checks=[{'key':'repair'}])
+            self.assertFalse((job/'source-resolution').exists())
+            scan = self.root/'resolution-scan.png'
+            from PIL import Image
+            Image.new('RGB', (2, 2), 'white').save(scan)
+            source_context = [{'path': str(scan), 'pdf_page': 1}]
+            with self.assertRaisesRegex(RuntimeError, 'Transport checked'):
+                source_enrichment.resolve_source_findings(job, Runner(), source_context=source_context,
+                                                         repair_checks=[{'key':'repair'}])
 
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
