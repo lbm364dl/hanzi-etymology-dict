@@ -320,6 +320,10 @@ conflicting accounts and gaps in the dossier. Research earliest attested senses,
 semantic extensions and graph borrowing separately from graphic development. Do not infer
 chronology from a dictionary gloss list. Record dated attestations where available and gaps where
 semantic links are not established. Prefer primary paleographic/dictionary references.
+Record an inspected source's explicit proposed semantic mechanism separately from the
+chronology of attestations. Missing dates do not erase that proposed explanation. Preserve
+its actual starting point: a graphic idea such as dividing an object is not automatically
+an attested word sense or the same proposal as a different source's original-meaning account.
 Research significant components as characters in their own right, including traditional forms
 behind simplified replacements. Follow one additional component level when it resolves a named
 formation question; keep this within the search budget below. A host entry alone may omit the

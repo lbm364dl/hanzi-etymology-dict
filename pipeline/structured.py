@@ -348,6 +348,11 @@ explicitly identified as the earliest attested use. Several senses may share tha
 without established priority between them. An undated old dictionary or classical use alone
 is historical, not automatically earliest_attested. The label never establishes original meaning.
 Connect senses only when evidence supports the development; a list of modern glosses does not establish chronology.
+An explicit sourced proposal for a semantic mechanism may be reported with its qualification
+even when the dates or historical sequence remain unresolved. Do not replace that proposal
+with a blanket statement that no path is known. Preserve its exact starting point; if it
+starts from a graphic idea rather than an independently attested sense, explain it in cited
+expert prose without inventing a sense node or an edge with unsupported endpoints.
 Do not create two sense records with the same use and overlapping teaching synonyms merely because
 different sources or periods word the gloss differently. Merge duplicate uses, preserving their
 attestations and citations in one sense; keep genuinely distinct uses separate.
@@ -664,6 +669,11 @@ limitation is appropriately scoped to the evidence and the particular claim. Rej
 unsupported chronology, claims of scholarly consensus, or absolute impossibility when asserted;
 do not manufacture such claims from a narrower ordinary statement.
 Disputed interpretations and genuinely unsupported transitions must remain qualified or omitted.
+Check whether a blanket unresolved-development statement omits an explicit proposal in the
+cited research. A proposed mechanism and an unestablished dated sequence are different claims;
+retain the relevant qualified proposal without treating it as consensus or proven chronology.
+Do not require a semantic-development edge when the proposal starts from a graphic idea
+rather than an independently supported sense represented by the article's nodes.
 Attributed classical passages or historical dictionary quotations can document a historical
 use without a dated surviving manuscript. Distinguish that ordinary historical-use claim
 from earliest attestation, the age of a witness, or a dated sequence of semantic development;
