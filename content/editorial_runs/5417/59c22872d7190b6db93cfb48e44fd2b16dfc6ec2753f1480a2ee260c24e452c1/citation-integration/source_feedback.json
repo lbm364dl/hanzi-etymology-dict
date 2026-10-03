@@ -1,0 +1,44 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "current_uncited_book_records": [
+    {
+      "research_output": "initial-followup/research/result.json",
+      "research_receipt_hash": "601b4e56059e64caf49933f59420b1682cfa1620f2117dab80b8d19084c79cc6",
+      "research_result_hash": "f69455083058b44c8637e9428df893a782c736406609b20d204b06c2e84127ab",
+      "source": "《字源》, edited by 李學勤; 2012, 天津古籍出版社 / 辽宁人民出版社, ISBN 9787552800692",
+      "field": "PDF page 1339; printed page 1324; modern Pinyin appendix",
+      "text": "Directly inspected the scan. The appendix lists 妈 mā, 麻 má, 马 mǎ, 骂 mà, and 吗 ma (轻声) as examples of the four tones and neutral tone. This is a modern pronunciation chart, not historical evidence for 吗’s formation or the particle’s origin.",
+      "evidence_ids": [
+        "X-b57fc8149fd9ad000253"
+      ]
+    },
+    {
+      "research_output": "initial-followup/research/result.json",
+      "research_receipt_hash": "601b4e56059e64caf49933f59420b1682cfa1620f2117dab80b8d19084c79cc6",
+      "research_result_hash": "f69455083058b44c8637e9428df893a782c736406609b20d204b06c2e84127ab",
+      "source": "《字源》, edited by 李學勤; 2012, 天津古籍出版社 / 辽宁人民出版社, ISBN 9787552800692",
+      "field": "PDF page 1333; printed page 1318; Modern Chinese Common Character List",
+      "text": "Directly inspected the scan. 吗 appears among the listed common characters; this is a list occurrence, not a headword entry or etymological explanation.",
+      "evidence_ids": [
+        "X-9833f05d3544ef01f8b4"
+      ]
+    }
+  ],
+  "citation_integration_policy": "Research has already returned the supplied exact page-specific book records. Use the current retained evidence IDs on article claims that these records support. Unchanged supported prose plus a citation is sufficient. Do not invent support, put IDs in prose, or cite unrelated claims. If no record supports an article claim, retain a precise research gap. Obtain fresh independent factual and readability reviews."
+}

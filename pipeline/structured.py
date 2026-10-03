@@ -287,6 +287,12 @@ join. Do not describe a central stem as extending below side arms when only its 
 branches descend, or confuse the bottom of an outline with the ends of upright marks.
 Prior caption proposals and review descriptions are hypotheses; inspect the actual pixels
 again rather than repeating their geometry. Avoid stroke-order claims from a static redraw.
+Keep captions focused on the visible contrast that helps the explanation, such as
+vertical versus side-by-side arrangement. Do not add an exhaustive stroke inventory
+or relative-size claim merely to sound precise. Include such detail only when it is
+explanatorily useful and clearly established by the actual selected pixels. Removing
+unnecessary decorative geometry is preferable to inventing it; essential visible
+distinctions and supported historical interpretations still need accurate explanation.
 Choose the small set that actually helps explain this character; return historical_glyphs with
 items and limitations. Return only each chosen item's id, caption, alt, selection_reason and
 evidence_ids. The harness attaches its unchanged image URL, source, period, tradition and rights

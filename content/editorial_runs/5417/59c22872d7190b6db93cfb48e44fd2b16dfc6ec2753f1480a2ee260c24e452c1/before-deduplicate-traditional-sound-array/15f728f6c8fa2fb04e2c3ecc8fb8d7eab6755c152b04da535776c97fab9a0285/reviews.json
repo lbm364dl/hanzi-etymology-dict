@@ -1,0 +1,20 @@
+[
+  {
+    "role": "factual",
+    "verdict": "pass",
+    "findings": [],
+    "article_hash": "15f728f6c8fa2fb04e2c3ecc8fb8d7eab6755c152b04da535776c97fab9a0285",
+    "dossier_hash": "c850dea3fa837d1200a6ad48744ee652eb856eb86cfcd221575cde760fee9538",
+    "reviewer": "gpt-6-luna:low:factual:01a0ff29-b537-77c2-b6f8-8ab00665be74"
+  },
+  {
+    "role": "readability",
+    "verdict": "revise",
+    "findings": [
+      "In `components[3].sound[0]`, replace citation `X-b57fc8149fd9ad000253`: its appendix directly lists 马 mǎ and 吗 ma, so it supports the comparison only for those simplified forms, not this traditional-host comparison. Cite evidence verifying 马 mǎ and 吗 ma for this record, or remove the duplicate comparison; retain the traditional comparison in `components[1].sound[0]` with its CNS evidence."
+    ],
+    "article_hash": "15f728f6c8fa2fb04e2c3ecc8fb8d7eab6755c152b04da535776c97fab9a0285",
+    "dossier_hash": "c850dea3fa837d1200a6ad48744ee652eb856eb86cfcd221575cde760fee9538",
+    "reviewer": "gpt-6-luna:low:readability:01a0ff29-eace-7970-af92-436ef3250198"
+  }
+]
