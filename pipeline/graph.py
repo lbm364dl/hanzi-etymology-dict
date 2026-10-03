@@ -21,6 +21,8 @@ def export_graph(directory=ROOT / 'content/entries', characters=None):
         included.append(char)
         evidence = {item['id']: item for item in entry['evidence']}
         senses = {item['id']: item for item in article['meaning_history']['senses']}
+        marks = {item['element_id']: item for item in article['components']
+                 if item.get('element_kind') == 'noncharacter_mark'}
         for relationship in article['relationships']:
             endpoints = {}
             for side in ('subject', 'object'):
@@ -29,7 +31,14 @@ def export_graph(directory=ROOT / 'content/entries', characters=None):
                 endpoints[side] = key
                 if key not in nodes:
                     nodes[key] = {'id': key, 'kind': node['kind'], 'form': node['id']}
-                    if node['kind'] == 'sense':
+                    if node['kind'] == 'component' and node['id'] in marks:
+                        mark = marks[node['id']]
+                        nodes[key].pop('form')
+                        nodes[key].update(element_kind='noncharacter_mark',
+                                          display_label=mark['element_label'],
+                                          context_character=mark.get('scope_character', char),
+                                          character_entry=None)
+                    elif node['kind'] == 'sense':
                         nodes[key]['sense'] = senses[node['id']]
                     else:
                         nodes[key]['character_entry'] = node['id'] if len(node['id']) == 1 else None
@@ -47,7 +56,7 @@ def export_graph(directory=ROOT / 'content/entries', characters=None):
             sound_limitations = []
             if relationship['predicate'] == 'phonetic_component_of':
                 for component in article['components']:
-                    if (relationship['subject']['id'] in (component['form'], component['origin_form'])
+                    if (relationship['subject']['id'] in (component.get('form'), component.get('origin_form'), component.get('element_id'))
                             and relationship['object']['id'] == component.get('scope_character', char)):
                         sound.extend({**comparison, 'evidence': [evidence[id] for id in comparison['evidence_ids']]}
                                      for comparison in component.get('sound', []))
