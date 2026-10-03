@@ -93,6 +93,29 @@ class ComponentScopeTests(unittest.TestCase):
         self.assertIn("Do not automatically match words", REVIEW_V2_POLICY)
         self.assertIn("Reject invented readings or phonetic roles", REVIEW_V2_POLICY)
 
+    def test_attested_historical_use_certainty_is_separate_from_originality_proposal(self):
+        from pipeline.editorial import assemble_article
+        article, dossier = noncharacter_mark_fixture()
+        root_sense = article["meaning_history"]["senses"][0]
+        root_sense.update(
+            status="historical", certainty="established",
+            text="An older cited passage records 本 for a plant root.")
+        article["formation"].update(
+            text="The lower mark may identify the root in the proposed original analysis; its priority is unresolved.",
+            evidence_ids=["source:1"])
+        validate_article(article, dossier)
+        assembled = assemble_article(article, dossier)
+        edge = next(edge for edge in assembled["relationships"]
+                    if edge["predicate"] == "has_sense" and edge["object"]["id"] == "本:root")
+        self.assertEqual(root_sense["certainty"], "established")
+        self.assertEqual(edge["certainty"], "established")
+        for policy in (V2_POLICY, REVIEW_V2_POLICY):
+            contract = " ".join(policy.split())
+            self.assertIn("attested use", contract)
+            self.assertIn("original-priority", contract)
+            self.assertIn("lower use certainty", contract)
+            self.assertIn("has_sense edge represents", contract)
+
     def test_sourced_noncharacter_mark_has_scoped_opaque_identity(self):
         article, dossier = noncharacter_mark_fixture()
         validate_article(article, dossier)

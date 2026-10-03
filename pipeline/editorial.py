@@ -474,9 +474,15 @@ Repeated source assertions are not independent corroboration. State disagreement
 Check that uncertainty agrees across prose, sense metadata and generated relationships.
 A source's established existence does not make its proposed original meaning established:
 certainty describes the substantive claim represented by the sense, not whether a source
-reports that proposal. When original-meaning analyses compete, scope the sense gloss and
-certainty to the unresolved claim; preserve supported current meanings separately. Reviewers
-must inspect this agreement even when the prose already contains an appropriate qualification.
+reports that proposal. When a use is independently attested but its status as the original
+meaning is only proposed, keep the sense record about the attested use and set its certainty
+according to evidence for that use (established when occurrence is established). State original
+priority separately in cited formation/history/limitations prose with its own qualification;
+do not bundle it into the sense text or lower use certainty merely because priority is unresolved.
+A generated has_sense edge represents the attested use, not the separate original-priority proposal.
+When original-meaning analyses compete, scope any sense representing that unresolved proposal to
+its substantive claim; preserve supported current meanings separately. Reviewers must inspect
+this agreement even when the prose already contains an appropriate qualification.
 When competing analyses assign different identities or roles to the same strokes, keep those
 accounts distinct in both learner and expert prose. Do not describe a shared semantic split
 unless each account actually supports it. A later regularized shape is not evidence that the

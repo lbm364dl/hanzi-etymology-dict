@@ -404,6 +404,11 @@ Do not create a sense node merely because one source proposes an original meanin
 word use is not independently attested. Explain the competing proposal in cited prose and
 limitations instead; a disputed proposed transition must not force a fabricated source sense
 or derived graph edge. Preserve the proposed analysis without presenting it as an attested use.
+When a use is independently attested but its priority as the original meaning is only proposed,
+keep the sense record and its certainty about that attested use (established when occurrence is
+established); state the uncertain original-priority claim separately in cited prose or limitations.
+Do not bundle both claims in one sense text or lower use certainty because priority is unresolved.
+Its generated has_sense edge represents the attested use, not the original-priority proposal.
 Use earliest_attested for a sourced use in the earliest documented corpus or period, or one
 explicitly identified as the earliest attested use. Several senses may share that early period
 without established priority between them. An undated old dictionary or classical use alone
@@ -710,7 +715,11 @@ or a previous review's requested correction. Before reporting that an evidence I
 is present or absent from an array, inspect that exact current array. Evidence
 retained in the dossier, another sense, or a prior finding is not a citation on
 this claim. When an array already has the requested correction, do not repeat the
-obsolete finding. Check the generated edge against its actual current source sense.
+obsolete finding. Check the generated edge against its actual current source sense. A historical use can be
+independently established while its priority as an original meaning remains proposed: retain
+certainty for the attested use, state the original-priority uncertainty separately in cited prose,
+and ensure the generated has_sense edge represents only the attested use. Do not lower use certainty
+solely because historical priority is unresolved.
 When attached_source_scans is present, compare substantive book-based component and form claims
 with the exact image attachments, including ordinary lookalike characters inside fluent OCR.
 The research agent's statement that it inspected a scan does not replace this independent check.
