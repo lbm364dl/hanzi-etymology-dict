@@ -83,6 +83,31 @@ class NewReaderStyleTests(unittest.TestCase):
         repaired = repair_reader_prose(article, {"evidence": []}, Path("unused"), NeverRunner())
         self.assertEqual(repaired, article)
 
+    def test_failed_citation_repair_retries_without_mutating_evidence(self):
+        article = {"formation": {"text": "A proposal [X-source123].",
+                                  "evidence_ids": ["X-source123"], "certainty": "disputed"}}
+        original = copy.deepcopy(article)
+        dossier = {"evidence": [{"id": "X-source123", "source": "A source"}]}
+
+        class FixtureRunner:
+            def __init__(self):
+                self.calls = []
+
+            def run(self, role, inputs, schema, directory):
+                self.calls.append((copy.deepcopy(inputs), directory))
+                text = "A proposal [X-source123]." if len(self.calls) == 1 else "A proposal."
+                return {"edits": [{"field": "formation/text", "text": text}]}
+
+        runner = FixtureRunner()
+        repaired = repair_reader_prose(article, dossier, Path("unused"), runner)
+        self.assertEqual(len(runner.calls), 2)
+        self.assertIn("validation_error", runner.calls[1][0])
+        self.assertEqual(runner.calls[1][1].name, "prose-repair-retry-1")
+        self.assertEqual(article, original)
+        self.assertEqual(repaired["formation"]["evidence_ids"], ["X-source123"])
+        self.assertEqual(repaired["formation"]["certainty"], "disputed")
+        validate_new_reader_style(repaired, dossier)
+
     def test_source_name_in_summary_text_is_repaired_without_touching_metadata(self):
         dossier = {"evidence": [{"source": "李學勤主編《字源》"}]}
         article = {

@@ -110,8 +110,31 @@ def triage_job(job, source, runner):
                       'evidence_ids and confirm the requested ID is actually absent there. '
                       'Do not repeat an archived finding when that citation is already present. '
                       'Identify a concrete current defect or unapplied repair. '
+                      'Existing issue records establish identities, not current defects. '
+                      'An archived failed attempt alone does not establish a current pipeline '
+                      'failure: name a current failing stage or a failure reproduced against '
+                      'the current contract. Check current_source_page_metadata before '
+                      'alleging that a corpus printed-page field is still absent. '
                       'Umbrella work issues are tracking parents, not finding identities. '
                       'Keep public issue text concise and paraphrase books instead of quoting passages.'}
+    checkpoint_path = job / 'source_checkpoint.json'
+    corpus_path = Path(source.get('corpus_path', ''))
+    if checkpoint_path.is_file() and corpus_path.is_file():
+        locator = editorial.read(checkpoint_path).get('locator', {})
+        pages = {candidate['pdf_page_1based']
+                 for lead in locator.get('source_leads', [])
+                 for candidate in lead.get('candidates', []) if 'pdf_page_1based' in candidate}
+        pages.update(scan['pdf_page'] for scan in locator.get('source_scan_images', [])
+                     if 'pdf_page' in scan)
+        current_metadata = []
+        with corpus_path.open() as stream:
+            for line in stream:
+                page = json.loads(line)
+                if page.get('pdf_page_1based') in pages and page.get('book_id') == source.get('book_id'):
+                    current_metadata.append({key: page.get(key) for key in (
+                        'page_id', 'pdf_page_1based', 'printed_page', 'source_sha256',
+                        'evidence_sha256', 'metadata_provenance')})
+        inputs['current_source_page_metadata'] = current_metadata
     known_by_key = {f["key"]: f for f in known}
     schema = copy.deepcopy(FINDING_SCHEMA)
     schema["properties"]["findings"]["items"]["properties"]["existing_key"]["enum"] = [None, *known_by_key]

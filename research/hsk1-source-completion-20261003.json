@@ -1,7 +1,7 @@
 {
   "source_id": "ziyuan-2012",
   "characters_total": 300,
-  "verified_source_complete": 22,
+  "verified_source_complete": 21,
   "scope": "Entire selected cohort; only current exact source/publication gates count, not legacy approvals.",
   "scan_errors": [],
   "characters": [
@@ -73,12 +73,17 @@
     },
     {
       "character": "八",
-      "verified_source_completion": true,
+      "verified_source_completion": false,
       "jobs": [
         {
           "job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/ba-516b-current-sense-recovery-20261003/ziyuan-2012/516B",
           "recorded_status": "published",
-          "verified_source_completion": true
+          "verified_source_completion": false
+        },
+        {
+          "job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/ba-metadata-applied-20261003/ziyuan-2012/516B",
+          "recorded_status": "needs_source_research",
+          "verified_source_completion": false
         },
         {
           "job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/hsk1-next-three-20261003/ziyuan-2012/516B",
@@ -121,24 +126,41 @@
     },
     {
       "character": "白",
-      "verified_source_completion": false,
+      "verified_source_completion": true,
       "jobs": [
         {
           "job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/bai-two-20261003/ziyuan-2012/767D",
-          "recorded_status": "running",
-          "verified_source_completion": false
+          "recorded_status": "published",
+          "verified_source_completion": true
         }
       ]
     },
     {
       "character": "百",
       "verified_source_completion": false,
-      "jobs": []
+      "jobs": [
+        {
+          "job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/bai-two-20261003/ziyuan-2012/767E",
+          "recorded_status": "needs_revision",
+          "verified_source_completion": false
+        }
+      ]
     },
     {
       "character": "班",
       "verified_source_completion": false,
-      "jobs": []
+      "jobs": [
+        {
+          "job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/ban-next-20261003/ziyuan-2012/73ED",
+          "recorded_status": "needs_revision",
+          "verified_source_completion": false
+        },
+        {
+          "job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/ban-next-followup-20261003/ziyuan-2012/73ED",
+          "recorded_status": "approved",
+          "verified_source_completion": false
+        }
+      ]
     },
     {
       "character": "半",
@@ -184,7 +206,23 @@
     {
       "character": "帮",
       "verified_source_completion": false,
-      "jobs": []
+      "jobs": [
+        {
+          "job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/bang-next-20261003/ziyuan-2012/5E2E",
+          "recorded_status": "needs_revision",
+          "verified_source_completion": false
+        },
+        {
+          "job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/bang-next-20261003-recovery-1/ziyuan-2012/5E2E",
+          "recorded_status": "needs_revision",
+          "verified_source_completion": false
+        },
+        {
+          "job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/bang-next-20261003-recovery-2/ziyuan-2012/5E2E",
+          "recorded_status": "running",
+          "verified_source_completion": false
+        }
+      ]
     },
     {
       "character": "包",
@@ -1615,7 +1653,7 @@
     },
     {
       "character": "小",
-      "verified_source_completion": true,
+      "verified_source_completion": false,
       "jobs": [
         {
           "job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/book-citation-integration/ziyuan-2012/5C0F",
@@ -1630,7 +1668,7 @@
         {
           "job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/xiao-explicit-book-citation/ziyuan-2012/5C0F",
           "recorded_status": "published",
-          "verified_source_completion": true
+          "verified_source_completion": false
         }
       ]
     },

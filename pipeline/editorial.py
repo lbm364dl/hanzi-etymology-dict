@@ -1799,12 +1799,34 @@ def repair_reader_prose(article, dossier, directory, runner):
                   "maxItems": len(targets), "items": {"type": "object", "additionalProperties": False,
                       "required": ["field", "text"], "properties": {
                           "field": {"enum": list(targets)}, "text": {"type": "string", "minLength": 1}}}}}}
-    result = runner.run("prose_repair", {"article": article, "dossier": dossier,
+    forbidden = "|".join([r"ref\d{3}", *map(re.escape, sorted(known_ids))])
+    schema["properties"]["edits"]["items"]["properties"]["text"]["pattern"] = (
+        r"^(?![\s\S]*\b(?:" + forbidden + r")\b)[\s\S]+$")
+    inputs = {"article": article, "dossier": dossier,
         "paragraphs": [{"field": field, **{k:v for k,v in target.items() if k != "path"}}
-                       for field, target in targets.items()]}, schema, Path(directory) / "prose-repair")
-    Draft202012Validator(schema).validate(result)
-    if {edit["field"] for edit in result["edits"]} != set(targets):
-        raise ValueError("Reader-prose repair must edit every flagged field exactly once")
+                       for field, target in targets.items()],
+        'citation_boundary': 'Evidence IDs stay in the existing evidence_ids arrays. '
+            'Return only character explanation text, with no canonical IDs or refNNN '
+            'aliases anywhere in text. Do not append bracketed citation lists. '
+            'Preserve facts and qualifications; these edits receive fresh reviews.'}
+    for attempt in range(3):
+        stage = Path(directory) / ('prose-repair' if attempt == 0 else f'prose-repair-retry-{attempt}')
+        try:
+            result = runner.run('prose_repair', inputs, schema, stage)
+            Draft202012Validator(schema).validate(result)
+            fields = [edit['field'] for edit in result['edits']]
+            if len(fields) != len(set(fields)) or set(fields) != set(targets):
+                raise ValueError('Reader-prose repair must edit every flagged field exactly once')
+            for edit in result['edits']:
+                finding = reader_prose_finding(edit['text'], source_names, known_ids)
+                if finding:
+                    raise ValueError(f"Reader-prose repair left a reader-style violation in {edit['field']}: {finding}")
+            break
+        except (ValueError, ValidationError) as exc:
+            if attempt == 2:
+                raise
+            inputs = {**inputs, 'validation_error': str(exc),
+                      'repair_task': 'Correct the actual failed text contract. Remove citation labels from text, preserve the existing citations separately, and preserve every substantive claim and qualification. No metadata edits.'}
     repaired = copy.deepcopy(article)
     for edit in result["edits"]:
         finding = reader_prose_finding(edit["text"], source_names, known_ids)

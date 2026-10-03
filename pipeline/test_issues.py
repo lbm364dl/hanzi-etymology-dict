@@ -8,6 +8,29 @@ from pipeline import editorial
 
 
 class IssueTests(unittest.TestCase):
+    def test_triage_sees_current_page_label_instead_of_stale_locator_null(self):
+        with tempfile.TemporaryDirectory() as temp:
+            job = Path(temp)
+            corpus = job / 'corpus.jsonl'
+            corpus.write_text('\n'.join(json.dumps(row) for row in [
+                {'book_id': 'edition', 'pdf_page_1based': 76, 'printed_page': 64,
+                 'source_sha256': 'pixels', 'text': 'Do not send full page text',
+                 'metadata_provenance': {'metadata_sha256': 'verified-overlay'}},
+                {'book_id': 'other-edition', 'pdf_page_1based': 76, 'printed_page': 99},
+                {'book_id': 'edition', 'pdf_page_1based': 77, 'printed_page': None}]) + '\n')
+            editorial.write(job / 'status.json', {'character': '八'})
+            editorial.write(job / 'source_checkpoint.json', {'locator': {'source_leads': [
+                {'candidates': [{'pdf_page_1based': 76, 'printed_page': None}]}]}})
+            class Runner:
+                model, reasoning = 'gpt-6-luna', 'low'
+                def run(self, role, inputs, schema, directory):
+                    observed = inputs['current_source_page_metadata']
+                    assert len(observed) == 1 and observed[0]['printed_page'] == 64
+                    assert observed[0]['metadata_provenance']['metadata_sha256'] == 'verified-overlay'
+                    assert 'text' not in observed[0]
+                    return {'findings': []}
+            triage_job(job, {'id': 'book', 'book_id': 'edition', 'corpus_path': str(corpus)}, Runner())
+
     def test_full_parent_reports_actionable_capacity_without_duplicate_or_post(self):
         finding = dict(key='book:claim', kind='factual', title='Claim',
                        details='A supported finding.', verification='Fresh review.')
