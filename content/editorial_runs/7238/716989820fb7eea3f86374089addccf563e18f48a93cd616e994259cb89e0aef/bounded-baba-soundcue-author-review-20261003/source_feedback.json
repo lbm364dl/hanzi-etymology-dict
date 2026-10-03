@@ -1,0 +1,15 @@
+{
+  "allowed_edit_paths": [
+    "learner/components/1/text"
+  ],
+  "instruction": "Make only the requested learner-card clarification at the exact current path /learner/components/1/text. Briefly identify the similar pair as Zhengzhang Old Chinese 巴 *praː and 爸 *praːs, and say this supports the proposed sound cue; retain the qualification that 巴's original name and referent remain unsettled. Existing cited evidence on this card includes the sound proposal/reconstructions and competing 巴 identity accounts. Keep citations valid and scoped. Do not add unsupported claims or attach the p.1289–1290 book record simply because it is available; any optional source integration must be evidence-based and separately checked. Preserve every other article field, evidence array, component, relationship, and dossier field exactly. This is a bounded patch, not a rewrite.",
+  "prior_review_proposals": [
+    {
+      "role": "readability",
+      "text": "`learner.components[1].text` says 巴 is the sound component with a similar Old Chinese reconstruction, but does not explain why the pair supports the role. Briefly name the similar Zhengzhang Old Chinese forms supporting the proposed sound cue, while keeping 巴’s original name/referent unsettled and citing existing sound and identity evidence."
+    }
+  ],
+  "source_followup_questions": {
+    "instruction": "For this edit, verify only the requested current learner text against the exact existing cited records. The requested sound comparison is 巴 *praː vs 爸 *praːs in Zhengzhang Old Chinese; competing 巴 name/referent interpretations remain unsettled. Do not treat availability of X-37869a6afe8b21a152d8 as an instruction to cite it."
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "allowed_edit_paths": [
+    "components/1/text",
+    "components/1/evidence_ids",
+    "uncertainties/1/text",
+    "uncertainties/1/evidence_ids"
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1289/source.png",
+      "pdf_page": 1289,
+      "printed_page": 1274,
+      "source_pixel_sha256": "f58209fe0643ceb5dade5313ccc232a639f08517b607281c31928fac654525f8"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1290/source.png",
+      "pdf_page": 1290,
+      "printed_page": 1275,
+      "source_pixel_sha256": "cdbbb32e85d8744b8f2da12d382de5761131aac5b860fdfa9bb3200588370b6a"
+    }
+  ],
+  "instruction": "Integrate dossier evidence X-37869a6afe8b21a152d8 into the already-qualified account of 巴's competing possible referents. Its inspected 字源 passage at PDF pp.1289–1290/printed pp.1274–1275 describes 巴 as shaped like a large-mouthed snake and proposes 巴蛇 as the original meaning; write this as that source's proposal, not established fact. Keep separate the modern kneeling-person interpretation, which is supported by its existing evidence. In the appropriate expert component and uncertainty fields, cite X-378 for the source-specific snake description/proposal and preserve the uncertainty about 巴's original name/referent. Do not let X-378 support an oracle-bone glyph or a phonetic comparison. Do not change the existing Zhengzhang sound pair, any phonetic citation, the learner layer, glyph selection, history, other citations, or any unrelated prose. The allowed paths are the only fields to edit. Fresh reviews will see both actual source-page scans.",
+  "additional_research_context": "Exact bounded source finding to integrate: existing dossier record X-37869a6afe8b21a152d8 reports that the 字源 巴 entry (PDF p.1289, printed1274) describes the graph as a snake with a large mouth and proposes 巴蛇 as original meaning; PDF p.1290 (printed1275) continues with later phonetic loans unrelated to this proposed meaning. The article's competing kneeling-person proposal remains attributed only to its existing evidence. X-378 neither displays an oracle-bone 巴 specimen nor supports the 爸/巴 Zhengzhang comparison.",
+  "prior_review_proposals": [
+    {
+      "role": "source-integration",
+      "text": "Integrate the existing scanned 字源 巴 account into the qualified competing-referent discussion, with a specific citation to X-378 and explicit language that giant-snake is a source-reported proposal; retain the competing kneeling-person account and unsettled original identity/referent."
+    }
+  ]
+}
