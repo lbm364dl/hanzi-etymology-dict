@@ -13,6 +13,27 @@ from pipeline import editorial
 
 
 class IssueTests(unittest.TestCase):
+    def test_remote_sync_retry_preserves_finding_packet_but_new_review_changes_it(self):
+        with tempfile.TemporaryDirectory() as temp:
+            job = Path(temp)
+            state = {'character': '八', 'status': 'approved', 'article_hash': 'original'}
+            editorial.write(job / 'status.json', state)
+            packets = []
+            class Runner:
+                model, reasoning = 'gpt-6-luna', 'low'
+                def run(self, role, inputs, schema, directory):
+                    packets.append(inputs)
+                    return {'findings': []}
+            runner = Runner()
+            triage_job(job, {'id': 'fixture'}, runner)
+            editorial.write(job / 'status.json', {**state, 'issue_sync_status': 'pending',
+                                                   'issue_receipts_hash': 'remote-retry'})
+            triage_job(job, {'id': 'fixture'}, runner)
+            self.assertEqual(packets[0], packets[1])
+            editorial.write(job / 'status.json', {**state, 'article_hash': 'new-candidate'})
+            triage_job(job, {'id': 'fixture'}, runner)
+            self.assertNotEqual(packets[1], packets[2])
+
     def test_triage_sees_current_page_label_instead_of_stale_locator_null(self):
         with tempfile.TemporaryDirectory() as temp:
             job = Path(temp)

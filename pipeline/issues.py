@@ -26,6 +26,12 @@ GH_TIMEOUT_SECONDS = 60
 SYNC_LOCK_WAIT_SECONDS = 90
 
 
+def triage_state(state):
+    """A remote sync failure changes workflow, not the underlying editorial finding."""
+    return {key: value for key, value in state.items()
+            if key not in ('issue_sync_status', 'issue_receipts_hash')}
+
+
 def triage_job(job, source, runner):
     """Use a separate Luna low agent to turn actual findings into issue records."""
     import re
@@ -103,7 +109,7 @@ def triage_job(job, source, runner):
         'dossier_hash': editorial.digest(current_dossier),
         'evidence': [e for e in current_dossier.get('evidence', [])
                      if re.search(r'(?<![\w-])' + re.escape(e['id']) + r'(?![\w-])', packet_text)]}
-    inputs = {'character': character, 'source': source, 'job_state': state,
+    inputs = {'character': character, 'source': source, 'job_state': triage_state(state),
               'actual_findings': records, 'existing_findings': known,
               'current_article': current_article, 'current_dossier_evidence': evidence_packet,
               'task': 'Track material findings with evidence. Rejected proposals are not factual errors. '
