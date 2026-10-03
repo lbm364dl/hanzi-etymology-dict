@@ -290,6 +290,13 @@ check the passage's end and any continuation before paraphrasing it. Check unusu
 characters, sound components and historical glyph references against the scan; an OCR typo can
 change the analysis even when the surrounding prose looks fluent. Record exact book edition,
 PDF page, verified printed page if known, and which words/forms were checked against the scan.
+On a page with several entries or columns, bind each paraphrase to its visible headword and
+paragraph. Follow the column order: a passage can continue at the top of the next column on
+the same page. Do not infer a next-page continuation from the bottom of the first column.
+When inspections disagree on a headword, component or passage, inspect a bounded original-pixel
+crop containing that occurrence and its adjacent anchor before synthesizing another account.
+Record the crop's original page and bounds. Check that each disputed word is inside the target
+passage; a correct reading from a neighboring entry is still incorrect evidence for this entry.
 Unverified OCR remains a locator lead, not cited evidence or corroboration. A previous agent's
 scan-check note is a useful lead with its own provenance; do not state that you personally inspected
 the scan unless you actually opened its pixels in this invocation. If direct viewing fails, identify

@@ -637,6 +637,10 @@ When attached_source_scans is present, compare substantive book-based component 
 with the exact image attachments, including ordinary lookalike characters inside fluent OCR.
 The research agent's statement that it inspected a scan does not replace this independent check.
 Report a mismatch against the cited claim and require corrected source evidence before approval.
+For multi-column dictionary pages, check the cited headword and paragraph together, including
+any continuation in the next column of the same page. A nearby entry's correctly read words
+do not support the target entry. If prior readings conflict, request or inspect a bounded
+original-pixel crop of the disputed passage rather than accepting a fluent combined paraphrase.
 A visible grouped assembly may be represented by its accurate subcomponent records, with their
 joint relationship explained in prose, when no verified literal identifier represents the whole.
 Before requesting a current-form split, verify the complete visible assembly. Do not list
