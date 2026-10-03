@@ -12,6 +12,30 @@ from pipeline.editorial import (Runner, ARTICLE_SCHEMA, REVIEW_SCHEMA, digest, m
 from pipeline.editorial import summarize_web_activity, parse_codex_events, validate_new_reader_style, reuse_glyphs_for_text_followup
 
 
+class ReviewComponentIndexPacketTests(unittest.TestCase):
+    def test_current_records_keep_complete_array_indices_in_review_packet(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            script = root/'fixture_runner.py'
+            script.write_text("import sys\nfrom pathlib import Path\n"
+                              "sys.stdin.read()\nPath(sys.argv[1]).write_text('{\"verdict\":\"pass\",\"findings\":[]}')\n")
+            article = {'character': '的', 'components': [
+                {'form': '日', 'scope_character': '旳', 'current_form_component': False},
+                {'form': '勺', 'scope_character': '旳', 'current_form_component': False},
+                {'form': '白', 'scope_character': '的', 'current_form_component': True},
+                {'form': '勺', 'scope_character': '的', 'current_form_component': True}]}
+            runner = Runner([sys.executable, str(script), '{output}'], 'gpt-6-luna', 10, 'low')
+            for role in ('factual', 'readability'):
+                directory = root/role
+                runner.run(role, {'article': article, 'dossier': {'glyph_assets': []}},
+                           REVIEW_SCHEMA, directory)
+                packet, _ = json.JSONDecoder().raw_decode(
+                    (directory/'prompt.txt').read_text().split('\nINPUTS:\n', 1)[1])
+                self.assertEqual(packet['schema_contract']['current_form_component_indices'], [2, 3])
+                self.assertEqual(packet['article']['components'], article['components'])
+                self.assertIn('never renumber', packet['schema_contract']['component_index_instruction'])
+
+
 class ResearchAuditURLSchemaTests(unittest.TestCase):
     def test_audit_requires_web_urls_but_allows_failed_lookup(self):
         from jsonschema import Draft202012Validator, ValidationError
