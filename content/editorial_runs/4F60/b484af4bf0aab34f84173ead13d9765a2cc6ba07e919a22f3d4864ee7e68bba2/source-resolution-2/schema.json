@@ -1,0 +1,49 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "findings"
+  ],
+  "properties": {
+    "findings": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "disposition",
+          "reason",
+          "affected_paths"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:4F60:830114b1c806",
+              "ziyuan-2012:4F60:d868a772637d"
+            ]
+          },
+          "disposition": {
+            "enum": [
+              "pending",
+              "unresolved_identity_not_used"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affected_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

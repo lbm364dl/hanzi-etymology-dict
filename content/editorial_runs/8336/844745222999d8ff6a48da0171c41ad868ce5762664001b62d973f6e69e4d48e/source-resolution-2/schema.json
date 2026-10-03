@@ -1,0 +1,90 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "findings",
+    "transcription_observations"
+  ],
+  "properties": {
+    "findings": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "disposition",
+          "reason",
+          "affected_paths"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:8336:e831781f0c0e",
+              "ziyuan-2012:8336:2df6150cded1",
+              "ziyuan-2012:8336:d206d924f8c0",
+              "ziyuan-2012:8336:7e1ff413a13b",
+              "ziyuan-2012:8336:cb500dea2502",
+              "ziyuan-2012:8336:3ab209cbffdc",
+              "ziyuan-2012:8336:17a860b95a1b",
+              "ziyuan-2012:8336:11a999cbc270"
+            ]
+          },
+          "disposition": {
+            "enum": [
+              "pending",
+              "unresolved_identity_not_used",
+              "verified_transcription_matches_corpus"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affected_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "transcription_observations": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "observed_literal",
+          "pixel_reason"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:8336:e831781f0c0e",
+              "ziyuan-2012:8336:11a999cbc270"
+            ]
+          },
+          "observed_literal": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pixel_reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "高"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000486",
+          "pdf_page_1based": 486,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0486/source.png",
+          "source_sha256": "79b98ddd34ebec7b339b734c972b34b5e018011f17b5579ecde3e7f511c69983",
+          "evidence_sha256": "9e6a37fa82148977af1da1252af60cba9c82cfedd69f5d81cda12c0fa829efc7",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "高 gāo 见组、宵部；见组、豪韵、古劳切。"
+          ],
+          "excerpt": "然是不对的。汉代仍有用矣为矣者，马王堆汉墓帛书《刑德甲》：“因遇战矣（矣）”，即其例。（刘桓）\n\n矮 ǎi 影组、微部；影组、蟹韵、乌蟹切。\n[glyph:g022] 1 《说文》新附 矮 楷书\n1《说文》110页。\n形声字。从矢，委声。本义为身材短。《说文》：“矮，短人也。”（刘桓）\n\n高 部\n\n高 gāo 见组、宵部；见组、豪韵、古劳切。\n[glyph:g023] 1 商 [glyph:g024] 2 商 [glyph:g025] 3 商 [glyph:g026] 4 西周 [glyph:g027] 5 西周 [glyph:g028] 6 春秋 [glyph:g029] 7 战国 [glyph:g030] 8 战国\n[glyph:g031] 9 战国 [glyph:g032] 10 战国 [glyph:g033] 11 战国 [glyph:g034] 12 战国 [glyph:g035] 13 《说文》小篆 [glyph:g036] 14 汉 [glyph:g037] 15 汉\n[glyph:g038] 16 汉 高 楷书\n1《甲文编》245页。2、3《甲文编》244页。4、5、6《金文编》374页。7-12《战文编》338页。13《说文》110页。14《隶字编》1480页。15《曹全碑》。16《汉印徵》卷5，13页。\n初为象形字，商代文字不从口者当为初形。《说\n473"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000487",
+          "pdf_page_1based": 487,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0487/source.png",
+          "source_sha256": "7b77ce3110c1619d21eacd04f74b18d525c2e74a171e3871c8528a3fad97677d",
+          "evidence_sha256": "a6e99bd8db0f34d4fbb2512cb4a2bbc2aee7360c5190fff1b8d186cc5eb66fae",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "高部 冂部\n\n文》：“高，崇也，象台观高之形。”商代文字下端加“口”字者，成为此字定型的基础。西周、春秋文字与商代的相似。战国文字出现简省写法，秦统一文字系参考战国字形略作省改而成。商代甲骨文多用“高”为远义，如《粹》：“惠高且（祖）饗祝用，王受又（祐）。”《广雅·释诂》：“高，远也。”故“高祖”即远祖，高祖夔是商朝的远祖。周代如旟钟（二式）乙铭：“虘曰：不显高且（祖）、亚且（祖）、文考”，“高祖”在“亚祖”前面，仍是指远祖。春秋时期秦公毁用“高”为由下向上，距离地面远之意，铭云：“睨（畯）遽才（在）天，高引又（有）慶，奄匐三（四）方。”战国文字高用为高低之高，秦青川木牍：“道广三步，封高四尺，大称其高。”高又多用做地名，如《包山楚简》237有“高至（丘）”。高又假为缟，望山楚简2.2：“秦高之麠[glyph:g001]”，“秦高”即“秦缟”。（刘桓）\n\n亭 tíng 定纽、耕部；定纽、青韵、特丁切。\n\n[glyph:g002] 1\n战国\n[glyph:g003] 2\n战国\n[glyph:g004] 3\n战国\n[glyph:g005] 4\n战国\n[glyph:g006] 5\n战国\n[glyph:g007] 6\n秦\n[glyph:g008] 7\n《说文》小篆\n[glyph:g009] 8\n汉\n[glyph:g010] 9\n汉\n亭\n楷书\n\n1、2、6《古文典》792页。3《战文编》338页。4《战文编》339页。5《集成》16.10371。7《说文》110页。8、9《汉印徵》卷5，13页。\n\n形声字。从高，丁声。《说文》：“亭，民所安定也。亭有楼。从高省，丁声。”所说“从高省”，应易为从高，较为合理。《释名》：“亭，停也，亦人所停集也。”战国文字字形多有变化，多数从高、丁声，唯简省形不易看出声符。战国有“市亭”（《玺汇》3093），即市场管理机构，陈纯釜“于丝（兹）安陵亭（《集成》16.10371）”，即安陵的市亭。又有四方的亭障，《战国策·魏策》：“卒戌四方守亭障者参列。”秦汉亦有候望之亭。《急就篇》颜注：“秦汉之制，十里一亭，亭有高楼，可以候望。”秦汉的亭为社会基层组织机构，《史记·高祖本纪》说刘邦“及壮，试为吏，为泗水亭长。”《汉书·百官表》：“大率十里一亭，亭一乡，天下亭凡二万九千六百三十五也。”（刘桓）\n\n亳 bó 並纽、铎部；並纽、铎韵、傍各切。\n\n[glyph:g011] 1\n商\n[glyph:g012] 2\n商\n[glyph:g013] 3\n商\n[glyph:g014] 4\n西周\n[glyph:g015] 5\n西周\n[glyph:g016] 6\n战国\n[glyph:g017] 7\n战国\n[glyph:g018] 8\n战国\n[glyph:g019] 9\n秦\n[glyph:g020] 10\n《说文》小篆\n[glyph:g021] 11\n汉\n亳\n楷书\n\n1、2、3《甲文编》245页。4、5《金文编》374页。6、7、8《战文编》339页。9《睡甲》79页。10《说文》110页。11《隶韵》209页。\n\n此字在商代甲骨文中即有两形，一应是会意字，从高、从屮，像草生于台观之下形，疑本义为薄，指草木丛生之地；一为会意兼形声字，从毛，“毛”通“薄”，像草木落叶形。《诗·豳风·七月》：“八月其荻，十月陨薄。”所以这一构形的“亳”，乃像落叶的草木生于台观之下形。西周文字大致沿袭商代字形，或稍有讹变。战国文字发生形变，字上端的从高，有的则从声，下端从毛。《说文》训亳为“从高省，乇声”，是对的。或说从高从屮的字应隶定为蒿，读郊。卜辞“蒿士”应该“郊社”，《礼记·仲尼燕居》：“郊社之义，所以仁鬼神也。”亳字本义待考。商代甲骨文用亳为地名，如《合集》7841：“贞：于亳。”亳地有社，称为“亳士（社）”。《合集》28110：“其又亳土。”“亳社”见于《左传·襄公三十年》、《昭公十年》、《春秋·哀公四年》。杜预注：“亳社，殷社。”至战国亳仍用做地名，如陈璋壶有地名“偃亳”，学者以为即《左传·昭公九年》的“燕亳”。（刘桓）\n\n冂 部\n\n冂 jiōng 见纽、耕部；见纽、青韵、古萤切。\n\n[glyph:g022] 1\n西周\n[glyph:g023] 3\n战国\n[glyph:g024] 8\n《说文》小篆\n冂 10\n楷书\n[glyph:g025] 2\n西周\n["
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0486/source.png",
+      "pdf_page": 486,
+      "source_pixel_sha256": "79b98ddd34ebec7b339b734c972b34b5e018011f17b5579ecde3e7f511c69983"
+    }
+  ],
+  "target_language": "zh",
+  "require_source_specific_page_evidence": true
+}

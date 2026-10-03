@@ -474,12 +474,13 @@
       "form": "三",
       "character_entry": "三",
       "formation": {
-        "text": "The graph’s construction is disputed. A paleographic account interprets its three equal strokes as counting rods representing three; a later lexicographic account associates them with Heaven, Earth, and humanity. The evidence does not establish that the earliest graph copied rods or settle these accounts as its original formation.",
+        "text": "The graph is an ideogram for the numeral three, represented by three horizontal strokes. A paleographic interpretation sees the strokes as counting rods. Shuowen later glosses 三 as the way of Heaven, Earth, and humanity and explains it from the number three; this is a distinct lexicographic account, not evidence that the graph originally depicted those three powers.",
         "evidence_ids": [
           "X-cf2e4185c438e7569f0f",
-          "X-718d8d468383943ee429"
+          "X-d18801b51827324b3992",
+          "X-3cb353196eb41e37c253"
         ],
-        "type": "disputed"
+        "type": "indicative"
       },
       "components": [],
       "evidence": [
@@ -495,19 +496,30 @@
           "accessed_at": "2026-09-27"
         },
         {
-          "id": "X-718d8d468383943ee429",
-          "source": "Shuowen.org, transcription of Shuowen Jiezi with Duan Yucai commentary",
-          "field": "三 entry; 許慎 account and 段玉裁 commentary",
-          "text": "The transmitted Shuowen account defines 三 as “the way of Heaven, Earth, and humanity” and says it is formed “from the number three”; it also records 弎 as an ancient form written with 弋. Duan Yucai distinguishes the definition from the graphic explanation and comments that the three strokes embody the three powers. This is a later lexicographic account, not an independent Shang attestation. No semantic extension chronology follows from this gloss.",
+          "id": "X-d18801b51827324b3992",
+          "source": "李學勤主編《字源》",
+          "field": "三部 entry; PDF p. 25, printed p. 13; scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0025/source.png, crop bounds x=1900–2900, y=1750–3750 (3000×4095 source)",
+          "text": "Directly inspected the scan pixels. Under the visible headword 三, 白于蓝 describes it as 指事字 and identifies the original sense as the numeral three (“二加一为三”). The passage cites 《庄子·齐物论》, 《广韵·谈韵》, and other received texts for ordinal use and extended use referring broadly to multiplicity. It says the graph used three horizontal strokes to represent quantity; Warring States forms sometimes add 戈 or 弋, and the 弋-added form continued into Han. It distinguishes oracle-bone 三, whose three strokes are equal, from 气, whose middle stroke is shorter. The headword, diagram, paragraph, and paragraph end are visible on this page; page 26 starts with 王 and 皇 entries, not a continuation of 三.",
+          "record_character": "三",
+          "kind": "locally inspected book scan",
+          "url": "https://search.worldcat.org/search?q=9787552800692",
+          "title": "字源 (2012 edition; bibliographic lookup)",
+          "accessed_at": "2026-10-03"
+        },
+        {
+          "id": "X-3cb353196eb41e37c253",
+          "source": "許慎《說文解字》 transcription with 段玉裁 commentary",
+          "field": "三 entry, lines 8, 12–16; later commentary lines 22–27",
+          "text": "The transmitted text says “天地人之道也。从三數” and records “古文三从弋” for 弎. Duan Yucai distinguishes the gloss from the graphic explanation and relates the strokes to the three powers. This is a received lexicographic interpretation, not an independent Shang-period attestation.",
           "record_character": "三",
           "kind": "historical dictionary transcription and commentary",
-          "url": "https://www.shuowen.org/view/77",
+          "url": "https://www.shuowen.org/view/77?juanshu=01",
           "title": "說文解字「三」",
-          "accessed_at": "2026-09-27"
+          "accessed_at": "2026-10-03"
         }
       ],
-      "article_hash": "c10633dbb6058b7d2bb4eac831b7ff35ca8974e0cf30023d5120769928c45964",
-      "dossier_hash": "53b15c5d5b9bc587f0311756305aa40a8310ca9c52969ee93693b9b35271ee04"
+      "article_hash": "9015b533550a46494ca6090d51e906fb13c3c5ec661a93812b4aa202cf6b803d",
+      "dossier_hash": "46622dafee40139a185723d518e4f527ea22f889174d3e3f4e445b6ab113f312"
     },
     {
       "id": "character:上",
@@ -5786,39 +5798,23 @@
       "form": "六",
       "character_entry": "六",
       "formation": {
-        "text": "The formation remains disputed, and no component breakdown is established. The shelter-picture proposal would make the whole graph pictographic; other proposals treat it as a conventional counting mark or as a graph later distinguished from 入. The Shuowen analysis of 入 and 八 through 易 numerology is a historical interpretation that the paleographic discussion considers unlikely to preserve the original graphic meaning.",
+        "text": "The graph’s formation is disputed. One account treats the whole form as a pictograph of a simple shelter; other proposals treat it as a conventional counting mark or as a graph once similar to 入 and later distinguished. The Shuowen analysis through 入 and 八 in 易 numerology is a historical interpretation that the paleographic discussion considers unlikely to preserve the original graphic meaning.",
         "evidence_ids": [
-          "E1",
-          "E3",
+          "E2",
           "X-e5958c0581a8f46890f9",
           "X-a8787d4dd2054e32c349",
-          "E2"
+          "X-ed791582d40c15aa38c9",
+          "X-c062c507a05499d5a3a7"
         ],
         "type": "disputed"
       },
       "components": [],
       "evidence": [
         {
-          "id": "E1",
-          "source": "dong_chinese",
-          "field": "hanzi.etymology_notes[0]",
-          "text": "Originally a pictograph of a tent or building. Unrelated to modern meaning.",
-          "record_character": "六",
-          "kind": "imported_excerpt"
-        },
-        {
           "id": "E2",
           "source": "shuowen_jiezi",
           "field": "hanzi.etymology_notes[1]",
           "text": "《易》之數，陰變於六，正於八。从入从八。凡六之屬皆从六。",
-          "record_character": "六",
-          "kind": "imported_excerpt"
-        },
-        {
-          "id": "E3",
-          "source": "wiktionary",
-          "field": "hanzi.etymology_notes[2]",
-          "text": "Pictogram (象形) – perhaps a shed. Originally using the similar-sounding word 廬 (OC *ra, “shed, cabin”) to represent the concept “six” (Liu Xinglong). Alternatively, it may be an ancient counting symbol.\nFrom Proto-Sino-Tibetan *d-k-ruk (“six”).",
           "record_character": "六",
           "kind": "imported_excerpt"
         },
@@ -5843,10 +5839,32 @@
           "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php?piece=%E5%85%AD",
           "title": "漢字甲骨部件分析：六",
           "accessed_at": "2026-09-27"
+        },
+        {
+          "id": "X-ed791582d40c15aa38c9",
+          "source": "李學勤主編《字源》",
+          "field": "PDF p.1282; printed p.1267; 六 entry",
+          "text": "The 六 entry identifies the graph as a pictograph resembling a simple shelter. It says Shang oracle-bone forms resemble a shelter set on the ground and later forms emphasize the shelter wall; Qin small-seal form curves the two upper strokes inward, and clerical transformation changes them into a dot and horizontal stroke. It proposes a grass hut as the original meaning and 六 as an early graph for 廬, later borrowed for the numeral because the sounds were close. It also connects 六 with the yin line in the Changes. I directly inspected the full page image, including the 六 heading, glyph sequence, source notes, and complete paragraph; this is one attributed proposal, not conclusive evidence of the graph’s origin.",
+          "record_character": "六",
+          "kind": "locally inspected scholarly book passage",
+          "url": "https://search.worldcat.org/search?q=9787552800692",
+          "title": "字源, 2012 edition (catalogue search for ISBN 9787552800692)",
+          "accessed_at": "2026-10-03"
+        },
+        {
+          "id": "X-c062c507a05499d5a3a7",
+          "source": "漢語多功能字庫 (CUHK Multi-function Chinese Character Database)",
+          "field": "漢字甲骨部件分析：六; web page lines 122–127",
+          "text": "The entry reports three explanations: early 六 and 入 may have been the same graph before strokes differentiated the numeral; 六 may depict a shelter and be an earlier graph for 廬 (attributed to 劉興隆); or 六 may be an early conventional counting mark. It regards the 易-based Shuowen explanation as unlikely to preserve the original meaning. It cites oracle-bone examples for cardinal use in 合集 32320 (“燎六羊”) and ordinal use in 合集 7775 (“今六月王入于商”), with later numeral examples in bronze and Warring States texts. Those usages support 六 as a numeral in the cited records but do not decide among the graphic-origin proposals.",
+          "record_character": "六",
+          "kind": "character-specific paleographic reference citing inscriptions",
+          "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php?piece=%E5%85%AD",
+          "title": "漢字甲骨部件分析：六",
+          "accessed_at": "2026-10-03"
         }
       ],
-      "article_hash": "571f3a31dc190d218e1a53f5074a80d908175bc789d69aa5add4ddb180ea28da",
-      "dossier_hash": "87f56e1ef7e0c59700557ce57076e895da88dd213c5ff8def38a3454f10c1e02"
+      "article_hash": "6392c213944d9f32a5a2d6ed6f107fb27028669cdfbce4729961b597f22cc4d4",
+      "dossier_hash": "620b9e42bd2a2f6fcf73077331deef9190026dc9d31be3b02e96f409755d3761"
     },
     {
       "id": "character:关",
@@ -8970,7 +8988,7 @@
       "form": "南",
       "character_entry": "南",
       "formation": {
-        "text": "The early graph is treated as pictographic in competing proposals, but its referent is unsettled: interpretations include a hanging percussion instrument, a house front, and a covered vessel with a plant-like feature. The received Shuowen account separately analyzes 南 as comprising 𣎵 and phonetic 𢆉; the evidence here does not independently verify that historical sound relation.",
+        "text": "The early graph has been interpreted as a hanging percussion instrument, a house front, or a covered vessel with a plant-like feature; its referent is unsettled. The received Shuowen account divides it into 𣎵 and phonetic 𢆉, but that component analysis is disputed and does not establish the graph’s original construction.",
         "evidence_ids": [
           "E2",
           "E4",
@@ -8979,7 +8997,8 @@
           "X-ebaca017e9819ccaed18",
           "X-7070e3bb7c00a1bd1734",
           "X-3bbddd3e249114b65e05",
-          "X-df3bab6ab89f7499714f"
+          "X-df3bab6ab89f7499714f",
+          "X-66c750ba5aa4c4c13fc0"
         ],
         "type": "disputed"
       },
@@ -9003,14 +9022,16 @@
           "roles": [
             "pictorial"
           ],
-          "form_status": "disputed"
+          "form_status": "disputed",
+          "current_form_component": false
         },
         {
-          "text": "In the received Shuowen analysis, 𣎵 contributes meaning. This historical dictionary account does not independently confirm the graph’s original pictorial source.",
+          "text": "The received Shuowen account assigns 𣎵 a meaning-bearing role in 南. This historical analysis is disputed and does not establish the graph’s original construction.",
           "evidence_ids": [
             "X-73b980b3f1166d1f1561",
             "X-28fbd5160558c66986f3",
-            "X-6e974ade6199b807576e"
+            "X-6e974ade6199b807576e",
+            "X-66c750ba5aa4c4c13fc0"
           ],
           "form": "𣎵",
           "origin_form": "",
@@ -9021,22 +9042,24 @@
           "roles": [
             "semantic"
           ],
-          "form_status": "disputed"
+          "form_status": "disputed",
+          "current_form_component": false
         },
         {
-          "text": "The received Shuowen analysis identifies 𢆉 as phonetic, but this evidence does not independently verify the historical sound relation.",
+          "text": "The received Shuowen account calls 𢆉 phonetic in 南. This historical analysis is disputed; no suitable historical sound comparison here independently confirms that role.",
           "evidence_ids": [
             "X-73b980b3f1166d1f1561",
             "X-df3bab6ab89f7499714f",
             "X-28fbd5160558c66986f3",
-            "X-6e974ade6199b807576e"
+            "X-6e974ade6199b807576e",
+            "X-66c750ba5aa4c4c13fc0"
           ],
           "form": "𢆉",
           "origin_form": "",
           "origin_relation": "none",
           "scope_character": "南",
           "sound_limitation": {
-            "text": "The modern Mandarin readings can be compared, but they do not establish that 𢆉 had a phonetic role in 南 historically.",
+            "text": "The current Mandarin readings can be compared, but they do not establish that 𢆉 had a phonetic role in 南 historically.",
             "evidence_ids": [
               "X-df3bab6ab89f7499714f",
               "X-15e28d400820d024b6f0"
@@ -9058,7 +9081,8 @@
           "roles": [
             "phonetic"
           ],
-          "form_status": "disputed"
+          "form_status": "disputed",
+          "current_form_component": false
         }
       ],
       "evidence": [
@@ -9176,10 +9200,21 @@
           "url": "https://www.shuowen.org/view/3857",
           "title": "說文解字「南」",
           "accessed_at": "2026-09-27"
+        },
+        {
+          "id": "X-66c750ba5aa4c4c13fc0",
+          "source": "《字源》, 李學勤主編, 2012, 天津古籍出版社、遼寧人民出版社；PDF p. 565, printed p. 552; directly inspected original scan at /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0565/source.png. Checked the 南 headword, form chart and full entry paragraph against pixels.",
+          "field": "南 entry; graphic history and explanation",
+          "text": "The entry labels 南 a loan graph (假借字). It presents Shang forms as an independent pictograph, with the original meaning unknown, and reports that the graph was borrowed for the direction word in Yin-period oracle-bone inscriptions, citing Heji 9738. It also reports a later extension for southward movement and a use for music of ancient southern peoples. The author rejects the received Shuowen component analysis: in the printed clause, 南 is analyzed 从𣎵、𦍒(rěn)聲 and said to be unconvincing. The printed sound referent is 𦍒, not OCR’s 𦍑; the entry does not establish a sound or semantic component analysis for current 南. It cites transmitted texts for later uses but does not date those uses or establish the chronology of the word senses.",
+          "record_character": "南",
+          "kind": "locally_inspected_book_entry",
+          "url": "https://ci.nii.ac.jp/ncid/BB13266817",
+          "title": "字源 (李學勤主編, 2012)",
+          "accessed_at": "2026-10-03"
         }
       ],
-      "article_hash": "f6ba29288df8407d9159462e57f39732c9d08ed761175d16075cce936bc8fa5c",
-      "dossier_hash": "db92c623f7b3d490401d168ca1f3a998ef2701a62f4b6c15e48fc140a5169c22"
+      "article_hash": "9bba852db931adf84b31d7e6d32d7596be27f145dd10c9076da87c33690aeafd",
+      "dossier_hash": "0c92bb5a319f97f7ea0d9019374d2d656db004606347076b959b296ed127c2cb"
     },
     {
       "id": "character:去",
@@ -12789,21 +12824,23 @@
       "form": "回",
       "character_entry": "回",
       "formation": {
-        "text": "The graph is best treated as a pictograph of a spiral or revolving form. One interpretation specifies water turning in a circle, but the depicted object and exact original meaning remain uncertain. A competing proposal treats 回 and 囘 as originally distinct graphs and words, with 回 meaning “around”; their relationship is unresolved. No separate semantic or phonetic parts within 回 are established.",
+        "text": "回 is treated in one account as a pictograph of a revolving loop; another describes its inner shape as resembling rotation within 囗. A competing analysis proposes that 囘 “whirl” and 回 “around” were originally distinct graphs and words. The depicted object and the relationship between these analyses remain unresolved.",
         "evidence_ids": [
           "E1",
           "E2",
+          "E3",
           "E4",
-          "X-498a4f9c79147dd4463a",
           "X-686cf002dbddfac975d4",
           "X-9527c500d38104acbbf9",
-          "X-a80e548990f50af87ccd"
+          "X-a80e548990f50af87ccd",
+          "X-002a38f20dd773474863",
+          "X-a961fa48a242c11c81fc"
         ],
-        "type": "pictographic"
+        "type": "disputed"
       },
       "components": [
         {
-          "text": "回 is represented as one whole picture associated with a spiral or circular motion. The traditional description of an outer 囗 and an inner revolving shape is an account of its appearance, not proof that these are independent components.",
+          "text": "回 is treated as a whole picture associated with circular motion. Shuowen describes an outer 囗 and an inner revolving shape, but this does not establish them as independent components.",
           "evidence_ids": [
             "E1",
             "E2",
@@ -12811,7 +12848,9 @@
             "E7",
             "X-4a05036c0286ca7449f7",
             "X-9527c500d38104acbbf9",
-            "X-a80e548990f50af87ccd"
+            "X-a80e548990f50af87ccd",
+            "X-002a38f20dd773474863",
+            "X-a961fa48a242c11c81fc"
           ],
           "form": "回",
           "origin_form": "",
@@ -12867,17 +12906,6 @@
           "kind": "imported_excerpt"
         },
         {
-          "id": "X-498a4f9c79147dd4463a",
-          "source": "Dong Chinese",
-          "field": "graphic_history",
-          "text": "The entry describes 回 as depicting water rotating in a circle and labels its displayed forms Oracle script (~1250–1000 BC), early Western Zhou bronze script (~1000 BC), Shuowen seal script (~100 AD), and Eastern Han clerical script (25–220 AD). These are the page's attributions; no glyph image was independently inspected here.",
-          "record_character": "回",
-          "kind": "dictionary_entry",
-          "url": "https://www.dong-chinese.com/wiki/%E5%9B%9E",
-          "title": "回 - Dong Chinese dictionary",
-          "accessed_at": "2026-09-26"
-        },
-        {
           "id": "X-4a05036c0286ca7449f7",
           "source": "Tsinghua University Research Center for Excavated Texts",
           "field": "methodological context",
@@ -12920,10 +12948,32 @@
           "url": "https://toaj.stpi.niar.org.tw/index/journal/volume/article/4b1141f9917320a501918ca66f490726",
           "title": "說「回」 / A Discussion on the word “hui(回)”",
           "accessed_at": "2026-09-26"
+        },
+        {
+          "id": "X-002a38f20dd773474863",
+          "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692; direct scan inspection",
+          "field": "回 entry, printed p. 559; PDF p. 572; scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0572/source.png",
+          "text": "The entry identifies 回 as pictographic and says Shang–Zhou forms resemble a revolving loop; it describes Warring States Qin forms as two enclosed rings and says later forms follow them. It proposes rotation as the original meaning, then presents turning, changing direction, changing, returning, answering, taking a circuitous route, and counting occurrences as further uses. The cited examples include 荀子《致士》“水深而回,” 楚辭《離騷》, and 杜甫《百憂集行》. These are the book’s graphic and semantic analysis and cited literary examples; the passage does not establish dates for the examples or a securely dated earliest use. I inspected the headword, paragraph, form labels, cited references, and printed page number in the scan. The entry ends on this page; page 573 continues the neighboring 國 entry, not 回.",
+          "record_character": "回",
+          "kind": "local_book_scan",
+          "url": "https://www.sanmin.com.tw/product/index/004029656",
+          "title": "字源(上中下)（簡體書） — 三民網路書店",
+          "accessed_at": "2026-10-03"
+        },
+        {
+          "id": "X-a961fa48a242c11c81fc",
+          "source": "臺灣學術期刊開放取用平台; 鄔可晶",
+          "field": "說「回」, abstract, pp. 61–78",
+          "text": "The 2019 abstract proposes a competing analysis: 說文’s 古文 囘 and 篆文 回 were originally distinct graphs/words; 囘 represented “whirl,” while 回 was made for “around” and modeled on 圍. It further proposes that after clerical transformation 囘 was largely absorbed by 回, and says excavated Warring States and early Western Han texts use 回 for “around.” This is an attributed scholarly proposal from the abstract; the article PDF download required a captcha and was not inspected.",
+          "record_character": "回",
+          "kind": "research_article_abstract",
+          "url": "https://toaj.stpi.niar.org.tw/index/journal/volume/article/4b1141f9917320a501918ca66f490726",
+          "title": "說「回」 / A Discussion on the word “hui(回)”",
+          "accessed_at": "2026-10-03"
         }
       ],
-      "article_hash": "4701fb4798c73587b1fc393248633d2eeca555c136f67d1b5c59efbc88c9503e",
-      "dossier_hash": "7e14548260537ebde93cfea867767de5f49ac935453ce40bf2197fca19c2bc5a"
+      "article_hash": "65532820c99958628118473d2665dd39bf25cbdadd7d915982715aab69ff3a5f",
+      "dossier_hash": "1d058fbbea5a46c9caece4f68f063abd5e9ccfd70b0258e367fd478f096f88f5"
     },
     {
       "id": "character:国",
@@ -15501,25 +15551,19 @@
       "form": "女",
       "character_entry": "女",
       "formation": {
-        "text": "Pictographic: the graph depicts a woman as a whole figure. Early forms are interpreted as kneeling or seated, with hands described as crossed or engaged in an activity.",
+        "text": "Pictographic: the whole graph depicts a woman. Early forms are interpreted as a kneeling figure with hands crossed at the chest; some forms are described with an added head stroke interpreted as headwear.",
         "evidence_ids": [
-          "E3",
-          "X-bd0bf57ed5daad271d70",
-          "X-922ad02c114e7082ee17",
           "X-6e0aa3d5bf251173eba3",
-          "X-b673263574d1b06e2f5d"
+          "X-d774cdb729da4f9605d9"
         ],
         "type": "pictographic"
       },
       "components": [
         {
-          "text": "The whole graph depicts a woman. Early forms are interpreted as a kneeling or seated figure; accounts describe the hands as crossed or engaged in an activity. It is not divided into smaller parts.",
+          "text": "The whole graph depicts a woman; early forms are interpreted as a kneeling figure, sometimes with a head stroke interpreted as headwear. It is not divided into smaller parts.",
           "evidence_ids": [
-            "E2",
-            "X-bd0bf57ed5daad271d70",
-            "X-922ad02c114e7082ee17",
             "X-6e0aa3d5bf251173eba3",
-            "X-b673263574d1b06e2f5d"
+            "X-d774cdb729da4f9605d9"
           ],
           "form": "女",
           "origin_form": "",
@@ -15535,44 +15579,6 @@
       ],
       "evidence": [
         {
-          "id": "E2",
-          "source": "dong_chinese",
-          "field": "hanzi.etymology_notes[1]",
-          "text": "Pictograph of a woman. Depicts a stick-figure with breasts sitting or squatting down.",
-          "record_character": "女",
-          "kind": "imported_excerpt"
-        },
-        {
-          "id": "E3",
-          "source": "shuowen_jiezi",
-          "field": "hanzi.etymology_notes[2]",
-          "text": "婦人也。象形。王育說。凡女之屬皆从女。",
-          "record_character": "女",
-          "kind": "imported_excerpt"
-        },
-        {
-          "id": "X-bd0bf57ed5daad271d70",
-          "source": "漢語多功能字庫 (Chinese Characters Database), CUHK",
-          "field": "甲金文字形及用法；字形義通解",
-          "text": "The database describes 女 in oracle-bone and bronze inscriptions as a kneeling woman, with knees and toes on the ground, seated on her heels and hands crossed at the chest. It says later bronze forms gradually lose the seated-on-heels shape through writing simplification. It reports early graph uses for woman/female, mother, 毋 ‘not’, 每/悔, and place names; bronze uses include woman, mother, second-person pronoun (later 汝), and 如 ‘as’. These are reported uses/loans and should not be treated as stages in the graphic evolution of 女.",
-          "record_character": "女",
-          "kind": "dictionary account",
-          "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php?piece=%E5%A5%B3&sub=1",
-          "title": "漢語多功能字庫 — 女",
-          "accessed_at": "2026-09-27"
-        },
-        {
-          "id": "X-922ad02c114e7082ee17",
-          "source": "常用漢字二百字探源（金真姬）",
-          "field": "女 entry: glyph history and oracle-bone examples",
-          "text": "The entry characterizes 女 as a pictograph and summarizes Li Xiaoding and Xu Zhongshu as interpreting it as a kneeling person with hands engaged in an activity. It says the original form had become less recognizable by the Warring States period. It cites oracle-bone examples including 合集14002正 for female, 殷虛文字綴合94 for a reading as 母, and other oracle-bone records for a female ancestor/consort and a female person. The examples support early female-related uses while also documenting early interchange or overlap with 母 in particular contexts.",
-          "record_character": "女",
-          "kind": "secondary paleographic dictionary",
-          "url": "https://www.yjcn.nl/wp/wp-content/uploads/2015/11/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%BA%8C%E百字探源%EF%BC%88金真姬）.pdf",
-          "title": "常用漢字二百字探源",
-          "accessed_at": "2026-09-27"
-        },
-        {
           "id": "X-6e0aa3d5bf251173eba3",
           "source": "漢語多功能字庫 (Chinese Characters Database), CUHK",
           "field": "女: oracle-bone and bronze form account",
@@ -15584,19 +15590,19 @@
           "accessed_at": "2026-09-27"
         },
         {
-          "id": "X-b673263574d1b06e2f5d",
-          "source": "常用漢字二百字探源（金真姬）",
-          "field": "女 entry: form history and cited uses",
-          "text": "The entry describes oracle-bone and early bronze 女 as a side-view kneeling woman with hands engaged in an activity; it says later bronze forms lose the recognizable kneeling posture, the small-seal form continues that shape, and by the Warring States period the original depiction is obscure. It cites oracle-bone examples for female and a reading as 母. The cited catalog numbers do not, by themselves, establish a precise date for each inscription.",
+          "id": "X-d774cdb729da4f9605d9",
+          "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692; PDF p. 1100, printed p. 1085. Directly inspected the supplied scan pixels for the 女 headword, its forms and explanatory paragraph; the printed 女 entry ends on this page. The next supplied page, PDF p. 1101 (printed p. 1086), begins with 姓 material, not a continuation of 女.",
+          "field": "女 entry: script-form account, senses and cited examples; scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1100/source.png",
+          "text": "The entry calls 女 pictographic. It describes oracle-bone forms as a woman kneeling with her hands crossed before her chest, and says some forms add a head stroke interpreted as headwear. It describes the kneeling posture as less apparent in Spring and Autumn bronze forms, with Warring States forms following those bronze forms with changed stroke manner; clerical writing turns the vertical kneeling stroke into a horizontal stroke. It gives the core meaning as female, contrasted with 男, and cites a bronze-inscription example and the transmitted 易 for 女 meaning female. It separately reports 女 read as 母 in an oracle-bone example, as 汝 in bronze inscriptions, and as 如 in Warring States writing. The entry also records a distinct nù reading for ‘give a woman in marriage’, citing 國語. These source-reported uses and citations do not by themselves establish a dated semantic development or the dates of each cited inscription.",
           "record_character": "女",
-          "kind": "secondary paleographic dictionary",
-          "url": "https://www.yjcn.nl/wp/wp-content/uploads/2015/11/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%BA%8C%E7%99%BE%E5%AD%97%E6%8E%A2%E6%BA%90%EF%BC%88%E9%87%91%E7%9C%9F%E5%A7%AC%EF%BC%89.pdf",
-          "title": "常用漢字二百字探源",
-          "accessed_at": "2026-09-27"
+          "kind": "locally inspected scholarly dictionary entry",
+          "url": "https://search.worldcat.org/search?q=9787552800692",
+          "title": "字源",
+          "accessed_at": "2026-10-03"
         }
       ],
-      "article_hash": "c58fac7ed753eb9ae05e456c04d6702e44fc35406eb0b0f39b6288703db998ee",
-      "dossier_hash": "4c01e0a0cbfce31857c1fab283d7205f26b6e67f8b5e500ff3efbacfb146d460"
+      "article_hash": "dbc5b817f7be8ba2db22d001689c4e02b6ce87c4945611e2e6674a1563f5ab85",
+      "dossier_hash": "ded8d80f122e63fb2ae1ee35baccd9065947a1b1efad7c9f777b1a8ac2dad37d"
     },
     {
       "id": "character:奶",
@@ -19526,16 +19532,19 @@
         "text": "帮 is analyzed as a phonosemantic character: 巾 contributes a broad meaning category and 邦 supplies a sound cue. One account describes 帮 as a modern-period nonstandard form of 幫, proposing that its lower 帛 was simplified to 巾. Separately, another analysis treats 帮 as a variant with its own 巾 and 邦 components. Neither account establishes a dated, step-by-step graphic route.",
         "evidence_ids": [
           "X-d891a8a2cb360d54b5ba",
+          "X-362f34166e8950473daa",
           "X-bb98d9ba88c32bd4568f"
         ],
         "type": "phonosemantic"
       },
       "components": [
         {
-          "text": "巾 is identified as the meaning element in this form. A separate account proposes that it represents 帛 simplified in 幫, but the graphic route is undated.",
+          "text": "巾 is analyzed as 帮’s semantic component, in the same broad meaning class as 帛 in 幫. One account proposes that it arose by reducing 幫’s lower 帛; the variant analysis does not establish that graphic route.",
           "evidence_ids": [
             "X-d891a8a2cb360d54b5ba",
-            "X-bb98d9ba88c32bd4568f"
+            "X-362f34166e8950473daa",
+            "X-bb98d9ba88c32bd4568f",
+            "X-40b0594eb4a08dd1d3b6"
           ],
           "form": "巾",
           "origin_form": "",
@@ -19546,12 +19555,13 @@
           "roles": [
             "semantic"
           ],
-          "form_status": "preserved"
+          "form_status": "disputed"
         },
         {
           "text": "邦 is analyzed as the phonetic component. The same-system Middle Chinese comparison with 幫 supports a probable sound relationship, while leaving the rhyme vowel different and the variant's formation date unresolved.",
           "evidence_ids": [
             "X-d891a8a2cb360d54b5ba",
+            "X-362f34166e8950473daa",
             "X-c88ee7dce88fe06fd86c"
           ],
           "form": "邦",
@@ -19561,7 +19571,8 @@
           "sound_limitation": {
             "text": "The current Mandarin reading pair does not establish the historical sound relationship or when 帮 formed.",
             "evidence_ids": [
-              "X-d891a8a2cb360d54b5ba"
+              "X-d891a8a2cb360d54b5ba",
+              "X-c88ee7dce88fe06fd86c"
             ]
           },
           "sound": [
@@ -19569,9 +19580,7 @@
               "text": "In Modern Mandarin, 邦 and 帮 are both read bāng. This current reading pair is consistent with the editor’s phonetic analysis but does not establish the historical sound when the variant formed.",
               "evidence_ids": [
                 "X-d891a8a2cb360d54b5ba",
-                "X-c88ee7dce88fe06fd86c",
-                "X-05f8ede7e123a38f56b4",
-                "X-04d807e6e7af94356966"
+                "X-c88ee7dce88fe06fd86c"
               ],
               "component_form": "邦",
               "component_reading": "bāng",
@@ -19620,30 +19629,30 @@
           "accessed_at": "2026-10-03"
         },
         {
-          "id": "X-05f8ede7e123a38f56b4",
-          "source": "Unicode Consortium, Unihan database record",
-          "field": "U+5E2E: attempted official kMandarin record",
-          "text": "The official Unihan character-record URL was requested but was inaccessible through the web tool; no kMandarin claim is made from that page. The supplied local HSK1 row reports 帮 bāng, but it is not external evidence.",
+          "id": "X-40b0594eb4a08dd1d3b6",
+          "source": "Taiwan Ministry of Education, Dictionary of Chinese Character Variants",
+          "field": "A01190-003 帮 (幫): variant status and editorial component analysis",
+          "text": "The entry classifies 帮 as a variant of 幫 and gives the editor's analysis: 帮 uses 邦 as sound element and 巾 as meaning element; 幫 uses 封 and 帛. The editor says the meaning elements belong to the same category. The entry does not date 帮's emergence or specify a graphic route. This is an editorial analysis, separate from the more specific 帛-to-巾 reduction proposal in 字源.",
           "record_character": "帮",
-          "kind": "access_failure",
-          "url": "https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=5E2E",
-          "title": "Unihan database record for U+5E2E",
+          "kind": "dictionary_editorial_analysis",
+          "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=12971&la=1",
+          "title": "[A01190-003] 帮 (幫) - Ministry of Education《Dictionary of Chinese Character Variants》2024",
           "accessed_at": "2026-10-03"
         },
         {
-          "id": "X-04d807e6e7af94356966",
-          "source": "Unicode Consortium, Unihan database record",
-          "field": "U+90A6: attempted official kMandarin record",
-          "text": "The official Unihan character-record URL was requested but was inaccessible through the web tool; no kMandarin claim is made from that page. The supplied local HSK1 row reports 邦 bāng, but it is not external evidence.",
-          "record_character": "邦",
-          "kind": "access_failure",
-          "url": "https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=90A6",
-          "title": "Unihan database record for U+90A6",
+          "id": "X-362f34166e8950473daa",
+          "source": "李學勤主編《字源》；2012 edition, directly inspected supplied scan",
+          "field": "PDF p.708, printed p.695; headword 幫(帮), component account and sense history; original scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0708/source.png; source pixel SHA-256 fa20e8d355ce515c6d2fb88812a752f994b32b90562aefefeb6efa8fb3098c25; inspected crop bounds x=190–1530, y=700–2220",
+          "text": "The printed headword is 幫(帮), read bāng. The entry calls 幫 a phonosemantic character formed from 帛 with 封 as phonetic and gives the proposed original meaning as the edge of a shoe, citing 集韻·唐韻 “帮，治履边也.” It then describes extensions involving raised sides of objects, assistance, groups, and a classifier. It says 帮 appeared in the modern period as a俗字 of 幫 and proposes that the lower 帛 was reduced to 巾. This is the book author’s analysis; the passage does not date 帮’s first appearance or establish a step-by-step graphic route. The visible printed page is 695. PDF p.709 / printed p.696 begins 白部 entries; 幫 does not continue there. I inspected the headword, prose and adjacent entry boundary in the supplied pixels; I did not interpret the entry’s glyph specimens as historical forms.",
+          "record_character": "幫",
+          "kind": "locally_inspected_book",
+          "url": "https://books.google.com/books?vid=ISBN9787552800692",
+          "title": "字源, 李學勤主編, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
           "accessed_at": "2026-10-03"
         }
       ],
-      "article_hash": "9150307f7172e6bead00a977d3548feb3ed427f0db34e31caffd91ac72159307",
-      "dossier_hash": "5e47c64d1fce4362182de06ad315938ea9d5728acd6b7d5ce90ef263081a355c"
+      "article_hash": "72456de452b938fc54d53eae9d60a1f1b2e2dc25bc7dbeeaccf9a3f2e4dafb8a",
+      "dossier_hash": "ac3530a36003aee08a68fbb9fb50d306d8394ba9a05142c8ab4e5c3c69f7df43"
     },
     {
       "id": "character:常",
@@ -38734,8 +38743,8 @@
           "accessed_at": "2026-09-27"
         }
       ],
-      "article_hash": "8114464146d0a520cb05deab41165cd2c126fe6a57e45e54b3d385612d243c5a",
-      "dossier_hash": "5d54b57114e919d13c505345650ec6e960dd2b1487e7a149f69915f4657450b1"
+      "article_hash": "e7dc914ad76ac9dcb5b7ba0964a7b76eddc94219c71e6cf42e4bfe48be24098d",
+      "dossier_hash": "e6bb3890be843f88c62e23e2ccc3f50cd1b0759ebb97ed4382dd0e50cf6ad0f5"
     },
     {
       "id": "character:系",
@@ -50318,21 +50327,23 @@
       "form": "面",
       "character_entry": "面",
       "formation": {
-        "text": "Pictographic: the oracle graph is interpreted as an enclosing face outline with an eye. The Shuowen account describes 面 as shaped like a human face and relates it to 𦣻, but does not establish 𦣻 as a separate component within 面.",
+        "text": "Pictographic: the oracle graph has competing analyses. One reads it as an eye inside a face outline; another reads it as 目 within an outline, while the received Shuowen account relates 面 to 𦣻 and describes it as shaped like a human face. The ancient construction and graphic transitions remain disputed.",
         "evidence_ids": [
           "E3",
-          "X-2fa9e24e7d3cdf787466",
-          "X-7b1373c9fa394c42ea39"
+          "X-e9020bf4c05524c530ee",
+          "X-88eed63839b0ead334bf",
+          "X-0d4f2d2dfb6dd6c3fa11"
         ],
         "type": "pictographic"
       },
       "components": [
         {
-          "text": "The graph is interpreted as one picture of a face: an enclosing outline with an eye. The Shuowen relation to 𦣻 does not establish it as an internal component.",
+          "text": "面 is treated here as one pictorial graph. One analysis reads an eye within a face outline; another assigns the inner form to 目 and the outer form to a face outline. The received Shuowen account instead relates the graph to 𦣻; these analyses do not establish separate current components.",
           "evidence_ids": [
             "E3",
-            "X-2fa9e24e7d3cdf787466",
-            "X-7b1373c9fa394c42ea39"
+            "X-e9020bf4c05524c530ee",
+            "X-88eed63839b0ead334bf",
+            "X-0d4f2d2dfb6dd6c3fa11"
           ],
           "form": "面",
           "origin_form": "",
@@ -50356,30 +50367,41 @@
           "kind": "imported_excerpt"
         },
         {
-          "id": "X-2fa9e24e7d3cdf787466",
-          "source": "漢語多功能字庫 (Chinese University of Hong Kong Multi-function Chinese Character Database)",
-          "field": "形義通解; oracle graph analysis",
-          "text": "The database analyzes the oracle form as an eye (目) inside an enclosing outline, representing a face; it reports face as the original sense. It says a bronze form of 面 itself is not attested, though 面 occurs as a component in bronze graphs using 𦣻 plus the enclosure. It also reports a Chu-slip form whose enclosure strokes changed toward 臼, and cites 面 ‘face toward’ in 上博楚竹書二《容成氏》簡14. These are source assertions, not direct inspection of the cited artifacts.",
+          "id": "X-e9020bf4c05524c530ee",
+          "source": "李學勤主編《字源》, 2012, 天津古籍出版社／遼寧人民出版社, ISBN 9787552800692; direct inspection of original scan",
+          "field": "PDF p. 797, printed p. 784, entry 面; original scan pixels inspected (3000×4141 RGB; source_pixel_sha256 1299fccc946695f8dcacc0833fbb0e5ef70fbce15f52307d86bba9a5a5e14582)",
+          "text": "The 面 entry prints its reading and historical-form sequence, with cited examples labeled 商, 西周, 秦, 《說文》小篆, 漢, 戰國, and 楷書. Its account reports competing interpretations: the received 說文 explanation 从首 and “象人面形”; Li Xiaoding’s cited analysis describes the oracle form as 目 within a face-outline; the author says the oracle inscriptional context is fragmentary and 面’s use is unclear, and that the Western Zhou bronze form appears only as a component. The author describes the Chu-slip form as apparently derived from the Western Zhou form and the Qin, seal, and early Han forms as combining developments from oracle and Western Zhou shapes. This is the book author’s synthesis, not a claim that the source artifacts were independently examined.",
           "record_character": "面",
-          "kind": "character-specific paleographic reference",
-          "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php?piece=%E9%9D%A2",
-          "title": "漢語多功能字庫 — 面",
-          "accessed_at": "2026-09-27"
+          "kind": "locally inspected scholarly book entry",
+          "url": "https://search.worldcat.org/search?q=9787552800692",
+          "title": "字源 — 李學勤主編 (2012)",
+          "accessed_at": "2026-10-03"
         },
         {
-          "id": "X-7b1373c9fa394c42ea39",
-          "source": "漢語多功能字庫 (Chinese University of Hong Kong Multi-function Chinese Character Database)",
-          "field": "漢字甲骨部件分析; 形義通解",
-          "text": "The database reads the oracle graph as a facial outline enclosing an eye and gives ‘face’ as its original sense. It reports that 面 itself is not attested in bronze inscriptions, though a related bronze graph uses 𦣻 plus an enclosure. It says a Chu-slip form’s enclosure changed toward 臼 and cites 面 ‘face toward’ in 上博楚竹書二《容成氏》簡14. These are database analyses and reported citations; the artifacts and slip text were not independently inspected here.",
+          "id": "X-88eed63839b0ead334bf",
+          "source": "宋文田, “宋文田：“面”字問題,” 復旦大學出土文獻與古文字研究中心",
+          "field": "discussion of proposed 面 component changes and limits, especially paragraphs 70–87",
+          "text": "The article presents the eye-and-outline reading as the prevailing account it discusses, citing Li Xiaoding’s 甲骨文字集釋. It proposes possible pathways by which an eye-like element could be confused with head-related shapes, using comparisons of 目, 見, 頁, 首 and 𦣻. It explicitly treats these pathways as proposals and notes that no 面 bronze examples had been collected at the time. This supports recording disagreement and uncertainty about the graphic transition, not presenting one transformation pathway as settled.",
           "record_character": "面",
-          "kind": "character-specific paleographic analysis",
-          "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php?piece=%E9%9D%A2",
-          "title": "漢語多功能字庫 — 面",
-          "accessed_at": "2026-09-27"
+          "kind": "scholarly paleography discussion",
+          "url": "https://www.fdgwz.org.cn/Web/Show/1096",
+          "title": "宋文田：“面”字問題",
+          "accessed_at": "2026-10-03"
+        },
+        {
+          "id": "X-0d4f2d2dfb6dd6c3fa11",
+          "source": "Chinese Text Project, received 說文解字 text",
+          "field": "面部, 面 entry",
+          "text": "The transmitted Shuowen text gives 面: 顔前也。从𦣻，象人面形. This verifies the received lexicographic analysis, not the earliest graphic construction or a dated lexical attestation.",
+          "record_character": "面",
+          "kind": "historical dictionary text",
+          "url": "https://ctext.org/shuo-wen-jie-zi/mian-bu1",
+          "title": "Shuo Wen Jie Zi: 面部",
+          "accessed_at": "2026-10-03"
         }
       ],
-      "article_hash": "5e5e0c2ebebfdd4df125f099416b23a8ea89656a162377a31783626137c809b2",
-      "dossier_hash": "c9e5ec9e5833d90f37b1596457ce46fda0b1d9ae3c11e978a64d7258f52c534f"
+      "article_hash": "3cb1437af8462c0e12da9a451288e41adbde03e6d24d4443208ab70015f1832b",
+      "dossier_hash": "ca7657c650d6e8201e424e125109a692206ca1913e2f98c372ba28c302e65a66"
     },
     {
       "id": "character:頁",
@@ -51341,20 +51363,24 @@
       "form": "高",
       "character_entry": "高",
       "formation": {
-        "text": "Pictographic: the whole graph depicts a tall structure, traditionally described as a raised building or viewing tower. The traditional analysis into 冂 and 口 does not establish that either shape had a separate role in the original picture.",
+        "text": "Pictographic: the whole graph depicts a tall structure, traditionally described as a raised building or viewing tower. One account treats Shang forms without the lower 口 as the initial form and says the graph was later standardized; it does not establish separate original roles for 冂 and 口. Another analysis treats 冂 as a raised foundation and the rest as a tower, with 口 either added later or representing a window. The original construction remains unsettled.",
         "evidence_ids": [
           "X-d3ccc741158f010316c1",
           "X-abcb68fb133b9c826908",
-          "X-d71843935d808cc2276b"
+          "X-d71843935d808cc2276b",
+          "X-506e9a1fcf0c68189cee",
+          "X-2fb9a6abac444363d8d9"
         ],
         "type": "pictographic"
       },
       "components": [
         {
-          "text": "Treat 高 as one picture of a tall structure. A traditional analysis separates it into 冂 and 口, but their separate original meanings and roles are not established.",
+          "text": "Read the whole graph as a picture of a tall structure. The traditional 冂、口 split is a historical analysis; their separate original roles are unsettled.",
           "evidence_ids": [
             "X-d3ccc741158f010316c1",
-            "X-d71843935d808cc2276b"
+            "X-d71843935d808cc2276b",
+            "X-506e9a1fcf0c68189cee",
+            "X-2fb9a6abac444363d8d9"
           ],
           "form": "高",
           "origin_form": "",
@@ -51401,10 +51427,32 @@
           "url": "https://www.shuowen5.com/%E9%AB%98_zi/",
           "title": "「高」字的说文解字_高字说文解字注_说文解字在线查询高字",
           "accessed_at": "2026-09-26"
+        },
+        {
+          "id": "X-506e9a1fcf0c68189cee",
+          "source": "李學勤主編《字源》, 天津古籍出版社／辽宁人民出版社, 2012, PDF p. 486, printed p. 473; original scan inspected",
+          "field": "高部 entry, glyph series and opening paragraph; scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0486/source.png, decoded-pixel SHA-256 79b98ddd34ebec7b339b734c972b34b5e018011f17b5579ecde3e7f511c69983",
+          "text": "The 高 entry is headed 高部. It labels forms 1–3 商, 4–5 西周, 6 春秋, 7–12 战国, 13 《说文》小篆, 14–15 汉, and 16 汉楷书, with references to 甲文编, 金文编, 战文编 and other collections. Its text begins with the received Shuowen account, then says 商代 forms without the lower 口 are considered the initial form; Zhou and Spring-and-Autumn forms are similar to Shang forms; Warring States writing shows abbreviated forms, and Qin standardization made modest revisions with reference to Warring States forms. This supports a whole-graph pictographic account and broad labeled form sequence, not detailed claims about each glyph’s strokes.",
+          "record_character": "高",
+          "kind": "locally_inspected_book_scan",
+          "url": "https://www.worldcat.org/search?q=9787552800692",
+          "title": "字源 (2012), ISBN 9787552800692 — bibliographic lookup",
+          "accessed_at": "2026-10-03"
+        },
+        {
+          "id": "X-2fb9a6abac444363d8d9",
+          "source": "漢語多功能字庫, 高 entry",
+          "field": "形義源流通解, 高",
+          "text": "The entry proposes that early bronze and oracle forms comprise 冂 and an additional graph; it interprets 冂 as a raised foundation and 高 as a tower on it, glossing the original meaning as a high tower. It also says 口 was later added to distinguish 高 from 京, while reporting an alternative that 口 represents a lower-story window. Its cited inscriptional discussion treats 高祖 as remote ancestor and cites a Han silk text for ‘high/tall’. This differs from 字源’s formulation that early Shang forms without 口 are pictographic; the two sources do not fully agree on the component account or on how to describe the initial structure.",
+          "record_character": "高",
+          "kind": "dictionary_entry",
+          "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php?piece=%E9%AB%98&sub=1",
+          "title": "漢語多功能字庫 — 漢字甲骨部件分析：高",
+          "accessed_at": "2026-10-03"
         }
       ],
-      "article_hash": "d6b14dbafaca6fb1333fd63238c45b65565117d25813c9038c444cd5b686ddc2",
-      "dossier_hash": "626a1620ecef68a1c99ec6724b55df4becfce60abe8cb5b78d81dc8189e843f4"
+      "article_hash": "c31a39b908961e9985e5714aa59c5e9a768daa82e660e0139b6af59a6f9efbe1",
+      "dossier_hash": "6447645d90a5edc66e885cb51e685ae05338472adec78e2f878b900cb2b3a3da"
     },
     {
       "id": "character:鳮",
@@ -53444,10 +53492,12 @@
         "period": "Shang period; precise date unresolved",
         "certainty": "established",
         "status": "earliest_attested",
-        "text": "A corpus study reports 三 writing the numeral three in Shang oracle-bone examples H.16189 and H.37453; it gives no precise date for either inscription.",
+        "text": "A corpus study reports 三 writing the numeral three in Shang oracle-bone examples H.16189 and H.37453; the inscriptions are not precisely dated. A consulted character account also identifies the numeral three as the original meaning.",
         "evidence_ids": [
           "X-ee2936ae78dc484cfe13",
-          "X-3c76cbb7e350d3cd9c82"
+          "X-3c76cbb7e350d3cd9c82",
+          "X-d18801b51827324b3992",
+          "X-92aabbdf3a67a282eb8a"
         ]
       }
     },
@@ -53461,7 +53511,7 @@
         "period": "current",
         "certainty": "established",
         "status": "current",
-        "text": "三 continues to represent the numeral three.",
+        "text": "三 represents the numeral three in present-day use.",
         "evidence_ids": [
           "E2",
           "E6",
@@ -57514,44 +57564,13 @@
         "gloss": "south",
         "period": "Shang oracle-bone inscriptions; exact earliest specimen date unresolved",
         "certainty": "established",
-        "status": "earliest_attested",
-        "text": "南 is attested for the direction “south” in Shang oracle-bone inscriptions. This early documented use does not prove that “south” was the graph’s original meaning.",
+        "status": "historical",
+        "text": "南 is reported for the direction “south” in Shang oracle-bone inscriptions; the exact earliest specimen date is unresolved. This attested use does not establish the graph’s original meaning.",
         "evidence_ids": [
           "X-a093af2dfd0924e2c4d6",
           "X-ec7e662f99c1d10ff88c",
-          "X-44c3d752aaec277a04d7"
-        ]
-      }
-    },
-    {
-      "id": "sense:南:southern-part",
-      "kind": "sense",
-      "form": "南:southern-part",
-      "sense": {
-        "id": "南:southern-part",
-        "gloss": "southern part",
-        "period": "dating unresolved",
-        "certainty": "established",
-        "status": "current",
-        "text": "南 is also used for a southern part; its date relative to the directional sense is unresolved.",
-        "evidence_ids": [
-          "E6"
-        ]
-      }
-    },
-    {
-      "id": "sense:南:southward",
-      "kind": "sense",
-      "form": "南:southward",
-      "sense": {
-        "id": "南:southward",
-        "gloss": "southward",
-        "period": "dating unresolved",
-        "certainty": "established",
-        "status": "current",
-        "text": "南 is also used to mean southward; its date relative to the directional sense is unresolved.",
-        "evidence_ids": [
-          "E6"
+          "X-44c3d752aaec277a04d7",
+          "X-66c750ba5aa4c4c13fc0"
         ]
       }
     },
@@ -59324,7 +59343,9 @@
           "E8",
           "E11",
           "X-6b4ac30e9aee9783a1ab",
-          "X-b294406ded0aad4bbb4a"
+          "X-b294406ded0aad4bbb4a",
+          "X-002a38f20dd773474863",
+          "X-0d7769208254775873c1"
         ]
       }
     },
@@ -59338,32 +59359,13 @@
         "period": "dating unresolved",
         "certainty": "established",
         "status": "current",
-        "text": "“Return” is a common current meaning. Its historical relationship to the turning sense is unresolved.",
+        "text": "‘Return’ is a common current meaning. Its historical relationship to turning or revolving remains unresolved.",
         "evidence_ids": [
           "E8",
           "X-6b4ac30e9aee9783a1ab",
-          "X-b294406ded0aad4bbb4a"
-        ]
-      }
-    },
-    {
-      "id": "sense:回:turn",
-      "kind": "sense",
-      "form": "回:turn",
-      "sense": {
-        "id": "回:turn",
-        "gloss": "turn; revolve",
-        "period": "dating unresolved",
-        "certainty": "probable",
-        "status": "earliest_attested",
-        "text": "Turning or revolving is proposed as the graph’s early meaning, but no securely dated contextual occurrence establishes it as the earliest attested sense.",
-        "evidence_ids": [
-          "E1",
-          "E2",
-          "E3",
-          "E4",
-          "X-6b4ac30e9aee9783a1ab",
-          "X-9527c500d38104acbbf9"
+          "X-b294406ded0aad4bbb4a",
+          "X-002a38f20dd773474863",
+          "X-0d7769208254775873c1"
         ]
       }
     },
@@ -60366,12 +60368,11 @@
         "period": "dating unresolved",
         "certainty": "established",
         "status": "current",
-        "text": "Dictionary and definition records list these meanings, but do not establish when they arose or how they developed from “woman.”",
+        "text": "Present-day definition records list “girl” and “feminine”; a dictionary also lists daughter or unmarried girl. These listed meanings do not establish when they arose or how they developed from “woman.”",
         "evidence_ids": [
           "E6",
           "E9",
-          "X-7ddabf4002f4899f94ec",
-          "X-563a9936d8ecef059615"
+          "X-7ddabf4002f4899f94ec"
         ]
       }
     },
@@ -60422,7 +60423,7 @@
         "period": "dating unresolved",
         "certainty": "probable",
         "status": "historical",
-        "text": "Inscription accounts report these uses of the graph. Some may be spellings borrowed for other words, but the available accounts do not provide enough context or sound evidence to explain each use.",
+        "text": "Inscription accounts report 女 used for 毋, 每/悔, 汝, 如, and place names. The evidence does not establish whether these were borrowed spellings for other words or meanings of 女, and it gives no dated sequence among them.",
         "evidence_ids": [
           "X-bd0bf57ed5daad271d70",
           "X-41428fc5fee74fe1ba8b",
@@ -60439,14 +60440,14 @@
         "gloss": "woman; female",
         "period": "dating unresolved",
         "certainty": "established",
-        "status": "earliest_attested",
-        "text": "Early inscription accounts report female-related uses, and the Han-period Shuowen glosses 女 as “woman.” The cited inscription examples are not precisely dated here, so this is the earliest documented sense in these accounts, not proof of the graph’s original meaning or priority among early uses.",
+        "status": "current",
+        "text": "Early inscription accounts report female-related uses; a later dictionary glosses 女 as “woman.” The cited inscription examples are not precisely dated here, so they document early use without proving the graph’s original meaning or priority among early uses. The ordinary meaning “woman; female” is current.",
         "evidence_ids": [
-          "E3",
           "X-bd0bf57ed5daad271d70",
           "X-922ad02c114e7082ee17",
           "X-c228fd2f98157883adfb",
-          "X-75ff90b42ec34f326610"
+          "X-75ff90b42ec34f326610",
+          "X-d774cdb729da4f9605d9"
         ]
       }
     },
@@ -62114,9 +62115,7 @@
         "status": "current",
         "text": "Help and assist are current meanings of 帮. The current dictionary evidence cited here supports this sense; the separate current uses for a group or organization, an object-side part, and a classifier are not included in this sense record.",
         "evidence_ids": [
-          "X-9fd34fb65d4c7680c22e",
-          "X-80115d2c1161c26dbe1c",
-          "X-4b7ca2c1ba76e82c881a"
+          "X-9fd34fb65d4c7680c22e"
         ]
       }
     },
@@ -69888,13 +69887,14 @@
         "gloss": "dehusked grain",
         "period": "Oracle-bone corpus; exact date unresolved",
         "certainty": "probable",
-        "status": "earliest_attested",
+        "status": "historical",
         "text": "米 is reported in oracle-bone use for rice or grain. Scholarly discussion identifies its early referent as probably dehusked grain broadly, rather than a single crop; the precise first-use date and inscription context are unresolved.",
         "evidence_ids": [
           "X-12b88fa0c38aa8d44f5a",
           "X-2a68dc8b86b609d11512",
           "X-fd3a2a42002b8615573e",
-          "X-627132ddd62164b1bfce"
+          "X-627132ddd62164b1bfce",
+          "X-0fbd7e8227523711099d"
         ]
       }
     },
@@ -69930,7 +69930,8 @@
           "E1",
           "E2",
           "X-2a68dc8b86b609d11512",
-          "X-627132ddd62164b1bfce"
+          "X-627132ddd62164b1bfce",
+          "X-0fbd7e8227523711099d"
         ]
       }
     },
@@ -74743,8 +74744,8 @@
         "gloss": "face",
         "period": "oracle-bone script period; individual attestations undated",
         "certainty": "probable",
-        "status": "earliest_attested",
-        "text": "The oracle graph is interpreted as depicting a face; the Shuowen gloss describes the area before the face. This is the earliest supported sense here, though the individual inscriptions are undated.",
+        "status": "historical",
+        "text": "Paleographic accounts interpret oracle-period forms as depicting a face. This is a proposed reading of the graph; the individual inscriptions and their dates were not verified, so the evidence does not establish this as the earliest attested use.",
         "evidence_ids": [
           "X-2fa9e24e7d3cdf787466",
           "E3",
@@ -75206,15 +75207,14 @@
       "form": "高:high_tall",
       "sense": {
         "id": "高:high_tall",
-        "gloss": "high; tall",
-        "period": "dating unresolved",
-        "certainty": "probable",
-        "status": "earliest_attested",
-        "text": "The traditional pictographic interpretation connects the tall structure with “high.” No verified inscription context securely establishes this as the earliest attested lexical sense.",
+        "gloss": "distant; remote",
+        "period": "Shang oracle-bone and Zhou bronze uses reported; exact dating unresolved",
+        "certainty": "established",
+        "status": "historical",
+        "text": "Historical examples are interpreted as using 高祖 for “remote ancestor,” supporting a reported use of 高 for “distant; remote.” The inscriptional readings and contexts have not been independently verified.",
         "evidence_ids": [
-          "X-d3ccc741158f010316c1",
-          "X-abcb68fb133b9c826908",
-          "X-21ee8d235de98c204153"
+          "X-506e9a1fcf0c68189cee",
+          "X-19c045d36cd85d731d43"
         ]
       }
     },
@@ -75242,14 +75242,16 @@
       "sense": {
         "id": "高:other_senses",
         "gloss": "high place or ridge; excellence, esteem, high price, old age, or a high or forceful voice",
-        "period": "historical; dates and sequence unresolved",
+        "period": "historical and current listed uses; dates and sequence unresolved",
         "certainty": "established",
         "status": "historical",
-        "text": "Textual citations and dictionary records attest these uses, but do not establish when they arose or how they developed from “high” or “tall.” Their pathways are left unspecified.",
+        "text": "Dictionary records and textual citations attest these uses, but do not establish when they arose or how they developed from “high” or “tall.” Separate reports describe uses for “distant” and later uses for vertical height and “high” in the high/low sense; they do not settle a single semantic pathway.",
         "evidence_ids": [
           "X-f698b22977dbb9efd9c2",
           "X-5f5220c51fff27a844b1",
-          "X-97a903fe605cb2c867df"
+          "X-97a903fe605cb2c867df",
+          "X-506e9a1fcf0c68189cee",
+          "X-19c045d36cd85d731d43"
         ]
       }
     },
@@ -75572,16 +75574,18 @@
       "predicate": "has_sense",
       "context_character": "三",
       "certainty": "established",
-      "text": "A corpus study reports 三 writing the numeral three in Shang oracle-bone examples H.16189 and H.37453; it gives no precise date for either inscription.",
+      "text": "A corpus study reports 三 writing the numeral three in Shang oracle-bone examples H.16189 and H.37453; the inscriptions are not precisely dated. A consulted character account also identifies the numeral three as the original meaning.",
       "evidence_ids": [
         "X-ee2936ae78dc484cfe13",
-        "X-3c76cbb7e350d3cd9c82"
+        "X-3c76cbb7e350d3cd9c82",
+        "X-d18801b51827324b3992",
+        "X-92aabbdf3a67a282eb8a"
       ],
       "entry_character": "三",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "c10633dbb6058b7d2bb4eac831b7ff35ca8974e0cf30023d5120769928c45964",
-      "dossier_hash": "53b15c5d5b9bc587f0311756305aa40a8310ca9c52969ee93693b9b35271ee04",
+      "article_hash": "9015b533550a46494ca6090d51e906fb13c3c5ec661a93812b4aa202cf6b803d",
+      "dossier_hash": "46622dafee40139a185723d518e4f527ea22f889174d3e3f4e445b6ab113f312",
       "evidence": [
         {
           "id": "X-ee2936ae78dc484cfe13",
@@ -75604,6 +75608,28 @@
           "url": "https://www5.zzu.edu.cn/hzwm/info/1148/1935.htm",
           "title": "数词﹛三﹜的用字演变研究（一）",
           "accessed_at": "2026-09-27"
+        },
+        {
+          "id": "X-d18801b51827324b3992",
+          "source": "李學勤主編《字源》",
+          "field": "三部 entry; PDF p. 25, printed p. 13; scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0025/source.png, crop bounds x=1900–2900, y=1750–3750 (3000×4095 source)",
+          "text": "Directly inspected the scan pixels. Under the visible headword 三, 白于蓝 describes it as 指事字 and identifies the original sense as the numeral three (“二加一为三”). The passage cites 《庄子·齐物论》, 《广韵·谈韵》, and other received texts for ordinal use and extended use referring broadly to multiplicity. It says the graph used three horizontal strokes to represent quantity; Warring States forms sometimes add 戈 or 弋, and the 弋-added form continued into Han. It distinguishes oracle-bone 三, whose three strokes are equal, from 气, whose middle stroke is shorter. The headword, diagram, paragraph, and paragraph end are visible on this page; page 26 starts with 王 and 皇 entries, not a continuation of 三.",
+          "record_character": "三",
+          "kind": "locally inspected book scan",
+          "url": "https://search.worldcat.org/search?q=9787552800692",
+          "title": "字源 (2012 edition; bibliographic lookup)",
+          "accessed_at": "2026-10-03"
+        },
+        {
+          "id": "X-92aabbdf3a67a282eb8a",
+          "source": "Wu Yuanyuan, Zhengzhou University Center for Chinese Characters Civilization Research",
+          "field": "§3.1.1.1, “三”与数词﹛三﹜",
+          "text": "The author argues that the numeral sense is the original sense: oracle-bone 三 has three strokes and is used for the number in cited examples, while the surveyed oracle-bone evidence shows no use for Xu Shen's gloss 天地人之道. This is the author's evidence-based argument and conclusion; it does not turn the received Shuowen gloss into a false quotation, but distinguishes it from the proposed original numeral sense.",
+          "record_character": "三",
+          "kind": "scholarly article and attributed analysis",
+          "url": "https://www5.zzu.edu.cn/hzwm/info/1148/1911.htm",
+          "title": "数词﹛三﹜的用字演变研究（四）",
+          "accessed_at": "2026-10-03"
         }
       ]
     },
@@ -75614,7 +75640,7 @@
       "predicate": "has_sense",
       "context_character": "三",
       "certainty": "established",
-      "text": "三 continues to represent the numeral three.",
+      "text": "三 represents the numeral three in present-day use.",
       "evidence_ids": [
         "E2",
         "E6",
@@ -75623,8 +75649,8 @@
       "entry_character": "三",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "c10633dbb6058b7d2bb4eac831b7ff35ca8974e0cf30023d5120769928c45964",
-      "dossier_hash": "53b15c5d5b9bc587f0311756305aa40a8310ca9c52969ee93693b9b35271ee04",
+      "article_hash": "9015b533550a46494ca6090d51e906fb13c3c5ec661a93812b4aa202cf6b803d",
+      "dossier_hash": "46622dafee40139a185723d518e4f527ea22f889174d3e3f4e445b6ab113f312",
       "evidence": [
         {
           "id": "E2",
@@ -87756,8 +87782,8 @@
       "entry_character": "六",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "571f3a31dc190d218e1a53f5074a80d908175bc789d69aa5add4ddb180ea28da",
-      "dossier_hash": "87f56e1ef7e0c59700557ce57076e895da88dd213c5ff8def38a3454f10c1e02",
+      "article_hash": "6392c213944d9f32a5a2d6ed6f107fb27028669cdfbce4729961b597f22cc4d4",
+      "dossier_hash": "620b9e42bd2a2f6fcf73077331deef9190026dc9d31be3b02e96f409755d3761",
       "evidence": [
         {
           "id": "X-e5958c0581a8f46890f9",
@@ -87800,8 +87826,8 @@
       "entry_character": "六",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "571f3a31dc190d218e1a53f5074a80d908175bc789d69aa5add4ddb180ea28da",
-      "dossier_hash": "87f56e1ef7e0c59700557ce57076e895da88dd213c5ff8def38a3454f10c1e02",
+      "article_hash": "6392c213944d9f32a5a2d6ed6f107fb27028669cdfbce4729961b597f22cc4d4",
+      "dossier_hash": "620b9e42bd2a2f6fcf73077331deef9190026dc9d31be3b02e96f409755d3761",
       "evidence": [
         {
           "id": "E5",
@@ -95711,8 +95737,8 @@
       "entry_character": "南",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "f6ba29288df8407d9159462e57f39732c9d08ed761175d16075cce936bc8fa5c",
-      "dossier_hash": "db92c623f7b3d490401d168ca1f3a998ef2701a62f4b6c15e48fc140a5169c22",
+      "article_hash": "9bba852db931adf84b31d7e6d32d7596be27f145dd10c9076da87c33690aeafd",
+      "dossier_hash": "0c92bb5a319f97f7ea0d9019374d2d656db004606347076b959b296ed127c2cb",
       "evidence": [
         {
           "id": "E2",
@@ -95772,17 +95798,18 @@
       "predicate": "semantic_component_of",
       "context_character": "南",
       "certainty": "disputed",
-      "text": "The received Shuowen analysis assigns 𣎵 a semantic role within 南; this historical dictionary account is not independent confirmation of the graph’s original formation.",
+      "text": "The received Shuowen analysis assigns 𣎵 a semantic role in 南. This historical interpretation is disputed and does not establish the graph’s original construction.",
       "evidence_ids": [
         "X-73b980b3f1166d1f1561",
         "X-28fbd5160558c66986f3",
-        "X-6e974ade6199b807576e"
+        "X-6e974ade6199b807576e",
+        "X-66c750ba5aa4c4c13fc0"
       ],
       "entry_character": "南",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "f6ba29288df8407d9159462e57f39732c9d08ed761175d16075cce936bc8fa5c",
-      "dossier_hash": "db92c623f7b3d490401d168ca1f3a998ef2701a62f4b6c15e48fc140a5169c22",
+      "article_hash": "9bba852db931adf84b31d7e6d32d7596be27f145dd10c9076da87c33690aeafd",
+      "dossier_hash": "0c92bb5a319f97f7ea0d9019374d2d656db004606347076b959b296ed127c2cb",
       "evidence": [
         {
           "id": "X-73b980b3f1166d1f1561",
@@ -95816,6 +95843,17 @@
           "url": "https://www.shuowen.org/view/3857",
           "title": "說文解字「南」",
           "accessed_at": "2026-09-27"
+        },
+        {
+          "id": "X-66c750ba5aa4c4c13fc0",
+          "source": "《字源》, 李學勤主編, 2012, 天津古籍出版社、遼寧人民出版社；PDF p. 565, printed p. 552; directly inspected original scan at /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0565/source.png. Checked the 南 headword, form chart and full entry paragraph against pixels.",
+          "field": "南 entry; graphic history and explanation",
+          "text": "The entry labels 南 a loan graph (假借字). It presents Shang forms as an independent pictograph, with the original meaning unknown, and reports that the graph was borrowed for the direction word in Yin-period oracle-bone inscriptions, citing Heji 9738. It also reports a later extension for southward movement and a use for music of ancient southern peoples. The author rejects the received Shuowen component analysis: in the printed clause, 南 is analyzed 从𣎵、𦍒(rěn)聲 and said to be unconvincing. The printed sound referent is 𦍒, not OCR’s 𦍑; the entry does not establish a sound or semantic component analysis for current 南. It cites transmitted texts for later uses but does not date those uses or establish the chronology of the word senses.",
+          "record_character": "南",
+          "kind": "locally_inspected_book_entry",
+          "url": "https://ci.nii.ac.jp/ncid/BB13266817",
+          "title": "字源 (李學勤主編, 2012)",
+          "accessed_at": "2026-10-03"
         }
       ]
     },
@@ -95826,11 +95864,12 @@
       "predicate": "phonetic_component_of",
       "context_character": "南",
       "certainty": "disputed",
-      "text": "The received Shuowen analysis calls 𢆉 phonetic. Its current Mandarin reading rěn can be compared with 南 nán, but this modern pair does not verify the proposed historical phonetic relation.",
+      "text": "The received Shuowen analysis calls 𢆉 phonetic in 南. Its current Mandarin reading can be compared with 南 nán, but this does not independently confirm the proposed historical phonetic role.",
       "evidence_ids": [
         "X-73b980b3f1166d1f1561",
         "X-df3bab6ab89f7499714f",
-        "X-15e28d400820d024b6f0"
+        "X-15e28d400820d024b6f0",
+        "X-66c750ba5aa4c4c13fc0"
       ],
       "entry_character": "南",
       "sound_comparisons": [
@@ -95872,7 +95911,7 @@
       ],
       "sound_limitations": [
         {
-          "text": "The modern Mandarin readings can be compared, but they do not establish that 𢆉 had a phonetic role in 南 historically.",
+          "text": "The current Mandarin readings can be compared, but they do not establish that 𢆉 had a phonetic role in 南 historically.",
           "evidence_ids": [
             "X-df3bab6ab89f7499714f",
             "X-15e28d400820d024b6f0"
@@ -95903,8 +95942,8 @@
           ]
         }
       ],
-      "article_hash": "f6ba29288df8407d9159462e57f39732c9d08ed761175d16075cce936bc8fa5c",
-      "dossier_hash": "db92c623f7b3d490401d168ca1f3a998ef2701a62f4b6c15e48fc140a5169c22",
+      "article_hash": "9bba852db931adf84b31d7e6d32d7596be27f145dd10c9076da87c33690aeafd",
+      "dossier_hash": "0c92bb5a319f97f7ea0d9019374d2d656db004606347076b959b296ed127c2cb",
       "evidence": [
         {
           "id": "X-73b980b3f1166d1f1561",
@@ -95938,6 +95977,17 @@
           "url": "https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=5357",
           "title": "Unihan data for U+5357",
           "accessed_at": "2026-09-27"
+        },
+        {
+          "id": "X-66c750ba5aa4c4c13fc0",
+          "source": "《字源》, 李學勤主編, 2012, 天津古籍出版社、遼寧人民出版社；PDF p. 565, printed p. 552; directly inspected original scan at /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0565/source.png. Checked the 南 headword, form chart and full entry paragraph against pixels.",
+          "field": "南 entry; graphic history and explanation",
+          "text": "The entry labels 南 a loan graph (假借字). It presents Shang forms as an independent pictograph, with the original meaning unknown, and reports that the graph was borrowed for the direction word in Yin-period oracle-bone inscriptions, citing Heji 9738. It also reports a later extension for southward movement and a use for music of ancient southern peoples. The author rejects the received Shuowen component analysis: in the printed clause, 南 is analyzed 从𣎵、𦍒(rěn)聲 and said to be unconvincing. The printed sound referent is 𦍒, not OCR’s 𦍑; the entry does not establish a sound or semantic component analysis for current 南. It cites transmitted texts for later uses but does not date those uses or establish the chronology of the word senses.",
+          "record_character": "南",
+          "kind": "locally_inspected_book_entry",
+          "url": "https://ci.nii.ac.jp/ncid/BB13266817",
+          "title": "字源 (李學勤主編, 2012)",
+          "accessed_at": "2026-10-03"
         }
       ]
     },
@@ -95948,17 +95998,18 @@
       "predicate": "has_sense",
       "context_character": "南",
       "certainty": "established",
-      "text": "南 is attested for the direction “south” in Shang oracle-bone inscriptions. This early documented use does not prove that “south” was the graph’s original meaning.",
+      "text": "南 is reported for the direction “south” in Shang oracle-bone inscriptions; the exact earliest specimen date is unresolved. This attested use does not establish the graph’s original meaning.",
       "evidence_ids": [
         "X-a093af2dfd0924e2c4d6",
         "X-ec7e662f99c1d10ff88c",
-        "X-44c3d752aaec277a04d7"
+        "X-44c3d752aaec277a04d7",
+        "X-66c750ba5aa4c4c13fc0"
       ],
       "entry_character": "南",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "f6ba29288df8407d9159462e57f39732c9d08ed761175d16075cce936bc8fa5c",
-      "dossier_hash": "db92c623f7b3d490401d168ca1f3a998ef2701a62f4b6c15e48fc140a5169c22",
+      "article_hash": "9bba852db931adf84b31d7e6d32d7596be27f145dd10c9076da87c33690aeafd",
+      "dossier_hash": "0c92bb5a319f97f7ea0d9019374d2d656db004606347076b959b296ed127c2cb",
       "evidence": [
         {
           "id": "X-a093af2dfd0924e2c4d6",
@@ -95992,60 +96043,17 @@
           "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/search.php?word=%E5%8D%97",
           "title": "漢語多功能字庫 — 南",
           "accessed_at": "2026-09-27"
-        }
-      ]
-    },
-    {
-      "id": "南:meaning:南:southern-part",
-      "subject": "character:南",
-      "object": "sense:南:southern-part",
-      "predicate": "has_sense",
-      "context_character": "南",
-      "certainty": "established",
-      "text": "南 is also used for a southern part; its date relative to the directional sense is unresolved.",
-      "evidence_ids": [
-        "E6"
-      ],
-      "entry_character": "南",
-      "sound_comparisons": [],
-      "sound_limitations": [],
-      "article_hash": "f6ba29288df8407d9159462e57f39732c9d08ed761175d16075cce936bc8fa5c",
-      "dossier_hash": "db92c623f7b3d490401d168ca1f3a998ef2701a62f4b6c15e48fc140a5169c22",
-      "evidence": [
+        },
         {
-          "id": "E6",
-          "source": "merged_record",
-          "field": "hanzi.definitions",
-          "text": "south; southern part; southward",
+          "id": "X-66c750ba5aa4c4c13fc0",
+          "source": "《字源》, 李學勤主編, 2012, 天津古籍出版社、遼寧人民出版社；PDF p. 565, printed p. 552; directly inspected original scan at /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0565/source.png. Checked the 南 headword, form chart and full entry paragraph against pixels.",
+          "field": "南 entry; graphic history and explanation",
+          "text": "The entry labels 南 a loan graph (假借字). It presents Shang forms as an independent pictograph, with the original meaning unknown, and reports that the graph was borrowed for the direction word in Yin-period oracle-bone inscriptions, citing Heji 9738. It also reports a later extension for southward movement and a use for music of ancient southern peoples. The author rejects the received Shuowen component analysis: in the printed clause, 南 is analyzed 从𣎵、𦍒(rěn)聲 and said to be unconvincing. The printed sound referent is 𦍒, not OCR’s 𦍑; the entry does not establish a sound or semantic component analysis for current 南. It cites transmitted texts for later uses but does not date those uses or establish the chronology of the word senses.",
           "record_character": "南",
-          "kind": "imported_metadata"
-        }
-      ]
-    },
-    {
-      "id": "南:meaning:南:southward",
-      "subject": "character:南",
-      "object": "sense:南:southward",
-      "predicate": "has_sense",
-      "context_character": "南",
-      "certainty": "established",
-      "text": "南 is also used to mean southward; its date relative to the directional sense is unresolved.",
-      "evidence_ids": [
-        "E6"
-      ],
-      "entry_character": "南",
-      "sound_comparisons": [],
-      "sound_limitations": [],
-      "article_hash": "f6ba29288df8407d9159462e57f39732c9d08ed761175d16075cce936bc8fa5c",
-      "dossier_hash": "db92c623f7b3d490401d168ca1f3a998ef2701a62f4b6c15e48fc140a5169c22",
-      "evidence": [
-        {
-          "id": "E6",
-          "source": "merged_record",
-          "field": "hanzi.definitions",
-          "text": "south; southern part; southward",
-          "record_character": "南",
-          "kind": "imported_metadata"
+          "kind": "locally_inspected_book_entry",
+          "url": "https://ci.nii.ac.jp/ncid/BB13266817",
+          "title": "字源 (李學勤主編, 2012)",
+          "accessed_at": "2026-10-03"
         }
       ]
     },
@@ -104947,101 +104955,25 @@
       ]
     },
     {
-      "id": "回:meaning:回:turn",
-      "subject": "character:回",
-      "object": "sense:回:turn",
-      "predicate": "has_sense",
-      "context_character": "回",
-      "certainty": "probable",
-      "text": "Turning or revolving is proposed as the graph’s early meaning, but no securely dated contextual occurrence establishes it as the earliest attested sense.",
-      "evidence_ids": [
-        "E1",
-        "E2",
-        "E3",
-        "E4",
-        "X-6b4ac30e9aee9783a1ab",
-        "X-9527c500d38104acbbf9"
-      ],
-      "entry_character": "回",
-      "sound_comparisons": [],
-      "sound_limitations": [],
-      "article_hash": "4701fb4798c73587b1fc393248633d2eeca555c136f67d1b5c59efbc88c9503e",
-      "dossier_hash": "7e14548260537ebde93cfea867767de5f49ac935453ce40bf2197fca19c2bc5a",
-      "evidence": [
-        {
-          "id": "E1",
-          "source": "makemeahanzi",
-          "field": "hanzi.etymology_notes[0]",
-          "text": "Originally, a spiral signifying return",
-          "record_character": "回",
-          "kind": "imported_excerpt"
-        },
-        {
-          "id": "E2",
-          "source": "dong_chinese",
-          "field": "hanzi.etymology_notes[1]",
-          "text": "Originally a spiral, conveying the meaning \"to turn around\".",
-          "record_character": "回",
-          "kind": "imported_excerpt"
-        },
-        {
-          "id": "E3",
-          "source": "shuowen_jiezi",
-          "field": "hanzi.etymology_notes[2]",
-          "text": "轉也。从囗，中象回轉形。",
-          "record_character": "回",
-          "kind": "imported_excerpt"
-        },
-        {
-          "id": "E4",
-          "source": "wiktionary",
-          "field": "hanzi.etymology_notes[3]",
-          "text": "Pictogram (象形): rotation (originally a spiral).",
-          "record_character": "回",
-          "kind": "imported_excerpt"
-        },
-        {
-          "id": "X-6b4ac30e9aee9783a1ab",
-          "source": "Dong Chinese",
-          "field": "Shuowen account and meanings",
-          "text": "Quotes 許慎’s 說文解字: “回，轉也。从囗，中象回轉形。囘，古文。” The entry lists return/turn around, circling, going back, answering, revolving, time, and classifier uses. This is a historical dictionary account and a modern dictionary's gloss list, not dated evidence for when each sense arose.",
-          "record_character": "回",
-          "kind": "dictionary_entry",
-          "url": "https://www.dong-chinese.com/wiki/%E5%9B%9E",
-          "title": "回 - Dong Chinese dictionary",
-          "accessed_at": "2026-09-26"
-        },
-        {
-          "id": "X-9527c500d38104acbbf9",
-          "source": "Chinese University of Hong Kong, Multi-function Chinese Character Database",
-          "field": "paleographic interpretation and cited classical examples",
-          "text": "The entry interprets 商周 forms as a revolving or circular shape and says Warring States forms with two rings underlie later shapes. It identifies rotation as the original sense and cites the Classic of Poetry phrase 昭回于天, a Xunzi usage 水深而回, and Chu Ci 回風, with traditional commentarial glosses referring to turning or swirling. These are literary attestations cited by a modern reference, not a complete dated semantic chronology.",
-          "record_character": "回",
-          "kind": "dictionary_entry",
-          "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php?piece=%E5%9B%9E&sub=1",
-          "title": "漢語多功能字庫 — 漢字甲骨部件分析",
-          "accessed_at": "2026-09-26"
-        }
-      ]
-    },
-    {
       "id": "回:meaning:回:return",
       "subject": "character:回",
       "object": "sense:回:return",
       "predicate": "has_sense",
       "context_character": "回",
       "certainty": "established",
-      "text": "“Return” is a common current meaning. Its historical relationship to the turning sense is unresolved.",
+      "text": "‘Return’ is a common current meaning. Its historical relationship to turning or revolving remains unresolved.",
       "evidence_ids": [
         "E8",
         "X-6b4ac30e9aee9783a1ab",
-        "X-b294406ded0aad4bbb4a"
+        "X-b294406ded0aad4bbb4a",
+        "X-002a38f20dd773474863",
+        "X-0d7769208254775873c1"
       ],
       "entry_character": "回",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "4701fb4798c73587b1fc393248633d2eeca555c136f67d1b5c59efbc88c9503e",
-      "dossier_hash": "7e14548260537ebde93cfea867767de5f49ac935453ce40bf2197fca19c2bc5a",
+      "article_hash": "65532820c99958628118473d2665dd39bf25cbdadd7d915982715aab69ff3a5f",
+      "dossier_hash": "1d058fbbea5a46c9caece4f68f063abd5e9ccfd70b0258e367fd478f096f88f5",
       "evidence": [
         {
           "id": "E8",
@@ -105072,6 +105004,28 @@
           "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=7392&la=1",
           "title": "回 - Ministry of Education 《Dictionary of Chinese Character Variants》2024",
           "accessed_at": "2026-09-26"
+        },
+        {
+          "id": "X-002a38f20dd773474863",
+          "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692; direct scan inspection",
+          "field": "回 entry, printed p. 559; PDF p. 572; scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0572/source.png",
+          "text": "The entry identifies 回 as pictographic and says Shang–Zhou forms resemble a revolving loop; it describes Warring States Qin forms as two enclosed rings and says later forms follow them. It proposes rotation as the original meaning, then presents turning, changing direction, changing, returning, answering, taking a circuitous route, and counting occurrences as further uses. The cited examples include 荀子《致士》“水深而回,” 楚辭《離騷》, and 杜甫《百憂集行》. These are the book’s graphic and semantic analysis and cited literary examples; the passage does not establish dates for the examples or a securely dated earliest use. I inspected the headword, paragraph, form labels, cited references, and printed page number in the scan. The entry ends on this page; page 573 continues the neighboring 國 entry, not 回.",
+          "record_character": "回",
+          "kind": "local_book_scan",
+          "url": "https://www.sanmin.com.tw/product/index/004029656",
+          "title": "字源(上中下)（簡體書） — 三民網路書店",
+          "accessed_at": "2026-10-03"
+        },
+        {
+          "id": "X-0d7769208254775873c1",
+          "source": "臺灣教育部《異體字字典》",
+          "field": "A00727 回: Shuowen account, readings, and senses",
+          "text": "The entry reproduces the Shuowen explanation that 回 means turning and describes an outer 囗 with an inner form resembling rotation. It gives Mandarin huí and lists senses including turning, returning, answering, surrounding, and use as a counter for actions, periods, and chapters. Its gloss list and examples document the dictionary’s account; they do not alone establish when each sense arose.",
+          "record_character": "回",
+          "kind": "dictionary_entry",
+          "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=7392&powerMode=2&q=1",
+          "title": "回 - 教育部《異體字字典》",
+          "accessed_at": "2026-10-03"
         }
       ]
     },
@@ -105087,13 +105041,15 @@
         "E8",
         "E11",
         "X-6b4ac30e9aee9783a1ab",
-        "X-b294406ded0aad4bbb4a"
+        "X-b294406ded0aad4bbb4a",
+        "X-002a38f20dd773474863",
+        "X-0d7769208254775873c1"
       ],
       "entry_character": "回",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "4701fb4798c73587b1fc393248633d2eeca555c136f67d1b5c59efbc88c9503e",
-      "dossier_hash": "7e14548260537ebde93cfea867767de5f49ac935453ce40bf2197fca19c2bc5a",
+      "article_hash": "65532820c99958628118473d2665dd39bf25cbdadd7d915982715aab69ff3a5f",
+      "dossier_hash": "1d058fbbea5a46c9caece4f68f063abd5e9ccfd70b0258e367fd478f096f88f5",
       "evidence": [
         {
           "id": "E8",
@@ -105132,6 +105088,28 @@
           "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=7392&la=1",
           "title": "回 - Ministry of Education 《Dictionary of Chinese Character Variants》2024",
           "accessed_at": "2026-09-26"
+        },
+        {
+          "id": "X-002a38f20dd773474863",
+          "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692; direct scan inspection",
+          "field": "回 entry, printed p. 559; PDF p. 572; scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0572/source.png",
+          "text": "The entry identifies 回 as pictographic and says Shang–Zhou forms resemble a revolving loop; it describes Warring States Qin forms as two enclosed rings and says later forms follow them. It proposes rotation as the original meaning, then presents turning, changing direction, changing, returning, answering, taking a circuitous route, and counting occurrences as further uses. The cited examples include 荀子《致士》“水深而回,” 楚辭《離騷》, and 杜甫《百憂集行》. These are the book’s graphic and semantic analysis and cited literary examples; the passage does not establish dates for the examples or a securely dated earliest use. I inspected the headword, paragraph, form labels, cited references, and printed page number in the scan. The entry ends on this page; page 573 continues the neighboring 國 entry, not 回.",
+          "record_character": "回",
+          "kind": "local_book_scan",
+          "url": "https://www.sanmin.com.tw/product/index/004029656",
+          "title": "字源(上中下)（簡體書） — 三民網路書店",
+          "accessed_at": "2026-10-03"
+        },
+        {
+          "id": "X-0d7769208254775873c1",
+          "source": "臺灣教育部《異體字字典》",
+          "field": "A00727 回: Shuowen account, readings, and senses",
+          "text": "The entry reproduces the Shuowen explanation that 回 means turning and describes an outer 囗 with an inner form resembling rotation. It gives Mandarin huí and lists senses including turning, returning, answering, surrounding, and use as a counter for actions, periods, and chapters. Its gloss list and examples document the dictionary’s account; they do not alone establish when each sense arose.",
+          "record_character": "回",
+          "kind": "dictionary_entry",
+          "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=7392&powerMode=2&q=1",
+          "title": "回 - 教育部《異體字字典》",
+          "accessed_at": "2026-10-03"
         }
       ]
     },
@@ -111179,28 +111157,20 @@
       "predicate": "has_sense",
       "context_character": "女",
       "certainty": "established",
-      "text": "Early inscription accounts report female-related uses, and the Han-period Shuowen glosses 女 as “woman.” The cited inscription examples are not precisely dated here, so this is the earliest documented sense in these accounts, not proof of the graph’s original meaning or priority among early uses.",
+      "text": "Early inscription accounts report female-related uses; a later dictionary glosses 女 as “woman.” The cited inscription examples are not precisely dated here, so they document early use without proving the graph’s original meaning or priority among early uses. The ordinary meaning “woman; female” is current.",
       "evidence_ids": [
-        "E3",
         "X-bd0bf57ed5daad271d70",
         "X-922ad02c114e7082ee17",
         "X-c228fd2f98157883adfb",
-        "X-75ff90b42ec34f326610"
+        "X-75ff90b42ec34f326610",
+        "X-d774cdb729da4f9605d9"
       ],
       "entry_character": "女",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "c58fac7ed753eb9ae05e456c04d6702e44fc35406eb0b0f39b6288703db998ee",
-      "dossier_hash": "4c01e0a0cbfce31857c1fab283d7205f26b6e67f8b5e500ff3efbacfb146d460",
+      "article_hash": "dbc5b817f7be8ba2db22d001689c4e02b6ce87c4945611e2e6674a1563f5ab85",
+      "dossier_hash": "ded8d80f122e63fb2ae1ee35baccd9065947a1b1efad7c9f777b1a8ac2dad37d",
       "evidence": [
-        {
-          "id": "E3",
-          "source": "shuowen_jiezi",
-          "field": "hanzi.etymology_notes[2]",
-          "text": "婦人也。象形。王育說。凡女之屬皆从女。",
-          "record_character": "女",
-          "kind": "imported_excerpt"
-        },
         {
           "id": "X-bd0bf57ed5daad271d70",
           "source": "漢語多功能字庫 (Chinese Characters Database), CUHK",
@@ -111244,6 +111214,17 @@
           "url": "https://www.yjcn.nl/wp/wp-content/uploads/2015/11/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%BA%8C%E百字探源%EF%BC%88金真姬）.pdf",
           "title": "常用漢字二百字探源",
           "accessed_at": "2026-09-27"
+        },
+        {
+          "id": "X-d774cdb729da4f9605d9",
+          "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692; PDF p. 1100, printed p. 1085. Directly inspected the supplied scan pixels for the 女 headword, its forms and explanatory paragraph; the printed 女 entry ends on this page. The next supplied page, PDF p. 1101 (printed p. 1086), begins with 姓 material, not a continuation of 女.",
+          "field": "女 entry: script-form account, senses and cited examples; scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1100/source.png",
+          "text": "The entry calls 女 pictographic. It describes oracle-bone forms as a woman kneeling with her hands crossed before her chest, and says some forms add a head stroke interpreted as headwear. It describes the kneeling posture as less apparent in Spring and Autumn bronze forms, with Warring States forms following those bronze forms with changed stroke manner; clerical writing turns the vertical kneeling stroke into a horizontal stroke. It gives the core meaning as female, contrasted with 男, and cites a bronze-inscription example and the transmitted 易 for 女 meaning female. It separately reports 女 read as 母 in an oracle-bone example, as 汝 in bronze inscriptions, and as 如 in Warring States writing. The entry also records a distinct nù reading for ‘give a woman in marriage’, citing 國語. These source-reported uses and citations do not by themselves establish a dated semantic development or the dates of each cited inscription.",
+          "record_character": "女",
+          "kind": "locally inspected scholarly dictionary entry",
+          "url": "https://search.worldcat.org/search?q=9787552800692",
+          "title": "字源",
+          "accessed_at": "2026-10-03"
         }
       ]
     },
@@ -111265,8 +111246,8 @@
       "entry_character": "女",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "c58fac7ed753eb9ae05e456c04d6702e44fc35406eb0b0f39b6288703db998ee",
-      "dossier_hash": "4c01e0a0cbfce31857c1fab283d7205f26b6e67f8b5e500ff3efbacfb146d460",
+      "article_hash": "dbc5b817f7be8ba2db22d001689c4e02b6ce87c4945611e2e6674a1563f5ab85",
+      "dossier_hash": "ded8d80f122e63fb2ae1ee35baccd9065947a1b1efad7c9f777b1a8ac2dad37d",
       "evidence": [
         {
           "id": "X-bd0bf57ed5daad271d70",
@@ -111332,7 +111313,7 @@
       "predicate": "has_sense",
       "context_character": "女",
       "certainty": "probable",
-      "text": "Inscription accounts report these uses of the graph. Some may be spellings borrowed for other words, but the available accounts do not provide enough context or sound evidence to explain each use.",
+      "text": "Inscription accounts report 女 used for 毋, 每/悔, 汝, 如, and place names. The evidence does not establish whether these were borrowed spellings for other words or meanings of 女, and it gives no dated sequence among them.",
       "evidence_ids": [
         "X-bd0bf57ed5daad271d70",
         "X-41428fc5fee74fe1ba8b",
@@ -111341,8 +111322,8 @@
       "entry_character": "女",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "c58fac7ed753eb9ae05e456c04d6702e44fc35406eb0b0f39b6288703db998ee",
-      "dossier_hash": "4c01e0a0cbfce31857c1fab283d7205f26b6e67f8b5e500ff3efbacfb146d460",
+      "article_hash": "dbc5b817f7be8ba2db22d001689c4e02b6ce87c4945611e2e6674a1563f5ab85",
+      "dossier_hash": "ded8d80f122e63fb2ae1ee35baccd9065947a1b1efad7c9f777b1a8ac2dad37d",
       "evidence": [
         {
           "id": "X-bd0bf57ed5daad271d70",
@@ -111394,8 +111375,8 @@
       "entry_character": "女",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "c58fac7ed753eb9ae05e456c04d6702e44fc35406eb0b0f39b6288703db998ee",
-      "dossier_hash": "4c01e0a0cbfce31857c1fab283d7205f26b6e67f8b5e500ff3efbacfb146d460",
+      "article_hash": "dbc5b817f7be8ba2db22d001689c4e02b6ce87c4945611e2e6674a1563f5ab85",
+      "dossier_hash": "ded8d80f122e63fb2ae1ee35baccd9065947a1b1efad7c9f777b1a8ac2dad37d",
       "evidence": [
         {
           "id": "E8",
@@ -111425,18 +111406,17 @@
       "predicate": "has_sense",
       "context_character": "女",
       "certainty": "established",
-      "text": "Dictionary and definition records list these meanings, but do not establish when they arose or how they developed from “woman.”",
+      "text": "Present-day definition records list “girl” and “feminine”; a dictionary also lists daughter or unmarried girl. These listed meanings do not establish when they arose or how they developed from “woman.”",
       "evidence_ids": [
         "E6",
         "E9",
-        "X-7ddabf4002f4899f94ec",
-        "X-563a9936d8ecef059615"
+        "X-7ddabf4002f4899f94ec"
       ],
       "entry_character": "女",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "c58fac7ed753eb9ae05e456c04d6702e44fc35406eb0b0f39b6288703db998ee",
-      "dossier_hash": "4c01e0a0cbfce31857c1fab283d7205f26b6e67f8b5e500ff3efbacfb146d460",
+      "article_hash": "dbc5b817f7be8ba2db22d001689c4e02b6ce87c4945611e2e6674a1563f5ab85",
+      "dossier_hash": "ded8d80f122e63fb2ae1ee35baccd9065947a1b1efad7c9f777b1a8ac2dad37d",
       "evidence": [
         {
           "id": "E6",
@@ -111459,17 +111439,6 @@
           "source": "普及版 字通, via Kotobank",
           "field": "字形 and 訓義",
           "text": "The entry labels 女 pictographic, gives the figure as a kneeling woman seated with hands crossed in front, and records meanings/uses including woman, daughter or unmarried girl, to take as wife, and second-person pronoun ‘you’. This is a synchronic/historical dictionary list, not a dated semantic chronology.",
-          "record_character": "女",
-          "kind": "dictionary account",
-          "url": "https://kotobank.jp/word/%E5%A5%B3-449223",
-          "title": "女(オンナ)とは？ 意味や使い方 — コトバンク",
-          "accessed_at": "2026-09-27"
-        },
-        {
-          "id": "X-563a9936d8ecef059615",
-          "source": "普及版 字通, via Kotobank",
-          "field": "女: forms, graphic classification and meanings",
-          "text": "The entry labels 女 pictographic and supplies oracle-bone and bronze forms. It lists senses including woman, daughter, to marry, and second-person pronoun, but does not provide a dated semantic sequence; the list alone does not establish when those senses arose.",
           "record_character": "女",
           "kind": "dictionary account",
           "url": "https://kotobank.jp/word/%E5%A5%B3-449223",
@@ -120234,16 +120203,15 @@
       "predicate": "semantic_component_of",
       "context_character": "帮",
       "certainty": "established",
-      "text": "In 帮, 巾 is analyzed as the semantic component, contributing a broad cloth-related category.",
+      "text": "In 帮, 巾 is analyzed as the semantic component, contributing a broad meaning category.",
       "evidence_ids": [
-        "X-d891a8a2cb360d54b5ba",
-        "X-8acd4d9c74b07d340115"
+        "X-d891a8a2cb360d54b5ba"
       ],
       "entry_character": "帮",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "9150307f7172e6bead00a977d3548feb3ed427f0db34e31caffd91ac72159307",
-      "dossier_hash": "5e47c64d1fce4362182de06ad315938ea9d5728acd6b7d5ce90ef263081a355c",
+      "article_hash": "72456de452b938fc54d53eae9d60a1f1b2e2dc25bc7dbeeaccf9a3f2e4dafb8a",
+      "dossier_hash": "ac3530a36003aee08a68fbb9fb50d306d8394ba9a05142c8ab4e5c3c69f7df43",
       "evidence": [
         {
           "id": "X-d891a8a2cb360d54b5ba",
@@ -120251,17 +120219,6 @@
           "field": "幫/帮: variant-form classification and component account",
           "text": "The editorial note treats 帮 as a variant of 幫 and says both are phonosemantic structures: 幫 has phonetic 封 and semantic 帛, while 帮 has phonetic 邦 and semantic 巾. It regards the two semantic elements as belonging to the same broad meaning class. This supports a nonchronological variant relation between the forms; it does not show that 帮 was created by directly replacing the parts of 幫 at a specific date.",
           "record_character": "幫",
-          "kind": "dictionary_editorial_analysis",
-          "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=12971&la=1",
-          "title": "[A01190-003] 帮 (幫) - Ministry of Education《Dictionary of Chinese Character Variants》2024",
-          "accessed_at": "2026-09-26"
-        },
-        {
-          "id": "X-8acd4d9c74b07d340115",
-          "source": "Ministry of Education, Taiwan, Dictionary of Chinese Character Variants",
-          "field": "帮: variant status and form account",
-          "text": "The editor classifies 帮 as a variant of 幫, not as evidence of a dated simplification route. The note says both are phonosemantic: 帮 uses 邦 as phonetic and 巾 as semantic element; 幫 uses 封 and 帛. It treats the semantic elements as belonging to a related meaning class. The entry says 帮 is not found in Shuowen and its paleographic table marks oracle, bronze and bamboo-slip collections unavailable.",
-          "record_character": "帮",
           "kind": "dictionary_editorial_analysis",
           "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=12971&la=1",
           "title": "[A01190-003] 帮 (幫) - Ministry of Education《Dictionary of Chinese Character Variants》2024",
@@ -120278,7 +120235,8 @@
       "certainty": "probable",
       "text": "邦 is analyzed as the phonetic component of 帮. Their current Mandarin readings are both bāng, consistent with this analysis; that pair does not establish the historical sound when the variant formed.",
       "evidence_ids": [
-        "X-d891a8a2cb360d54b5ba"
+        "X-d891a8a2cb360d54b5ba",
+        "X-c88ee7dce88fe06fd86c"
       ],
       "entry_character": "帮",
       "sound_comparisons": [
@@ -120286,9 +120244,7 @@
           "text": "In Modern Mandarin, 邦 and 帮 are both read bāng. This current reading pair is consistent with the editor’s phonetic analysis but does not establish the historical sound when the variant formed.",
           "evidence_ids": [
             "X-d891a8a2cb360d54b5ba",
-            "X-c88ee7dce88fe06fd86c",
-            "X-05f8ede7e123a38f56b4",
-            "X-04d807e6e7af94356966"
+            "X-c88ee7dce88fe06fd86c"
           ],
           "component_form": "邦",
           "component_reading": "bāng",
@@ -120316,28 +120272,6 @@
               "url": "https://ytenx.org/kyonh/sieux/73/",
               "title": "邦 - 小韻 - 廣韻 - 韻典網",
               "accessed_at": "2026-10-03"
-            },
-            {
-              "id": "X-05f8ede7e123a38f56b4",
-              "source": "Unicode Consortium, Unihan database record",
-              "field": "U+5E2E: attempted official kMandarin record",
-              "text": "The official Unihan character-record URL was requested but was inaccessible through the web tool; no kMandarin claim is made from that page. The supplied local HSK1 row reports 帮 bāng, but it is not external evidence.",
-              "record_character": "帮",
-              "kind": "access_failure",
-              "url": "https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=5E2E",
-              "title": "Unihan database record for U+5E2E",
-              "accessed_at": "2026-10-03"
-            },
-            {
-              "id": "X-04d807e6e7af94356966",
-              "source": "Unicode Consortium, Unihan database record",
-              "field": "U+90A6: attempted official kMandarin record",
-              "text": "The official Unihan character-record URL was requested but was inaccessible through the web tool; no kMandarin claim is made from that page. The supplied local HSK1 row reports 邦 bāng, but it is not external evidence.",
-              "record_character": "邦",
-              "kind": "access_failure",
-              "url": "https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=90A6",
-              "title": "Unihan database record for U+90A6",
-              "accessed_at": "2026-10-03"
             }
           ]
         }
@@ -120346,7 +120280,8 @@
         {
           "text": "The current Mandarin reading pair does not establish the historical sound relationship or when 帮 formed.",
           "evidence_ids": [
-            "X-d891a8a2cb360d54b5ba"
+            "X-d891a8a2cb360d54b5ba",
+            "X-c88ee7dce88fe06fd86c"
           ],
           "evidence": [
             {
@@ -120359,12 +120294,23 @@
               "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=12971&la=1",
               "title": "[A01190-003] 帮 (幫) - Ministry of Education《Dictionary of Chinese Character Variants》2024",
               "accessed_at": "2026-09-26"
+            },
+            {
+              "id": "X-c88ee7dce88fe06fd86c",
+              "source": "韻典網, Guangyun 小韻 tables",
+              "field": "邦 and 幫: same-system Middle Chinese comparison",
+              "text": "The database gives 邦 as 博江切 and Zhengzhang Middle Chinese pɣʌŋ, and 幫 as 博旁切 and Zhengzhang Middle Chinese pɑŋ. In this reconstruction system the initial and final consonant notations align while the rhyme vowels differ. This is compatible with, but does not itself prove, the editorial proposal that 邦 serves as phonetic in 帮. These are reconstructions alongside rhyme-book data, not direct recordings or evidence for when the variant formed.",
+              "record_character": "邦",
+              "kind": "phonological_database",
+              "url": "https://ytenx.org/kyonh/sieux/73/",
+              "title": "邦 - 小韻 - 廣韻 - 韻典網",
+              "accessed_at": "2026-10-03"
             }
           ]
         }
       ],
-      "article_hash": "9150307f7172e6bead00a977d3548feb3ed427f0db34e31caffd91ac72159307",
-      "dossier_hash": "5e47c64d1fce4362182de06ad315938ea9d5728acd6b7d5ce90ef263081a355c",
+      "article_hash": "72456de452b938fc54d53eae9d60a1f1b2e2dc25bc7dbeeaccf9a3f2e4dafb8a",
+      "dossier_hash": "ac3530a36003aee08a68fbb9fb50d306d8394ba9a05142c8ab4e5c3c69f7df43",
       "evidence": [
         {
           "id": "X-d891a8a2cb360d54b5ba",
@@ -120376,6 +120322,17 @@
           "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=12971&la=1",
           "title": "[A01190-003] 帮 (幫) - Ministry of Education《Dictionary of Chinese Character Variants》2024",
           "accessed_at": "2026-09-26"
+        },
+        {
+          "id": "X-c88ee7dce88fe06fd86c",
+          "source": "韻典網, Guangyun 小韻 tables",
+          "field": "邦 and 幫: same-system Middle Chinese comparison",
+          "text": "The database gives 邦 as 博江切 and Zhengzhang Middle Chinese pɣʌŋ, and 幫 as 博旁切 and Zhengzhang Middle Chinese pɑŋ. In this reconstruction system the initial and final consonant notations align while the rhyme vowels differ. This is compatible with, but does not itself prove, the editorial proposal that 邦 serves as phonetic in 帮. These are reconstructions alongside rhyme-book data, not direct recordings or evidence for when the variant formed.",
+          "record_character": "邦",
+          "kind": "phonological_database",
+          "url": "https://ytenx.org/kyonh/sieux/73/",
+          "title": "邦 - 小韻 - 廣韻 - 韻典網",
+          "accessed_at": "2026-10-03"
         }
       ]
     },
@@ -120386,17 +120343,18 @@
       "predicate": "variant_of",
       "context_character": "帮",
       "certainty": "established",
-      "text": "帮 is classified as a variant of 幫. One account proposes that 帮 arose by simplifying 幫’s lower 帛 to 巾, while another analyzes the two forms with different phonetic and semantic components. The evidence does not establish a dated, step-by-step graphic route.",
+      "text": "帮 is classified as a variant of 幫. One account proposes that 幫’s lower 帛 was reduced to 巾 in 帮, while another analyzes the two forms with different semantic and phonetic components. The evidence does not establish when the variant arose or a step-by-step graphic route.",
       "evidence_ids": [
         "X-d891a8a2cb360d54b5ba",
         "X-bb98d9ba88c32bd4568f",
-        "X-9eaa452cfbd7a4afe529"
+        "X-40b0594eb4a08dd1d3b6",
+        "X-e50d4bd4d112147e0ade"
       ],
       "entry_character": "帮",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "9150307f7172e6bead00a977d3548feb3ed427f0db34e31caffd91ac72159307",
-      "dossier_hash": "5e47c64d1fce4362182de06ad315938ea9d5728acd6b7d5ce90ef263081a355c",
+      "article_hash": "72456de452b938fc54d53eae9d60a1f1b2e2dc25bc7dbeeaccf9a3f2e4dafb8a",
+      "dossier_hash": "ac3530a36003aee08a68fbb9fb50d306d8394ba9a05142c8ab4e5c3c69f7df43",
       "evidence": [
         {
           "id": "X-d891a8a2cb360d54b5ba",
@@ -120421,15 +120379,26 @@
           "accessed_at": "2026-10-03"
         },
         {
-          "id": "X-9eaa452cfbd7a4afe529",
-          "source": "Ministry of Education, Taiwan, Dictionary of Chinese Character Variants",
-          "field": "帮: status and historical-form availability",
-          "text": "The entry lists 帮 as an alternate form under 幫, says 帮 is not found in Shuowen, and notes the dictionary classification of 帮 as a variant. Its form-history table marks many paleographic reference collections as unavailable. The available page therefore does not establish the date or exact graphic route by which this variant arose.",
+          "id": "X-40b0594eb4a08dd1d3b6",
+          "source": "Taiwan Ministry of Education, Dictionary of Chinese Character Variants",
+          "field": "A01190-003 帮 (幫): variant status and editorial component analysis",
+          "text": "The entry classifies 帮 as a variant of 幫 and gives the editor's analysis: 帮 uses 邦 as sound element and 巾 as meaning element; 幫 uses 封 and 帛. The editor says the meaning elements belong to the same category. The entry does not date 帮's emergence or specify a graphic route. This is an editorial analysis, separate from the more specific 帛-to-巾 reduction proposal in 字源.",
           "record_character": "帮",
-          "kind": "dictionary_entry",
+          "kind": "dictionary_editorial_analysis",
           "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=12971&la=1",
           "title": "[A01190-003] 帮 (幫) - Ministry of Education《Dictionary of Chinese Character Variants》2024",
-          "accessed_at": "2026-09-26"
+          "accessed_at": "2026-10-03"
+        },
+        {
+          "id": "X-e50d4bd4d112147e0ade",
+          "source": "Wikisource transcription of the State Council resolution",
+          "field": "1956 scheme: First Table and implementation date",
+          "text": "The transcribed resolution is dated 1956-01-28. It states that the 230 characters in the First Table were to be used nationwide beginning 1956-02-01, and lists 帮（幫）. This verifies the listing in the inspected transcription, not in an opened government-hosted original.",
+          "record_character": "帮",
+          "kind": "primary_document_transcription",
+          "url": "https://zh.wikisource.org/zh-hans/%E6%BC%A2%E5%AD%97%E7%B0%A1%E5%8C%96%E6%96%B9%E6%A1%88",
+          "title": "国务院关于公布汉字简化方案的决议 / 汉字简化方案",
+          "accessed_at": "2026-10-03"
         }
       ]
     },
@@ -120442,15 +120411,13 @@
       "certainty": "established",
       "text": "Help and assist are current meanings of 帮. The current dictionary evidence cited here supports this sense; the separate current uses for a group or organization, an object-side part, and a classifier are not included in this sense record.",
       "evidence_ids": [
-        "X-9fd34fb65d4c7680c22e",
-        "X-80115d2c1161c26dbe1c",
-        "X-4b7ca2c1ba76e82c881a"
+        "X-9fd34fb65d4c7680c22e"
       ],
       "entry_character": "帮",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "9150307f7172e6bead00a977d3548feb3ed427f0db34e31caffd91ac72159307",
-      "dossier_hash": "5e47c64d1fce4362182de06ad315938ea9d5728acd6b7d5ce90ef263081a355c",
+      "article_hash": "72456de452b938fc54d53eae9d60a1f1b2e2dc25bc7dbeeaccf9a3f2e4dafb8a",
+      "dossier_hash": "ac3530a36003aee08a68fbb9fb50d306d8394ba9a05142c8ab4e5c3c69f7df43",
       "evidence": [
         {
           "id": "X-9fd34fb65d4c7680c22e",
@@ -120462,28 +120429,6 @@
           "url": "https://zd.hwxnet.com/search/hwxE5hwxB8hwxAE.html",
           "title": "帮字的解释及意思 - 在线新华字典",
           "accessed_at": "2026-10-03"
-        },
-        {
-          "id": "X-80115d2c1161c26dbe1c",
-          "source": "漢語多功能字庫 (Chinese University of Hong Kong)",
-          "field": "幫: graphic analysis and sense history",
-          "text": "The database analyzes 幫 as 帛 semantic plus 封 phonetic and gives the original sense as the side of a shoe. It cites the Guangyun gloss 衣治鞋履 (shoe-making/repair) and a Song Ci line by Jiang Jie using 鞋幫. It records extensions to the side of objects, proximity, assistance, and a group/class, with literary examples from Yuan and later works. These dictionary citations establish later attestations for the listed uses, but do not date the character's earliest occurrence.",
-          "record_character": "幫",
-          "kind": "dictionary_analysis",
-          "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/search.php?word=%E5%B9%AB",
-          "title": "漢語多功能字庫 - 字頭「幫」",
-          "accessed_at": "2026-09-26"
-        },
-        {
-          "id": "X-4b7ca2c1ba76e82c881a",
-          "source": "Taiwan Ministry of Education, Dictionary of Chinese Character Variants",
-          "field": "幫: headword, components, senses, and cited attestations",
-          "text": "The entry says 幫 is not recorded in Shuowen and describes its standard form as 封 above 帛. Under 幫, it cites Guangyun for 衣治鞋履 (shoe-making or repair), Jiyun for 治履邊, and later textual examples for shoe edge, an object's side, assistance, dependence or proximity, agreement, groups, and a measure word. These citations document uses attributed to 幫; they do not establish the graph's earliest appearance or a chronological chain among senses.",
-          "record_character": "幫",
-          "kind": "dictionary_entry",
-          "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=12968&la=1",
-          "title": "[A01190] 幫 - Ministry of Education《Dictionary of Chinese Character Variants》2024",
-          "accessed_at": "2026-09-26"
         }
       ]
     },
@@ -167114,13 +167059,14 @@
         "X-12b88fa0c38aa8d44f5a",
         "X-2a68dc8b86b609d11512",
         "X-fd3a2a42002b8615573e",
-        "X-627132ddd62164b1bfce"
+        "X-627132ddd62164b1bfce",
+        "X-0fbd7e8227523711099d"
       ],
       "entry_character": "米",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "8114464146d0a520cb05deab41165cd2c126fe6a57e45e54b3d385612d243c5a",
-      "dossier_hash": "5d54b57114e919d13c505345650ec6e960dd2b1487e7a149f69915f4657450b1",
+      "article_hash": "e7dc914ad76ac9dcb5b7ba0964a7b76eddc94219c71e6cf42e4bfe48be24098d",
+      "dossier_hash": "e6bb3890be843f88c62e23e2ccc3f50cd1b0759ebb97ed4382dd0e50cf6ad0f5",
       "evidence": [
         {
           "id": "X-12b88fa0c38aa8d44f5a",
@@ -167165,6 +167111,17 @@
           "url": "https://www.ch.ntnu.edu.tw/SIS/downloadfile.php?issue_id=67&paper_id=634",
           "title": "中國學術年刊第四十七期（春季號）",
           "accessed_at": "2026-09-27"
+        },
+        {
+          "id": "X-0fbd7e8227523711099d",
+          "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012",
+          "field": "PDF p. 658; printed p. 645; 米 entry continuation; scan inspected",
+          "text": "The entry describes 米 as a pictograph resembling scattered grains: small marks lie above and below a horizontal stroke, later changing into longer strokes and a cross-like form. It gives the original sense as seeds of grain crops with their husks removed, then notes later broader use for shelled kernels such as 花生米, embroidered patterns resembling grains, and a measure meaning a small amount. The printed page and passage were checked against the supplied scan; the headword 米 is at the bottom of PDF p. 657 (printed p. 644), and the explanation continues at the top of p. 658. No OCR correction was identified in the inspected passage.",
+          "record_character": "米",
+          "kind": "locally_inspected_book_scan",
+          "url": "https://search.worldcat.org/search?q=9787552800692",
+          "title": "字源",
+          "accessed_at": "2026-10-03"
         }
       ]
     },
@@ -167180,13 +167137,14 @@
         "E1",
         "E2",
         "X-2a68dc8b86b609d11512",
-        "X-627132ddd62164b1bfce"
+        "X-627132ddd62164b1bfce",
+        "X-0fbd7e8227523711099d"
       ],
       "entry_character": "米",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "8114464146d0a520cb05deab41165cd2c126fe6a57e45e54b3d385612d243c5a",
-      "dossier_hash": "5d54b57114e919d13c505345650ec6e960dd2b1487e7a149f69915f4657450b1",
+      "article_hash": "e7dc914ad76ac9dcb5b7ba0964a7b76eddc94219c71e6cf42e4bfe48be24098d",
+      "dossier_hash": "e6bb3890be843f88c62e23e2ccc3f50cd1b0759ebb97ed4382dd0e50cf6ad0f5",
       "evidence": [
         {
           "id": "E1",
@@ -167225,6 +167183,17 @@
           "url": "https://www.ch.ntnu.edu.tw/SIS/downloadfile.php?issue_id=67&paper_id=634",
           "title": "中國學術年刊第四十七期（春季號）",
           "accessed_at": "2026-09-27"
+        },
+        {
+          "id": "X-0fbd7e8227523711099d",
+          "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012",
+          "field": "PDF p. 658; printed p. 645; 米 entry continuation; scan inspected",
+          "text": "The entry describes 米 as a pictograph resembling scattered grains: small marks lie above and below a horizontal stroke, later changing into longer strokes and a cross-like form. It gives the original sense as seeds of grain crops with their husks removed, then notes later broader use for shelled kernels such as 花生米, embroidered patterns resembling grains, and a measure meaning a small amount. The printed page and passage were checked against the supplied scan; the headword 米 is at the bottom of PDF p. 657 (printed p. 644), and the explanation continues at the top of p. 658. No OCR correction was identified in the inspected passage.",
+          "record_character": "米",
+          "kind": "locally_inspected_book_scan",
+          "url": "https://search.worldcat.org/search?q=9787552800692",
+          "title": "字源",
+          "accessed_at": "2026-10-03"
         }
       ]
     },
@@ -167243,8 +167212,8 @@
       "entry_character": "米",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "8114464146d0a520cb05deab41165cd2c126fe6a57e45e54b3d385612d243c5a",
-      "dossier_hash": "5d54b57114e919d13c505345650ec6e960dd2b1487e7a149f69915f4657450b1",
+      "article_hash": "e7dc914ad76ac9dcb5b7ba0964a7b76eddc94219c71e6cf42e4bfe48be24098d",
+      "dossier_hash": "e6bb3890be843f88c62e23e2ccc3f50cd1b0759ebb97ed4382dd0e50cf6ad0f5",
       "evidence": [
         {
           "id": "E5",
@@ -167282,8 +167251,8 @@
       "entry_character": "米",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "8114464146d0a520cb05deab41165cd2c126fe6a57e45e54b3d385612d243c5a",
-      "dossier_hash": "5d54b57114e919d13c505345650ec6e960dd2b1487e7a149f69915f4657450b1",
+      "article_hash": "e7dc914ad76ac9dcb5b7ba0964a7b76eddc94219c71e6cf42e4bfe48be24098d",
+      "dossier_hash": "e6bb3890be843f88c62e23e2ccc3f50cd1b0759ebb97ed4382dd0e50cf6ad0f5",
       "evidence": [
         {
           "id": "X-2a68dc8b86b609d11512",
@@ -196277,8 +196246,8 @@
       "entry_character": "面",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "5e5e0c2ebebfdd4df125f099416b23a8ea89656a162377a31783626137c809b2",
-      "dossier_hash": "c9e5ec9e5833d90f37b1596457ce46fda0b1d9ae3c11e978a64d7258f52c534f",
+      "article_hash": "3cb1437af8462c0e12da9a451288e41adbde03e6d24d4443208ab70015f1832b",
+      "dossier_hash": "ca7657c650d6e8201e424e125109a692206ca1913e2f98c372ba28c302e65a66",
       "evidence": [
         {
           "id": "E4",
@@ -196319,7 +196288,7 @@
       "predicate": "has_sense",
       "context_character": "面",
       "certainty": "probable",
-      "text": "The oracle graph is interpreted as depicting a face; the Shuowen gloss describes the area before the face. This is the earliest supported sense here, though the individual inscriptions are undated.",
+      "text": "Paleographic accounts interpret oracle-period forms as depicting a face. This is a proposed reading of the graph; the individual inscriptions and their dates were not verified, so the evidence does not establish this as the earliest attested use.",
       "evidence_ids": [
         "X-2fa9e24e7d3cdf787466",
         "E3",
@@ -196328,8 +196297,8 @@
       "entry_character": "面",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "5e5e0c2ebebfdd4df125f099416b23a8ea89656a162377a31783626137c809b2",
-      "dossier_hash": "c9e5ec9e5833d90f37b1596457ce46fda0b1d9ae3c11e978a64d7258f52c534f",
+      "article_hash": "3cb1437af8462c0e12da9a451288e41adbde03e6d24d4443208ab70015f1832b",
+      "dossier_hash": "ca7657c650d6e8201e424e125109a692206ca1913e2f98c372ba28c302e65a66",
       "evidence": [
         {
           "id": "X-2fa9e24e7d3cdf787466",
@@ -196379,8 +196348,8 @@
       "entry_character": "面",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "5e5e0c2ebebfdd4df125f099416b23a8ea89656a162377a31783626137c809b2",
-      "dossier_hash": "c9e5ec9e5833d90f37b1596457ce46fda0b1d9ae3c11e978a64d7258f52c534f",
+      "article_hash": "3cb1437af8462c0e12da9a451288e41adbde03e6d24d4443208ab70015f1832b",
+      "dossier_hash": "ca7657c650d6e8201e424e125109a692206ca1913e2f98c372ba28c302e65a66",
       "evidence": [
         {
           "id": "X-2fa9e24e7d3cdf787466",
@@ -196433,8 +196402,8 @@
       "entry_character": "面",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "5e5e0c2ebebfdd4df125f099416b23a8ea89656a162377a31783626137c809b2",
-      "dossier_hash": "c9e5ec9e5833d90f37b1596457ce46fda0b1d9ae3c11e978a64d7258f52c534f",
+      "article_hash": "3cb1437af8462c0e12da9a451288e41adbde03e6d24d4443208ab70015f1832b",
+      "dossier_hash": "ca7657c650d6e8201e424e125109a692206ca1913e2f98c372ba28c302e65a66",
       "evidence": [
         {
           "id": "E6",
@@ -196485,8 +196454,8 @@
       "entry_character": "面",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "5e5e0c2ebebfdd4df125f099416b23a8ea89656a162377a31783626137c809b2",
-      "dossier_hash": "c9e5ec9e5833d90f37b1596457ce46fda0b1d9ae3c11e978a64d7258f52c534f",
+      "article_hash": "3cb1437af8462c0e12da9a451288e41adbde03e6d24d4443208ab70015f1832b",
+      "dossier_hash": "ca7657c650d6e8201e424e125109a692206ca1913e2f98c372ba28c302e65a66",
       "evidence": [
         {
           "id": "E2",
@@ -196524,60 +196493,6 @@
           "kind": "character-specific official dictionary entry",
           "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=53047",
           "title": "A04763 麵 — 教育部《異體字字典》",
-          "accessed_at": "2026-09-27"
-        }
-      ]
-    },
-    {
-      "id": "面:development:0",
-      "subject": "sense:面:face",
-      "object": "sense:面:face_toward",
-      "predicate": "sense_developed_into",
-      "context_character": "面",
-      "certainty": "probable",
-      "text": "The facing use is compatible with an extension from “face,” but that historical development is not established.",
-      "evidence_ids": [
-        "X-2fa9e24e7d3cdf787466",
-        "X-081bb5682ced6d91e220",
-        "X-7b1373c9fa394c42ea39"
-      ],
-      "entry_character": "面",
-      "sound_comparisons": [],
-      "sound_limitations": [],
-      "article_hash": "5e5e0c2ebebfdd4df125f099416b23a8ea89656a162377a31783626137c809b2",
-      "dossier_hash": "c9e5ec9e5833d90f37b1596457ce46fda0b1d9ae3c11e978a64d7258f52c534f",
-      "evidence": [
-        {
-          "id": "X-2fa9e24e7d3cdf787466",
-          "source": "漢語多功能字庫 (Chinese University of Hong Kong Multi-function Chinese Character Database)",
-          "field": "形義通解; oracle graph analysis",
-          "text": "The database analyzes the oracle form as an eye (目) inside an enclosing outline, representing a face; it reports face as the original sense. It says a bronze form of 面 itself is not attested, though 面 occurs as a component in bronze graphs using 𦣻 plus the enclosure. It also reports a Chu-slip form whose enclosure strokes changed toward 臼, and cites 面 ‘face toward’ in 上博楚竹書二《容成氏》簡14. These are source assertions, not direct inspection of the cited artifacts.",
-          "record_character": "面",
-          "kind": "character-specific paleographic reference",
-          "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php?piece=%E9%9D%A2",
-          "title": "漢語多功能字庫 — 面",
-          "accessed_at": "2026-09-27"
-        },
-        {
-          "id": "X-081bb5682ced6d91e220",
-          "source": "漢語多功能字庫 (Chinese University of Hong Kong Multi-function Chinese Character Database)",
-          "field": "形義通解; oracle graph analysis",
-          "text": "The database interprets the oracle graph as an enclosing face outline with an eye in the middle and gives ‘face’ as its original sense. It reports that 面 itself is not attested in bronze inscriptions, although a related component occurs in a bronze graph with 𦣻 and an enclosure. It identifies the enclosure as changing toward 臼 in a Chu-slip form and cites 面 ‘face toward’ in 上博楚竹書二《容成氏》簡14. These are the database’s analyses and citations, not direct examination of the artifacts.",
-          "record_character": "面",
-          "kind": "character-specific paleographic reference",
-          "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php?piece=%E9%9D%A2",
-          "title": "漢語多功能字庫 — 面",
-          "accessed_at": "2026-09-27"
-        },
-        {
-          "id": "X-7b1373c9fa394c42ea39",
-          "source": "漢語多功能字庫 (Chinese University of Hong Kong Multi-function Chinese Character Database)",
-          "field": "漢字甲骨部件分析; 形義通解",
-          "text": "The database reads the oracle graph as a facial outline enclosing an eye and gives ‘face’ as its original sense. It reports that 面 itself is not attested in bronze inscriptions, though a related bronze graph uses 𦣻 plus an enclosure. It says a Chu-slip form’s enclosure changed toward 臼 and cites 面 ‘face toward’ in 上博楚竹書二《容成氏》簡14. These are database analyses and reported citations; the artifacts and slip text were not independently inspected here.",
-          "record_character": "面",
-          "kind": "character-specific paleographic analysis",
-          "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php?piece=%E9%9D%A2",
-          "title": "漢語多功能字庫 — 面",
           "accessed_at": "2026-09-27"
         }
       ]
@@ -199051,51 +198966,39 @@
       "object": "sense:高:high_tall",
       "predicate": "has_sense",
       "context_character": "高",
-      "certainty": "probable",
-      "text": "The traditional pictographic interpretation connects the tall structure with “high.” No verified inscription context securely establishes this as the earliest attested lexical sense.",
+      "certainty": "established",
+      "text": "Historical examples are interpreted as using 高祖 for “remote ancestor,” supporting a reported use of 高 for “distant; remote.” The inscriptional readings and contexts have not been independently verified.",
       "evidence_ids": [
-        "X-d3ccc741158f010316c1",
-        "X-abcb68fb133b9c826908",
-        "X-21ee8d235de98c204153"
+        "X-506e9a1fcf0c68189cee",
+        "X-19c045d36cd85d731d43"
       ],
       "entry_character": "高",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "d6b14dbafaca6fb1333fd63238c45b65565117d25813c9038c444cd5b686ddc2",
-      "dossier_hash": "626a1620ecef68a1c99ec6724b55df4becfce60abe8cb5b78d81dc8189e843f4",
+      "article_hash": "c31a39b908961e9985e5714aa59c5e9a768daa82e660e0139b6af59a6f9efbe1",
+      "dossier_hash": "6447645d90a5edc66e885cb51e685ae05338472adec78e2f878b900cb2b3a3da",
       "evidence": [
         {
-          "id": "X-d3ccc741158f010316c1",
-          "source": "Shuowen5, 高 entry (reproduces Shuowen and Duan Yucai annotation)",
-          "field": "graphic_origin",
-          "text": "The entry gives the received Shuowen account: 高 means ‘崇’ and its form depicts a tall 臺觀 (raised building/viewing tower); Shuowen analyzes it with 冂 and 口 and compares the formation with 倉 and 舍. Duan Yucai’s note further glosses the comparison in terms of enclosing/building forms. This is an early lexicographic analysis, not independent proof of every component’s original referent.",
+          "id": "X-506e9a1fcf0c68189cee",
+          "source": "李學勤主編《字源》, 天津古籍出版社／辽宁人民出版社, 2012, PDF p. 486, printed p. 473; original scan inspected",
+          "field": "高部 entry, glyph series and opening paragraph; scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0486/source.png, decoded-pixel SHA-256 79b98ddd34ebec7b339b734c972b34b5e018011f17b5579ecde3e7f511c69983",
+          "text": "The 高 entry is headed 高部. It labels forms 1–3 商, 4–5 西周, 6 春秋, 7–12 战国, 13 《说文》小篆, 14–15 汉, and 16 汉楷书, with references to 甲文编, 金文编, 战文编 and other collections. Its text begins with the received Shuowen account, then says 商代 forms without the lower 口 are considered the initial form; Zhou and Spring-and-Autumn forms are similar to Shang forms; Warring States writing shows abbreviated forms, and Qin standardization made modest revisions with reference to Warring States forms. This supports a whole-graph pictographic account and broad labeled form sequence, not detailed claims about each glyph’s strokes.",
           "record_character": "高",
-          "kind": "dictionary_entry",
-          "url": "https://www.shuowen5.com/%E9%AB%98_zi/",
-          "title": "「高」字的说文解字_高字说文解字注_说文解字在线查询高字",
-          "accessed_at": "2026-09-26"
+          "kind": "locally_inspected_book_scan",
+          "url": "https://www.worldcat.org/search?q=9787552800692",
+          "title": "字源 (2012), ISBN 9787552800692 — bibliographic lookup",
+          "accessed_at": "2026-10-03"
         },
         {
-          "id": "X-abcb68fb133b9c826908",
-          "source": "Chinese Etymology, Education University of Hong Kong resource",
-          "field": "graphic_origin",
-          "text": "The entry describes oracle-bone, bronze, and small-seal forms as resembling a tall pavilion, with the building image used to represent ‘high’. Its text states that the standard form follows small seal. This supports the pictographic interpretation, though the accessible entry does not document detailed dated forms or competing readings.",
+          "id": "X-19c045d36cd85d731d43",
+          "source": "李學勤主編《字源》, 2012, PDF p. 487, printed p. 474; original scan inspected",
+          "field": "Continuation of 高部 entry, first column; scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0487/source.png",
+          "text": "The passage continues the 高 entry from the preceding page. It reports 商 oracle-bone use for ‘distant/remote’ (远), including a quoted oracle-bone example glossed as 高祖, ‘remote ancestor’; cites a Zhou bronze inscription where 高祖 is also interpreted as remote ancestor; reports a Spring-and-Autumn-period Qin use for distance upward from the ground (‘high’); and reports Warring States use for ‘high’ in the high/low sense, citing the Qin Qingchuan wooden tablet. It also reports place-name use and a loan use for 缟 in a Chu slip. These are source-attributed lexical attestations and interpretations; they do not by themselves prove a single semantic pathway from a building depiction to every later sense. The passage ends with 刘桓 attribution.",
           "record_character": "高",
-          "kind": "dictionary_entry",
-          "url": "https://ephpth.ephhk.com/resource/tools/lcprichi/search/show_word.php?id=2940",
-          "title": "字源考釋 - 高",
-          "accessed_at": "2026-09-26"
-        },
-        {
-          "id": "X-21ee8d235de98c204153",
-          "source": "Shuowen5, 高 entry",
-          "field": "graphic_examples",
-          "text": "The page labels forms for an oracle-bone example 甲2807, a Western Zhou bronze-vessel inscription 不𡢁簋蓋, a mid-Warring-States bronze inscription 鄂君啟車節, Chu slips, Shuowen, Qin slips and later scripts. The labels support a range of dated graphic witnesses; the page does not provide a transcribed context establishing the sense of the oracle-bone instance.",
-          "record_character": "高",
-          "kind": "paleographic_database",
-          "url": "https://www.shuowen5.com/%E9%AB%98_zi/",
-          "title": "「高」字的说文解字_高字说文解字注_说文解字在线查询高字",
-          "accessed_at": "2026-09-26"
+          "kind": "locally_inspected_book_scan",
+          "url": "https://www.worldcat.org/search?q=9787552800692",
+          "title": "字源 (2012), ISBN 9787552800692 — bibliographic lookup",
+          "accessed_at": "2026-10-03"
         }
       ]
     },
@@ -199114,8 +199017,8 @@
       "entry_character": "高",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "d6b14dbafaca6fb1333fd63238c45b65565117d25813c9038c444cd5b686ddc2",
-      "dossier_hash": "626a1620ecef68a1c99ec6724b55df4becfce60abe8cb5b78d81dc8189e843f4",
+      "article_hash": "c31a39b908961e9985e5714aa59c5e9a768daa82e660e0139b6af59a6f9efbe1",
+      "dossier_hash": "6447645d90a5edc66e885cb51e685ae05338472adec78e2f878b900cb2b3a3da",
       "evidence": [
         {
           "id": "E6",
@@ -199145,17 +199048,19 @@
       "predicate": "has_sense",
       "context_character": "高",
       "certainty": "established",
-      "text": "Textual citations and dictionary records attest these uses, but do not establish when they arose or how they developed from “high” or “tall.” Their pathways are left unspecified.",
+      "text": "Dictionary records and textual citations attest these uses, but do not establish when they arose or how they developed from “high” or “tall.” Separate reports describe uses for “distant” and later uses for vertical height and “high” in the high/low sense; they do not settle a single semantic pathway.",
       "evidence_ids": [
         "X-f698b22977dbb9efd9c2",
         "X-5f5220c51fff27a844b1",
-        "X-97a903fe605cb2c867df"
+        "X-97a903fe605cb2c867df",
+        "X-506e9a1fcf0c68189cee",
+        "X-19c045d36cd85d731d43"
       ],
       "entry_character": "高",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "d6b14dbafaca6fb1333fd63238c45b65565117d25813c9038c444cd5b686ddc2",
-      "dossier_hash": "626a1620ecef68a1c99ec6724b55df4becfce60abe8cb5b78d81dc8189e843f4",
+      "article_hash": "c31a39b908961e9985e5714aa59c5e9a768daa82e660e0139b6af59a6f9efbe1",
+      "dossier_hash": "6447645d90a5edc66e885cb51e685ae05338472adec78e2f878b900cb2b3a3da",
       "evidence": [
         {
           "id": "X-f698b22977dbb9efd9c2",
@@ -199189,6 +199094,28 @@
           "url": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=51711",
           "title": "[A04667] 高 - Ministry of Education Dictionary of Chinese Character Variants",
           "accessed_at": "2026-09-26"
+        },
+        {
+          "id": "X-506e9a1fcf0c68189cee",
+          "source": "李學勤主編《字源》, 天津古籍出版社／辽宁人民出版社, 2012, PDF p. 486, printed p. 473; original scan inspected",
+          "field": "高部 entry, glyph series and opening paragraph; scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0486/source.png, decoded-pixel SHA-256 79b98ddd34ebec7b339b734c972b34b5e018011f17b5579ecde3e7f511c69983",
+          "text": "The 高 entry is headed 高部. It labels forms 1–3 商, 4–5 西周, 6 春秋, 7–12 战国, 13 《说文》小篆, 14–15 汉, and 16 汉楷书, with references to 甲文编, 金文编, 战文编 and other collections. Its text begins with the received Shuowen account, then says 商代 forms without the lower 口 are considered the initial form; Zhou and Spring-and-Autumn forms are similar to Shang forms; Warring States writing shows abbreviated forms, and Qin standardization made modest revisions with reference to Warring States forms. This supports a whole-graph pictographic account and broad labeled form sequence, not detailed claims about each glyph’s strokes.",
+          "record_character": "高",
+          "kind": "locally_inspected_book_scan",
+          "url": "https://www.worldcat.org/search?q=9787552800692",
+          "title": "字源 (2012), ISBN 9787552800692 — bibliographic lookup",
+          "accessed_at": "2026-10-03"
+        },
+        {
+          "id": "X-19c045d36cd85d731d43",
+          "source": "李學勤主編《字源》, 2012, PDF p. 487, printed p. 474; original scan inspected",
+          "field": "Continuation of 高部 entry, first column; scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0487/source.png",
+          "text": "The passage continues the 高 entry from the preceding page. It reports 商 oracle-bone use for ‘distant/remote’ (远), including a quoted oracle-bone example glossed as 高祖, ‘remote ancestor’; cites a Zhou bronze inscription where 高祖 is also interpreted as remote ancestor; reports a Spring-and-Autumn-period Qin use for distance upward from the ground (‘high’); and reports Warring States use for ‘high’ in the high/low sense, citing the Qin Qingchuan wooden tablet. It also reports place-name use and a loan use for 缟 in a Chu slip. These are source-attributed lexical attestations and interpretations; they do not by themselves prove a single semantic pathway from a building depiction to every later sense. The passage ends with 刘桓 attribution.",
+          "record_character": "高",
+          "kind": "locally_inspected_book_scan",
+          "url": "https://www.worldcat.org/search?q=9787552800692",
+          "title": "字源 (2012), ISBN 9787552800692 — bibliographic lookup",
+          "accessed_at": "2026-10-03"
         }
       ]
     },
