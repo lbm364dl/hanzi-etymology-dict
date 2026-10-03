@@ -10,6 +10,13 @@ Register digitised books in `research/digitised-sources.json`. Each registry rec
 the exact edition, book hash and consumer corpus; adding later books does not require changing
 character prompts or adding character-specific rules. Only 字源 is currently registered.
 
+`status`, `prepare` and `run` reuse verified completions across `runs/`,
+`content/source_coverage/` and the requested output folder. A fresh batch folder
+does not restart entries already completed elsewhere. Reuse requires the current
+exact source, locator, audit, article, dossier and review/publication gates; stale
+jobs, legacy approvals and another book do not count. Returned published rows
+identify the actual verified job folder. The limit applies to remaining work.
+
 ```bash
 python3 -m pipeline.source_enrichment status --registry research/digitised-sources.json --source ziyuan-2012 --cohort content/cohorts/hsk3-2021-level-1.json
 python3 -m pipeline.source_enrichment run --registry research/digitised-sources.json --source ziyuan-2012 --cohort content/cohorts/hsk3-2021-level-1.json --limit 3

@@ -385,9 +385,24 @@ class SourceEnrichmentTests(unittest.TestCase):
                 "source_audit_hash": editorial.digest(audit),
                 "article_hash": editorial.digest(article), "dossier_hash": editorial.digest(dossier)})
             self.assertTrue(source_enrichment._published_matches(job, SOURCE, self.root))
+            fresh_output = self.root/'new-batch'
+            cohort = {'characters': ['木']}
+            for row in (source_enrichment.status(cohort, SOURCE, fresh_output, self.root)[0],
+                        source_enrichment.prepare(cohort, SOURCE, fresh_output, root=self.root)[0],
+                        source_enrichment.run(cohort, SOURCE, fresh_output, object(), root=self.root)[0]):
+                self.assertEqual(row['status'], 'published')
+                self.assertEqual(Path(row['job']), job.resolve())
+            self.assertFalse((source_enrichment.job_path(fresh_output, SOURCE['id'], '木')/'source.json').exists())
+            next_rows = source_enrichment.prepare({'characters':['木', '水']}, SOURCE,
+                                                  fresh_output, limit=1, root=self.root)
+            self.assertEqual([r['status'] for r in next_rows], ['published', 'failed'])
+            self.assertEqual(source_enrichment.status(cohort, {**SOURCE, 'id':'another-book'},
+                                                      fresh_output, self.root)[0]['status'], 'pending')
             editorial.write(job / "source_findings.json", {'requires_coordinator_verification': True,
                                                             'findings': [{'key': 'new-source-error'}]})
             self.assertFalse(source_enrichment._published_matches(job, SOURCE, self.root))
+            self.assertEqual(source_enrichment.status(cohort, SOURCE, fresh_output,
+                                                      self.root)[0]['status'], 'pending')
             (job / "source_findings.json").unlink()
             editorial.write(job / "status.json", {**editorial.read(job / "status.json"), "status": "approved"})
             with patch.object(LocalSources, 'locate_sources', return_value={'changed': 'page evidence'}):
@@ -396,6 +411,8 @@ class SourceEnrichmentTests(unittest.TestCase):
             editorial.write(job / "status.json", {**editorial.read(job / "status.json"), "status": "published"})
             editorial.write(job / "status.json", {**editorial.read(job / "status.json"), "article_hash": "stale"})
             self.assertFalse(source_enrichment._published_matches(job, SOURCE, self.root))
+            self.assertEqual(source_enrichment.status(cohort, SOURCE, fresh_output,
+                                                      self.root)[0]['status'], 'pending')
             self.assertEqual(source_enrichment.status({"characters": ["木"]}, SOURCE, self.output,
                                                        self.root)[0]["status"], "stale")
 

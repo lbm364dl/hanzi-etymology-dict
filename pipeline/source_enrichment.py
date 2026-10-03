@@ -625,11 +625,27 @@ def _triage_and_sync_issues(job, source, runner):
     return record
 
 
+def _verified_cohort_jobs(cohort, source, output, root):
+    """Reuse only current exact completions, including earlier batch locations."""
+    from pipeline.source_progress import report
+    audit = report(cohort, source, [Path(root)/'runs', Path(root)/'content/source_coverage',
+                                   Path(output)], root)
+    verified = {}
+    for row in audit['characters']:
+        jobs = [Path(item['job']) for item in row['jobs'] if item['verified_source_completion']]
+        if jobs:
+            requested = job_path(output, source['id'], row['character']).resolve()
+            verified[row['character']] = requested if requested in jobs else jobs[0]
+    return verified
+
+
 def status(cohort, source, output, root=ROOT):
     rows = []
+    verified = _verified_cohort_jobs(cohort, source, output, root)
     for char in cohort["characters"]:
         job = job_path(output, source["id"], char)
-        if _published_matches(job, source, root):
+        if char in verified:
+            job = verified[char]
             value = "published"
         elif (job / "source.json").is_file() and editorial.read(job / "source.json").get(
                 "registry_source_hash") and not _recorded_source_hash_matches(
@@ -654,10 +670,11 @@ def prepare(cohort, source, output, limit=3, root=ROOT):
     if limit < 1 or limit > MAX_SELECTION:
         raise ValueError(f"Selection limit must be between 1 and {MAX_SELECTION}")
     rows, selected = [], 0
+    verified = _verified_cohort_jobs(cohort, source, output, root)
     for char in cohort["characters"]:
         job = job_path(output, source["id"], char)
-        if _published_matches(job, source, root):
-            rows.append({"character": char, "status": "published", "job": str(job)})
+        if char in verified:
+            rows.append({"character": char, "status": "published", "job": str(verified[char])})
             continue
         if selected >= limit:
             rows.append({"character": char, "status": "deferred", "job": str(job)})
@@ -757,10 +774,11 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
         raise ValueError(f"Selection limit must be between 1 and {MAX_SELECTION}")
     rows = {}
     selected = []
+    verified = _verified_cohort_jobs(cohort, source, output, root)
     for char in cohort["characters"]:
         job = job_path(output, source["id"], char)
-        if _published_matches(job, source, root):
-            rows[char] = {"character": char, "status": "published", "job": str(job)}
+        if char in verified:
+            rows[char] = {"character": char, "status": "published", "job": str(verified[char])}
         elif len(selected) < limit:
             selected.append(char)
         else:
