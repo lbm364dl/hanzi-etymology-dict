@@ -1296,8 +1296,13 @@ class Runner:
         if role in ("analysis", "writer", "revision", "editor", "glyph_visual", "learner", "form_annotation", "component_sound", "article_patch"):
             inputs, citation_aliases = citation_transport(inputs)
         image_paths = []
-        if role in ("research", "ocr_verification", "source_resolution", "source_coverage") and isinstance(inputs.get("feedback"), dict):
-            scans = inputs["feedback"].get("source_scan_images", [])
+        if role in ("research", "ocr_verification", "source_resolution", "source_coverage"):
+            # research_dossier flattens its review context into the stage inputs;
+            # source-enrichment also supplies scans through nested feedback.
+            feedback = inputs.get("feedback")
+            scans = inputs.get("source_scan_images")
+            if scans is None:
+                scans = feedback.get("source_scan_images", []) if isinstance(feedback, dict) else []
             if scans:
                 image_paths, records = source_scan_attachments(scans)
                 inputs = {**inputs, "attached_source_scans": records}

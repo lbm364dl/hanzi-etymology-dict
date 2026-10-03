@@ -279,6 +279,38 @@ class EditorialTests(unittest.TestCase):
             self.assertEqual(inputs["attached_source_scans"][0]["pdf_page"], 277)
             self.assertEqual(inputs["attached_images"], [])
 
+    def test_top_level_research_scans_reach_codex_image_arguments(self):
+        from pipeline.editorial import RESEARCH_SCHEMA
+        import hashlib
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            scans = [root / 'page-277.png', root / 'page-278.png']
+            for index, scan in enumerate(scans): scan.write_bytes(f'scan {index}'.encode())
+            argv_path = root / 'argv.json'
+            # Test-only executable: records transport arguments, without invoking a model.
+            script = root / 'codex'
+            script.write_text(f'#!{sys.executable}\nimport sys,json,pathlib\n'
+                f'pathlib.Path({str(argv_path)!r}).write_text(json.dumps(sys.argv[1:]))\n'
+                f'pathlib.Path(sys.argv[sys.argv.index("-o")+1]).write_text({json.dumps(json.dumps(RESEARCH))})\n'
+                'print(json.dumps({"type":"item.completed","item":{"type":"web_search",'
+                '"action":{"type":"search","queries":["test-only transport fixture"]}}}))\n')
+            script.chmod(0o755)
+            runner = Runner([str(script), 'exec', '-o', '{output}', '-'], 'fake')
+            job = root / 'research'
+            runner.run('research', {'dossier': DOSSIER, 'source_scan_images': [
+                {'path': str(scan), 'pdf_page': 277 + index}
+                for index, scan in enumerate(scans)]}, RESEARCH_SCHEMA, job)
+            argv = json.loads(argv_path.read_text())
+            at = argv.index('--image')
+            self.assertEqual(argv[at+1:at+3], list(map(str, scans)))
+            packet = json.JSONDecoder().raw_decode(
+                (job / 'prompt.txt').read_text().split('\nINPUTS:\n', 1)[1])[0]
+            records = packet['attached_source_scans']
+            self.assertEqual([r['attachment_index'] for r in records], [1, 2])
+            self.assertEqual([r['pdf_page'] for r in records], [277, 278])
+            self.assertEqual([r['sha256'] for r in records], [
+                hashlib.sha256(scan.read_bytes()).hexdigest() for scan in scans])
+
     def test_source_pixel_hash_is_distinct_from_attachment_file_hash(self):
         import hashlib
         from PIL import Image
