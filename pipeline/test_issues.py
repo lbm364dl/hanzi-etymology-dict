@@ -170,6 +170,60 @@ class IssueTests(unittest.TestCase):
             self.assertEqual(len(runner.inputs['actual_findings']), 1)
             self.assertNotIn('Rejected claim', str(runner.inputs['actual_findings']))
 
+    def test_triage_receives_validated_resolution_without_claiming_corpus_repair(self):
+        from unittest.mock import patch
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+            def run(self, role, inputs, schema, directory):
+                self.inputs = inputs
+                return {'findings': []}
+        with tempfile.TemporaryDirectory() as temp:
+            job = Path(temp)
+            editorial.write(job / 'status.json', {'character': '八', 'status': 'approved'})
+            result = {'findings': [{'key': 'label', 'disposition': 'verified_metadata_not_extracted'}],
+                      'metadata_observations': [{'key': 'label', 'observed_value': '64'}]}
+            binding = {'review_path': 'source-resolution/result.json',
+                       'result_hash': editorial.digest(result)}
+            editorial.write(job / 'source_resolution.json', binding)
+            editorial.write(job / binding['review_path'], result)
+            runner = Runner()
+            with patch('pipeline.source_enrichment._source_findings_pending', return_value=False):
+                triage_job(job, {'id': 'book'}, runner)
+            packet = next(r['content'] for r in runner.inputs['actual_findings']
+                          if r['artifact'] == 'source_resolution.json')
+            self.assertFalse(packet['pending'])
+            self.assertEqual(packet['actual_result'], result)
+            self.assertEqual(packet['binding'], binding)
+            self.assertIn('corpus metadata repair may remain unapplied', runner.inputs['task'])
+
+    def test_triage_reuses_only_hash_bound_previous_syncs_for_the_same_repository(self):
+        from unittest.mock import patch
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+            def run(self, role, inputs, schema, directory):
+                self.inputs = inputs
+                return {'findings': []}
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            job = root / 'new'
+            editorial.write(job / 'status.json', {'character': '八'})
+            for name, repository, valid in [('synced', 'owner/repo', True),
+                                             ('other-repo', 'other/repo', True),
+                                             ('changed-proposal', 'owner/repo', False)]:
+                finding = {'key': f'book:八:{name}', 'kind': 'factual', 'title': name,
+                           'details': 'Fixture finding.', 'verification': 'Fixture check.', 'evidence': []}
+                previous = root / 'runs' / name
+                editorial.write(previous / 'issue_findings.json', {'findings': [finding]})
+                editorial.write(previous / 'issue_receipts.json', {'repository': repository, 'issues': [{
+                    'key': finding['key'], 'number': 42,
+                    'finding_hash': editorial.digest(finding) if valid else 'stale'}]})
+            runner = Runner()
+            with patch.object(editorial, 'ROOT', root):
+                triage_job(job, {'id': 'book', 'github_repo': 'owner/repo'}, runner)
+            self.assertEqual([f['key'] for f in runner.inputs['existing_findings']], ['book:八:synced'])
+
     def test_triage_does_not_reuse_another_character_or_source_finding(self):
         from unittest.mock import patch
         from pipeline import editorial

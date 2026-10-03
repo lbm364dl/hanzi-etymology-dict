@@ -41,8 +41,33 @@ def triage_job(job, source, runner):
     reviews_path = job / 'reviews.json'
     if reviews_path.is_file():
         records.append({'artifact': 'reviews.json', 'content': editorial.read(reviews_path)})
+    if (job / 'source_resolution.json').is_file():
+        from pipeline.source_enrichment import _source_findings_pending
+        resolution = editorial.read(job / 'source_resolution.json')
+        records.append({'artifact': 'source_resolution.json', 'content': {
+            'pending': _source_findings_pending(job), 'binding': resolution,
+            'actual_result': editorial.read(job / resolution['review_path'])}})
     known_path = editorial.ROOT / 'research/source-enrichment-findings.json'
     known = editorial.read(known_path)['findings'] if known_path.is_file() else []
+    # Recover stable identities from actual previous syncs, including fresh batch jobs
+    # not yet incorporated into the curated manifest. Unsynced proposals are not issues.
+    if source.get('github_repo'):
+        known_keys = {f['key'] for f in known}
+        for root in (editorial.ROOT / 'runs', editorial.ROOT / 'content/source_coverage'):
+            for path in sorted(root.glob('**/issue_findings.json')):
+                try:
+                    receipt = editorial.read(path.parent / 'issue_receipts.json')
+                    if receipt.get('repository') != source['github_repo']:
+                        continue
+                    synced = {r['key']: r for r in receipt.get('issues', [])}
+                    for finding in editorial.read(path).get('findings', []):
+                        saved = synced.get(finding['key'], {})
+                        if (finding['key'] not in known_keys and saved.get('number')
+                                and saved.get('finding_hash') == editorial.digest(finding)):
+                            known.append(finding)
+                            known_keys.add(finding['key'])
+                except (OSError, ValueError, KeyError):
+                    continue
     character = state.get('character') or editorial.read(job / 'source.json')['character']
     # Character findings cannot be reused merely because another entry has the
     # same failure class. Keep genuinely shared pipeline/source findings available.
@@ -78,7 +103,10 @@ def triage_job(job, source, runner):
                       'An OCR suspicion needs source verification; never guess a replacement. '
                       'Return no finding for correctly supported current prose, a resolved '
                       'review disagreement, or advice to preserve a correct treatment in '
-                      'future edits. Identify a concrete current defect or unapplied repair. '
+                      'future edits. Respect a current exact-pair source resolution; verified '
+                      'citation provenance is not a remaining scan-identity error, though a '
+                      'separately requested corpus metadata repair may remain unapplied. '
+                      'Identify a concrete current defect or unapplied repair. '
                       'Umbrella work issues are tracking parents, not finding identities. '
                       'Keep public issue text concise and paraphrase books instead of quoting passages.'}
     known_by_key = {f["key"]: f for f in known}

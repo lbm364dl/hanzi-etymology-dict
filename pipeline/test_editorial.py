@@ -468,6 +468,29 @@ class EditorialTests(unittest.TestCase):
         self.assertEqual(result['relationships'], before['relationships'])
         self.assertEqual(article, before)
 
+    def test_array_patch_trailing_sibling_fields_are_rejected_with_exact_target_feedback(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
+        article = copy.deepcopy(ARTICLE_V2)
+        before = copy.deepcopy(article)
+        calls = []
+        def invoke(role, inputs, schema, directory):
+            calls.append(inputs)
+            if len(calls) == 1:
+                return {'edits': [{'path': 'meaning_history/senses',
+                                  'value_json': '[],"developments":[]'}]}
+            self.assertIn('Invalid JSON replacement at meaning_history/senses',
+                          inputs['validation_findings'][0])
+            self.assertIn('one complete array value', inputs['validation_findings'][0])
+            self.assertEqual(inputs['article']['meaning_history'], before['meaning_history'])
+            return {'edits': [{'path': 'meaning_history/senses',
+                              'value_json': json.dumps(before['meaning_history']['senses'])}]}
+        dossier = {**DOSSIER, 'glyph_research': {'historical_glyphs': article['historical_glyphs']}}
+        result = apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                     WRITER_SCHEMA, Path('/unused'), invoke)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(result['meaning_history'], before['meaning_history'])
+        self.assertEqual(article, before)
+
     def test_indexed_citation_patch_expands_transport_alias(self):
         from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
         article = copy.deepcopy(ARTICLE_V2)

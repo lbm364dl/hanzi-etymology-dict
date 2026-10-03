@@ -156,12 +156,19 @@ proposals are not established errors. Link repeated manifestations to the existi
 research gaps and validation failures; it saves proposed issue records without inventing
 approvals. `pipeline.issues` synchronizes findings using stable markers, so reruns reuse
 existing issues and preserve human discussion. It never closes issues automatically.
+Triage receives the current exact source-resolution result and recovers issue identities
+from hash-bound previous sync receipts for the same repository, including newer batch
+jobs absent from the curated manifest. Unsynced proposals do not establish issue identities.
 Registered sources can set `issue_parent_number`, `issue_milestone` and `issue_labels`;
 new findings become native subissues with kind labels and the configured milestone.
 Current job findings reopen a matching closed issue: a newly failed check must remain
 visible as active work. Historical manifest synchronization preserves closure. Neither
 path closes issues automatically or treats a new finding as proof that prior approvals
 were fabricated or invalid.
+`source_enrichment.run` performs this sync even with `publish_now=False`. An isolated
+task that forbids GitHub writes should use `editorial.refine` directly or omit GitHub
+workflow fields from its source configuration. The coordinating publisher must still
+perform the configured real issue sync before publication.
 GitHub workflow settings are kept separate from book identity, so relabeling work does not
 invalidate completed research. Edition or corpus identity changes still require new jobs.
 

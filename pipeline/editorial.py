@@ -1160,7 +1160,10 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
                 else 'boolean' if isinstance(value, bool) else 'number')
     contract['patch_value_kinds'] = {path: value_kind(parts) for path, parts in paths.items()}
     contract['patch_value_instruction'] = (
-        'value_json must encode a replacement of the indicated type. Object fields such '
+        'value_json must encode exactly one complete replacement value of the indicated type. '
+        'An array replacement ends at its closing bracket; do not append sibling object '
+        'fields or another JSON value. Put sibling changes in separate nonoverlapping edits. '
+        'Object fields such '
         'as summary and formation require a complete object, not bare prose; select '
         'their text child when permitted for a prose-only edit. Preserve required keys.')
     contract['preserve_array_items'] = copy.deepcopy(preserved)
@@ -1188,8 +1191,10 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
                 for part in parts[:-1]: node = node[part]
                 try:
                     value = json.loads(edit['value_json'])
-                except json.JSONDecodeError:
-                    if not isinstance(node[parts[-1]], str): raise
+                except json.JSONDecodeError as exc:
+                    if not isinstance(node[parts[-1]], str):
+                        raise ValueError(f"Invalid JSON replacement at {edit['path']}: "
+                            f"{exc.msg}; supply one complete {contract['patch_value_kinds'][edit['path']]} value") from exc
                     # A model's verbatim prose is already an unambiguous string value.
                     value = edit['value_json']
                 citation_key = (parts[-2] if isinstance(parts[-1], int) and len(parts) > 1
