@@ -186,7 +186,8 @@ class IssueTests(unittest.TestCase):
             keys = ['book:爱:meaning-status', 'book:6708:meaning-status',
                     'book:月:dating', 'other-book:月:dating', 'pipeline:review:certainty']
             editorial.write(root/'research/source-enrichment-findings.json',
-                            {'findings': [{'key': key} for key in keys]})
+                            {'findings': [{'key': key} for key in keys] +
+                             [{'key':'hsk1:source-enrichment:book', 'kind':'work'}]})
             runner = Runner()
             with patch.object(editorial, 'ROOT', root):
                 triage_job(job, {'id':'book'}, runner)

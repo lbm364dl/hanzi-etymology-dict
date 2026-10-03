@@ -22,3 +22,18 @@ instruction in a new source-resolution stage. If it still establishes actual
 claim dependence, publication remains blocked and needs genuine author/reviews.
 All 21 source-enrichment tests pass; no existing publication is recertified by
 this prompt change.
+
+The fresh exact-pair scan reviewer returned `unresolved_identity_not_used`,
+explicitly tracing the received analysis to E3 and the two independently
+consulted Shuowen records. Its real result is preserved in source-resolution-1.
+The original pending result stays intact. This releases no Unicode correction
+and does not certify the ambiguous quote.
+
+The subsequent issue-triage stage selected the umbrella work key for a routine
+note about already-correct dictionary-backed senses. GitHub rejected an attempted
+cycle attaching issue #1 beneath its own descendant #152. The failed triage
+artifacts remain archived. Generic triage now excludes work-item identities
+from reusable findings and explicitly excludes resolved disagreements/future
+preservation advice. A regression covers umbrella exclusion alongside character
+and source scope; 11 issue tests pass. The actual handoff is retried with a genuine
+Luna low triage result; no coordinator-made empty result is substituted.

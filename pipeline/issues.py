@@ -47,6 +47,8 @@ def triage_job(job, source, runner):
     # Character findings cannot be reused merely because another entry has the
     # same failure class. Keep genuinely shared pipeline/source findings available.
     def in_scope(finding):
+        if finding.get('kind') == 'work':
+            return False  # Umbrella work items are parents, never reusable findings.
         pieces = finding['key'].split(':', 2)
         if len(pieces) < 3:
             return True
@@ -74,6 +76,10 @@ def triage_job(job, source, runner):
               'current_article': current_article, 'current_dossier_evidence': evidence_packet,
               'task': 'Track material findings with evidence. Rejected proposals are not factual errors. '
                       'An OCR suspicion needs source verification; never guess a replacement. '
+                      'Return no finding for correctly supported current prose, a resolved '
+                      'review disagreement, or advice to preserve a correct treatment in '
+                      'future edits. Identify a concrete current defect or unapplied repair. '
+                      'Umbrella work issues are tracking parents, not finding identities. '
                       'Keep public issue text concise and paraphrase books instead of quoting passages.'}
     known_by_key = {f["key"]: f for f in known}
     schema = copy.deepcopy(FINDING_SCHEMA)
