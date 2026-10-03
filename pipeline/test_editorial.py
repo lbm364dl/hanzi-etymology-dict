@@ -720,6 +720,24 @@ class EditorialTests(unittest.TestCase):
         self.assertEqual(result['history'], kept)
         self.assertEqual(article['history'][0], removed)
 
+    def test_patch_repair_feedback_identifies_inline_alias_after_long_prose(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
+        article=copy.deepcopy(ARTICLE_V2)
+        dossier={**DOSSIER,'glyph_research':{'historical_glyphs':article['historical_glyphs']}}
+        calls=[]
+        def invoke(role,inputs,schema,directory):
+            calls.append(inputs)
+            if len(calls)==1:
+                return {'edits':[{'path':'summary/text', 'value_json':'Supported character explanation. '*15+'(Evidence: ref001)'}]}
+            self.assertIn("offending token 'ref001'",inputs['validation_findings'][0])
+            self.assertIn('Evidence:',inputs['validation_findings'][0])
+            return {'edits':[{'path':'summary/text','value_json':article['summary']['text']}]}
+        result=apply_article_patch('revision',{'article':article,'dossier':dossier},
+                                  WRITER_SCHEMA,Path('/unused'),invoke)
+        self.assertEqual(len(calls),2)
+        self.assertEqual(result['summary']['text'],article['summary']['text'])
+        self.assertEqual(result['summary']['evidence_ids'],article['summary']['evidence_ids'])
+
     def test_targeted_patch_repairs_semantic_validation_before_review(self):
         from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
         article = copy.deepcopy(ARTICLE_V2)

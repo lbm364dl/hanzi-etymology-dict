@@ -448,12 +448,24 @@ because they are uncertain. Give every sense an explicit certainty; do not inven
 (e.g. a red pigment contributing the category color need not make the whole character mean red).
 """
 
+def reader_violation_context(text, match):
+    """Show the rejected token, not an unrelated prefix of a long paragraph."""
+    start, end = match.span()
+    snippet = text[max(0, start - 60):min(len(text), end + 60)]
+    return f"offending token {match.group()!r} at text offset {start}; context: {snippet}"
+
+
 def validate_reader_prose(sections):
-    for section in sections:
-        if re.search(r"\bref\d{3}\b", section["text"]):
-            raise ValueError("Citation labels belong only in evidence_ids, not reader-facing prose: " + section["text"][:120])
-        if re.search(r"\b(?:the|this|supplied|provided)\s+(?:research\s+)?dossier\b", section["text"], re.I):
-            raise ValueError("Reader-facing prose must explain the character rather than refer to the dossier: " + section["text"][:120])
+    for index, section in enumerate(sections):
+        text = section["text"]
+        match = re.search(r"\bref\d{3}\b", text)
+        if match:
+            raise ValueError("Citation labels belong only in evidence_ids, not reader-facing prose: "
+                             + f"section {index}, " + reader_violation_context(text, match))
+        match = re.search(r"\b(?:the|this|supplied|provided)\s+(?:research\s+)?dossier\b", text, re.I)
+        if match:
+            raise ValueError("Reader-facing prose must explain the character rather than refer to the dossier: "
+                             + f"section {index}, " + reader_violation_context(text, match))
 
 
 def validate_learner(article, dossier, validate_sections):
