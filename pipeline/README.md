@@ -10,6 +10,14 @@ Register digitised books in `research/digitised-sources.json`. Each registry rec
 the exact edition, book hash and consumer corpus; adding later books does not require changing
 character prompts or adding character-specific rules. Only 字源 is currently registered.
 
+Derive each job's source configuration from that registry. Isolated tasks may remove
+GitHub workflow fields listed in `ISSUE_METADATA`, but must not reconstruct a source
+dictionary with different research instructions. Instructions are frozen research inputs
+and contribute to the source hash. An older genuinely approved job can be published
+against its exact saved configuration with current issue settings; it still needs a fresh
+independent adoption check before counting against a changed current registry. Preserve
+the original snapshots and approvals; do not relabel their hashes as current.
+
 `status`, `prepare` and `run` reuse verified completions across `runs/`,
 `content/source_coverage/` and the requested output folder. A fresh batch folder
 does not restart entries already completed elsewhere. Reuse requires the current
