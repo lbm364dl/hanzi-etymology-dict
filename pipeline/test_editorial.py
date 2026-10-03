@@ -29,6 +29,9 @@ class NewReaderStyleTests(unittest.TestCase):
         article["meaning_history"]["senses"][0]["text"] = "The source check notes that the two graphs resemble each other."
         with self.assertRaisesRegex(ValueError, "Workflow term"):
             validate_new_reader_style(article, dossier)
+        article["meaning_history"]["senses"][0]["text"] = "The source check does not establish a human-like shape."
+        with self.assertRaisesRegex(ValueError, "Workflow term"):
+            validate_new_reader_style(article, dossier)
         article["meaning_history"]["senses"][0]["text"] = "Early inscriptions show similar paired forms; the date is unresolved."
         validate_new_reader_style(article, dossier)
 

@@ -13,5 +13,11 @@ The rule leaves direct descriptions of inscription evidence valid. A focused
 style test exercises both the rejected narration and that contrasting valid
 description. No approved article is rewritten or recertified by this change.
 
+The following review also found negative narration (“the source check does not
+establish”). The matcher therefore recognizes the workflow noun phrase itself,
+including plural checks/inspections, instead of requiring particular reporting
+verbs. The same focused test rejects this negative form while retaining the
+direct inscription description.
+
 学's already approved rev5 still retained the narration, so it awaits the actual
 narrow rev6 author repair and fresh reviews. It is not published by this note.
