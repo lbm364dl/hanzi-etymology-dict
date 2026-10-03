@@ -455,11 +455,13 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
             'the observed literal equals the current corpus literal and differs from the proposal. '
             'Your pixel_reason must agree with those fields; a contradictory rationale is not approval.')
         schema['required'].append('literal_observations')
-        schema['properties']['literal_observations'] = {'type': 'array', 'items': {
+        schema['properties']['literal_observations'] = {'type': 'array',
+            'minItems': len(checks), 'maxItems': len(checks), 'items': {
             'type': 'object', 'additionalProperties': False,
             'required': ['key', 'current_corpus_literal', 'proposed_literal', 'observed_literal', 'pixel_reason'],
-            'properties': {field: {'type': 'string', 'minLength': 1} for field in
-                           ['key', 'current_corpus_literal', 'proposed_literal', 'observed_literal', 'pixel_reason']}}}
+            'properties': {**{field: {'type': 'string', 'minLength': 1} for field in
+                           ['current_corpus_literal', 'proposed_literal', 'observed_literal', 'pixel_reason']},
+                           'key': {'type': 'string', 'enum': [check['key'] for check in checks]}}}}
     repairs = []
     if repair_checks:
         from pipeline import source_repairs
@@ -475,11 +477,13 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
             'Use applied_repair_scan_matches_corpus only if observed_literal equals after. '
             'Preserve original findings and report pending for unclear pixels or unsupported claims.')
         schema['required'].append('repair_observations')
-        schema['properties']['repair_observations'] = {'type': 'array', 'items': {
+        schema['properties']['repair_observations'] = {'type': 'array',
+            'minItems': len(repairs), 'maxItems': len(repairs), 'items': {
             'type': 'object', 'additionalProperties': False,
             'required': ['key', 'observed_literal', 'pixel_reason'],
-            'properties': {f: {'type': 'string', 'minLength': 1}
-                           for f in ('key', 'observed_literal', 'pixel_reason')}}}
+            'properties': {**{f: {'type': 'string', 'minLength': 1}
+                           for f in ('observed_literal', 'pixel_reason')},
+                           'key': {'type': 'string', 'enum': [repair['key'] for repair in repairs]}}}}
     allowed_dispositions = ['pending', 'unresolved_identity_not_used']
     if checks:
         allowed_dispositions.append('rejected_proposal_scan_matches_corpus')

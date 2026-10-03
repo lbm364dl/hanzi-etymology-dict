@@ -1,0 +1,134 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "你"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:001100",
+          "pdf_page_1based": 1100,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1100/source.png",
+          "source_sha256": "0812816978f0d520abab8591c28dba7979faa281df590b9517efe598defd882b",
+          "evidence_sha256": "72b33f09b16c37772c281d62eaa6596caeca923c707b872a9bdf4674b14ad5a8",
+          "ocr_review_status": "unreviewed",
+          "applied_ocr_corrections": {
+            "original_evidence_sha256": "aeb472bad344ca562eb2b75cc013f4ea7a194662fc061b274b65ccc44f6f9a27",
+            "corrections_sha256": "5cd76e401a1b06d0ce4c84dc57268991ce58d6c373b6cf7459c9e937fc2dcd75",
+            "text_patches": [
+              {
+                "start": 10,
+                "end": 11,
+                "before": "芈",
+                "after": "[glyph:p001]"
+              },
+              {
+                "start": 19,
+                "end": 20,
+                "before": "芈",
+                "after": "[glyph:p002]"
+              },
+              {
+                "start": 23,
+                "end": 24,
+                "before": "芈",
+                "after": "[glyph:p003]"
+              },
+              {
+                "start": 182,
+                "end": 183,
+                "before": "芈",
+                "after": "[glyph:p004]"
+              },
+              {
+                "start": 266,
+                "end": 267,
+                "before": "芈",
+                "after": "[glyph:p005]"
+              },
+              {
+                "start": 286,
+                "end": 287,
+                "before": "芈",
+                "after": "[glyph:p006]"
+              },
+              {
+                "start": 307,
+                "end": 308,
+                "before": "芈",
+                "after": "[glyph:p007]"
+              },
+              {
+                "start": 340,
+                "end": 341,
+                "before": "芈",
+                "after": "[glyph:p008]"
+              },
+              {
+                "start": 393,
+                "end": 394,
+                "before": "芈",
+                "after": "[glyph:p009]"
+              }
+            ],
+            "scope": "Applied producer overlay, not whole-page approval. Compare current corrected corpus text with original pixels before proposing another correction."
+          },
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "”读为“nǚ”。从女性引申出以女嫁人义。《国语·越语上》:“请句践女女于王,大夫女女于大夫,士女女于士。”第二个“女”作动词,以女嫁人。这种意义的“女”读为“nù”。甲骨文“女”或读为“母”。《合集》94:“隹(唯)女庚蚩(害)子安。”(只有母庚害子安)金文“女”或读为“汝”,第二人称代词,相当于“你”。令鼎:“余其舍女臣十家。”(我给你十家奴隶)《诗·魏风·硕鼠》:“三岁贯女,莫我肯顾。”(养你三年,不肯照顾我)战国文字“女”或读为“如”。古玺“相女”,读“相如”,人名。中山王鼎:“事少女(如)长,事愚女(如)智。”(徐在国)\n\n姓 xìng 心组、耕部;心组、劲韵、息正切。\n\n[glyph:g036]¹ 商 — [glyph:g037]² 商 — [glyph:g038]³ 春秋 — [glyph:g039]⁴ 战国 — [glyph:g040]⁵ 秦 — [glyph:g041]⁶ 《说文》小篆 — [glyph:g042]⁷ 汉 — 姓 楷书\n\n1、2《甲文编》469页。3《金文编》786页。\n\n1085"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000077",
+          "pdf_page_1based": 77,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0077/source.png",
+          "source_sha256": "6ca19028ac75861df9098ae5f4781977aca78bc0c9ab1625cc7187363d8bfba2",
+          "evidence_sha256": "d03253b60df7aed4c417e2e7b2b95d3079ec989f54eb6d7d6f47f731d17beb44",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "不明。现在能看到的简体“尔”最早出现在战国时期的中山王鼎上。小篆字体见于东汉安帝建光元年(121)成书的《说文解字》。刊立于三国魏正始二年(241)的“三体石经”中，也有这个简体。现在写法的“尔”出现在东晋王羲之的作品中，是在隶书草写的基础上进行楷化形成的。金文中用作第二人称代词，相当于现代汉语的“你”，尔即你之古体。中山王鼎：“毋忘尔邦。”战国文字中“尔”或加点饰，点又经常演变为横，均无义。(陈英杰)\n\n曾 zēng 精纽、蒸部;精纽、登韵、作滕切。\ncéng 从纽、蒸部;从纽、登韵、昨棱切。\n\n[glyph:g009]1 商\n[glyph:g010]2 西周\n[glyph:g011]3 春秋\n[glyph:g012]4 春秋\n[glyph:g013]5 战国\n[glyph:g014]6 战国\n[glyph:g015]7 汉\n[glyph:g016]8 《说文》小篆\n[glyph:g017]9 汉\n曾 楷书\n\n1、9《甲金篆》63页。2、3、4《金文编》47页。5、6《战文编》54页。7《汉印徵》卷2，1页。8《说文》28页。\n\n象形字。甲骨文中之“田”(非土田之田)像釜鬲之算，“八”像散发出的蒸汽，[glyph:g018]之整体像蒸熟食物的器皿，即甑(zèng)之初文。古代的甑，底部有许多透蒸汽的小孔，置于鬲或䰝(fù，大口的釜)上蒸煮，如同现在的蒸笼。也有另外加算的。新石器时代已有陶甑，殷周时有用青铜铸成的，现在则以木制为主，也有竹制。甑、鬲合在一起便是甗，甗之甑、鬲两部分可合铸在一起，也可上下分开，器盛行于殷、周时。西周金文中始加[glyph:g019]或[glyph:g020](“口”中加短横是古文字中常见的现象)，乃像承置甑的物件。“曾”在甲骨文中用为祭祀名、地名或方国名，金文中用作国名、地名。易鼎：“使于曾。”或用为增加的“增”。卫簋：“王曾(增)令卫，易(赐)赤巿攸勒。”或用为重义，曾孙仆儿钟有“曾孙”语。文献中多用为加强语气的副词，常与“不”连用。《列子·汤问》：“曾不若孀妻弱子。”(竟然连寡妇小孩都不如)用为这些意义的“曾”读zēng。表示“曾经”义时读céng。(陈英杰)\n\n尚 shàng 禅纽、阳部;禅纽、漾韵、时亮切。\ncháng 禅纽、阳部;禅纽、阳韵、市羊切。\n\n[glyph:g021]1 西周\n[glyph:g022]2 西周\n[glyph:g023]3 战国\n[glyph:g024]4 春秋\n[glyph:g025]5 战国\n[glyph:g026]6 战国\n[glyph:g027]7 战国\n[glyph:g028]8 《说文》小篆\n[glyph:g029]9 汉\n[glyph:g030]10 汉\n尚 楷书\n\n1-4《金文编》48页。5、6、7《战文编》55页。8《说文》28页。9《银雀山》31页。10《甲金篆》64页。\n\n形声字。《说文》：“尚，曾也，庶几也。从八，向声。”“曾”、“庶几”均后来义，初义不知。字形不见于殷商甲骨文，而见于先周周原甲骨。金文中多假“尚”为“常”。陈侯因𧊒敦“永为典尚”，读为《易·系辞》“既有典常”之“常”，“典常”指国之典章制度。亦可单言“尚”。秦驷玉版“世万子孙，以此为尚”，“尚”读为“常”，常规、典常之义。借为“常”时音读cháng。文献中多用为增加、饰、崇尚、好尚等义，音读shàng。陈公子叔邋父甗：“子子孙孙是尚。”《集韵·漾韵》：“尚，贵也。”颛铭中是尊尚、宝爱之义。铭文中还用为人名。望山楚简“足骨疾尚死”，用为“庶几”义。(陈英杰)\n\n詹 zhān 章纽、谈部;章纽、盐韵、职廉切。\n\n[glyph:g031]1 春秋\n[glyph:g032]2 战国\n[glyph:g033]3 战国\n[glyph:g034]4 战国\n[glyph:g035]5 《说文》小篆\n[glyph:g036]6 汉\n[glyph:g037]7 汉\n詹 楷书\n\n1《金文编》369页“蟾”字偏旁。2《考古与文物》2002年5期64页。3《金文编》396页“檐”字偏旁。4《战文编》56页。5《说文》28页。6《汉印徵》卷2，2页。7《银雀山》31页。"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000272",
+          "pdf_page_1based": 272,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0272/source.png",
+          "source_sha256": "465d992b8c5cc03078e1b79503bb15863cf245e4c7e6cf4fea0a12e09f74aed4",
+          "evidence_sha256": "813172fcfcaeda262a3746d4224c79deef91c3074d5f17baaacbb7fcacf7aabb",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "纽，鱼铎对转)。[glyph:g001]的远源、声首为石，近源、准声首、初文为度。楷书作[glyph:g001]与[glyph:g007]，是小篆的笔势变化。《说文》“本义是闭塞。《周礼·秋官·雍氏》:“秋令塞阱杜擭。”郑玄注引《书·费誓》:“[glyph:g001]乃搜，敛(niè)乃穽。”(杜塞你们的捕兽机具，填塞你们的陷阱)古书中此义多借用“杜”字表示，以至于杜字取代了[glyph:g001]字。[glyph:g001]与[glyph:g007]是狭义的异体字。《说文·刀部》另有[glyph:g007]，训“判”，音duó(定纽、铎部;定纽、铎韵、徒落切)，与[glyph:g007]是同形字。(张标)\n\n收 shōu 书纽、幽部;书纽、尤韵、式州切。\n\n[glyph:g008]² 战国\n[glyph:g009]¹ 战国 — [glyph:g010]³ 战国 — [glyph:g011]⁴ 秦 — [glyph:g012]⁵ 《说文》小篆 — [glyph:g013]¹⁰ 汉 — [glyph:g014]¹¹ 汉\n[glyph:g015]⁶ 汉 — [glyph:g016]⁷ 汉 — [glyph:g017]⁸ 汉 — [glyph:g018]⁹ 汉 — 收 楷书\n\n1《楚系简帛》271页。2《四声韵》32页。3《古文典》163页。4《睡甲》48页。5《说文》69页。6、7、8、11《篆隶表》218页。9《隶辨》293页。10《汉印徵》卷3,22页。\n\n形声字。从攴，丩声。形旁攴为手持器械治事状，表示收字本义与治事有关;声旁丩像两绳纠结，于收字表音，丩与收为宵幽旁转。丩为收之源头、声首，甲骨文已经出现。古初盖以丩为收，后乃为造专字。郾侯廉簋、《包山楚简》并以丩为“纠”，后乃造分化字。收字最早见于战国古文字，主流结构为从攴丩声。形旁或作手，手与攴属于义近偏旁的互用，不影响本义之表达。声旁或作手，手与收同韵，较丩之于收的宵幽旁转更切近，但没得到《说文》的首肯。隶变时，丩旁或繁化作[glyph:g019]，或又加形旁糸(mì，俗称“绞丝”)，但都没取得主流地位。楷书作收，是小篆的笔势变化。俗作[glyph:p001]，非正字。《说文》本义为捕，即捕取罪人。《诗·大雅·瞻仰》:“此宜无罪，女反收之。”郑玄笺:“收，拘也。”引申指没收。云梦秦简《法律答问》:“从母为收。”引申指收藏，收取。《法律答问》:“妻智(知)夫盗而匿之，当以三百论为盗;不智，为收。”又:“死者有妻子当收(收尸)，弗言而葬，当赀一甲。”又引申为所收赋敛。《包山楚简》2.147:“酒(将)以成收。”通“纠”，纠察。《荀子·君道》:“便嬖左右者，人主之所以窥远、收众之门户牖向也。”(张标)\n\n鼓（[glyph:g020]） gǔ 见纽、鱼部;见纽、鱼韵、公户切。\n\n[glyph:g025]⁵ 西周 — 鼓 楷书\n[glyph:g021]¹ 商 — [glyph:g022]² 商 — [glyph:g023]³ 商 — [glyph:g024]⁴ 商 — [glyph:g026]⁶ 春秋 — [glyph:g027]⁷ 春秋 — [glyph:g028]⁸ 春秋 — [glyph:g029]⁹ 战国 — [glyph:g030]¹⁰ 战国 — [glyph:g031]¹¹ 战国 — [glyph:g032]¹² 战国 — [glyph:g033]¹³ 战国 — [glyph:g034]¹⁴ 战国 — [glyph:g035]¹⁵ 《说文》小篆 — [glyph:g036]¹⁶ 汉 — [glyph:g037]¹⁷ 楷书 [glyph:g020]\n[glyph:g038]¹⁸ 汉 — [glyph:g039]¹⁹ 汉\n\n1~4《类编》332~333页。5~8《金文编》219、319页。9《汉语字形表》182页。10、13、14《战文编》201页。11、12、15《古文典》479页。16《说文》69页。17、18、19《篆隶表》317页。\n\n会意兼形声。从攴从壴(zhù)，壴亦声。形旁攴为手持械器以击状，表示鼓的本义与击打有关。形旁兼声旁壴是鼓之象形，于鼓表音，鼓与壴为鱼侯旁转，壴是鼓的源头、声首与初文，甲骨文已见之，为鼓之象形。古初即从壴为鼓，后乃为造专字，甲骨文(《殷契佚存》233)、金文王孙遗者钟及战国陶、玺、简、金文字中以壴为鼓即其证。鼓字始见于甲骨文，一旁作鼓形，鼓有头饰、鼓身、鼓架，一旁作[glyph:g040]、[glyph:g041]、[glyph:g042]，为手持竹枝、木棒、兵器等形，即支、攴、殳。三形同源自壴，亦皆得表名词鼓与动词击鼓义。后从支的楷书作"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing.",
+      "locator_gap": "No headword-shaped OCR line found; mentions are not verified entries"
+    }
+  ],
+  "source_scan_images": [],
+  "require_source_specific_page_evidence": true
+}

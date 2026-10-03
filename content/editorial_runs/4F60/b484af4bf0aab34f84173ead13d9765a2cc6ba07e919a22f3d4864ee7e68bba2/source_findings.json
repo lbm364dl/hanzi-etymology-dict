@@ -1,0 +1,29 @@
+{
+  "source_id": "ziyuan-2012",
+  "tracking_issue_url": "https://github.com/lbm364dl/hanzi-etymology-dict/issues/1",
+  "requires_coordinator_verification": true,
+  "findings": [
+    {
+      "key": "ziyuan-2012:4F60:830114b1c806",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 4F60",
+      "details": "[SCAN VERIFICATION REQUIRED] 字源 PDF page 1100, OCR spans containing [glyph:p001]–[glyph:p009], including the 女/姓 material; it is a locator hit unrelated to the 你 headword and was not inspected in this invocation. Do not use it for 你 evidence.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: runs/source-enrichment-ziyuan/ni-hao-ma-smoke/ziyuan-2012/4F60",
+        "Research output: initial-followup/research/result.json"
+      ]
+    },
+    {
+      "key": "ziyuan-2012:4F60:d868a772637d",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 4F60",
+      "details": "[SCAN VERIFICATION REQUIRED] 字源 PDF p. 1100, supplied OCR spans [glyph:p001]–[glyph:p009] in 女/姓 material: this is unrelated to the 你 headword and was not inspected; do not use as evidence about 你.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: runs/source-enrichment-ziyuan/ni-hao-ma-smoke/ziyuan-2012/4F60",
+        "Research output: initial-followup/research-repair-1/result.json"
+      ]
+    }
+  ]
+}

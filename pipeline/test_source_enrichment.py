@@ -115,6 +115,32 @@ class SourceEnrichmentTests(unittest.TestCase):
             editorial.write(job / 'article.json', {**article, 'summary': 'Now cites a glyph.'})
             self.assertTrue(source_enrichment._source_findings_pending(job))
 
+    def test_resolution_transport_limits_repair_observations_to_requested_keys(self):
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        article = editorial.read(job/'source_article.json')
+        dossier = editorial.read(job/'source_dossier.json')
+        editorial.write(job/'article.json', article)
+        editorial.write(job/'dossier.json', dossier)
+        editorial.write(job/'reviews.json', [editorial.make_review(role, 'pass', [],
+            article, dossier, 'fixture-' + role) for role in ('factual', 'readability')])
+        editorial.write(job/'source_findings.json', {'findings': [{'key':'repair'}, {'key':'identity'}]})
+        editorial.write(job/'source_checkpoint.json', {'locator': {'source_scan_images': []}})
+        test = self
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+            def run(self, role, inputs, schema, directory):
+                transport = schema['properties']['repair_observations']
+                validator = editorial.Draft202012Validator(transport)
+                valid = {'key':'repair', 'observed_literal':'皃', 'pixel_reason':'Fixture'}
+                validator.validate([valid])
+                test.assertTrue(list(validator.iter_errors([valid, {**valid, 'key':'identity'}])))
+                test.assertTrue(list(validator.iter_errors([{**valid, 'key':'identity'}])))
+                raise RuntimeError('Transport checked')
+        with patch('pipeline.source_repairs.verify', return_value={'key':'repair'}):
+            with self.assertRaisesRegex(RuntimeError, 'Transport checked'):
+                source_enrichment.resolve_source_findings(job, Runner(), repair_checks=[{'key':'repair'}])
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
