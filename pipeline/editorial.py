@@ -306,6 +306,12 @@ occurrence by occurrence. Do not replace normal particles or lookalikes through 
 When attached_source_scans is present, inspect the corresponding image attachments directly;
 their SHA-256 values bind the exact pixels. Cite only claims you can actually read from them,
 and keep unresolved glyph identities as source-bound images rather than guessed Unicode.
+When paraphrasing a component-role clause, explicitly name the printed unit or its exact
+occurrence anchor and distinguish it from nearby groups. Do not use “that combined unit”
+when it could refer either to a preceding construction or to a following graphic. Resolve
+the antecedent against the source pixels before treating the wording as citable support.
+For a reduction note, identify which named shapes are reduced and distinguish the observed
+resulting graph from its unverified Unicode identity or proposed meaning.
 Do not launch whole-book OCR, rendering, API digitisation or visual searching; record a locator
 gap and continue online when access is inefficient.
 When a meaningful grouped component may once have been an independently written whole graph,
