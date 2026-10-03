@@ -19,6 +19,32 @@ class AttentionRepairTests(unittest.TestCase):
         self.assertEqual(editorial.overlapping_article_patch_paths(edits, paths),
                          [('components', 'components/0/text')])
 
+    def test_apply_article_patch_repairs_overlap_without_module_helper(self):
+        from pipeline.test_editorial import ARTICLE_V2, DOSSIER
+        from pipeline.editorial import WRITER_SCHEMA
+        import copy
+        with tempfile.TemporaryDirectory() as temporary:
+            article = copy.deepcopy(ARTICLE_V2)
+            dossier = {**DOSSIER, 'glyph_research': {
+                'historical_glyphs': article['historical_glyphs']}}
+            calls = []
+            def invoke(role, inputs, schema, directory):
+                calls.append(inputs)
+                if len(calls) == 1:
+                    return {'edits': [
+                        {'path': 'components/0', 'value_json': json.dumps(article['components'][0])},
+                        {'path': 'components/0/form', 'value_json': '木'},
+                    ]}
+                self.assertIn("'components/0' conflicts with 'components/0/form'",
+                              inputs['validation_findings'][0])
+                return {'edits': [{'path': 'summary/text', 'value_json': 'A tree.'}]}
+            with patch.object(editorial, 'overlapping_article_patch_paths', None, create=True):
+                result = editorial.apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                                       WRITER_SCHEMA, Path(temporary), invoke)
+            self.assertEqual(len(calls), 2)
+            self.assertEqual(result['summary']['text'], 'A tree.')
+            self.assertEqual(article['summary']['text'], ARTICLE_V2['summary']['text'])
+
     def test_only_terminal_attention_jobs_can_be_reused(self):
         with tempfile.TemporaryDirectory() as temporary:
             job = Path(temporary)

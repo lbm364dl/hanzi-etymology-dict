@@ -9,3 +9,7 @@ Safety contracts: unchanged frozen/canonical baseline; registered source identit
 Actual smoke: 唱 received fresh factual/readability passes and current cited book coverage, then published through the normal issue and source gates. 多 remains under factual repair; 系 remains under scoped author repair. Their failed attempts and reviews are retained.
 
 A separate timeout-recovery launch mistakenly supplied the full300 cohort to a saved96-character tail queue. The immutable queue identity gate rejected the launch before scheduling. Corrected launch reuses research/cohorts/hsk1-remaining-tail-20261003.json; all300 remain the completion audit scope. The other full-cohort supervisor was unaffected.
+
+## Live deployment finding
+
+A recovery supervisor loaded an intermediate shared-module version where the patch call referenced an overlap helper not available in its globals. Six author jobs failed with NameError; actual research receipts remain intact. The hot-path overlap checker is being made self-contained and exercised without the module helper. The affected supervisor received one SIGINT and drains its current work before a verified clean-process handoff; the saved tail cohort supervisor remains independent. New code alone does not repair these failed candidates or certify entries.

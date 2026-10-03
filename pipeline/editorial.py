@@ -1266,12 +1266,21 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
         'article for this invocation. Match the requested sense ID, gloss or component identity '
         'to its target path before drafting a replacement; never copy a neighboring sense into '
         'the selected slot or infer indexes from prose order in an earlier draft.')
+    def patch_conflicts(edits):
+        selected = [(edit['path'], paths[edit['path']]) for edit in edits]
+        conflicts = []
+        for index, (left_label, left) in enumerate(selected):
+            for right_label, right in selected[index + 1:]:
+                if left == right or left == right[:len(left)] or right == left[:len(right)]:
+                    conflicts.append((left_label, right_label))
+        return conflicts
+
     for attempt in range(3):
         patch_directory = Path(directory) if attempt == 0 else Path(directory)/f'patch-repair-{attempt}'
         result = invoke('article_patch', patch_inputs, patch_schema, patch_directory)
         patched = copy.deepcopy(article)
         try:
-            conflicts = overlapping_article_patch_paths(result['edits'], paths)
+            conflicts = patch_conflicts(result['edits'])
             if conflicts:
                 rendered = '; '.join(f"'{left}' conflicts with '{right}'" for left, right in conflicts)
                 raise ValueError('Article patches must have distinct nonoverlapping paths; detected ' + rendered +
