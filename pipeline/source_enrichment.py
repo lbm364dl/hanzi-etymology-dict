@@ -514,6 +514,13 @@ def _source_finding_class(finding):
     identity_gap = identity_gap or re.search(
         r'did not (?:separately |individually |independently )?(?:check|verify|identify).{0,100}'
         + identity_term, text, re.I)
+    # Research findings often phrase a gap in the inverse order: the reviewer
+    # "did not establish the Unicode identity" rather than "the identity was
+    # not established." Keep those occurrence-bound identity gaps in the
+    # identity lane so resolution requires an exact claim inventory.
+    identity_gap = identity_gap or re.search(
+        r'did not (?:separately |individually |independently )?(?:establish|determine|ascertain)'
+        r'.{0,140}' + identity_term, text, re.I)
     specimen_gap = re.search(r'\b(?:glyph|specimen|graph|form)s?\b.{0,120}'
                              r'(?:not (?:separately |individually |independently )?(?:identified|interpreted|checked|verified)|'
                              r'did not (?:separately |individually |independently )?(?:identify|interpret|check|verify)|'

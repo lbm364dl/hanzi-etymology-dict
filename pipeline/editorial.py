@@ -1271,10 +1271,11 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
         result = invoke('article_patch', patch_inputs, patch_schema, patch_directory)
         patched = copy.deepcopy(article)
         try:
-            selected = [paths[edit['path']] for edit in result['edits']]
-            if any(a == b or a == b[:len(a)] or b == a[:len(b)]
-                   for i, a in enumerate(selected) for b in selected[i+1:]):
-                raise ValueError('Article patches must have distinct nonoverlapping paths')
+            conflicts = overlapping_article_patch_paths(result['edits'], paths)
+            if conflicts:
+                rendered = '; '.join(f"'{left}' conflicts with '{right}'" for left, right in conflicts)
+                raise ValueError('Article patches must have distinct nonoverlapping paths; detected ' + rendered +
+                    '. Choose either a complete array/object replacement or its child edits; do not include both.')
             for edit in result['edits']:
                 parts = paths[edit['path']]; node = patched
                 for part in parts[:-1]: node = node[part]
@@ -2064,6 +2065,21 @@ def changed_article_paths(before, after, path="article"):
         return [changed for index, (old, new) in enumerate(zip(before, after))
                 for changed in changed_article_paths(old, new, f"{path}[{index}]")]
     return [path]
+
+
+def overlapping_article_patch_paths(edits, paths):
+    """Return exact conflicting patch paths after resolving schema path aliases."""
+    selected = []
+    for edit in edits:
+        label = edit.get('path')
+        if label in paths:
+            selected.append((label, paths[label]))
+    conflicts = []
+    for index, (left_label, left) in enumerate(selected):
+        for right_label, right in selected[index + 1:]:
+            if left == right or left == right[:len(left)] or right == left[:len(right)]:
+                conflicts.append((left_label, right_label))
+    return conflicts
 
 
 def review_article(article, dossier, directory, runner, state, max_revisions, feedback=None,

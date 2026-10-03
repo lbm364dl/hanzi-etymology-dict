@@ -47,6 +47,7 @@ class SourceEnrichmentTests(unittest.TestCase):
                         'individual specimen identities or dates were not verified',
                         'this research did not verify individual specimen identities or dates',
                         'the identity and intended scope should be verified',
+                        'I did not establish every uncommon printed graph’s Unicode identity or verify its underlying paleographic source.',
                         'small individual glyph forms were not independently identified',
                         'numbered glyph drawings and their identifications were not individually checked',
                         'glyph specimens were not individually interpreted',

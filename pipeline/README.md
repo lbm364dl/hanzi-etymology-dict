@@ -93,6 +93,28 @@ raw OCR and exact independent scan receipts, serialize shared overlay/corpus wri
 and verify consumer evidence before any dependent character can pass its source gates.
 Attention states are genuine unfinished work, not completed entries or invented approvals.
 
+### Continuing failed editorial stages
+
+For a terminal source job whose research is usable but authoring or review failed,
+create a fresh attempt with `pipeline.attention_repair`. It preserves exact research
+receipts and diagnostic findings, verifies the unchanged canonical baseline and
+current source locator, and runs new Luna low authorship and independent reviews.
+
+```bash
+python3 -m pipeline.attention_repair --registry research/digitised-sources.json --source ziyuan-2012 --output runs/attention-repair-next --workers 6 --agents 24 runs/old-source-job/ziyuan-2012/5531
+```
+
+Use a new output folder for each attempt. Known OCR findings require scan verification
+first. Optional `--edit-scopes` supplies a JSON object mapping characters to allowed
+article paths; paths must not overlap. This command retains candidates and findings;
+normal source resolution, issue synchronization and publication gates still apply.
+Select `--source` explicitly when the registry contains more than one book.
+
+When resuming a queue, reuse the exact cohort file recorded at its creation. A saved
+tail queue may contain fewer characters than the overall300-character completion
+scope. Changing it to the full cohort is rejected before scheduling; use the original
+tail cohort and audit completion against the complete HSK1 cohort separately.
+
 ### Live dashboard
 
 ```bash
