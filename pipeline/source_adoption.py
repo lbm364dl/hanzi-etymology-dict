@@ -100,7 +100,7 @@ def check_coverage(inputs, schema, job, runner):
     return result, 'source-coverage-adjudication'
 
 
-def adopt(character, source, output, runner, root=se.ROOT):
+def adopt(character, source, output, runner, root=se.ROOT, *, source_context=None):
     job = se.job_path(output, source['id'], character)
     job.mkdir(parents=True, exist_ok=True)
     with (job / 'coordinator.lock').open('a') as lock:
@@ -110,10 +110,10 @@ def adopt(character, source, output, runner, root=se.ROOT):
             return {'character': character, 'status': 'already_running', 'job': str(job)}
         local_runner = copy.copy(runner)
         local_runner.inherited_lock_fds = (lock.fileno(),)
-        return _adopt(character, source, output, local_runner, root)
+        return _adopt(character, source, output, local_runner, root, source_context)
 
 
-def _adopt(character, source, output, runner, root):
+def _adopt(character, source, output, runner, root, source_context=None):
     """No authorship or publication: preserve the exact already-reviewed content."""
     if runner.model != 'gpt-6-luna' or runner.reasoning != 'low':
         raise ValueError('Source adoption requires gpt-6-luna low')
@@ -136,8 +136,12 @@ def _adopt(character, source, output, runner, root):
     if snapshot['article_hash'] != editorial.digest(article) or snapshot['dossier_hash'] != editorial.digest(dossier):
         raise ValueError('Prepared source snapshot does not match current approved content')
     located = se._load_source_tools().locate_sources({'schema_version': 1, 'sources': [source]}, character, dossier)
-    if not located.get('source_scan_images'):
+    scans = [*located.get('source_scan_images', []), *(source_context or [])]
+    if not scans:
         raise ValueError('Independent adoption requires original source scan attachments')
+    editorial.source_scan_attachments(scans)
+    if source_context:
+        editorial.write(job / 'source_context.json', source_context)
     editorial.write(job / 'article.json', article)
     editorial.write(job / 'dossier.json', dossier)
     editorial.write(job / 'reviews.json', reviews)
@@ -148,7 +152,7 @@ def _adopt(character, source, output, runner, root):
                   'findings': {'type': 'array', 'items': {'type': 'string'}}}}
     result, coverage_stage = check_coverage({'character': character, 'source': se._research_source(source),
         'article': article, 'dossier': dossier, 'book_evidence': citations,
-        'feedback': {**located, 'source_scan_images': located['source_scan_images']}}, schema, job, runner)
+        'feedback': {**located, 'source_scan_images': scans}}, schema, job, runner)
     verified = result['verdict'] == 'pass' and not result['findings'] and bool(result['evidence_ids'])
     audit = {'source_id': source['id'], 'source_hash': se._research_source_hash(source),
              'mode': 'existing_approved_research', 'verified': verified,

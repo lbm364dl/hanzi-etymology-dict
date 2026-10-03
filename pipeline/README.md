@@ -751,3 +751,5 @@ Automatic source citation integration uses this proof from its pre-edit approved
 Preserve failed reviews and independently resolve conflicting findings before requesting
 another author rewrite. Do not restart completed research unless a concrete evidence gap
 requires it. Current-source and OCR gates still run on the final exact pair.
+
+For already-approved entries, `source_adoption.adopt(..., source_context=[scan_record, ...])` can attach additional discovered original scans when locator leads are text mentions. These records are validated and saved separately from the locator; never inject review attachments into the frozen locator to make a source gate pass.

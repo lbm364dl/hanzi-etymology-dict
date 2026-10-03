@@ -57,6 +57,35 @@ class SourceAdoptionTests(unittest.TestCase):
                                                                 'findings': ['Scan disagrees.']})
             self.assertFalse(se._published_matches(job, SOURCE, self.root))
 
+    def test_additional_scans_do_not_change_locator_identity(self):
+        context = [{'path': str(self.scan), 'pdf_page': 123}]
+        locator = LocalSources()
+        case = self
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+            def run(self, role, inputs, schema, directory):
+                case.assertEqual(inputs['feedback']['source_scan_images'], context)
+                result = {'verdict': 'pass', 'evidence_ids': ['source:1'], 'findings': []}
+                editorial.write(Path(directory)/'result.json', result)
+                editorial.write(Path(directory)/'meta.json', {
+                    'role': role, 'status': 'complete', 'model': self.model,
+                    'reasoning': self.reasoning, 'result_hash': editorial.digest(result)})
+                return result
+        before = self.entry.read_bytes()
+        with patch.object(se, '_load_source_tools', return_value=locator):
+            result = source_adoption.adopt('木', SOURCE, self.root/'runs', Runner(),
+                                          self.root, source_context=context)
+            self.assertEqual(result['status'], 'published')
+            job = se.job_path(self.root/'runs', SOURCE['id'], '木')
+            self.assertTrue(se._published_matches(job, SOURCE, self.root))
+            checkpoint = editorial.read(job/'source_checkpoint.json')
+            self.assertFalse(checkpoint['locator'].get('source_scan_images'))
+            self.assertEqual(editorial.read(job/'source_context.json'), context)
+            self.assertEqual(self.entry.read_bytes(), before)
+            with self.assertRaisesRegex(ValueError, 'requires original source scan'):
+                source_adoption.adopt('木', SOURCE, self.root/'missing', Runner(), self.root)
+
     def test_failed_source_check_tracks_findings_without_publishing(self):
         scan = str(self.scan)
         class Locator(LocalSources):
