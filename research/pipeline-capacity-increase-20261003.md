@@ -31,3 +31,17 @@ but its completion inventory was read at startup. Arrange a clean queue handoff 
 it reaches the tail; do not claim that locks alone prevent later redundant research.
 The full 300-character cohort remains the completion target. Queue record counts across
 the two manifests are not a count of unique characters.
+
+## Handoff started after contract changes
+
+The original supervisor received one SIGINT directed only to PID3643036 after its
+process identity was rechecked. Its ThreadPoolExecutor waits for active workers;
+model subprocesses have separate process groups and were not signalled. The tail
+supervisor continues. A live handoff watcher at
+`runs/operations/capacity24-handoff-20261003/resume_after_drain.py` waits for the
+exact original process to finish, then for an explicit verified-smoke release.
+It will restart the same original queue with24model slots and exclude the96-character
+tail plus its existing separately owned characters. No release receipt has been
+created yet: genuine new 本 and 边 smoke/source gates are still in progress.
+Saved worker outputs remain authoritative during drain even if the interrupted
+scheduler's queue manifest still labels them running; restart reconciles them.
