@@ -1,0 +1,18 @@
+{
+  "source_id": "ziyuan-2012",
+  "tracking_issue_url": null,
+  "requires_coordinator_verification": true,
+  "findings": [
+    {
+      "key": "ziyuan-2012:73ED:5a5a6e4d2d24",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 73ED",
+      "details": "[OCR CORRECTION REQUIRED] 字源 PDF p. 38, printed p. 26, 班 entry's glyph-sequence reference line immediately beneath the headword: raw OCR excerpt labels the Shuowen small-seal glyph as “4” in “1、2《金文编》26页。3《战文编》17页。4《说文》14页。5《篆隶表》26页。” The scan visibly numbers the sequence Western Zhou 1, Spring and Autumn 2, Warring States 3, Shuowen small seal 4, Han 5, regular script unnumbered in the line, while the bibliography assigns 《说文》14页 to 4 and 《篆隶表》26页 to 5. Elsewhere in OCR this may be a typography/numbering issue; verify the source-bound OCR and repeated references before applying any correction. This discrepancy does not affect the cited prose claim about the traditional formation.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: /home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/ban-next-20261003/ziyuan-2012/73ED",
+        "Research output: initial-followup/research/result.json"
+      ]
+    }
+  ]
+}
