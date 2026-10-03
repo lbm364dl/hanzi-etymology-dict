@@ -1,0 +1,29 @@
+{
+  "source_id": "ziyuan-2012",
+  "tracking_issue_url": "https://github.com/lbm364dl/hanzi-etymology-dict/issues/1",
+  "requires_coordinator_verification": true,
+  "findings": [
+    {
+      "key": "ziyuan-2012:597D:62fb34c43330",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 597D",
+      "details": "[OCR CORRECTION REQUIRED] 《字源》, 李學勤主編, 2012, printed p. 1094 / PDF p. 1109: provisional corpus OCR span 虐钟 in the bronze-example phrase should be checked for producer correction to scan-visible 虘鐘. The attached full-page pixels show the rare vessel-name graph as 虘 followed by 鐘; this report proposes the literal correction but did not alter the corpus.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: runs/source-enrichment-ziyuan/hao-ocr-correction-refresh/ziyuan-2012/597D",
+        "Research output: initial-followup/research/result.json"
+      ]
+    },
+    {
+      "key": "ziyuan-2012:597D:2bce4fa87802",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 597D",
+      "details": "[SCAN VERIFICATION REQUIRED] 《字源》, 李學勤主編, 2012, printed p. 1095 / PDF p. 1110: continuation sentence beginning “好”读为 hào was available only as supplied OCR in this invocation; its source scan pixels were not attached or opened here. Check that page and the continuation before treating this passage as scan-verified.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: runs/source-enrichment-ziyuan/hao-ocr-correction-refresh/ziyuan-2012/597D",
+        "Research output: initial-followup/research/result.json"
+      ]
+    }
+  ]
+}
