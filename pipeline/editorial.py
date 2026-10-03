@@ -1804,9 +1804,8 @@ def repair_reader_prose(article, dossier, directory, runner):
                   "maxItems": len(targets), "items": {"type": "object", "additionalProperties": False,
                       "required": ["field", "text"], "properties": {
                           "field": {"enum": list(targets)}, "text": {"type": "string", "minLength": 1}}}}}}
-    forbidden = "|".join([r"ref\d{3}", *map(re.escape, sorted(known_ids))])
-    schema["properties"]["edits"]["items"]["properties"]["text"]["pattern"] = (
-        r"^(?![\s\S]*\b(?:" + forbidden + r")\b)[\s\S]+$")
+    # The agent API uses a restricted regex dialect without lookaround. Enforce
+    # citation exclusion through the local validator and retained bounded retries.
     inputs = {"article": article, "dossier": dossier,
         "paragraphs": [{"field": field, **{k:v for k,v in target.items() if k != "path"}}
                        for field, target in targets.items()],

@@ -94,6 +94,9 @@ class NewReaderStyleTests(unittest.TestCase):
                 self.calls = []
 
             def run(self, role, inputs, schema, directory):
+                self_schema = schema['properties']['edits']['items']['properties']['text']
+                if 'pattern' in self_schema:
+                    raise AssertionError('Do not send unsupported exclusion lookaround to the agent API')
                 self.calls.append((copy.deepcopy(inputs), directory))
                 text = "A proposal [X-source123]." if len(self.calls) == 1 else "A proposal."
                 return {"edits": [{"field": "formation/text", "text": text}]}
