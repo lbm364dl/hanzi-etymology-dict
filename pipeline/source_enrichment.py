@@ -292,6 +292,8 @@ def _integrate_uncited_book_records(job, source, runner, state, audit, feedback,
         return state, audit
     article, dossier = editorial.read(job / 'article.json'), editorial.read(job / 'dossier.json')
     editorial.validate_reviews(article, dossier, editorial.read(job / 'reviews.json'))
+    approved_base = {'article': copy.deepcopy(article), 'dossier': copy.deepcopy(dossier),
+                     'reviews': editorial.read(job / 'reviews.json')}
     archive = job / 'before-citation-integration' / editorial.digest(article)
     for name in ('article.json', 'dossier.json', 'reviews.json', 'status.json'):
         if (job / name).exists():
@@ -308,7 +310,8 @@ def _integrate_uncited_book_records(job, source, runner, state, audit, feedback,
     article = editorial.author_book_citations(article, dossier, audit['consulted_citations'],
                                              stage / 'citation-author', runner, context)
     repaired = editorial.refine(article, dossier, stage, runner, max_revisions,
-                                context, research_first=False, edit_first=False)
+                                context, research_first=False, edit_first=False,
+                                approved_base=approved_base)
     for name in ('article.json', 'dossier.json', 'reviews.json'):
         if (stage / name).exists():
             shutil.copy2(stage / name, job / name)

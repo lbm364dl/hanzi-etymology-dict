@@ -2143,13 +2143,21 @@ def refine(article, dossier, directory, runner, max_revisions=3, feedback=None,
     state = {"character": dossier.get("character"), "status": "running", "mode": "refine",
              "dossier_hash": digest(dossier), "source_article_hash": digest(article)}
     if approved_base is not None:
-        if edit_first or research_first:
-            raise ValueError("Scoped base review requires an unchanged candidate and no initial research")
+        if research_first:
+            raise ValueError("Scoped base review requires no initial research")
         base_article = approved_base["article"]
+        if edit_first and digest(article) != digest(base_article):
+            raise ValueError("Scoped editing must start from the exact approved base article")
         base_dossier = approved_base["dossier"]
         if digest(base_dossier) != digest(dossier):
             raise ValueError("Approved base dossier differs from candidate dossier")
         validate_reviews(base_article, base_dossier, approved_base["reviews"])
+        base_record = {"article": base_article, "dossier": base_dossier,
+                       "reviews": approved_base["reviews"]}
+        base_path = directory / 'approved_base.json'
+        if base_path.exists() and read(base_path) != base_record:
+            raise ValueError('Approved base changed; use a fresh refinement directory')
+        write(base_path, base_record)
         approved_base = {"article": base_article, "reviews": approved_base["reviews"],
                          "dossier_hash": digest(base_dossier)}
         state["base_article_hash"] = digest(base_article)

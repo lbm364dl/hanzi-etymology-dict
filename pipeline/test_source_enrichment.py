@@ -657,10 +657,12 @@ class SourceEnrichmentTests(unittest.TestCase):
                             ('reviews.json', []), ('status.json', {'status': 'needs_source_evidence'})]:
             editorial.write(job / name, value)
         audit = {'verified': False, 'consulted_citations': [{'evidence_ids': ['fixture-book']}]}
-        def fixture_refine(article, dossier, stage, runner, revisions, feedback, research_first, edit_first):
+        def fixture_refine(article, dossier, stage, runner, revisions, feedback, research_first, edit_first,
+                           approved_base):
             self.assertFalse(research_first)
             self.assertFalse(edit_first)
             self.assertEqual(feedback['current_uncited_book_records'], audit['consulted_citations'])
+            self.assertEqual(approved_base, {'article': ARTICLE_V2, 'dossier': DOSSIER, 'reviews': []})
             for name, value in [('article.json', article), ('dossier.json', dossier), ('reviews.json', [])]:
                 editorial.write(stage / name, value)
             return {'status': 'needs_revision'}

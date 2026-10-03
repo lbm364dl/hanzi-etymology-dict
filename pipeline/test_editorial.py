@@ -203,6 +203,40 @@ class SiteArticleRefreshTests(unittest.TestCase):
 
 
 class ScopedRefinementTests(unittest.TestCase):
+    def test_agent_edit_from_exact_approved_base_gets_scoped_fresh_reviews(self):
+        from pipeline.editorial import assemble_article
+        dossier = {**copy.deepcopy(DOSSIER), 'glyph_research': {'historical_glyphs': GLYPHS},
+                   'glyph_assets': []}
+        base = assemble_article(copy.deepcopy(ARTICLE_V2), dossier)
+        reviews = [make_review(role, 'pass', [], base, dossier, f'fixture-base-{role}')
+                   for role in ('factual', 'readability')]
+        class EditorReviewer:
+            model = 'fixture'
+            def __init__(self): self.inputs = []
+            def run(self, role, inputs, schema, directory):
+                self.inputs.append((role, inputs))
+                if role == 'editor':
+                    changed = copy.deepcopy(inputs['article'])
+                    changed['summary']['text'] = 'A tree with branches.'
+                    return changed
+                return {'verdict': 'pass', 'findings': []}
+        proof = {'article': base, 'dossier': dossier, 'reviews': reviews}
+        with tempfile.TemporaryDirectory() as temporary:
+            runner = EditorReviewer()
+            state = refine(base, dossier, temporary, runner, 0, approved_base=proof)
+            self.assertEqual(state['status'], 'approved')
+            self.assertEqual([role for role, _ in runner.inputs], ['editor', 'factual', 'readability'])
+            for _, packet in runner.inputs[1:]:
+                self.assertEqual(packet['changed_paths'], ['article.summary.text'])
+                self.assertEqual(packet['validated_base_article'], base)
+                self.assertEqual(packet['base_approval'], reviews)
+            self.assertEqual(json.loads((Path(temporary)/'approved_base.json').read_text()), proof)
+        altered = copy.deepcopy(base)
+        altered['summary']['text'] = 'An unapproved input change.'
+        with tempfile.TemporaryDirectory() as temporary:
+            with self.assertRaisesRegex(ValueError, 'exact approved base article'):
+                refine(altered, dossier, temporary, EditorReviewer(), 0, approved_base=proof)
+
     def test_generated_edges_are_not_authored_array_protection_targets(self):
         from pipeline.editorial import apply_article_patch
         edge = {'id': 'sense', 'predicate': 'has_sense'}

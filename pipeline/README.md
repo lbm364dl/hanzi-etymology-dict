@@ -737,3 +737,17 @@ article still passes the full schema before assembly and factual review.
 Read `AGENTS.md` and `research/local-book-sources.md` for the current editorial rules and bounded scan access. A scan citation must distinguish the original page actually inspected from unread references mentioned on it.
 
 Default Codex editor/revision calls now use the shared `apply_article_patch` mechanism for both Chinese and Japanese. Custom external commands retain their full-article contract. Patch candidates receive immediate schema, citation, component-role/edge, origin-relation and scope validation before independent review; sense edges are rebuilt from the candidate's meaning history. When a repair needs another attempt, that attempt receives the current candidate and preserves prior edits, rather than silently restarting from the original article. Independently approved artifacts remain the only publishable output.
+
+## Efficient repair of an approved pair
+
+For a bounded author edit with an unchanged dossier, pass an `approved_base` containing
+its exact `article`, `dossier` and genuine factual/readability `reviews` to
+`editorial.refine`. With `edit_first=True`, the initial article must exactly match that
+approved base and `research_first` must be false. The proof is validated and retained in
+`approved_base.json`; fresh independent reviews assess actual changed paths and direct
+citation/meaning/graph effects, binding the complete resulting pair. Changed dossiers
+require full review. This does not carry an old approval onto new prose or evidence.
+Automatic source citation integration uses this proof from its pre-edit approved pair.
+Preserve failed reviews and independently resolve conflicting findings before requesting
+another author rewrite. Do not restart completed research unless a concrete evidence gap
+requires it. Current-source and OCR gates still run on the final exact pair.
