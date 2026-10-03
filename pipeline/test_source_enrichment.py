@@ -618,6 +618,50 @@ class SourceEnrichmentTests(unittest.TestCase):
         resolve.assert_not_called()
         publish.assert_called_once()
 
+    def test_source_only_revalidation_contention_does_not_create_attempt_or_call_agent(self):
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        article = editorial.read(job / 'source_article.json')
+        dossier = editorial.read(job / 'source_dossier.json')
+        reviews = [editorial.make_review(role, 'pass', [], article, dossier, 'locked-' + role)
+                   for role in ('factual', 'readability')]
+        for name, value in [('article.json', article), ('dossier.json', dossier),
+                            ('reviews.json', reviews),
+                            ('source_findings.json', {'requires_coordinator_verification': True,
+                                'findings': [{'key': 'identity', 'details': 'Identity unresolved.'}]})]:
+            editorial.write(job / name, value)
+        from pipeline.source_adoption import _used_ids
+        used = _used_ids(article)
+        audit = {'verified': True, 'source_hash': source_enrichment._research_source_hash(SOURCE),
+                 'citations': [e for e in dossier['evidence'] if e.get('id') in used]}
+        editorial.write(job / 'source_audit.json', audit)
+        editorial.write(job / 'status.json', {'status': 'published',
+            'source_audit_hash': editorial.digest(audit), 'issue_sync_status': 'synced'})
+        old_resolution = {'prior': 'unchanged'}
+        editorial.write(job / 'source_resolution.json', old_resolution)
+        pair_dir = job / 'source-only-revalidation' / (
+            f"{editorial.digest(article)[:12]}-{editorial.digest(dossier)[:12]}")
+        claim_dir = self.root / 'runs' / '.locks'
+        claim_dir.mkdir(parents=True, exist_ok=True)
+        claim_path = claim_dir / (
+            f"source-{source_enrichment._research_source_hash(SOURCE)[:16]}-{ord('木'):04X}.lock")
+
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+
+        with claim_path.open('a') as claim:
+            fcntl.flock(claim, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            before = sorted(str(path.relative_to(job)) for path in job.rglob('*'))
+            with patch.object(source_enrichment, 'resolve_source_findings') as resolve:
+                rows = source_enrichment.revalidate_published_source_jobs([job], Runner(), self.root)
+            after = sorted(str(path.relative_to(job)) for path in job.rglob('*'))
+
+        self.assertEqual(rows[0]['status'], 'already_running', rows[0])
+        resolve.assert_not_called()
+        self.assertEqual(after, before)
+        self.assertFalse(pair_dir.exists())
+        self.assertEqual(editorial.read(job / 'source_resolution.json'), old_resolution)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
