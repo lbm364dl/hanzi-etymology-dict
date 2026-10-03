@@ -53,6 +53,15 @@ references can still improve an entry. Agents use reasoning to flag suspicious O
 verify replacements against scans. Corrections feed the book repository's source-bound
 layer and its rebuilt consumer corpus; raw OCR is preserved.
 
+For a bounded repair, use existing slash-separated article paths in `allowed_edit_paths`
+(for example, `components/1/sound`). Recheck the permitted paths against each fresh verified
+review: a newly identified required correction may fall outside the original repair scope.
+Preserve that review and widen only the necessary source fields in a new continuation;
+do not repeat authorship with a scope that cannot fix the finding. Protect semantic source
+records rather than derived relationship rows. Changes still require fresh independent
+factual/readability reviews and current source gates; a prior approval of another pair
+cannot certify the continuation.
+
 `pipeline.ocr_verification.verify` checks proposed literal replacements through a separate
 Luna low scan reviewer. Each proposal carries a stable occurrence ID, exact raw-text offsets,
 an anchor and surrounding context. Incomplete coverage, duplicate IDs, wrong raw text and
