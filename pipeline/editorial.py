@@ -1088,6 +1088,18 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
         'by assembly and are forbidden. A relationships array replacement may omit these '
         'generated edges or preserve them unchanged; edit only authored graphic relationships.')
     patch_inputs = {**inputs, 'original_role':role, 'article_contract': contract}
+    def value_kind(parts):
+        value = article
+        for part in parts:
+            value = value[part]
+        return ('object' if isinstance(value, dict) else 'array' if isinstance(value, list)
+                else 'string' if isinstance(value, str) else 'null' if value is None
+                else 'boolean' if isinstance(value, bool) else 'number')
+    contract['patch_value_kinds'] = {path: value_kind(parts) for path, parts in paths.items()}
+    contract['patch_value_instruction'] = (
+        'value_json must encode a replacement of the indicated type. Object fields such '
+        'as summary and formation require a complete object, not bare prose; select '
+        'their text child when permitted for a prose-only edit. Preserve required keys.')
     for attempt in range(3):
         patch_directory = Path(directory) if attempt == 0 else Path(directory)/f'patch-repair-{attempt}'
         result = invoke('article_patch', patch_inputs, patch_schema, patch_directory)
@@ -1117,7 +1129,10 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
                     patched['relationships'] = copy.deepcopy(article['relationships'])
                     raise ValueError('Generated meaning relationships are read-only; '
                                      'edit the corresponding meaning_history record instead')
-            errors = list(Draft202012Validator(ARTICLE_V2_SCHEMA).iter_errors(patched))
+            # Validate the published shape after restoring generated meaning edges.
+            # An empty authored graphic-edge array is valid when senses generate edges.
+            assembled = assemble_article(patched, inputs['dossier'])
+            errors = list(Draft202012Validator(ARTICLE_V2_SCHEMA).iter_errors(assembled))
             if errors:
                 raise ValidationError("; ".join(error.json_path + ": " + error.message
                     for error in errors[:8]))

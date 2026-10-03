@@ -18,3 +18,26 @@ authored sense-certainty edit and its regenerated edge, preserving input immutab
 It and the indexed citation-alias and unaffected-field patch tests pass (3 tests).
 This contract does not rewrite or recertify published articles. 水's distinct
 certainty mismatch remains tracked in #147 pending genuine authorship and reviews.
+
+## Follow-up: authored arrays and replacement types
+
+The 日 current-sense repair correctly returned an empty authored `relationships`
+array after replacing its meaning history. The pre-assembly article schema rejected
+that array as empty, even though assembly supplies the required meaning links.
+Targeted patches now validate the assembled shape while retaining the direct
+mutated-generated-edge rejection. A regression verifies this empty-array case,
+actual regenerated edges, input immutability and a single successful patch call.
+
+The 四 repair separately exhausted bounded retries by placing bare prose in the
+object-valued `summary` and `formation` fields. The patch contract now exposes
+each allowed path's value kind and explicitly requires complete object values,
+or an allowed text child for prose-only edits. Invalid values remain rejected;
+the coordinator does not wrap prose or invent missing citations.
+
+Four focused patch tests pass, including generated-edge mutation rejection and
+semantic-validation repair. Both interrupted jobs retain every real response and
+resume from their actual reviewed drafts in `patch-contract-recovery`, using
+fresh Luna low authorship and independent reviews. This does not certify either
+entry or any previous publication. The distinct 水 certainty repair was since
+published with fresh approvals; #147 is closed, as recorded in
+`research/shan-shui-publication-20261003.md`.

@@ -516,6 +516,26 @@ class EditorialTests(unittest.TestCase):
         self.assertEqual(article, original)
         self.assertEqual(len(calls), 2)
 
+    def test_targeted_patch_accepts_empty_authored_edges_and_regenerates_senses(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA, assemble_article
+        article = copy.deepcopy(ARTICLE_V2)
+        dossier = {**copy.deepcopy(DOSSIER), 'glyph_research': {'historical_glyphs': GLYPHS}}
+        calls = []
+        def invoke(role, inputs, schema, directory):
+            calls.append(inputs)
+            self.assertEqual(inputs['article_contract']['patch_value_kinds']['summary'], 'object')
+            self.assertEqual(inputs['article_contract']['patch_value_kinds']['summary/text'], 'string')
+            return {'edits': [{'path': 'relationships', 'value_json': '[]'}]}
+        result = apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                     WRITER_SCHEMA, Path('/unused'), invoke)
+        assembled = assemble_article(result, dossier)
+        validate_article(assembled, dossier)
+        self.assertTrue(assembled['relationships'])
+        self.assertTrue(all(edge['predicate'] in ('has_sense', 'sense_developed_into',
+            'phonetic_loan_for') for edge in assembled['relationships']))
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(article, ARTICLE_V2)
+
     def test_disputed_role_hypothesis_does_not_assert_a_known_role(self):
         dossier = {**copy.deepcopy(DOSSIER), "glyph_research": {"historical_glyphs": GLYPHS}}
         article = copy.deepcopy(ARTICLE_V2)
