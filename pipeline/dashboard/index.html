@@ -6,6 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>Hanzi Pipeline · Operations</title>
   <link rel="stylesheet" href="style.css">
+  <script src="timings.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -76,6 +77,13 @@
             </div>
           </article>
         </aside>
+      </section>
+
+      <section class="panel timing-panel">
+        <div class="panel-heading"><div><div class="section-kicker">Where time goes</div><h2>Character timings</h2></div><span id="timing-count" class="count-pill"></span></div>
+        <p class="timing-note">Slowest first · follows board filters. Enable Include history for reused and older jobs. Clock time includes all work and waits. Recorded model stages include tool calls; overlapping stages can exceed clock time. Open a character for its full breakdown.</p>
+        <div id="timing-summary" class="timing-summary"></div>
+        <div class="timing-scroll"><table class="timing-table"><thead><tr><th>Character</th><th>Timing scope</th><th>Clock time</th><th>Model stages</th><th>Slot wait</th><th>Slowest stage</th><th>Attempts / failures</th></tr></thead><tbody id="timing-list"></tbody></table></div>
       </section>
 
       <section class="lower-grid">

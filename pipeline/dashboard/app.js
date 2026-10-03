@@ -177,7 +177,27 @@
       <div class="queue-footer"><span>${escapeHtml(val(j,'updated_at')?`${age(j.updated_at)} · ${absoluteTime(j.updated_at)}`:'Update time unavailable')}</span><span>${escapeHtml(j.issue_sync_status?`Issue sync ${statusText(j.issue_sync_status)}`:'')}</span></div>
     </article>`;
   }
+  function duration(seconds) {
+    if(seconds===null||seconds===undefined)return '—';
+    const n=Math.max(0,Math.round(seconds));return n>=3600?`${Math.floor(n/3600)}h ${Math.floor(n%3600/60)}m`:n>=60?`${Math.floor(n/60)}m ${n%60}s`:`${n}s`;
+  }
+  function timing(j){return PipelineTimings.analyze(j,state.jobs);}
+  function renderTimings() {
+    const visible=filteredJobs().filter(j=>state.showHistory||iso(j.queue?.started_at||j.started_at)||isLiveJob(j)||isWaitingJob(j));
+    const roots=visible.filter(j=>!visible.some(parent=>parent!==j&&parent._path&&j._path?.startsWith(parent._path+'/')));
+    const rows=roots.map(j=>({j,t:timing(j)})).filter(r=>r.t.wall!==null||r.t.stages.length).sort((a,b)=>Number(b.t.wall!==null)-Number(a.t.wall!==null)||(b.t.wall??b.t.model)-(a.t.wall??a.t.model));
+    el('timing-count').textContent=`${rows.length} measured jobs`;
+    const roles=new Map();for(const {t} of rows)for(const r of t.roles){const saved=roles.get(r.role)||{seconds:0,wait:0,count:0};saved.seconds+=r.seconds;saved.wait+=r.wait;saved.count+=r.count;roles.set(r.role,saved);}
+    el('timing-summary').innerHTML=[...roles].sort((a,b)=>b[1].seconds-a[1].seconds).slice(0,8).map(([role,r])=>`<span><strong>${escapeHtml(role)}</strong> ${duration(r.seconds)} · ${r.count} calls · ${duration(r.wait)} slot wait</span>`).join('');
+    el('timing-list').innerHTML=rows.length?rows.map(({j,t})=>`<tr><td><button data-timing-job="${escapeHtml(j._key)}">${escapeHtml(j._character)} · ${escapeHtml(statusText(displayStatus(j)))}</button></td><td>${escapeHtml(t.scope)}</td><td>${duration(t.wall)}</td><td>${duration(t.model)}${t.unknown?' + unknown':''}</td><td>${duration(t.wait)}</td><td>${escapeHtml(t.slowest||'—')}</td><td>${t.attempts??'—'} queue attempts / ${t.failed} stage failures</td></tr>`).join(''):'<tr><td colspan="7">No recorded timings match these filters.</td></tr>';
+    el('timing-list').querySelectorAll('[data-timing-job]').forEach(button=>button.addEventListener('click',()=>selectJob(button.dataset.timingJob)));
+  }
+  function timingDetail(j) {
+    const t=timing(j),max=Math.max(1,...t.roles.map(r=>r.seconds));
+    return `<section class="detail-section"><h3>Time breakdown</h3><p class="detail-copy">${escapeHtml(t.scope)} · clock ${duration(t.wall)} · recorded model stages ${duration(t.model)} · slot wait ${duration(t.wait)}. Model stages include agent tools/network; sums can overlap. ${t.unknown?`${t.unknown} stage durations unavailable.`:''}</p><div class="timing-bars">${t.roles.map(r=>`<div class="timing-bar"><strong>${escapeHtml(r.role)} (${r.count})</strong><progress max="100" value="${Math.round(r.seconds/max*100)}" aria-label="${escapeHtml(r.role)} time"></progress><span>${duration(r.seconds)} · wait ${duration(r.wait)}</span></div>`).join('')}</div><div class="timing-history">${t.stages.map(r=>`<div class="detail-row"><strong>${escapeHtml(r.role||'stage')} · ${escapeHtml(statusText(r.status))} · ${duration(r.elapsed_seconds)}</strong><small>Slot wait ${duration(r.status==='waiting_for_agent_slot'?r.elapsed_seconds:r.slot_wait_seconds)} · ${escapeHtml(absoluteTime(r.started_at||r.queued_at))}</small><small>${escapeHtml(r.path)}</small>${r.error?`<small>${escapeHtml(r.error)}</small>`:''}${linkForArtifact(r.path,'Stage metadata','meta.json')}${r.status==='complete'?linkForArtifact(r.path,'Result','result.json'):''}</div>`).join('')}</div>${j.error?`<p class="detail-copy">${escapeHtml(j.error)}</p>`:''}</section>`;
+  }
   function renderQueues() {
+    renderTimings();
     const filtered=sortJobs(filteredJobs());
     el('queue-list').innerHTML=filtered.length?filtered.map(queueCard).join(''):'<div class="empty-state">No jobs match these filters.</div>';
     const currentCount=state.jobs.filter(j=>j._current_queue||isLiveJob(j)||isWaitingJob(j)).length;
@@ -422,6 +442,7 @@
     el('drawer-content').innerHTML=`<div class="detail-hero"><span class="detail-hanzi">${escapeHtml(j._character)}</span><div class="detail-hero-meta"><strong>${escapeHtml(statusText(displayStatus(j)))} <span class="status-badge status-${slug(displayStatus(j))}">${escapeHtml(statusText(displayStatus(j)))}</span></strong><small>${escapeHtml(j._placeholder?`Queued in ${j._queue_path||'queue'} · job directory not created`:j._path||j.id||'Job path unavailable')}</small><small>${escapeHtml(j.updated_at?`${age(j.updated_at)} · ${absoluteTime(j.updated_at)}`:'Update time unavailable')}</small></div></div>
       ${j.summary?`<section class="detail-section"><h3>Current summary</h3><div class="detail-copy">${escapeHtml(j.summary)}</div></section>`:''}
       <section class="detail-section"><h3>Content hashes</h3>${hashHtml}</section>
+      ${timingDetail(j)}
       <section class="detail-section"><h3>Review receipts (${reviews.length})</h3><div class="detail-list">${reviewHtml}</div></section>
       <section class="detail-section"><h3>Stages (${stages.length})</h3><div class="detail-list">${stageHtml}</div></section>
       <section class="detail-section"><h3>Findings (${findings.length})</h3><div class="detail-list">${findingHtml}</div></section>

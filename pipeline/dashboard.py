@@ -19,6 +19,7 @@ ASSETS = Path(__file__).with_name('dashboard')
 STATIC = {'/favicon.ico': ('favicon.svg', 'image/svg+xml'), '/': ('index.html', 'text/html; charset=utf-8'),
           '/index.html': ('index.html', 'text/html; charset=utf-8'),
           '/app.js': ('app.js', 'text/javascript; charset=utf-8'),
+          '/timings.js': ('timings.js', 'text/javascript; charset=utf-8'),
           '/style.css': ('style.css', 'text/css; charset=utf-8')}
 
 

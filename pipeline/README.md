@@ -108,6 +108,12 @@ The board defaults to current queue work; **Include history** exposes archived a
 Details show complete article/dossier hashes and distinguish review receipts matching the
 current pair from older receipts. Coordinator task records in
 `runs/operations/coordination.json` are labeled separately from observed process liveness.
+The Character timings table follows board filters and shows slowest jobs, clock time,
+recorded model-stage time, slot waits and failed calls. Details group durations by role
+and list retained attempts with metadata/result links. The default focuses on current
+attempts; Include history also exposes reused/older work. Latest queue timestamps bound
+the attempt, so imported approvals are not charged as new work. Stage sums can overlap,
+and include tools/network, not measured CPU or billing time; missing timings remain unknown.
 Character/source history and current queue state remain separately inspectable.
 
 Audit the entire cohort across all source batches and source-coverage jobs with

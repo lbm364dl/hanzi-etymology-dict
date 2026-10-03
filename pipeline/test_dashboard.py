@@ -13,6 +13,26 @@ import subprocess
 
 
 class DashboardTests(unittest.TestCase):
+    def test_timings_distinguish_wall_parallel_model_wait_and_old_receipts(self):
+        script = r"""
+const assert=require('node:assert/strict');require(process.argv[1]);
+const job={path:'runs/job',queue:{started_at:100,finished_at:200,status:'failed',attempts:2}};
+const stage=(path,role,started,elapsed,extra={})=>({path,role,started_at:started,elapsed_seconds:elapsed,status:'complete',finished_at:started+elapsed,...extra});
+const rows=[{path:'runs/job',stage_history:[stage('old','research',10,999),
+ stage('retry/attempts/1','research',105,10,{status:'failed',slot_wait_seconds:3}),
+ stage('retry','research',120,40,{slot_wait_seconds:7})]},
+ {path:'runs/job/child',stage_history:[stage('factual','factual',125,30),
+ stage('waiting','editor',190,10,{status:'waiting_for_agent_slot',finished_at:null})]}];
+const result=PipelineTimings.analyze(job,rows,999);
+assert.equal(result.wall,100);assert.equal(result.model,80);assert.equal(result.wait,20);
+assert.equal(result.failed,1);assert.equal(result.stages.length,4);assert.equal(result.attempts,2);
+assert.equal(result.roles.find(r=>r.role==='research').count,2);
+assert.equal(result.scope,'latest queue attempt');
+const stale=PipelineTimings.analyze({path:'stale'},[{path:'stale',stage_history:[stage('stale','research',10,999,{liveness:'stale',finished_at:null})]}]);
+assert.equal(stale.model,0);assert.equal(stale.unknown,1);assert.equal(stale.wall,null);
+"""
+        subprocess.run(['node','-e',script,str(Path(dashboard.ASSETS)/'timings.js')],check=True,capture_output=True,text=True)
+
     def test_git_observer_does_not_take_optional_index_locks_or_trim_porcelain(self):
         commands = []
         def invoke(command, **kwargs):

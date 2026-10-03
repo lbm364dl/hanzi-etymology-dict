@@ -10,7 +10,7 @@ import re
 import time
 
 
-_SKIP_DIRS = {"attempts", "issue-bodies", "frozen-input-recovery", ".locks", "__pycache__"}
+_SKIP_DIRS = { "issue-bodies", "frozen-input-recovery", ".locks", "__pycache__"}
 _SOURCE_REPORT = re.compile(r".*source-completion.*\.json$")
 
 
@@ -167,14 +167,14 @@ class Collector:
             if warnings is not None and len(warnings) < 50:
                 warnings.append({"path": str(path), "error_type": type(exc).__name__})
             return default, None
-        signature = (stat.st_mtime_ns, stat.st_size)
+        signature = (stat.st_dev, stat.st_ino, stat.st_mtime_ns, stat.st_ctime_ns, stat.st_size)
         saved = self._file_cache.get(path)
-        if saved and saved[:2] == signature:
-            return saved[2], stat
+        if saved and saved[0] == signature:
+            return saved[1], stat
         value = _read(path, warnings, default)
         if len(self._file_cache) > 30000:
             self._file_cache.clear()
-        self._file_cache[path] = (*signature, value)
+        self._file_cache[path] = (signature, value)
         return value, stat
 
     def _read_optional_cached(self, path, warnings):
@@ -189,7 +189,7 @@ class Collector:
         value, stat = self._read_cached(path, warnings, None)
         if not isinstance(value, (dict, list)) or stat is None:
             return None
-        signature = (stat.st_mtime_ns, stat.st_size)
+        signature = (stat.st_dev, stat.st_ino, stat.st_mtime_ns, stat.st_ctime_ns, stat.st_size)
         cache_key = (Path(path), signature)
         cached = getattr(self, "_hash_cache", None)
         if cached is None:
@@ -299,6 +299,9 @@ class Collector:
                     }
                 rows.append({"character": character, "status": record.get("status", "unknown"),
                              "attempts": record.get("attempts", 0),
+                             "started_at": record.get("started_at"),
+                             "finished_at": record.get("finished_at"),
+                             "error": _compact(result.get("error")),
                              "job": _relative(_resolve_job_path(job_path, self.root), self.root)
                                     if job_path else None,
                              "attention_required": bool(result.get("attention_required"))})
@@ -330,7 +333,7 @@ class Collector:
             waiting = state == "waiting_for_agent_slot"
             elapsed_start = _parse_time(meta.get("queued_at") if waiting else started)
             finished_epoch = _parse_time(meta.get("finished_at"))
-            elapsed_end = (finished_epoch if state == "complete" and finished_epoch is not None else now)
+            elapsed_end = (finished_epoch if finished_epoch is not None else now)
             modified = file_stat.st_mtime if file_stat else 0
             row = {"role": meta.get("role"), "status": state, "model": meta.get("model"),
                    "reasoning": meta.get("reasoning"), "path": _relative(path.parent, self.root),
@@ -341,10 +344,10 @@ class Collector:
                    "started_at": started, "queued_at": meta.get("queued_at"),
                    "finished_at": meta.get("finished_at"),
                    "elapsed_seconds": max(0, elapsed_end - elapsed_start)
-                       if elapsed_start is not None else None,
+                       if elapsed_start is not None and not (liveness == "stale" and finished_epoch is None) else None,
                    "updated_at": datetime.fromtimestamp(modified, timezone.utc).isoformat()
                        if modified else None,
-                   "liveness": liveness}
+                   "liveness": liveness, "error": _compact(meta.get("error"))}
             metas.append((modified, row,
                           str(output_path), process))
         metas.sort(key=lambda item: (item[0], item[1]["path"]))
@@ -360,7 +363,7 @@ class Collector:
                                        "stage": row["path"], "role": row["role"],
                                        "model": row["model"], "reasoning": row["reasoning"],
                                        "liveness": "live", "orphan": False})
-        return active, len(metas), latest, process_rows
+        return active, len(metas), latest, process_rows, [row for _, row, _, _ in metas]
 
     def _standalone_process_row(self, process, now, warnings):
         """Represent an in-repository verifier process with no source job row."""
@@ -428,7 +431,7 @@ class Collector:
         source_id = source.get("source_id") or registered.get("id")
         queue_state = queue_state or {}
         status = state.get("status") or queue_state.get("status", "unknown")
-        active, stage_count, latest, process_rows = self._stage_rows(
+        active, stage_count, latest, process_rows, stage_history = self._stage_rows(
             path, stage_paths, process_map, proc_reliable, warnings, now)
         for process in process_rows:
             process["character"] = character
@@ -495,7 +498,7 @@ class Collector:
                 "updated_at": (state.get("updated_at") or state.get("published_at")
                     or queue_state.get("finished_at") or (latest or {}).get("finished_at")
                     or (latest or {}).get("started_at") or (latest or {}).get("updated_at")),
-                "active_stages": active, "stage_count": stage_count,
+                "active_stages": active, "stage_count": stage_count, "stage_history": stage_history,
                 "last_stage": latest, "liveness": liveness,
                 "reviews": reviews, "findings": findings, "issues": issues,
                 "issue_sync_status": issue_sync.get("status", state.get("issue_sync_status")),

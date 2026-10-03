@@ -29,6 +29,35 @@ def proc_fixture(root, pid, output_path, rss_pages=12):
 
 
 class DashboardDataTests(unittest.TestCase):
+    def test_receipt_cache_invalidates_same_size_mtime_replacement(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);path=root/'article.json';save(path,{'meaning':'old'})
+            collector=Collector(root,proc_root=root/'no-proc')
+            original_hash=collector._document_hash(path,[]);stat=path.stat()
+            replacement=root/'replacement.json';save(replacement,{'meaning':'new'})
+            os.utime(replacement,ns=(stat.st_atime_ns,stat.st_mtime_ns));replacement.replace(path)
+            self.assertNotEqual(collector._document_hash(path,[]),original_hash)
+
+    def test_archived_failed_stage_duration_is_frozen_and_queue_keeps_timestamps(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp); job=root/'runs/source/ziyuan-2012/672C'
+            save(job/'source.json',{'character':'本','source_id':'ziyuan-2012'})
+            save(job/'research/attempts/1/meta.json',{'role':'research','status':'failed',
+                 'started_at':100,'finished_at':110,'error':'timeout','model':'gpt-6-luna'})
+            save(job.parent/'queue.json',{'jobs':{'本':{'status':'failed','attempts':1,
+                 'started_at':90,'finished_at':120,'job':str(job.relative_to(root)),
+                 'result':{'error':'timeout','attention_required':True}}}})
+            snapshot=Collector(root,proc_root=root/'no-proc').snapshot()
+            row=snapshot['jobs'][0];stage=row['stage_history'][0]
+            self.assertEqual(stage['elapsed_seconds'],10)
+            self.assertEqual(stage['status'],'failed')
+            self.assertEqual(stage['error'],'timeout')
+            self.assertIn('/attempts/',stage['path'])
+            queue=snapshot['queues'][0]['jobs'][0]
+            self.assertEqual(queue['started_at'],90)
+            self.assertEqual(queue['finished_at'],120)
+            self.assertEqual(queue['error'],'timeout')
+
     def test_snapshot_joins_queue_jobs_live_proc_source_and_issue_summaries(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
