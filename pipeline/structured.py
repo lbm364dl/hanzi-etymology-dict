@@ -680,6 +680,10 @@ Equivalent separators between the same readings are not a factual discrepancy: s
 and shí shì enumerate the same values. Check the readings themselves, not a dataset's display
 delimiter. Usage explanations belong in prose rather than inside the reading fields.
 For v2, history covers the written form; meaning_history covers senses and lexical loans.
+Check the exact referent of a cited sound-role statement, including grouped and rare printed
+graphs. A source assigning sound to a combined unit does not establish that each member, or
+one selected member, independently supplies sound. Bracketed Unicode substitutions are not
+source verification; preserve a source-bound unresolved identity when the glyph cannot be read.
 Treat dossier.retired_evidence_ids as archived superseded support. Reject their use in current
 article citations, but do not attribute an archived record's wrong claim to the current article
 or demand its deletion from the provenance dossier. Evaluate the actual cited replacements.

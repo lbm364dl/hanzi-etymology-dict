@@ -265,6 +265,11 @@ Identify each independently confirmed affected record and the precise replacemen
 preserve unrelated accurate records. A fresh correct record does not make an older incorrect
 paraphrase safe to cite alongside it. Report the affected IDs for the coordinator's existing
 retired_evidence_ids gate and fresh authorship/review; do not edit old provenance in place.
+For a source's sound-role statement, identify the exact printed referent of 'phonetic' or
+'also supplies sound'. It may be a grouped or rare graph, not one of its individual members.
+Inspect the named glyph occurrence and neighboring text; do not replace it with a familiar
+Unicode member in brackets or transfer the whole unit's role to that member by inference.
+Retain an occurrence-bound identity gap when necessary, while preserving supported group roles.
 Do not launch project pipeline/cohort/review/publication commands, nested agents, or background
 jobs. Do not edit repository articles, dossiers, job state, book correction overlays or
 consumer corpora. Return proposed OCR corrections with exact source occurrences for the
