@@ -1,5 +1,6 @@
 """Independent, occurrence-bound scan checks; never edits OCR or certifies a page."""
 from pathlib import Path
+import copy
 
 from pipeline import editorial
 
@@ -71,8 +72,11 @@ def verify(text, proposals, scans, provenance, runner, output):
     if not scans:
         raise ValueError("OCR verification requires original source scan attachments")
     occurrences = packet(text, proposals)
+    occurrence_schema = copy.deepcopy(OCCURRENCE)
+    occurrence_schema['properties']['id'] = {'type': 'string', 'enum': [item['id'] for item in occurrences]}
+    occurrence_schema['properties']['raw_text'] = {'type': 'string', 'enum': sorted({item['before'] for item in occurrences})}
     schema = {"type": "object", "additionalProperties": False, "required": ["occurrences"],
-              "properties": {"occurrences": {"type": "array", "items": OCCURRENCE,
+              "properties": {"occurrences": {"type": "array", "items": occurrence_schema,
                   "minItems": len(occurrences), "maxItems": len(occurrences)}}}
     inputs = {"occurrences": occurrences, "provenance": provenance,
               "feedback": {"source_scan_images": scans},

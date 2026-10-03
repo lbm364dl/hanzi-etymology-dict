@@ -1,6 +1,8 @@
 import unittest
+import tempfile
+from jsonschema import Draft202012Validator, ValidationError
 
-from pipeline.ocr_verification import packet, validate_result
+from pipeline.ocr_verification import packet, validate_result, verify
 
 
 class OCRVerificationTests(unittest.TestCase):
@@ -10,6 +12,24 @@ class OCRVerificationTests(unittest.TestCase):
     def test_wrong_anchor_rejected(self):
         with self.assertRaises(ValueError):
             packet('甲的乙', [dict(id='x', start=1, end=2, before='昧', after='旳')])
+
+    def test_agent_schema_binds_raw_tokens_and_occurrence_ids(self):
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+            def run(inner, role, inputs, schema, directory):
+                good = {'occurrences': [dict(id='target', raw_text='楛', printed_text=None,
+                    verdict='unresolved_identity', reason='Test fixture') ]}
+                validator = Draft202012Validator(schema)
+                validator.validate(good)
+                for field, value in [('raw_text', '栢'), ('id', 'invented')]:
+                    bad = {'occurrences': [{**good['occurrences'][0], field: value}]}
+                    with self.assertRaises(ValidationError):
+                        validator.validate(bad)
+                return good
+        with tempfile.TemporaryDirectory() as directory:
+            verify('楛(杯)', [dict(id='target', start=0, end=1, before='楛', after='桮')],
+                [{'path':'test-fixture', 'pdf_page':1}], {}, Runner(), directory)
 
     def test_different_ids_cannot_duplicate_or_overlap_an_occurrence(self):
         first = dict(id='one', start=0, end=2, before='端组', after='端纽')
