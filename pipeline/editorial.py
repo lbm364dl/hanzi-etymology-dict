@@ -312,6 +312,10 @@ Consult relevant local books as well as external sources, rather than assuming
 that dossier excerpts exhaust the available scholarship. Distinguish inspected original scan
 pages from OCR exports and uninspected bibliography leads; verify crucial rare forms against
 source images. If no local collection is available, record the access gap and continue online.
+Keep filesystem scan paths in provenance or the source field, not the external evidence url.
+For a locally inspected book, an actual edition-matching catalogue URL may identify the
+publication, while the field records the inspected page and scan provenance. Do not claim
+that the catalogue supplies the character interpretation or that inaccessible web pages were read.
 
 You MUST browse external references in this stage; the repository dossier is a starting point,
 not the research boundary. Search for the character's historical formation, each meaningful
