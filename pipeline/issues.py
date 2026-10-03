@@ -187,9 +187,19 @@ def triage_job(job, source, runner):
     return findings
 
 
+class GitHubCommandError(subprocess.CalledProcessError):
+    def __str__(self):
+        detail = (self.stderr or '').strip()
+        return super().__str__() + (': ' + detail[-3000:] if detail else '')
+
+
 def gh(*args):
-    result = subprocess.run(['gh', *args], check=True, text=True, capture_output=True,
-                            timeout=GH_TIMEOUT_SECONDS)
+    try:
+        result = subprocess.run(['gh', *args], check=True, text=True, capture_output=True,
+                                timeout=GH_TIMEOUT_SECONDS)
+    except subprocess.CalledProcessError as exc:
+        raise GitHubCommandError(exc.returncode, exc.cmd, output=exc.output,
+                                 stderr=exc.stderr) from exc
     return result.stdout.strip()
 
 
@@ -243,7 +253,8 @@ def _sync_locked(findings, repository, receipt_path, invoke, parent_issue, miles
         raise ValueError('Duplicate finding keys')
     existing = json.loads(invoke('issue', 'list', '--repo', repository, '--state', 'all',
                                  '--limit', '1000', '--json', 'number,url,body,state,labels,milestone'))
-    parents = set((parent_by_kind or {}).values()) | ({parent_issue} if parent_issue is not None else set())
+    parents = {(parent_by_kind or {}).get(finding['kind'], parent_issue)
+               for finding in findings} - {None}
     child_numbers = {parent: {item['number'] for item in _paginated_items(
         invoke('api', '--paginate', f'repos/{repository}/issues/{parent}/sub_issues'))} for parent in parents}
     if labels or parent_issue is not None:
@@ -335,6 +346,11 @@ def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, miles
     """
     if not repository or len(repository.split('/')) != 2:
         raise ValueError('Repository must be owner/name')
+    findings = list(findings)
+    if not findings:
+        # The independent triage found nothing to write. Keep historical receipts
+        # and issues intact, without waiting for unrelated remote synchronization.
+        return []
     lock_key = hashlib.sha256(repository.lower().encode('utf-8')).hexdigest()
     lock_path = Path(tempfile.gettempdir()) / f'hanzi-issues-sync-{lock_key}.lock'
     lock_path.parent.mkdir(parents=True, exist_ok=True)

@@ -13,6 +13,26 @@ from pipeline import editorial
 
 
 class IssueTests(unittest.TestCase):
+    def test_remote_failure_retains_typed_status_and_actionable_error(self):
+        error = subprocess.CalledProcessError(1, ['gh', 'api'], stderr='TLS handshake timeout')
+        with patch('pipeline.issues.subprocess.run', side_effect=error):
+            with self.assertRaises(subprocess.CalledProcessError) as caught:
+                gh('api', 'repos/owner/repo/issues')
+        self.assertEqual(caught.exception.returncode, 1)
+        self.assertIn('TLS handshake timeout', str(caught.exception))
+        self.assertEqual(caught.exception.stderr, error.stderr)
+
+    def test_empty_actual_findings_skip_remote_calls_and_preserve_historical_receipt(self):
+        with tempfile.TemporaryDirectory() as temp:
+            receipt = Path(temp) / 'receipt.json'
+            previous = {'repository': 'owner/repo', 'issues': [{'number': 42}]}
+            editorial.write(receipt, previous)
+            with patch('pipeline.issues.fcntl.flock', side_effect=AssertionError('No remote lock needed')):
+                self.assertEqual(sync([], 'owner/repo', receipt,
+                    invoke=lambda *args: self.fail('No remote operation for empty findings'),
+                    parent_issue=1, parent_by_kind={'ocr': 5}), [])
+            self.assertEqual(editorial.read(receipt), previous)
+
     def test_remote_sync_retry_preserves_finding_packet_but_new_review_changes_it(self):
         with tempfile.TemporaryDirectory() as temp:
             job = Path(temp)
@@ -95,7 +115,8 @@ class IssueTests(unittest.TestCase):
             self.fail('Unexpected mutation or parent lookup: ' + repr(args))
         with tempfile.TemporaryDirectory() as temp:
             receipts = sync([finding], 'owner/repo', Path(temp)/'receipts.json', invoke,
-                            parent_issue=1, milestone='Smoke', labels=['scope:hsk1'])
+                            parent_issue=1, milestone='Smoke', labels=['scope:hsk1'],
+                            parent_by_kind={'pipeline': 999})
         self.assertEqual(receipts[0]['number'], 42)
 
     def test_active_finding_reopens_closed_issue_but_archive_sync_does_not(self):

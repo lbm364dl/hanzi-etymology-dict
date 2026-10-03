@@ -18,3 +18,12 @@ across a remote workflow failure and changes when the article hash changes.
 Older completed receipts are preserved; root's explicit 边 remote-only replay
 checked actual completed Luna-low result/hash, exact article+dossier, resolution,
 current page metadata and exact normalized finding records before writing GitHub.
+
+Further remote bottleneck fixes: a genuinely empty finding list now returns without
+GitHub calls or repository-lock waits, preserving historical issue receipts and
+issues. Nonempty sync queries only the hierarchy parents actually used by the
+current finding kinds. CLI failures retain their original typed status and bounded
+stderr detail in their error string, so timeout/authorization/capacity causes remain
+diagnosable even where the caller records only `str(exc)`.19issue tests pass;
+regressions verify no remote operation for empty findings, unchanged historical
+receipts, no unrelated-parent lookup and retained typed remote failure details.
