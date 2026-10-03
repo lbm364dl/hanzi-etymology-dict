@@ -1,0 +1,3 @@
+# 日 source page label restored
+
+Independent Luna-low source resolution `63d82f6eca8ccf386362ece745b3e450da076faf55b447b19e9a03b1bc019de0` verified printed label 599 on 字源 PDF612. The source-bound producer page metadata and rebuilt corpus now expose this value. Raw OCR and effective text are preserved; other1434 corpus records are identical. Actual review, source hashes and before/after records are retained in `research/producer-patches/ri-page612-metadata-20261003`. This repairs issue #179; the published article itself is unchanged and its source adoption is refreshed separately for the metadata change.
