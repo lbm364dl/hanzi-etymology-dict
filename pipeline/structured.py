@@ -568,6 +568,12 @@ def validate_v2(article, dossier, validate_sections):
                 raise ValueError("Graphic relationship must connect to this entry through cited graphic links")
 
 REVIEW_V2_POLICY = """
+Judge the literal current article in this packet, not a remembered earlier draft
+or a previous review's requested correction. Before reporting that an evidence ID
+is present or absent from an array, inspect that exact current array. Evidence
+retained in the dossier, another sense, or a prior finding is not a citation on
+this claim. When an array already has the requested correction, do not repeat the
+obsolete finding. Check the generated edge against its actual current source sense.
 When attached_source_scans is present, compare substantive book-based component and form claims
 with the exact image attachments, including ordinary lookalike characters inside fluent OCR.
 The research agent's statement that it inspected a scan does not replace this independent check.
