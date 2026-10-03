@@ -88,6 +88,7 @@ class ComponentScopeTests(unittest.TestCase):
         self.assertIn("visible noncharacter mark", policy)
         self.assertIn("element_kind noncharacter_mark", policy)
         self.assertIn("unread OCR graph", policy)
+        self.assertIn('relationship endpoint stays exactly {"kind":"component","id":element_id}', policy)
         self.assertIn("Do not automatically match words", REVIEW_V2_POLICY)
         self.assertIn("Reject invented readings or phonetic roles", REVIEW_V2_POLICY)
 

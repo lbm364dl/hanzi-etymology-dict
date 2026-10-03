@@ -65,3 +65,15 @@ The new schema and review instructions preserve supported visible parts without 
 unsupported historical component identities. They do not determine whether any particular
 mark is actually present; source inspection and fresh independent reviews remain required.
 No published entry was edited by this change.
+
+## First integration continuation
+
+The first fresh continuation under this contract,
+`runs/source-enrichment-ziyuan/ben-current-source-repair-20261003/typed-mark-final-repair-v2`,
+ended before independent review. Its genuine Luna-low author correctly emitted a typed visible
+mark record, but placed `element_kind` and `element_label` on the relationship `subject` node as
+well as on the component. The graph endpoint schema intentionally accepts only `{kind, id}`, so
+the patch failed validation; the preserved patch-repair stages repeated that shape. This exposed
+a prompt-location ambiguity, not a reason to loosen relationship node validation. The prompts
+now state that the display metadata belongs only on the component record and that the endpoint
+must remain `{kind: "component", id: element_id}`. This failed run produced no review approvals.

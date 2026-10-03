@@ -537,7 +537,9 @@ analysis. Cite the visual identity claim, and describe competing historical inte
 component prose and separately qualified relationships. Do not assign phonetic roles or readings
 to a noncharacter mark. This alternative cannot stand in for an unidentified rare character, a
 historical glyph specimen, or an unread OCR graph; keep their occurrence-specific provenance and
-identity gaps. Ordinary components remain element_kind glyph with literal forms.
+identity gaps. Put element_kind, element_id and element_label only on the component record. Its
+relationship endpoint remains exactly {kind: component, id: element_id}; do not add display fields
+to the relationship node. Ordinary components remain element_kind glyph with literal forms.
 Distinguish true graphic corruption or replacement from regular variants, simplification and
 stylization. The label "corruption" requires evidence of an altered or misinterpreted original
 form. Explain known changes rather than reducing every difficult component to "unknown".

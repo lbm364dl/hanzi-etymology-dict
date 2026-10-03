@@ -439,7 +439,9 @@ glyph records use element_kind glyph and empty element_id/element_label. Put exp
 never in form or origin_form. This alternative is only for an inspected, positively identified
 visible mark; it cannot stand in for an unidentified rare character, a historical glyph specimen,
 or an unread OCR graph. Record those with occurrence-specific source provenance and an explicit
-identity gap instead.
+identity gap instead. Keep element_kind, element_id and element_label only on the component record;
+the relationship endpoint stays exactly {"kind":"component","id":element_id}, with no display
+metadata added to that node.
 Set scope_character to the actual containing character for every component. Use the entry character
 for its current components; a component explained only inside a traditional or historical graph
 uses that graph as scope_character. Include a cited graphic relationship connecting that host to
@@ -710,7 +712,9 @@ form/origin_form stay empty, and that the opaque ID matches the exact
 host scope. Do not use this representation for an unidentified rare character, historical specimen,
 or unread OCR graph. Judge element_label only as a description of that visible mark; do not demand that it
 match one competing historical character reading. Conversely, a mark label cannot substitute
-for evidence about its current role or historical identity. Do not automatically match words such
+for evidence about its current role or historical identity. Check that the edge endpoint carries
+only kind="component" and id=<element_id>; the component's display metadata belongs on its record.
+Do not automatically match words such
 as “stroke” or “mark” in source paraphrases; inspect the cited claim and any attached pixels.
 Reject invented readings or phonetic roles on a noncharacter mark. Ordinary glyph components
 continue to use literal form IDs and their existing graph contract.
