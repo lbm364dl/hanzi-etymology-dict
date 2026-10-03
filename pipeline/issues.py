@@ -44,6 +44,20 @@ def triage_job(job, source, runner):
     known_path = editorial.ROOT / 'research/source-enrichment-findings.json'
     known = editorial.read(known_path)['findings'] if known_path.is_file() else []
     character = state.get('character') or editorial.read(job / 'source.json')['character']
+    # Character findings cannot be reused merely because another entry has the
+    # same failure class. Keep genuinely shared pipeline/source findings available.
+    def in_scope(finding):
+        pieces = finding['key'].split(':', 2)
+        if len(pieces) < 3:
+            return True
+        host = pieces[1]
+        if re.fullmatch(r'[0-9A-Fa-f]{4,6}', host):
+            codepoint = int(host, 16)
+            host = chr(codepoint) if codepoint <= 0x10ffff else host
+        if len(host) == 1 and ord(host) > 127:
+            return pieces[0] == source['id'] and host == character
+        return True
+    known = [finding for finding in known if in_scope(finding)]
     current_article = editorial.read(job / 'article.json') if (job / 'article.json').is_file() else None
     dossier_path = job / 'dossier.json'
     current_dossier = editorial.read(dossier_path) if dossier_path.is_file() else None

@@ -170,6 +170,31 @@ class IssueTests(unittest.TestCase):
             self.assertEqual(len(runner.inputs['actual_findings']), 1)
             self.assertNotIn('Rejected claim', str(runner.inputs['actual_findings']))
 
+    def test_triage_does_not_reuse_another_character_or_source_finding(self):
+        from unittest.mock import patch
+        from pipeline import editorial
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+            def run(self, role, inputs, schema, directory):
+                self.inputs, self.schema = inputs, schema
+                return {'findings': []}
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            job = root/'job'
+            editorial.write(job/'status.json', {'character':'月', 'status':'approved'})
+            keys = ['book:爱:meaning-status', 'book:6708:meaning-status',
+                    'book:月:dating', 'other-book:月:dating', 'pipeline:review:certainty']
+            editorial.write(root/'research/source-enrichment-findings.json',
+                            {'findings': [{'key': key} for key in keys]})
+            runner = Runner()
+            with patch.object(editorial, 'ROOT', root):
+                triage_job(job, {'id':'book'}, runner)
+            expected = ['book:6708:meaning-status', 'book:月:dating', 'pipeline:review:certainty']
+            self.assertEqual([f['key'] for f in runner.inputs['existing_findings']], expected)
+            self.assertEqual(runner.schema['properties']['findings']['items']['properties']
+                             ['existing_key']['enum'], [None, *expected])
+
     def test_triage_receives_exact_current_cited_and_review_referenced_evidence(self):
         class Runner:
             model = 'gpt-6-luna'
