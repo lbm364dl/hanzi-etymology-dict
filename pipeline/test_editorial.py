@@ -333,8 +333,12 @@ class EditorialTests(unittest.TestCase):
             self.assertNotEqual(first['sha256'], first['pixel_sha256'])
             pixels.putpixel((0, 0), (0, 0, 0))
             pixels.save(path)
-            with self.assertRaisesRegex(ValueError, 'decoded pixel hash'):
+            with self.assertRaisesRegex(ValueError, 'decoded pixel hash') as failure:
                 source_scan_attachments([scan])
+            self.assertIn(str(path), str(failure.exception))
+            self.assertIn('PDF page 1', str(failure.exception))
+            self.assertIn(f'expected {expected}', str(failure.exception))
+            self.assertIn(hashlib.sha256(pixels.tobytes()).hexdigest(), str(failure.exception))
 
     def test_local_glyph_leads_are_scoped_existing_files_and_unverified(self):
         with tempfile.TemporaryDirectory() as temp:

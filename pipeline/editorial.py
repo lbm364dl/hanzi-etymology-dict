@@ -1281,7 +1281,10 @@ def source_scan_attachments(scans, start_index=1):
             with Image.open(path) as source_image:
                 actual = hashlib.sha256(source_image.convert("RGB").tobytes()).hexdigest()
             if actual != record["source_pixel_sha256"]:
-                raise ValueError("Source scan decoded pixel hash mismatch")
+                raise ValueError(
+                    f"Source scan decoded pixel hash mismatch: {path} "
+                    f"(PDF page {record['pdf_page']}); expected "
+                    f"{record['source_pixel_sha256']}, actual {actual}")
             record["pixel_sha256"] = actual
             record["pixel_sha256_kind"] = "decoded_RGB_pixel_bytes"
     return paths, records
