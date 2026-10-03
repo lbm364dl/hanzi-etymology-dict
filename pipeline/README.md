@@ -96,6 +96,11 @@ Invalid removal, modification or reordering is rejected before review. This
 optional edit boundary does not approve the records or replace fresh reviews;
 expand the scope when supported facts themselves need correction.
 
+The patch contract also lists `array_item_targets` from the exact current article:
+zero-based paths alongside sense IDs/glosses and component identities. Match the
+requested item to that path before drafting an edit; earlier array order is not a
+current index map. These labels do not validate the replacement's meaning.
+
 After a source repair, `run --continue-from /path/to/previous/character/job` can start a
 fresh single-character job from the previous unfinished draft. The previous coordinator
 and agents must have released their OS lock, and its canonical article/dossier baseline

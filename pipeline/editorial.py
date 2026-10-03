@@ -1063,10 +1063,17 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
     derived_edges = {edge['id']: edge for edge in article.get('relationships', [])
                      if edge['predicate'] in derived_predicates}
     paths = {}
+    array_items = {}
     def visit(value, parts=()):
         if (len(parts) == 2 and parts[0] == 'relationships'
                 and isinstance(value, dict) and value.get('predicate') in derived_predicates):
             return
+        if parts and isinstance(parts[-1], int) and isinstance(value, dict):
+            labels = {key: value[key] for key in
+                      ('id', 'form', 'scope_character', 'gloss', 'component_index') if key in value}
+            if labels:
+                array_items['/'.join(map(str, parts))] = {
+                    'zero_based_index': parts[-1], **labels}
         if parts and parts[0] not in ('character', 'language', 'historical_glyphs', 'meanings', 'changes'):
             paths['/'.join(map(str, parts))] = parts
         if isinstance(value, dict):
@@ -1136,6 +1143,14 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
     contract['preserve_array_items'] = copy.deepcopy(preserved)
     contract['preserve_array_instruction'] = ('Retain these exact existing records in their '
         'original relative order when replacing an array; remove only unprotected items.')
+    contract['array_item_targets'] = {item_path: labels for item_path, labels in array_items.items()
+        if any(path == item_path or path.startswith(item_path + '/')
+               or item_path.startswith(path + '/') for path in paths)}
+    contract['array_index_instruction'] = (
+        'Array paths use zero-based indexes. These target labels come from the exact current '
+        'article for this invocation. Match the requested sense ID, gloss or component identity '
+        'to its target path before drafting a replacement; never copy a neighboring sense into '
+        'the selected slot or infer indexes from prose order in an earlier draft.')
     for attempt in range(3):
         patch_directory = Path(directory) if attempt == 0 else Path(directory)/f'patch-repair-{attempt}'
         result = invoke('article_patch', patch_inputs, patch_schema, patch_directory)

@@ -545,6 +545,35 @@ class EditorialTests(unittest.TestCase):
             self.assertTrue(any(r["predicate"] == "pictorial_component_of" for r in inputs["article"]["relationships"]))
             self.assertEqual(inputs["article"]["meaning_history"]["senses"][0]["id"], article["meaning_history"]["senses"][0]["id"])
 
+    def test_targeted_patch_maps_current_sense_identity_to_zero_based_paths(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
+        article = copy.deepcopy(ARTICLE_V2)
+        first = article['meaning_history']['senses'][0]
+        second = {**copy.deepcopy(first), 'id': '木:secondary', 'gloss': 'secondary use'}
+        article['meaning_history']['senses'].append(second)
+        dossier = {**copy.deepcopy(DOSSIER), 'glyph_research': {'historical_glyphs': GLYPHS}}
+        for reverse in (False, True):
+            current = copy.deepcopy(article)
+            if reverse:
+                current['meaning_history']['senses'].reverse()
+            before = copy.deepcopy(current)
+            expected = current['meaning_history']['senses'][1]
+            def invoke(role, inputs, schema, directory):
+                targets = inputs['article_contract']['array_item_targets']
+                self.assertEqual(targets, {'meaning_history/senses/1': {
+                    'zero_based_index': 1, 'id': expected['id'], 'gloss': expected['gloss']}})
+                return {'edits': [{'path': 'meaning_history/senses/1/text',
+                                   'value_json': '"Scoped replacement."'}]}
+            with tempfile.TemporaryDirectory() as temp:
+                result = apply_article_patch('revision', {
+                    'article': current, 'dossier': dossier,
+                    'allowed_edit_paths': ['meaning_history/senses/1/text']},
+                    WRITER_SCHEMA, temp, invoke)
+            self.assertEqual(result['meaning_history']['senses'][1]['id'], expected['id'])
+            self.assertEqual(result['meaning_history']['senses'][0],
+                             before['meaning_history']['senses'][0])
+            self.assertEqual(current, before)
+
     def test_targeted_patch_rejects_generated_edge_edits_and_repairs_source_sense(self):
         from pipeline.editorial import apply_article_patch, WRITER_SCHEMA, assemble_article
         article = copy.deepcopy(ARTICLE_V2)
