@@ -26,7 +26,10 @@ class NewReaderStyleTests(unittest.TestCase):
         article["meaning_history"]["senses"][0]["text"] = "This dossier does not settle the date."
         with self.assertRaisesRegex(ValueError, "Workflow term"):
             validate_new_reader_style(article, dossier)
-        article["meaning_history"]["senses"][0]["text"] = "The date is unresolved."
+        article["meaning_history"]["senses"][0]["text"] = "The source check notes that the two graphs resemble each other."
+        with self.assertRaisesRegex(ValueError, "Workflow term"):
+            validate_new_reader_style(article, dossier)
+        article["meaning_history"]["senses"][0]["text"] = "Early inscriptions show similar paired forms; the date is unresolved."
         validate_new_reader_style(article, dossier)
 
     def test_source_name_failure_gets_only_the_flagged_text_leaf_repaired(self):

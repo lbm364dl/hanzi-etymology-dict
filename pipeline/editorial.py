@@ -1850,7 +1850,9 @@ def reader_prose_finding(text, source_labels=(), evidence_ids=()):
     """Return the first shared reader-prose violation, or None for clean text."""
     if re.search(r"\bref\d{3}\b", text):
         return "Citation labels belong only in evidence_ids, not reader-facing prose"
-    if re.search(r"\bdossier\b", text, re.I):
+    if re.search(r"\bdossier\b|\b(?:source|scan|research)\s+"
+                 r"(?:check|inspection)\s+(?:notes?|reports?|finds?|found|shows?|indicates?)\b",
+                 text, re.I):
         return "Workflow term"
     for evidence_id in sorted(evidence_ids):
         if re.search(r"(?<![\w-])" + re.escape(evidence_id) + r"(?![\w-])", text):
