@@ -1,0 +1,169 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "日"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000612",
+          "pdf_page_1based": 612,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0612/source.png",
+          "source_sha256": "1cadbd65dde8f6adfcace48a424487db09d7d35246851239125bdef976e4197c",
+          "evidence_sha256": "b5144377551d1f566dc3d54c29188234fcd60ec9ac67bdd0d221921b17e26578",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "日 rì 日纽、质部;日纽、质韵、人质切。"
+          ],
+          "excerpt": "易·睽》：“遇主于巷。”有时也指门外为“巷”。《诗·郑风·丰》：“俟我乎巷兮。”毛传：“巷，门外也。”有时也泛指州闾。《礼记·祭义》：“强不犯弱，众不暴寡，而弟达乎州巷矣。”郑玄注：“巷，犹闾也。”以上诸义都念 xiàng。今矿山所用的小隧道也称为“巷道”，此则音 hàng。(王志平)\n\n日 部\n\n日 rì 日纽、质部;日纽、质韵、人质切。\n[glyph:g007]¹——[glyph:g008]² [glyph:g010]⁴ [glyph:g013]⁷\n商 商 西周 战国\n[glyph:g009]³——[glyph:g011]⁵——[glyph:g012]⁶——[glyph:g014]⁸\n商 西周 春秋 战国\n[glyph:g015]⁹——[glyph:g016]¹⁰——[glyph:g017]¹¹——[glyph:g018]¹²——日\n古文 《说文》小篆 汉 汉 楷书\n1、4、5《金文编》455页。2、3《甲文编》283页。6《金文编》456页。7《先秦货币》99页。8《楚系简帛》560页。9、10《说文》137页。11、12《篆隶表》441页。\n象形字。初文像太阳之形，后由于书写不便，笔画由圆转变为方折，象形之意渐失。“日”的本义就是太阳。甲骨文:“戊子贞:日有哉，告于河。”(《合集》33699)意思是太阳有黑点之义。《说文》:“日，实也。太阳之精不亏。从口、一，象形。”太阳本身是个发光体，所以日光也称为“日”。由于地球绕太阳运行一周为一个恒星日，也就是一天，所以一个昼夜也称为“日”。后来词义缩小了，专指狭义的“白昼”为“日”，以与“夜”相对。后又引申为时候、时代、日子。又因为“日”的唯一性，所谓“天无二日，人无二主”，所以“日”也用于比喻君主。《广雅·释诂一》:“日，君也。”(王志平)\n\n旻 mín 明纽、文部;明纽、真韵、武巾切。\n[glyph:g019]¹——[glyph:g020]²——旻\n《说文》小篆 汉 楷书\n1《说文》137页。2《篆隶表》441页。\n形声字。《说文》:“旻，秋天也。从日，文声。《虞书》曰:仁闵覆下则称旻天。”“文”与“闵”、“旻”接近，故从之。“闵”有悲悯的意思。《尔雅·释天》:“秋为旻天。”郭璞注:“旻，犹愍也。愍万物彫落。”《书·大禹谟》:“日号泣于旻天。”孔传:“仁覆愍下谓之旻天。”(王志平)\n\n時(时) shí 禅纽、之部;禅纽、之韵、市之切。\n[glyph:g021]¹ [glyph:g023]³——[glyph:g024]⁴——[glyph:g025]⁵\n商 战国 战国《说文》古文\n[glyph:g026]⁶\n战国\n[glyph:g022]² [glyph:g027]⁷——[glyph:g028]⁸\n春秋 战国 《说文》小篆\n[glyph:g029]⁹——[glyph:g030]¹⁰——[glyph:g031]¹¹——時——时\n汉 汉 汉 楷书 楷书\n1《甲文编》628页。2、7《类编》494页。3《金文编》456页。4《楚系简帛》565页。5、8《说文》137页。6《战文编》455页。9《睡甲》103页。10《银雀山》237页。11《篆隶表》442页。\n形声字。甲骨文作“[glyph:g021]”，从日，之声。或以为“之日”的合文。后添加了“又”字，“之”声也演变为“寺”声。石鼓文《车工》:“即适即時。”“時”假借为“塒”。《说文》:“時，四时也。从日，寺声。”而“时”是“時”的简化字，从日，从寸，成为了会意字，已失去了形声字的表音功能。“時”字的基本义就是一年四季中的某一季。“時”有大、"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000615",
+          "pdf_page_1based": 615,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0615/source.png",
+          "source_sha256": "11d997c4fe37457754b223c6fd5b7218a3f2bbe3fa0e3eda194413c788ce0ea4",
+          "evidence_sha256": "617cd1f5bdc09f099fff2d67935cf704f57338830cfaf7ca1b7d07782f01d226",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "日部\n\n啓 qǐ 溪纽、脂部; 溪纽、荠韵、康礼切。\nqiàn 溪纽、脂部; 溪纽、线韵、去战切。\n[glyph:g001]¹ — [glyph:g002]² — 啓\n商 《说文》小篆 楷书\n1《甲文编》284页。2《说文》138页。\n形声字。初文从日, 攴声。“攴”是“啓”字的初文, 像以手开门之意。甲骨文“啓”字, 所从声旁也有不省“口”而径作“啓”字者。故《说文》云:“啓, 雨而昼绁也。从日, 啓省声。”《说文》所说的“绁”实即“晴”(参见“绁”字)。雨过天晴为“啓”, 与开门之“啓”在比喻意义上是相似的, 它们在造字心理上有着共同的构型。甲骨文:“辛丑卜, 宾贞: 翌壬寅啓, 壬寅雾?”(《合集》13449)《广韵·荠韵》:“啓, 《说文》: 雨而昼见日。又姓。或作啓。”此念qǐ。《广韵·线韵》:“啓, 雨而昼止。”此念qiàn。(王志平)\n\n暘 yáng 书纽、锡部; 书纽、昔韵、施只切。\n[glyph:g003]¹ — 暘\n《说文》小篆 楷书\n1《说文》138页。\n形声字。初文作“易”, 甲骨文多有“易日”之语。后添加了义符“日”。《说文》:“暘, 日覆云暂见也。从日, 易声。”《广韵》:“暘, 日无光。”这是“暘”字的确诂。(王志平)\n\n晌 xiǎng 晓纽、侯部; 晓纽、遇韵、香句切。\n[glyph:g004]¹ — [glyph:g005]² — [glyph:g006]³ — 晌\n《说文》小篆 汉 汉 楷书\n1《说文》138页。2《汉印徵》卷7, 2页。3《篆隶表》444页。\n形声字。《说文》:“晌, 日出温也。从日, 句声。北地有晌衍县。”段玉裁注:“晌与火部煦义略同。”“煦”字《说文》训为:“蒸(蒸)也。一日赤兒(貌)。一日湿润也。从火, 呴声。”两字音义并同, 在“温暖”意义上经常通假。此外,“晌”还可以指“日光”等。(王志平)\n\n晛 xiàn 匣纽、元部; 匣纽、霰韵、胡甸切。\n[glyph:g007]¹ — [glyph:g008]² — 晛\n商 《说文》小篆 楷书\n\n1《甲文编》288页。2《说文》138页。\n会意兼形声字。甲骨文从日, 从见, 用为贞人名。甲骨文:“癸巳卜, 晛贞: 翌日祖甲岁其牢。”(《合集》27336)《说文》:“晛, 日见也。从日, 从见。见亦声。《诗》曰: 见晛曰消。”也形容日出时的明亮或美丽。还可指“日光”。《说文》所引的《诗》见今本《诗·小雅·角弓》:“雨雪漉漉, 见晛曰消。”这里的“晛”实际上是指“日气”, 不是《说文》的本义。(王志平)\n\n晏 yàn 影纽、元部; 影纽、谏韵、乌涧切。\n[glyph:g009]¹ — [glyph:g010]² — [glyph:g011]³ — 晏\n战国 《说文》小篆 汉 楷书\n1《战文编》457页。2《说文》138页。3《篆隶表》444页。\n形声字。楚文字从日, 安声, 但是“安”字的写法与小篆正好相反。《说文》:“晏, 天清也。从日, 安声。”《汉书·扬雄传上》:“天清日晏。”古书中又训为“鲜盛也”。而一般训为“晚”的“晏”实际上是“旰”的假借字。《楚辞·离骚》:“及年岁之未晏兮。”也假借为“安”, 《史记·南越尉佗列传》:“今吕嘉建德等反自立晏如, 令罪人及江淮以南。”“晏如”就是安闲的样子, 古书常见。(王志平)\n\n景 jǐng 见纽、阳部; 见纽、梗韵、居影切。\nyǐng 影纽、阳部; 影纽、梗韵、於境切。\n[glyph:g012]¹ — [glyph:g013]² — [glyph:g014]³ — [glyph:g015]⁴ — 景\n战国 《说文》小篆 汉 汉 楷书\n1《汉语字形表》258页。2《说文》138页。3、4《篆隶表》445页。\n形声字。《说文》:“景, 光也。从日, 京声。”这实际上是“影”的本字。“影子”的“影”本作“景”, 后来晋代葛洪的《字苑》一书为“景”字加上了“彡”旁, 才形成了今天的“影”字。所以形容时光短暂的“光景”也就是“光影”。又由名词的“光影”引申出动词的“光照”。“景”本不泛指光, 后也可仅指狭义的“日光”。此外,“景”又引申出“明亮”、“情况”、“风致”、“风景”等义。“景”还可以假借为“京”、“庆”、“映”、“仰”、“间”等等。(王志平)\n\n602"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000613",
+          "pdf_page_1based": 613,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0613/source.png",
+          "source_sha256": "2a1c71643780eac70dea94cf857ef09c9369f5ac1880ea084ea580af98c69e98",
+          "evidence_sha256": "5aae11821a88baa7a690c272d06a0212d6f47769aba3756bd3538f1ec4f2d283",
+          "ocr_review_status": "unreviewed",
+          "applied_ocr_corrections": {
+            "original_evidence_sha256": "a8fe9ccff4fb0209b4dd2325531a90367f185c57e2f88c9de88b81186e0c3299",
+            "corrections_sha256": "404fc938c688077e7cabc1d1631ef387c08c16e6083664aef5027dbd2cca3b1e",
+            "text_patches": [
+              {
+                "start": 1625,
+                "end": 1629,
+                "before": "昀(的)",
+                "after": "旳(的)"
+              }
+            ],
+            "scope": "Applied producer overlay, not whole-page approval. Compare current corrected corpus text with original pixels before proposing another correction."
+          },
+          "match_type": "possible_continuation",
+          "headword_lines": [],
+          "excerpt": "日部\n\n小之分。“大时”是指一年四季，“小时”是指一日中的十二辰，相当于今天的二十四小时。后来由计时的用法逐渐引申出“时光”、“时代”、“时运”、“时机”、“经常”、“适逢”等意义。(王志平)\n\n早 zǎo 精组、幽部; 精组、晧韵、子晧切。\n[glyph:g001]1 战国 [glyph:g002]2 战国\n[glyph:g003]3 《说文》小篆 [glyph:g004]4 秦 [glyph:g005]5 汉 早 楷书\n1《金文编》456页。2《战文编》456页。3《说文》137页。4《睡甲》103页。5《篆隶表》442页。\n会意字。战国文字从日,棗声,是个形声字。楚文字省略为“日”,“束”声(实际上是“棗”省声)。小篆从日,从甲。“甲”字是“毋”字的讹变。《说文》:“早,晨也。从日在甲上。”所以“早”的本义就是早晨。后来引申为“早先”、“很久以前”之义,如中山王𰯼鼎:“早弃群臣。”(《集成》5.2840)又有“最初”、“尽快”等义。古代一般假借“蚤”或“皂”字为之。(王志平)\n\n昧 mèi 明组、物部; 明组、队韵、莫佩切。\n[glyph:g006]1 西周 [glyph:g007]2 战国 [glyph:g008]3 战国 [glyph:g009]4 《说文》小篆 [glyph:g010]5 汉 [glyph:g011]6 晋 昧 楷书\n1《金文编》456页。2《古玺》165页。3《汉语字形表》257页。4《说文》137页。5、6《篆隶表》442页。\n形声字。初文从“未”在“日”上,“未”为声旁兼会意。古文字经常颠倒偏旁,至《说文》小篆又演变为左“日”,右“未”,与隶书、楷书无别了。免簋有“昧爽”(《集成》8.4240)之语。《说文》:“昧爽,旦明也。一日闇也。”所以“昧”字的本义就是天色将明未明之形。又由此引申出“暗昧”、“昏庸”之义。(王志平)\n\n睹 dǔ 端组、鱼部; 端组、姥韵、当古切。\nshǔ 禅组、鱼部; 禅组、御韵、常恕切。\n[glyph:g012]1 战国 [glyph:g013]2 《说文》小篆 睹 楷书\n1《楚系简帛》565页。2《说文》137页。\n形声字。战国文字从日,者声。“者”古音与“睹”接近。《楚帛书》丙篇:“故出睹。”《说文》:“睹,且明也。从日,者声。”通作“曙”。《广韵》:“睹,洁朝欲明。”(王志平)\n\n昭 zhāo 章组、宵部; 章组、宵韵、止遥切。\nzhào 章组、宵部; 章组、啸韵、之笑切。\nsháo 禅组、宵部; 禅组、宵韵、市昭切。\n[glyph:g014]1 西周 [glyph:g015]2 战国 [glyph:g016]3 战国 [glyph:g017]4 《说文》小篆 [glyph:g018]5 汉 [glyph:g019]6 汉 昭 楷书\n1《金文编》643页。2《汉语字形表》258页。3《战文编》456页。4《说文》137页。5《睡甲》103页。6《篆隶表》442页。\n形声字。初文作“召”,或添加了“日”旁,假借为“昭”。𧵦羌钟:“昭于天子。”(《集成》1.157)楚文字从日,召声,但是与后世小篆字形差别较大。《说文》:“昭,日明也。从日,召声。”《诗·大雅·云汉》:“倬彼云汉,昭回于天。”《楚辞·大招》:“白日昭只。”此音念 zhāo。后来由“日明”引申出“显著”的意思。也通假为“照”、“炤(zhào)”、“韶”、“佋(sháo)”等。(王志平)\n\n晤 wù 疑组、鱼部; 疑组、暮韵、五故切。\n[glyph:g020]1 《说文》小篆 晤 楷书\n1《说文》137页。\n形声字。《说文》:“晤,明也。从日,吾声。《诗》曰:晤辟有摽。”段玉裁注:“晤者,启之明也。心部之悟、寤部之寤皆训觉,亦明也。同声之义必相近。”通作“寤”。今本《诗·邶风·柏舟》即作“寤辟有摽”。也通假为“违”,我们今天所说的“会晤”之“晤”即是此义。(王志平)\n\n旳(的) dī 端组、药部; 端组、锡韵、都历切。\ndí 端组、药部; 端组、锡韵、都历切。\n[glyph:g021]1 《说文》小篆 [glyph:g022]2 汉 的 楷书\n[glyph:g023]3 汉 的 楷书\n\n600"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0612/source.png",
+      "pdf_page": 612,
+      "source_pixel_sha256": "1cadbd65dde8f6adfcace48a424487db09d7d35246851239125bdef976e4197c"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0613/source.png",
+      "pdf_page": 613,
+      "source_pixel_sha256": "2a1c71643780eac70dea94cf857ef09c9369f5ac1880ea084ea580af98c69e98"
+    }
+  ],
+  "target_language": "zh",
+  "additional_research_context": {
+    "target_language": "zh",
+    "questions": [
+      "Verify current Chinese senses sun/day directly in present-day authoritative dictionary entries and cite those consulted entries. Historical oracle examples establish their ancient use, not loss of present use. Keep supported early uses qualified and distinguish earliest corpus claims from first-ever priority.",
+      "The inherited draft contains Japanese-only senses inferred from KANJIDIC2 E11. This is a Chinese HSK1 entry: independently verify any proposed Chinese Japan abbreviation/current sense, or omit Japanese-only use from Chinese sense records. Do not solve absent Chinese evidence by calling a Japanese gloss historical Chinese. Research Japanese meanings separately for Japanese entries.",
+      "Inspect the retained selected sun glyph pixels and describe the actual rounded outline/filled oval. Qualify the modern bronze-style redraw: no exact image-to-師虎簋 inscription match has been verified, so do not transfer the vessel date or central-mark interpretation to this exact artifact. Retain source pictographic analysis as separately cited interpretation."
+    ],
+    "worker_scope": "Read sources and return evidence only; no nested jobs, pipeline invocation, subagents or repository mutations."
+  },
+  "additional_context_policy": "These source leads and prior findings are research tasks, not preverified dossier evidence. Consult the referenced sources directly, check exact graph identity and scope, and add cited evidence for useful claims before authorship. Recheck reviewer hypotheses; modern structure does not establish historical roles. Record inaccessible sources as gaps.",
+  "unfinished_draft_provenance": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/sun-moon-tree-smoke/ziyuan-2012/65E5",
+    "article_hash": "8218c0086a4364e2f2a874958fddbec936c6937eb6d6009d22ddba52c5288382",
+    "dossier_hash": "0b8dd4ccf919dd7f25f10a0a11ee22a6b8cc3cf128fee81de3c57da81f8be170",
+    "previous_state_hash": "7aa765a947f4154765b80abd8fc15bc236dd27e2d1151a143139bf277c46d4b6",
+    "canonical_article_hash": "1163c1080532b6624d33a122a296eb44882a810f06a0e9bf8f4d53dbbf134496",
+    "canonical_dossier_hash": "ecc6c8b75feff49ac9c47cc016ed61e8d217f018d871239884fa5bf1e628dc52",
+    "requires_fresh_research_and_reviews": true,
+    "prior_review_proposals_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "prior_review_proposals": [],
+  "prior_consulted_book_records": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/sun-moon-tree-smoke/ziyuan-2012/65E5",
+    "previous_audit_hash": "15e9b1de90879284a9ec13bedfd6b1dc43375f1a83fb8986a8048f25e9899d08",
+    "records": [
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "2b979e17c8644e178127387cc39b8f3bd229a898dd7ac25f020bd738833c35bc",
+        "research_result_hash": "18db116fb3f55a14d03aff2ae3e4c9d301cf56f61d95ec68fceb5dd2cb4cb11b",
+        "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692; scan inspected",
+        "field": "日部 entry, printed p. 599 / PDF p. 612; headword, glyph sequence, and prose checked against the supplied scan. The entry ends on this page; the next page begins the unrelated 旻 entry.",
+        "text": "Under the actual headword 日, the entry describes the graph as pictographic and its initial form as resembling the sun. It says later writing changed rounded strokes to angular forms, identifies the sun as the basic meaning, and proposes extensions to sunlight, day, daylight, time, and ruler. These are the book author's account of graphic and semantic development; the cited inscriptional examples do not independently establish the order or every semantic link.",
+        "evidence_ids": [
+          "X-8638acacc16dbb55570a"
+        ]
+      }
+    ],
+    "requires_current_source_research": true
+  },
+  "continuation_policy": "This is an unapproved draft, not reusable approval. Recheck source-dependent claims against current source scans/corpus. Prior revise findings are hypotheses to recheck, including possible source identity errors; do not obey them merely because a previous verifier repeated them. Prior consulted book records identify exact retained evidence IDs and claims to recheck. After current-source verification, cite relevant supported claims through evidence_ids metadata; dossier-only records do not count as article source use. Preserve prior supported work and obtain fresh factual/readability reviews.",
+  "require_source_specific_page_evidence": true,
+  "verified_review_findings": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "Remove `meaning_history.senses[4]` and its generated `relationships[4]` (`has_sense` for `日:japan`), or cite evidence that establishes the Japan abbreviation as current Chinese usage. X-e7518144c9191621be5c says the dictionary records Japan as an abbreviation but does not establish present-day usage; the separate Japan sense is outside the supported sun/day account."
+      ],
+      "article_hash": "66e15c270971112c2ab8dfc2172e06cdfe46cf809ef292844cc7eaf9a09a8e91",
+      "dossier_hash": "6a1cd870cfe18ee233a278c679a78619b60e68fd7acd6e9d0dd65b09f8abb943",
+      "reviewer": "gpt-6-luna:low:factual:01a0fef7-6a10-7243-a61a-92c5be1b2273"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses` for `日:japan` and its matching `has_sense` relationship, change `status` from `current` to `historical` or remove the sense and edge. The cited MOE dictionary entry supports a Chinese abbreviation sense, but this dossier does not establish that the abbreviation is in present-day use; its statement that the dictionary lists the abbreviation is insufficient to support the article’s current-use claim."
+      ],
+      "article_hash": "66e15c270971112c2ab8dfc2172e06cdfe46cf809ef292844cc7eaf9a09a8e91",
+      "dossier_hash": "6a1cd870cfe18ee233a278c679a78619b60e68fd7acd6e9d0dd65b09f8abb943",
+      "reviewer": "gpt-6-luna:low:readability:01a0fef8-9eaf-7b00-91ef-43cfbf666ce0"
+    }
+  ],
+  "allowed_edit_paths": [
+    "meaning_history",
+    "relationships",
+    "summary/evidence_ids",
+    "formation/evidence_ids",
+    "history"
+  ],
+  "instruction": "Complete the remaining Chinese 日 meaning support and book-citation repair. The actual MOE record X-e7518144c9191621be5c lists the Japan abbreviation as a Chinese dictionary sense; do not call it Japanese-only based on KANJIDIC2. Research a separate accessible authoritative contemporary Chinese use of 日 as Japan abbreviation if needed to settle the remaining review disagreement, and connect that usage to the consulted dictionary. Do not interpret historical as obsolete or fabricate usage frequency. A listed present-day Chinese dictionary sense need not have a newly dated archaeological witness. Preserve current sun/day/daytime meanings and their qualified ancient evidence. Use the retained book record X-221bbbf6c39f9ec4eee0 on a specifically supported whole-sun pictographic/form-history claim; do not use the unresolved quote-box identity to establish component identity or normalize it. The scan identity gap remains recorded for separate source resolution. Keep source names/workflow narration out of prose. Generated meaning edges are read-only; edit sense/development records. Prior reviewer suggestions are independently checked hypotheses, not required conclusions."
+}
