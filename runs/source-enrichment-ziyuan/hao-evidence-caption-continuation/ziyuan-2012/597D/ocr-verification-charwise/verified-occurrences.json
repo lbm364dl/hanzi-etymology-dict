@@ -1,0 +1,38 @@
+{
+  "provenance": {
+    "source_id": "ziyuan-2012",
+    "book": "李學勤主編《字源》, 2012",
+    "pdf_page": 1109,
+    "printed_page": 1094,
+    "source_scan_file_sha256": "8c2cad410c397a9d1bbab4f627fc9c973b942739f4c0063ceb9021b4dd5ad155",
+    "source_scan_pixel_sha256": "f57b420e60d20032f8df525c5dcae08228f9a01195720435613d53d0c14df040",
+    "targeted_crop_sha256": "cdbbd5305b30c93418b1efbd75654e776f7b832e778764fc04d22bf2d7801f88",
+    "ocr_evidence_sha256": "4ad1c5141bed8484c5d9088ce5888c2293aa5357267fc4ba04554e6f41620b56",
+    "raw_context": "12：“妇好伐土方。”引申为美、善。《说文》：“好，美也。”虐钟：“用乐好宾。”《诗·周南·关雎》：“窈窕淑女，君子好逑。”（容貌美好、品德善良的女子是君子的佳",
+    "verification_scope": "Two independently identified adjacent printed-character occurrences. Verify 虐 vs 虘 by visible lower and upper strokes; verify 钟 vs 鐘 by the actual printed left/right strokes. Use the full scan to check neighboring context and the crop for exact pixels. Do not infer from a vessel-name lookup, expected quotation, or the prior researcher proposal."
+  },
+  "occurrences_hash": "d6661e60e78c50558525ac6fdfa83c45102b35027b8c9386d0852e7a30903083",
+  "result": {
+    "occurrences": [
+      {
+        "id": "ziyuan-2012-p1109-hao-vessel-name-first-graph",
+        "raw_text": "虐",
+        "printed_text": "虐",
+        "verdict": "correct_raw",
+        "reason": "At this occurrence after “引申为美、善” and before “钟”, the printed character’s upper strokes and lower 虍 structure match 虐; the scan does not show the lower strokes of 虘."
+      },
+      {
+        "id": "ziyuan-2012-p1109-hao-vessel-name-second-graph",
+        "raw_text": "钟",
+        "printed_text": "钟",
+        "verdict": "correct_raw",
+        "reason": "The adjacent printed occurrence has 钅 on the left and 中 on the right, matching 钟; it does not have the 金 component form and right side of 鐘."
+      }
+    ]
+  },
+  "result_hash": "2104871ac4faf55af7943ebc27b77a4c0ac0334da04a1b7b220f7b1159bd2371",
+  "review_directory": "runs/source-enrichment-ziyuan/hao-evidence-caption-continuation/ziyuan-2012/597D/ocr-verification-charwise/review",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "whole_page_reviewed": false
+}
