@@ -162,6 +162,17 @@ class SiteArticleRefreshTests(unittest.TestCase):
 
 
 class ScopedRefinementTests(unittest.TestCase):
+    def test_preserved_record_cannot_also_be_an_allowed_leaf_edit(self):
+        from pipeline.editorial import apply_article_patch
+        item = {'text': 'Preserved claim.', 'evidence_ids': ['E1']}
+        inputs = {'article': {'history': [item]},
+                  'feedback': {'allowed_edit_paths': ['history/0/text'],
+                               'preserve_array_items': {'history': [item]}}}
+        def never_invoke(*args):
+            raise AssertionError('Contradictory coordinator packet must fail before agent work')
+        with self.assertRaisesRegex(ValueError, 'targets a preserved array record'):
+            apply_article_patch('editor', inputs, {}, Path('unused'), never_invoke)
+
     def test_exact_approved_base_scopes_fresh_reviews(self):
         dossier = {**copy.deepcopy(DOSSIER), "glyph_research": {"historical_glyphs": GLYPHS},
                    "glyph_assets": []}

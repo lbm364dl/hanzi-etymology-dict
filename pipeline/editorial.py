@@ -1138,6 +1138,13 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
     if allowed is not None:
         if not isinstance(allowed, list) or not allowed or not set(allowed) <= paths.keys():
             raise ValueError('Allowed patch paths must name existing article fields')
+        for array_path, (_, values, required) in preserved_arrays.items():
+            for index, item in enumerate(values):
+                if item not in required:
+                    continue
+                protected_path = f'{array_path}/{index}'
+                if any(path == protected_path or path.startswith(protected_path + '/') for path in allowed):
+                    raise ValueError(f'Allowed patch path targets a preserved array record: {protected_path}')
         paths = {path:paths[path] for path in allowed}
     patch_schema = {'type':'object','additionalProperties':False,'required':['edits'],
         'properties':{'edits':{'type':'array','items':{'type':'object',
