@@ -50,6 +50,10 @@ def _locator_hash(located):
 
 SOURCE_POLICY = """
 SOURCE-SPECIFIC CHINESE ENRICHMENT:
+An account that reports borrowing does not by itself identify the earlier word's
+name, reading or exact sound match. Cite those specific lexical/phonological claims
+separately when supported; otherwise retain the borrowing account with its precise
+qualification and omit the unsupported mechanism from learner prose.
 Keep chronology and attestation tied to the actual evidence. A received dictionary
 or Shuowen gloss is an attested lexicographic interpretation; it does not by itself
 date a historical lexical use or establish the original sense. When dating is
@@ -491,6 +495,23 @@ def _verify_source_claim_checks(job, checks, scans):
 def _source_finding_class(finding):
     """Classify only explicit retained finding language; never infer OCR disposition from plausibility."""
     text = ' '.join(str(finding.get(k, '')) for k in ('title', 'details', 'verification'))
+    # Findings are sometimes tagged with an OCR action marker even when their
+    # body explicitly says that no literal replacement is proposed and that
+    # the issue is a page/entry boundary (for example, a running header above
+    # a different headword).  Treat those as source-access/scope gaps so the
+    # normal exact-pair source resolver can determine whether the candidate
+    # depends on the missing entry.  The original finding remains in the
+    # inventory; a real before→after proposal still takes the transcription
+    # lane below.
+    no_literal_proposal = re.search(
+        r'\bno\s+(?:replacement\s+)?(?:unicode\s+)?(?:transcription|ocr|literal|character)'
+        r'(?:\s+(?:span|text|value))?\s+(?:is\s+)?(?:proposed|requested|identified|specified)',
+        text, re.I)
+    entry_boundary_issue = re.search(
+        r'entry[- ]boundary|running[- ]header|header.{0,80}(?:not|rather than).{0,80}headword|'
+        r'not a substantive entry|body.{0,80}belongs to|entry text belongs to', text, re.I)
+    if no_literal_proposal and entry_boundary_issue:
+        return 'primary_access_gap'
     if ('[OCR CORRECTION REQUIRED]' in text or 'raw provisional OCR span' in text
             or 'proposed source-bound OCR correction' in text
             or ('raw OCR' in text and re.search(r'not use .{0,80}confirmed source text', text, re.I))):
