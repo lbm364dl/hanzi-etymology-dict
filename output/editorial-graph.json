@@ -11979,13 +11979,14 @@
       "form": "唱",
       "character_entry": "唱",
       "formation": {
-        "text": "唱 is a phonosemantic compound: 口 contributes the vocal meaning category, and 昌 serves as its phonetic component. A Small Seal form is reported, but the earliest surviving form and graphic sequence are unresolved.",
+        "text": "唱 is a phonosemantic compound: 口 marks the vocal meaning category, and 昌 supplies the sound. 字源 proposes that 昌 was an earlier graph for the word later written 唱, with 口 added to form 唱; this proposed sequence is not established.",
         "evidence_ids": [
           "E2",
           "E3",
           "X-74ad0cf3ed0c1586c400",
           "X-9eebbc8d0f685e8008f5",
-          "X-c46564b3f6690f19a838"
+          "X-c46564b3f6690f19a838",
+          "X-72ec805ee3253cc45937"
         ],
         "type": "phonosemantic"
       },
@@ -12009,12 +12010,13 @@
           "form_status": "preserved"
         },
         {
-          "text": "昌 serves as the traditional phonetic component. Zhengzhang’s reconstruction gives it a similar initial and rhyme to 唱 but a different ending; another reported reconstruction of 唱 differs, leaving the detailed sound history unsettled.",
+          "text": "昌 serves as the phonetic component in 唱. 字源 proposes 昌 as an earlier graph for the word later written 唱, but this does not establish the compound’s graphic chronology.",
           "evidence_ids": [
             "E3",
             "X-546f7c44792592cb68e2",
             "X-50d05e15bbf69586a055",
-            "X-63d7278897ac66dc74bc"
+            "X-63d7278897ac66dc74bc",
+            "X-72ec805ee3253cc45937"
           ],
           "form": "昌",
           "origin_form": "",
@@ -12023,7 +12025,7 @@
           "sound_limitation": null,
           "sound": [
             {
-              "text": "In Zhengzhang’s system, the reconstructed forms for 昌 and 唱 share an initial and rhyme but differ in their endings; these are reconstructions, not recorded ancient pronunciations.",
+              "text": "Zhengzhang reconstructs 昌 and 唱 with the same initial and rhyme, while the final -s marks a difference in the reconstructed form. These are system-specific reconstructions, not recorded ancient pronunciations.",
               "evidence_ids": [
                 "X-546f7c44792592cb68e2"
               ],
@@ -12033,15 +12035,25 @@
               "system": "Old Chinese, Zhengzhang (2003)"
             },
             {
-              "text": "Middle Chinese categories show related initials and rhyme categories but different tones, consistent with a sound relationship without directly recording pronunciation at formation.",
+              "text": "The Guangyun categories show related initials and rhyme categories but different tones: 昌 is level-tone and 唱 departing-tone. This supports the traditional sound analysis but does not record pronunciation at formation.",
               "evidence_ids": [
                 "X-f5ee6f8d75aa6ef28571",
                 "X-ffe0aba9a092382d5c44"
               ],
               "component_form": "昌",
-              "component_reading": "initial 昌, level tone, 陽 rhyme, open division III (Guangyun fanqie 尺良)",
-              "character_reading": "initial 昌, departing tone, 漾 rhyme, open division III (Guangyun fanqie 尺亮)",
+              "component_reading": "level tone, 陽 rhyme, open division III (fanqie 尺良)",
+              "character_reading": "departing tone, 漾 rhyme, open division III (fanqie 尺亮)",
               "system": "Middle Chinese, Guangyun categories"
+            },
+            {
+              "text": "In present-day Mandarin, 昌 is chāng and 唱 is chàng; the tone differs. This modern comparison does not establish their historical phonetic relationship.",
+              "evidence_ids": [
+                "X-73f1abfb576ea5afac39"
+              ],
+              "component_form": "昌",
+              "component_reading": "chāng",
+              "character_reading": "chàng",
+              "system": "Modern Mandarin, Unihan kMandarin"
             }
           ],
           "roles": [
@@ -12154,10 +12166,32 @@
           "url": "https://zh.wiktionary.org/zh-hans/%E5%94%B1",
           "title": "唱 - 维基词典，自由的多语言词典",
           "accessed_at": "2026-09-26"
+        },
+        {
+          "id": "X-72ec805ee3253cc45937",
+          "source": "字源 (ed. 2012), 李學勤 主編; locally inspected scan, PDF p. 95, printed p. 83",
+          "field": "headword 唱; component and origin account; sense development; pinyin and historical rhyme data. Source scan: /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0095/source.png; decoded RGB pixel SHA-256 6a503d540e575979551067d0fb9815720e3fd55edd7b3a99645f59fa5753d682",
+          "text": "The entry headed 唱 gives chàng and rhyme-category information, then calls 唱 a phonosemantic graph: 从口，昌声. It says the oracle-bone graph 昌 was originally 日 plus 口 and identifies it as “唱”之初文; 唱 was formed by adding 口 to 昌. It proposes that the original referent was a call at sunrise to summon people to work, likely often tuneful, and describes this as a source of singing. It then says the sense extended to leading a song, quotes Shuowen 導也, and reports that older texts often wrote 倡 for 唱 before the graphs differentiated. These are the book author's proposals and account, not independently demonstrated graphic chronology. The occurrence and paragraph are visible under the 唱 heading; the next entry is 和, not a continuation of the 唱 passage. The printed page number 83 is visible at the bottom.",
+          "record_character": "唱",
+          "kind": "locally_inspected_book_entry",
+          "url": "https://www.worldcat.org/search?q=9787552800692",
+          "title": "《字源》 (2012), ISBN 9787552800692; catalogue search",
+          "accessed_at": "2026-10-03"
+        },
+        {
+          "id": "X-73f1abfb576ea5afac39",
+          "source": "Unihan data local row supplied in task; official Unicode lookup attempt",
+          "field": "kMandarin readings for 唱, 昌 and 口; local file pipeline/data/unihan-kmandarin-hsk1.tsv",
+          "text": "The supplied local extract gives 唱 chàng, 昌 chāng, and 口 kǒu. Unicode UAX #38 documents Unihan and its kMandarin field, but the official per-codepoint lookup URLs could not be opened in this browsing invocation. The local rows verify current readings for this research task; they do not demonstrate historical sound relationships.",
+          "record_character": "唱",
+          "kind": "local_reading_rows_with_upstream_access_gap",
+          "url": "https://www.unicode.org/charts/unihansearch.html",
+          "title": "Unihan Database Search Page",
+          "accessed_at": "2026-10-03"
         }
       ],
-      "article_hash": "4f6b4806e807b975e6211e18b948f536056ce151fdf6dd18b93c7c7e31eeedb9",
-      "dossier_hash": "01e1000ca506966b523350865cf8be47e3ca3cb968f2402ac1112a203e884246"
+      "article_hash": "5766e034dbb885021145cd36a0f2f4fabd6594f1dca695c50b18e5578c04192c",
+      "dossier_hash": "922f30d896defa27a37d45429ed11da185167d13995e6787331314adb208b80c"
     },
     {
       "id": "character:商",
@@ -59024,8 +59058,8 @@
         "gloss": "lead or guide singing/music",
         "period": "dating unresolved",
         "certainty": "probable",
-        "status": "earliest_attested",
-        "text": "A traditional gloss gives “lead or guide”; a cited example describes the yu leading while the other instruments follow. The date of the surviving written form remains unresolved.",
+        "status": "historical",
+        "text": "A traditional gloss gives “lead or guide”; a cited example describes the yu leading while the other instruments follow. The sources do not establish that this is the earliest attested sense.",
         "evidence_ids": [
           "E3",
           "X-9f4f27161b91c0cc770d",
@@ -59042,10 +59076,11 @@
         "gloss": "sing or chant",
         "period": "dating unresolved",
         "certainty": "established",
-        "status": "historical",
-        "text": "Singing and chanting are reported uses. Their dates relative to “lead” are not established.",
+        "status": "current",
+        "text": "唱 commonly means “sing” or “chant” in present-day use; dictionaries also report older examples. The cited evidence does not establish when this use began or its chronology relative to “lead.”",
         "evidence_ids": [
           "E7",
+          "E10",
           "X-de38e249c4c076324b6f",
           "X-623155a712d0fd50a244"
         ]
@@ -59060,8 +59095,8 @@
         "gloss": "song or tune",
         "period": "dating unresolved",
         "certainty": "established",
-        "status": "current",
-        "text": "唱 is also used as a noun meaning “song” or “tune.” When this meaning developed is unresolved.",
+        "status": "historical",
+        "text": "A cited historical example uses 唱 as a noun meaning “song” or “tune.” The available evidence does not establish when this use began or its relationship to other meanings.",
         "evidence_ids": [
           "E7",
           "X-de38e249c4c076324b6f",
@@ -103409,8 +103444,8 @@
       "entry_character": "唱",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "4f6b4806e807b975e6211e18b948f536056ce151fdf6dd18b93c7c7e31eeedb9",
-      "dossier_hash": "01e1000ca506966b523350865cf8be47e3ca3cb968f2402ac1112a203e884246",
+      "article_hash": "5766e034dbb885021145cd36a0f2f4fabd6594f1dca695c50b18e5578c04192c",
+      "dossier_hash": "922f30d896defa27a37d45429ed11da185167d13995e6787331314adb208b80c",
       "evidence": [
         {
           "id": "E2",
@@ -103447,7 +103482,7 @@
       "entry_character": "唱",
       "sound_comparisons": [
         {
-          "text": "In Zhengzhang’s system, the reconstructed forms for 昌 and 唱 share an initial and rhyme but differ in their endings; these are reconstructions, not recorded ancient pronunciations.",
+          "text": "Zhengzhang reconstructs 昌 and 唱 with the same initial and rhyme, while the final -s marks a difference in the reconstructed form. These are system-specific reconstructions, not recorded ancient pronunciations.",
           "evidence_ids": [
             "X-546f7c44792592cb68e2"
           ],
@@ -103470,14 +103505,14 @@
           ]
         },
         {
-          "text": "Middle Chinese categories show related initials and rhyme categories but different tones, consistent with a sound relationship without directly recording pronunciation at formation.",
+          "text": "The Guangyun categories show related initials and rhyme categories but different tones: 昌 is level-tone and 唱 departing-tone. This supports the traditional sound analysis but does not record pronunciation at formation.",
           "evidence_ids": [
             "X-f5ee6f8d75aa6ef28571",
             "X-ffe0aba9a092382d5c44"
           ],
           "component_form": "昌",
-          "component_reading": "initial 昌, level tone, 陽 rhyme, open division III (Guangyun fanqie 尺良)",
-          "character_reading": "initial 昌, departing tone, 漾 rhyme, open division III (Guangyun fanqie 尺亮)",
+          "component_reading": "level tone, 陽 rhyme, open division III (fanqie 尺良)",
+          "character_reading": "departing tone, 漾 rhyme, open division III (fanqie 尺亮)",
           "system": "Middle Chinese, Guangyun categories",
           "evidence": [
             {
@@ -103503,11 +103538,34 @@
               "accessed_at": "2026-09-26"
             }
           ]
+        },
+        {
+          "text": "In present-day Mandarin, 昌 is chāng and 唱 is chàng; the tone differs. This modern comparison does not establish their historical phonetic relationship.",
+          "evidence_ids": [
+            "X-73f1abfb576ea5afac39"
+          ],
+          "component_form": "昌",
+          "component_reading": "chāng",
+          "character_reading": "chàng",
+          "system": "Modern Mandarin, Unihan kMandarin",
+          "evidence": [
+            {
+              "id": "X-73f1abfb576ea5afac39",
+              "source": "Unihan data local row supplied in task; official Unicode lookup attempt",
+              "field": "kMandarin readings for 唱, 昌 and 口; local file pipeline/data/unihan-kmandarin-hsk1.tsv",
+              "text": "The supplied local extract gives 唱 chàng, 昌 chāng, and 口 kǒu. Unicode UAX #38 documents Unihan and its kMandarin field, but the official per-codepoint lookup URLs could not be opened in this browsing invocation. The local rows verify current readings for this research task; they do not demonstrate historical sound relationships.",
+              "record_character": "唱",
+              "kind": "local_reading_rows_with_upstream_access_gap",
+              "url": "https://www.unicode.org/charts/unihansearch.html",
+              "title": "Unihan Database Search Page",
+              "accessed_at": "2026-10-03"
+            }
+          ]
         }
       ],
       "sound_limitations": [],
-      "article_hash": "4f6b4806e807b975e6211e18b948f536056ce151fdf6dd18b93c7c7e31eeedb9",
-      "dossier_hash": "01e1000ca506966b523350865cf8be47e3ca3cb968f2402ac1112a203e884246",
+      "article_hash": "5766e034dbb885021145cd36a0f2f4fabd6594f1dca695c50b18e5578c04192c",
+      "dossier_hash": "922f30d896defa27a37d45429ed11da185167d13995e6787331314adb208b80c",
       "evidence": [
         {
           "id": "E3",
@@ -103559,7 +103617,7 @@
       "predicate": "has_sense",
       "context_character": "唱",
       "certainty": "probable",
-      "text": "A traditional gloss gives “lead or guide”; a cited example describes the yu leading while the other instruments follow. The date of the surviving written form remains unresolved.",
+      "text": "A traditional gloss gives “lead or guide”; a cited example describes the yu leading while the other instruments follow. The sources do not establish that this is the earliest attested sense.",
       "evidence_ids": [
         "E3",
         "X-9f4f27161b91c0cc770d",
@@ -103568,8 +103626,8 @@
       "entry_character": "唱",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "4f6b4806e807b975e6211e18b948f536056ce151fdf6dd18b93c7c7e31eeedb9",
-      "dossier_hash": "01e1000ca506966b523350865cf8be47e3ca3cb968f2402ac1112a203e884246",
+      "article_hash": "5766e034dbb885021145cd36a0f2f4fabd6594f1dca695c50b18e5578c04192c",
+      "dossier_hash": "922f30d896defa27a37d45429ed11da185167d13995e6787331314adb208b80c",
       "evidence": [
         {
           "id": "E3",
@@ -103610,23 +103668,32 @@
       "predicate": "has_sense",
       "context_character": "唱",
       "certainty": "established",
-      "text": "Singing and chanting are reported uses. Their dates relative to “lead” are not established.",
+      "text": "唱 commonly means “sing” or “chant” in present-day use; dictionaries also report older examples. The cited evidence does not establish when this use began or its chronology relative to “lead.”",
       "evidence_ids": [
         "E7",
+        "E10",
         "X-de38e249c4c076324b6f",
         "X-623155a712d0fd50a244"
       ],
       "entry_character": "唱",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "4f6b4806e807b975e6211e18b948f536056ce151fdf6dd18b93c7c7e31eeedb9",
-      "dossier_hash": "01e1000ca506966b523350865cf8be47e3ca3cb968f2402ac1112a203e884246",
+      "article_hash": "5766e034dbb885021145cd36a0f2f4fabd6594f1dca695c50b18e5578c04192c",
+      "dossier_hash": "922f30d896defa27a37d45429ed11da185167d13995e6787331314adb208b80c",
       "evidence": [
         {
           "id": "E7",
           "source": "merged_record",
           "field": "hanzi.definitions",
           "text": "sing, chant, call; ditty, song",
+          "record_character": "唱",
+          "kind": "imported_metadata"
+        },
+        {
+          "id": "E10",
+          "source": "kanjidic2_via_build_kanji",
+          "field": "kanji.definition",
+          "text": "Chant; Recite; Call Upon; Yell",
           "record_character": "唱",
           "kind": "imported_metadata"
         },
@@ -103669,8 +103736,8 @@
       "entry_character": "唱",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "4f6b4806e807b975e6211e18b948f536056ce151fdf6dd18b93c7c7e31eeedb9",
-      "dossier_hash": "01e1000ca506966b523350865cf8be47e3ca3cb968f2402ac1112a203e884246",
+      "article_hash": "5766e034dbb885021145cd36a0f2f4fabd6594f1dca695c50b18e5578c04192c",
+      "dossier_hash": "922f30d896defa27a37d45429ed11da185167d13995e6787331314adb208b80c",
       "evidence": [
         {
           "id": "X-de38e249c4c076324b6f",
@@ -103703,7 +103770,7 @@
       "predicate": "has_sense",
       "context_character": "唱",
       "certainty": "established",
-      "text": "唱 is also used as a noun meaning “song” or “tune.” When this meaning developed is unresolved.",
+      "text": "A cited historical example uses 唱 as a noun meaning “song” or “tune.” The available evidence does not establish when this use began or its relationship to other meanings.",
       "evidence_ids": [
         "E7",
         "X-de38e249c4c076324b6f",
@@ -103712,8 +103779,8 @@
       "entry_character": "唱",
       "sound_comparisons": [],
       "sound_limitations": [],
-      "article_hash": "4f6b4806e807b975e6211e18b948f536056ce151fdf6dd18b93c7c7e31eeedb9",
-      "dossier_hash": "01e1000ca506966b523350865cf8be47e3ca3cb968f2402ac1112a203e884246",
+      "article_hash": "5766e034dbb885021145cd36a0f2f4fabd6594f1dca695c50b18e5578c04192c",
+      "dossier_hash": "922f30d896defa27a37d45429ed11da185167d13995e6787331314adb208b80c",
       "evidence": [
         {
           "id": "E7",
