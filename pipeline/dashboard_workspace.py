@@ -19,8 +19,8 @@ class Workspace:
         result = {}
         try:
             def git(*args):
-                return subprocess.run(['git', *args], cwd=self.root, text=True,
-                    capture_output=True, timeout=5, check=True).stdout.strip()
+                return subprocess.run(['git', '--no-optional-locks', *args], cwd=self.root, text=True,
+                    capture_output=True, timeout=5, check=True).stdout.rstrip('\n')
             rows = git('status', '--porcelain').splitlines()
             result['repository'] = {'branch': git('branch', '--show-current'),
                 'head': git('rev-parse', 'HEAD'), 'dirty_count': len(rows),

@@ -132,3 +132,7 @@ The real board showed 300 current entries, 3 held revisions and 3 failed queue j
 that sample, with historical attention separate. Full review/finding/status JSON links
 returned HTTP 200; snapshot timestamps advanced without a page reload.
 Producer timeout and nonzero-exit tests prove helper descendants are stopped before rollback.
+
+The observer's Git status command briefly contended for the index during a coordinator
+commit. Dashboard Git reads now disable optional Git locks, so status observation cannot
+refresh the index. Porcelain whitespace is preserved to keep the first changed path exact.

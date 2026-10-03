@@ -7,12 +7,25 @@ import unittest
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-from pipeline import dashboard, dashboard_github
+from pipeline import dashboard, dashboard_github, dashboard_workspace
 from unittest.mock import patch
 import subprocess
 
 
 class DashboardTests(unittest.TestCase):
+    def test_git_observer_does_not_take_optional_index_locks_or_trim_porcelain(self):
+        commands = []
+        def invoke(command, **kwargs):
+            commands.append(command)
+            text = {'status': ' M pipeline/README.md\n', 'branch': 'test-branch\n',
+                    'rev-parse': 'abc123\n'}[command[2]]
+            return subprocess.CompletedProcess(command, 0, text, '')
+        with tempfile.TemporaryDirectory() as temp, patch.object(dashboard_workspace.subprocess, 'run', invoke):
+            snapshot = dashboard_workspace.Workspace(temp).snapshot()
+        self.assertEqual(snapshot['repository']['changes'],
+                         [{'status': 'M', 'path': 'pipeline/README.md'}])
+        self.assertTrue(all(command[1] == '--no-optional-locks' for command in commands))
+
     def test_artifact_reader_rejects_traversal_absolute_paths_and_symlink_escape(self):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp)
