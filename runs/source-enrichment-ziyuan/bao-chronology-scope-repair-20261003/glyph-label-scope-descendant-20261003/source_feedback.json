@@ -1,0 +1,34 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "allowed_edit_paths": [
+    "history/0"
+  ],
+  "verified_review_findings": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "efb895c478131e717e8fc4be5c52d3389db28ddc190e18d83f371d65c99baf70",
+      "dossier_hash": "f78c733193577465b4de3f0790c7b60e08e45fdc0bec85e9005a7c12c60d4549",
+      "reviewer": "gpt-6-luna:low:factual:01a100ca-c97e-7ad2-9996-db6b4ef27730"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `history[0]`, replace “script-style forms” with wording that identifies them as the page’s labeled glyph sequence (《说文》小篆, 秦, 睡甲, 汉, 《篆隶表》, 楷书). The scan verifies those labels, not that the displayed specimens are authenticated forms from those periods. Keep the existing caveat. Cite X-377c38424853d664eade and X-1c72a3d3b84d376b1af7."
+      ],
+      "article_hash": "efb895c478131e717e8fc4be5c52d3389db28ddc190e18d83f371d65c99baf70",
+      "dossier_hash": "f78c733193577465b4de3f0790c7b60e08e45fdc0bec85e9005a7c12c60d4549",
+      "reviewer": "gpt-6-luna:low:readability:01a100cb-48fb-76a0-b437-6341bd0da3b2"
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0817/source.png",
+      "pdf_page": 817,
+      "source_pixel_sha256": "6630e899bbb88b4e0eb8017c00cef031d729588b5e64fdac8817a14916b66304"
+    }
+  ],
+  "editorial_adjudication": "Address actual readability request only in history/0: clarify that the source page labels its displayed glyph sequence, not authenticated dated artifacts. Retain the received-form account and its qualification; use brief intelligible wording and cite the actual labels evidence. Preserve all other fields including already repaired chronology paragraph and modernreadingpair. No canonical/producer/GitHub writes."
+}

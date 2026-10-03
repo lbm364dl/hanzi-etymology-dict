@@ -1,0 +1,53 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "allowed_edit_paths": [
+    "components/1/text",
+    "components/1/evidence_ids",
+    "uncertainties",
+    "relationships"
+  ],
+  "verified_review_findings": {
+    "initial": {
+      "verdict": "revise",
+      "evidence_ids": [
+        "X-1c72a3d3b84d376b1af7",
+        "X-693c9ac58326ac5f8235",
+        "X-377c38424853d664eade",
+        "X-f3e5460b32bf092f5ff6",
+        "X-b09cad75f70476a4bee8",
+        "X-7b7bc6874e8d0f1d1358"
+      ],
+      "findings": [
+        "The scan-verified 字源 account is materially represented: the article cites its received-form analysis of 勹 wrapping 巳 to express 胞衣, and accurately treats the book’s Western Zhou dating as an attributed, unverified proposal. The glyph labels are not presented as authenticated artifacts; the separate 胞 entry’s dating is correctly kept out of 包’s component analysis.",
+        "There is a material source-coverage mismatch concerning 勹’s origin. The article’s formation and component prose discuss only 勹’s proposed roles within 包 and do not disclose that 字源’s separately headed 勹 entry says it has its own source and explicitly rejects derivation from 伏 or 旬. The verified p. 814 scan supports that claim (the supplied X-bac3f81fda668d01a5d9, which is not among the permitted evidence IDs, transcribes it accurately); add or cite an allowed book evidence ID only if the dossier registers this scanned 勹 passage under one. Do not treat the p. 817 包 entry or X-b09cad75f70476a4bee8 as support for this separate-origin claim."
+      ]
+    },
+    "adjudication": {
+      "verdict": "revise",
+      "evidence_ids": [
+        "X-1c72a3d3b84d376b1af7",
+        "X-693c9ac58326ac5f8235",
+        "X-377c38424853d664eade",
+        "X-f3e5460b32bf092f5ff6",
+        "X-b09cad75f70476a4bee8",
+        "X-7b7bc6874e8d0f1d1358"
+      ],
+      "findings": [
+        "The prior finding about the separate 勹 origin is not a remaining omission: the current article does not claim that 字源 supports 勹 as a phonetic component in 包. It attributes the wrapping analysis to 字源’s 包 entry and separately says that 勹 “has its own source” in the formation, with citations X-1c72a3d3b84d376b1af7 and X-693c9ac58326ac5f8235. The attached p. 814 scan independently confirms that the separate 勹 headword rejects proposed derivations from 伏 and 旬 and says 勹 has its own origin; its modern bāo reading is separately supported by X-b09cad75f70476a4bee8. The article therefore uses the relevant book findings without misattributing them to the 包 headword."
+      ]
+    }
+  },
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0814/source.png",
+      "pdf_page": 814,
+      "source_pixel_sha256": "8a2d95408394358e8be286890d9cf9409cee5dc314189aa0ace9874275f10ec1"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0817/source.png",
+      "pdf_page": 817,
+      "source_pixel_sha256": "6630e899bbb88b4e0eb8017c00cef031d729588b5e64fdac8817a14916b66304"
+    }
+  ],
+  "editorial_adjudication": "Inspect the exact current components[1] before editing: it does NOT presently say 勹 has its own origin, contrary to the final adjudicator summary. Independently consider the initial coverage finding: the directly inspected separate 勹 account X-bac3f81fda668d01a5d9 rejects proposed derivation from 伏/旬, says independent origin, associates 勹 and 包 as ancient/current forms, and cautions against misunderstanding the components grouped in its section. Integrate the relevant scoped clarification in expert component text with its own correct citation if supported; preserve competing 包-entry semantic account and sound analyses. Do not infer that an independent 勹 origin rules out a component phonetic role, or assert a consensus/demonstrated chronological lineage from the one source. Any added relationship must carry exact host scope and uncertainty; no required new edge if only reporting competing interpretations. Source names/workflow do not belong in explanation prose; evidence IDs/citations preserve provenance. Preserve current soundcomparison, learner, meanings and already repaired history paragraphs. All factual changes require fresh independent approvals. No canonical/producer/GitHub writes."
+}

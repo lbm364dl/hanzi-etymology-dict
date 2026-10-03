@@ -1,0 +1,24 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "allowed_edit_paths": [
+    "history/0"
+  ],
+  "verified_review_findings": {
+    "verdict": "revise",
+    "evidence_ids": [
+      "X-1c72a3d3b84d376b1af7",
+      "X-693c9ac58326ac5f8235"
+    ],
+    "findings": [
+      "`history[0].text` currently says “The received-form account preserved in Shuowen and 字源 interprets 包 as pregnancy: 勹 wraps or encloses 巳, understood as an unborn child, together conveying 胞衣.” Its citations are E3, X-1c72a3d3b84d376b1af7, X-693c9ac58326ac5f8235, and X-377c38424853d664eade. The scan supports 字源’s combined analysis, but Shuowen is quoted only for pregnancy with 巳 inside; 字源 separately supplies the reading of 勹, 巳, and their combination as 胞衣. Attribute the combined construction to 字源 rather than to both Shuowen and 字源."
+    ]
+  },
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0817/source.png",
+      "pdf_page": 817,
+      "source_pixel_sha256": "6630e899bbb88b4e0eb8017c00cef031d729588b5e64fdac8817a14916b66304"
+    }
+  ],
+  "editorial_adjudication": "Repair the exact history0 attribution boundary only. The old quoted received account describes a pregnant figure and 巳 inside as an unformed child; the independently inspected later book adds the distinct 勹-wrapping/巳-child semantic combination conveying 胞衣. Do not jointly attribute the entire combined construction to both. Preserve those competing received accounts with precise scoped citations, and preserve the already accurate glyph-label provenance caveat. Explanation prose should describe the analyses plainly with evidence IDs and citations carrying bibliography, not name the research workflow. All other fields frozen, including independent 勹 origin limitation, current readingpair and chronology paragraph. Fresh actual factual/readability approvals; no canonical/producer/GitHub writes."
+}
