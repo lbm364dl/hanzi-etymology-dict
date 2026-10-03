@@ -1,0 +1,8 @@
+{
+  "instruction": "Make only the metadata confidence correction identified by the native issue: for the sense whose gloss is proposed original sense “river”, certainty must reflect the unresolved source disagreement over whether the proposed original sense was river or water. “Established” currently overstates the proposed sense, despite the prose accurately reporting that one source proposes river and another gives broader water. Keep all wording, evidence IDs, dates, other senses, limitations, relationships and learner prose unchanged unless a required pipeline constraint demands a directly generated update. Use fresh factual and readability reviews; do not publish.",
+  "editorial_adjudication": "The sources support that a river-origin analysis has been proposed, but also report a competing broader-water account and explicitly leave which meaning was original unresolved. Established is appropriate for the fact that sources report the proposal only when prose makes that reporting scope explicit; the stored certainty field represents the proposed original sense claim itself, so should express its actual disputed status. The separate current water sense is established and must remain so.",
+  "allowed_edit_paths": [
+    "meaning_history/senses/0/certainty"
+  ],
+  "fresh_review_instruction": "Check alignment among the first historical sense gloss, certainty, prose, limitations, evidence and generated graph edges. Distinguish certainty that a proposal is reported from certainty in its proposed content. Preserve the established current water sense and all unrelated fields."
+}
