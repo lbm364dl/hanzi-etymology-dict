@@ -1,0 +1,267 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "findings",
+    "identity_observations",
+    "literal_observations",
+    "repair_observations",
+    "source_claim_observations"
+  ],
+  "properties": {
+    "findings": {
+      "type": "array",
+      "minItems": 18,
+      "maxItems": 18,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "disposition",
+          "reason",
+          "affected_paths"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:8FB9:8da1102f9589",
+              "ziyuan-2012:8FB9:2d5f50417d65",
+              "ziyuan-2012:8FB9:745bc4180f7d",
+              "ziyuan-2012:8FB9:df5e60844a40",
+              "ziyuan-2012:8FB9:e4292555bbce",
+              "ziyuan-2012:8FB9:2e03ffab6733",
+              "ziyuan-2012:8FB9:64be81173b5f",
+              "ziyuan-2012:8FB9:32952b94ba1d",
+              "ziyuan-2012:8FB9:80c0ade2b3bc",
+              "ziyuan-2012:8FB9:02097201ba0e",
+              "ziyuan-2012:8FB9:fa76cd9bf6c5",
+              "ziyuan-2012:8FB9:1889ad75316f",
+              "ziyuan-2012:8FB9:89c9a1e6ae12",
+              "ziyuan-2012:8FB9:f123ec8f0c27",
+              "ziyuan-2012:8FB9:ee40858a2ac0",
+              "ziyuan-2012:8FB9:32550b0e52db",
+              "ziyuan-2012:8FB9:736c7465a25c",
+              "ziyuan-2012:8FB9:c34338604aa7"
+            ]
+          },
+          "disposition": {
+            "enum": [
+              "pending",
+              "unresolved_identity_not_used",
+              "rejected_proposal_scan_matches_corpus",
+              "applied_repair_scan_matches_corpus",
+              "verified_source_claim"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affected_paths": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^article\\.[A-Za-z_]+(?:\\[\\d+\\])?(?:\\.[A-Za-z_]+)?$"
+            }
+          }
+        }
+      }
+    },
+    "identity_observations": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "independent_support",
+          "claim_paths",
+          "support_reason",
+          "whole_candidate_reviewed",
+          "reviewed_article_hash",
+          "reviewed_dossier_hash"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:8FB9:8da1102f9589",
+              "ziyuan-2012:8FB9:2d5f50417d65",
+              "ziyuan-2012:8FB9:df5e60844a40",
+              "ziyuan-2012:8FB9:e4292555bbce",
+              "ziyuan-2012:8FB9:80c0ade2b3bc",
+              "ziyuan-2012:8FB9:02097201ba0e",
+              "ziyuan-2012:8FB9:fa76cd9bf6c5",
+              "ziyuan-2012:8FB9:32550b0e52db",
+              "ziyuan-2012:8FB9:736c7465a25c"
+            ]
+          },
+          "independent_support": {
+            "type": "boolean"
+          },
+          "whole_candidate_reviewed": {
+            "type": "boolean"
+          },
+          "reviewed_article_hash": {
+            "type": "string",
+            "enum": [
+              "dc1ed5a30b474a232cc3dd4e11b7570d3f9556638b4fd5948f0484ad7d2bcd37"
+            ]
+          },
+          "reviewed_dossier_hash": {
+            "type": "string",
+            "enum": [
+              "d030072d7c38efb8b5b6382c6b1785522f1c9cd5c7a85f13ad7b6ee6cacb8af7"
+            ]
+          },
+          "claim_paths": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "article_path",
+                "claim_text",
+                "independent_evidence_ids"
+              ],
+              "properties": {
+                "article_path": {
+                  "type": "string",
+                  "pattern": "^article\\.[A-Za-z_]+(?:\\[\\d+\\])?(?:\\.[A-Za-z_]+)?$"
+                },
+                "claim_text": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "independent_evidence_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "support_reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "literal_observations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "current_corpus_literal",
+          "proposed_literal",
+          "observed_literal",
+          "pixel_reason"
+        ],
+        "properties": {
+          "current_corpus_literal": {
+            "type": "string",
+            "minLength": 1
+          },
+          "proposed_literal": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observed_literal": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pixel_reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:8FB9:64be81173b5f"
+            ]
+          }
+        }
+      }
+    },
+    "repair_observations": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "observed_literal",
+          "pixel_reason"
+        ],
+        "properties": {
+          "pixel_reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observed_literal": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 1
+          },
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:8FB9:32952b94ba1d",
+              "ziyuan-2012:8FB9:1889ad75316f",
+              "ziyuan-2012:8FB9:89c9a1e6ae12",
+              "ziyuan-2012:8FB9:ee40858a2ac0"
+            ]
+          }
+        }
+      }
+    },
+    "source_claim_observations": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "supported",
+          "support_reason"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:8FB9:745bc4180f7d",
+              "ziyuan-2012:8FB9:f123ec8f0c27"
+            ]
+          },
+          "supported": {
+            "type": "boolean"
+          },
+          "support_reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

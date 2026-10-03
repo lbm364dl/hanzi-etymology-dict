@@ -24,3 +24,28 @@ entries/1941 nodes/2010 cited relationships, and passed snapshot integrity for 3
 entries. The full current-source audit verifies 35/300 against this book with zero scan errors.
 Snapshot integrity is not source completion: the remaining 265 still need current book gates.
 The live 24-worker/12-model-slot queue continues; 本/边/别 are separate held continuations.
+
+## Later exact checkpoint: 边 publication and 百 source revalidation
+
+边 is now canonical, with exact article
+`dc1ed5a30b474a232cc3dd4e11b7570d3f9556638b4fd5948f0484ad7d2bcd37`
+and dossier `d030072d7c38efb8b5b6382c6b1785522f1c9cd5c7a85f13ad7b6ee6cacb8af7`.
+Both independent Luna-low review receipts pass; original source-resolution outcomes,
+primary-table proof bindings, OCR repair bindings and generation records are retained.
+Printed-folio corpus metadata remains a separate open issue #225.
+
+百 received a fresh source-only identity check and normal idempotent publication.
+Its article/dossier and factual/readability approvals are unchanged. The previous source
+wrapper and retained run are archived; the new real source-resolution-2 is retained.
+
+The tightened current book audit verifies 24/300, with no scan errors. The earlier
+35/300 checkpoint used a less complete identity-observation gate; it is historical,
+not a current certification. The 12-entry bounded revalidation restored 百 and held
+the other 11 for missing valid observations or actual remaining evidence gaps.
+They require targeted evidence/rechecks, not repeated authorship of unchanged prose.
+
+Downstream refresh now includes all 312 approved overlays. Full graph exports 303 v2
+entries, 1942 nodes, 2012 relationships; HSK1 snapshot integrity passes 300/300.
+Fresh Playwright loaded the real 边 learner entry at localhost:8767, showing 辶/力,
+traditional 邊, qualified roles, citations and no horizontal overflow. No entry prose
+was manually changed. This verifies the published display, not full book completion.
