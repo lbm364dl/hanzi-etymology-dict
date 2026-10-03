@@ -1,0 +1,32 @@
+{
+  "source_id": "ziyuan-2012",
+  "requires_coordinator_verification": true,
+  "findings": [
+    {
+      "kind": "pipeline",
+      "title": "Add verified printed page numbers to 字源 page metadata",
+      "details": "Issue #173: printed page metadata is absent for PDF page 814; expected scan label 801 requires independent observation.",
+      "verification": "Update the source page metadata with printed pages 801 and 804 and provenance tied to the inspected scans; verify the source registry and resulting citations expose both PDF and printed page numbers.",
+      "evidence": [
+        "current_source_page_metadata: PDF 814 printed_page null; X-b09cad75f70476a4bee8 records printed p. 801",
+        "current_source_page_metadata: PDF 817 printed_page null; X-7b7bc6874e8d0f1d1358 records printed p. 804",
+        "source_resolution.json: scan pixel hashes and transcription checks for PDF 814",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:包:ziyuan-2012-package-printed-page-metadata:p814"
+    },
+    {
+      "kind": "pipeline",
+      "title": "Add verified printed page numbers to 字源 page metadata",
+      "details": "Issue #173: printed page metadata is absent for PDF page 817; expected scan label 804 requires independent observation.",
+      "verification": "Update the source page metadata with printed pages 801 and 804 and provenance tied to the inspected scans; verify the source registry and resulting citations expose both PDF and printed page numbers.",
+      "evidence": [
+        "current_source_page_metadata: PDF 814 printed_page null; X-b09cad75f70476a4bee8 records printed p. 801",
+        "current_source_page_metadata: PDF 817 printed_page null; X-7b7bc6874e8d0f1d1358 records printed p. 804",
+        "source_resolution.json: scan pixel hashes and transcription checks for PDF 814",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:包:ziyuan-2012-package-printed-page-metadata:p817"
+    }
+  ]
+}
