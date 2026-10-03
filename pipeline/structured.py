@@ -697,6 +697,9 @@ source verification; preserve a source-bound unresolved identity when the glyph 
 Treat dossier.retired_evidence_ids as archived superseded support. Reject their use in current
 article citations, but do not attribute an archived record's wrong claim to the current article
 or demand its deletion from the provenance dossier. Evaluate the actual cited replacements.
+Do not use a retired record as authority for a proposed factual or readability correction.
+Establish any required correction through active evidence or independently inspected source
+pixels; naming a retired record does not restore its claim-support status.
 Before reporting a reversed glyph layout, identify the image by its attachment index and glyph
 ID, quote the exact current text that asserts the disputed direction, and compare it with
 visible landmarks in the upright attachment. A sentence saying only 'vertically arranged'
