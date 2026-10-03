@@ -1,0 +1,40 @@
+{
+  "source_id": "ziyuan-2012",
+  "tracking_issue_url": null,
+  "requires_coordinator_verification": true,
+  "findings": [
+    {
+      "key": "ziyuan-2012:676F:3c62db617dc3",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 676F",
+      "details": "[OCR CORRECTION REQUIRED] 字源, PDF p. 534 / printed p. 521, headword occurrence immediately before “bēi 帮组、之部”: provisional OCR reads “楛(杯)”; direct inspection of the supplied scan pixels shows “桮(杯)”. This is a proposed source-bound correction, not an applied repair. The preceding 木-entry prose in the same OCR excerpt belongs to a neighboring entry and should not support 杯 claims.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: /home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/next-bao-bei-bei-20261003/ziyuan-2012/676F",
+        "Research output: initial-followup/research/result.json"
+      ]
+    },
+    {
+      "key": "ziyuan-2012:676F:b6db135c8bb2",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 676F",
+      "details": "[SCAN VERIFICATION REQUIRED] 嚴學宭, “試論古訓的得失與取捨,” PDF page 2 / article p. 155, passage beginning “杯”字從“不”: the PDF text extraction corrupts the names of the quoted Shuowen forms. Exact printed glyph identities and their sequence remain unverified; they were excluded from the cited claim. The attempted browser screenshot failed.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: /home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/next-bao-bei-bei-20261003/ziyuan-2012/676F",
+        "Research output: initial-followup/research/result.json"
+      ]
+    },
+    {
+      "key": "ziyuan-2012:676F:p534-printed-page-metadata",
+      "kind": "metadata",
+      "title": "Verify missing printed-page metadata for 字源 PDF p. 534",
+      "details": "[PAGE METADATA CHECK] The current consumer corpus row for PDF p. 534 has printed_page=null. The approved article’s cited 字源 record X-9d148883a97b1e30bf85 identifies this scan as printed p. 521. Treat 521 only as a verification hypothesis; the exact original page scan must independently confirm the printed label before any metadata overlay.",
+      "verification": "Read the page number printed on the exact original p. 534 scan and compare it with the missing consumer printed_page field. If it visibly reads 521, apply only a page-metadata overlay bound to current raw OCR evidence and source pixels; leave raw OCR and OCR correction patches unchanged.",
+      "evidence": [
+        "Current consumer PDF p. 534 row: printed_page null; source pixel SHA-256 b1b8aa1a0816b15211ac2e5bf3c31ec681d8c077d8755d777df847c7d5902dfd.",
+        "Approved article citation X-9d148883a97b1e30bf85 reports PDF p. 534 / printed p. 521."
+      ]
+    }
+  ]
+}
