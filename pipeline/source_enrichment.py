@@ -242,7 +242,7 @@ def feedback(source, located=None, source_context=None):
         value.update(located)
     if source_context:
         merged = list(value.get("source_scan_images", [])) + list(source_context)
-        value["source_scan_images"] = merged[:3]
+        value["source_scan_images"] = merged
     return value
 
 
@@ -540,7 +540,7 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
                 "affected_paths": {"type": "array", "items": {"type": "string"}}}}}}}
     inputs = {"article": article, "dossier": dossier, "findings": findings,
               "feedback": {"source_scan_images": (
-                  list(checkpoint["locator"].get("source_scan_images", [])) + list(source_context or []))[:3]}}
+                  list(checkpoint["locator"].get("source_scan_images", [])) + list(source_context or []))}}
     checks = list(literal_checks or [])
     transcriptions = _verify_transcription_checks(job, list(transcription_checks or [])) if transcription_checks else []
     if transcriptions:
@@ -572,7 +572,7 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
             unique_scans.setdefault((scan['path'], scan['pdf_page']), scan)
         if len({(c['source_scan'], c['pdf_page']) for c in observations_to_attach}) > 3:
             raise ValueError('Source observations exceed the source attachment budget')
-        inputs['feedback']['source_scan_images'] = list(unique_scans.values())[:3]
+        inputs['feedback']['source_scan_images'] = list(unique_scans.values())
     if metadata:
         inputs['metadata_checks'] = metadata
         inputs['metadata_check_instruction'] = (

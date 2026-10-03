@@ -57,6 +57,9 @@ class AgentSchemaTests(unittest.TestCase):
             inspect(agent_schema(schema))
         self.assertIn('model_reasoning_effort="{reasoning}"', DEFAULT_COMMAND)
         self.assertIn('--search', DEFAULT_COMMAND)
+        self.assertEqual(DEFAULT_COMMAND[DEFAULT_COMMAND.index('-s') + 1], 'danger-full-access')
+        self.assertIn('approval_policy="never"', DEFAULT_COMMAND)
+        self.assertNotIn('--ignore-user-config', DEFAULT_COMMAND)
 
 
 if __name__ == '__main__':

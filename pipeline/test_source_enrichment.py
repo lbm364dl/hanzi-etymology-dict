@@ -28,6 +28,15 @@ class LocalSources:
 
 
 class SourceEnrichmentTests(unittest.TestCase):
+    def test_research_feedback_preserves_additional_source_pages(self):
+        located = {**copy.deepcopy(LOCATED), 'source_scan_images': [
+            {'path': '/page-1.png', 'pdf_page': 1}]}
+        additional = [{'path': f'/page-{page}.png', 'pdf_page': page}
+                      for page in range(2, 6)]
+        packet = source_enrichment.feedback(SOURCE, located, additional)
+        self.assertEqual(packet['source_scan_images'],
+                         located['source_scan_images'] + additional)
+
     def test_agent_child_inherits_live_source_lock(self):
         job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
         lock_path = job / 'coordinator.lock'

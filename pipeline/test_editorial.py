@@ -415,7 +415,7 @@ class EditorialTests(unittest.TestCase):
         import hashlib
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            scans = [root / 'page-277.png', root / 'page-278.png']
+            scans = [root / f'page-{page}.png' for page in range(277, 281)]
             for index, scan in enumerate(scans): scan.write_bytes(f'scan {index}'.encode())
             argv_path = root / 'argv.json'
             # Test-only executable: records transport arguments, without invoking a model.
@@ -433,12 +433,12 @@ class EditorialTests(unittest.TestCase):
                 for index, scan in enumerate(scans)]}, RESEARCH_SCHEMA, job)
             argv = json.loads(argv_path.read_text())
             at = argv.index('--image')
-            self.assertEqual(argv[at+1:at+3], list(map(str, scans)))
+            self.assertEqual(argv[at+1:at+1+len(scans)], list(map(str, scans)))
             packet = json.JSONDecoder().raw_decode(
                 (job / 'prompt.txt').read_text().split('\nINPUTS:\n', 1)[1])[0]
             records = packet['attached_source_scans']
-            self.assertEqual([r['attachment_index'] for r in records], [1, 2])
-            self.assertEqual([r['pdf_page'] for r in records], [277, 278])
+            self.assertEqual([r['attachment_index'] for r in records], [1, 2, 3, 4])
+            self.assertEqual([r['pdf_page'] for r in records], [277, 278, 279, 280])
             self.assertEqual([r['sha256'] for r in records], [
                 hashlib.sha256(scan.read_bytes()).hexdigest() for scan in scans])
             receipt = json.loads((job / 'meta.json').read_text())

@@ -24,7 +24,7 @@ Local file paths are access metadata, not public citation destinations. Cite bib
 
 ## Resource budget for scans
 
-The owner is still digitising this collection. Prefer existing reviewed exports, embedded searchable text and indexes. Limit an entry's initial local scan investigation to a brief locator check and at most three targeted relevant pages once a reliable locator is found. Do not run whole-book OCR, rendering or visual search, and do not invoke digitisation APIs as part of entry research. If the headword cannot be located efficiently, record that access gap and continue with accessible scholarly references. Additional scan work requires a concrete expected benefit and the owner's direction.
+The owner explicitly authorizes agents to use available tools freely. Prefer existing reviewed exports, searchable text and indexes for efficiency; start with relevant pages and expand as needed. There is no three-page research cap or requirement to ask permission for additional scan work. Agents may use shell scripts, image tools, rendering, browser/search and other available capabilities, and should create or repair their own crops from original scans when supplied crops are inadequate. Coordinate shared corpus and correction-overlay writes with the job owner to avoid collisions, preserve raw OCR, and retain actual source and review receipts. All introduced agents remain gpt-6-luna with low reasoning.
 
 ## Provisional searchable corpus
 

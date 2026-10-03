@@ -26,8 +26,9 @@ from pipeline.structured import (LEARNER, LEARNER_POLICY, MEANING_HISTORY, HISTO
                                  default_unihan_readings_path, _unihan_kmandarin_rows)
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_COMMAND = ["codex", "--search", "exec", "--json", "--ephemeral", "--ignore-user-config",
-                   "-s", "read-only", "-m", "{model}", "-c", 'model_reasoning_effort="{reasoning}"',
+DEFAULT_COMMAND = ["codex", "--search", "exec", "--json", "--ephemeral",
+                   "-s", "danger-full-access", "-c", 'approval_policy="never"',
+                   "-m", "{model}", "-c", 'model_reasoning_effort="{reasoning}"',
                    "--output-schema", "{schema}", "-o", "{output}", "-"]
 SECTION = {"type": "object", "additionalProperties": False,
            "required": ["text", "evidence_ids"], "properties": {
@@ -275,15 +276,18 @@ For a source's sound-role statement, identify the exact printed referent of 'pho
 Inspect the named glyph occurrence and neighboring text; do not replace it with a familiar
 Unicode member in brackets or transfer the whole unit's role to that member by inference.
 Retain an occurrence-bound identity gap when necessary, while preserving supported group roles.
-Do not launch project pipeline/cohort/review/publication commands, nested agents, or background
-jobs. Do not edit repository articles, dossiers, job state, book correction overlays or
-consumer corpora. Return proposed OCR corrections with exact source occurrences for the
-coordinator to verify and apply. Temporary image crops for inspection are allowed; write
-only the designated result and temporary inspection artifacts.
+Use available tools freely to complete the assigned investigation: shell commands, scripts,
+web search, browser access, image inspection, rendering and source retrieval. Choose and repair
+your own inspection crops; a bad supplied crop is a reason to inspect the original and make a
+better one, not to stop. Open additional pages and references whenever they help settle a claim.
+Coordinate shared article, dossier, job-state, book-overlay and corpus writes with the job owner
+to avoid concurrent edits. Preserve independent research, authorship and review roles and exact
+receipts; tools do not certify findings. Return proposed OCR corrections with exact occurrences
+for coordinated verification and application. Any delegated agents must be gpt-6-luna low.
 Read research/local-book-sources.md when available for acquired scholarly references and access
 instructions and scan budgets. The provisional full-book 字源 OCR corpus is searchable; use it
-when its coverage includes a relevant headword or component, with at most three targeted relevant
-scan pages after efficient location. Search simplified and traditional forms separately. A text
+when its coverage includes a relevant headword or component. Start with targeted relevant
+scan pages, then expand as needed without requesting permission. Search simplified and traditional forms separately. A text
 hit may be a quotation, running header or wrong OCR identity rather than the character's entry:
 identify the actual headword, inspect the original scan pixels for every book claim used, and
 check the passage's end and any continuation before paraphrasing it. Check unusual printed
@@ -324,8 +328,8 @@ when it could refer either to a preceding construction or to a following graphic
 the antecedent against the source pixels before treating the wording as citable support.
 For a reduction note, identify which named shapes are reduced and distinguish the observed
 resulting graph from its unverified Unicode identity or proposed meaning.
-Do not launch whole-book OCR, rendering, API digitisation or visual searching; record a locator
-gap and continue online when access is inefficient.
+Prefer existing searchable text and targeted rendering for efficiency. Choose additional
+inspection or processing when it resolves a concrete gap; report genuine access failures.
 When a meaningful grouped component may once have been an independently written whole graph,
 inspect its own dictionary record and earlier variants, not only the containing headword.
 Distinguish original construction from later addition of a meaning determinative and possible
@@ -1336,10 +1340,10 @@ def parse_codex_events(log_text):
 
 
 def source_scan_attachments(scans, start_index=1):
-    if not isinstance(scans, list) or len(scans) > 3 or any(
+    if not isinstance(scans, list) or any(
             not isinstance(scan, dict) or not isinstance(scan.get("path"), str)
             or not isinstance(scan.get("pdf_page"), int) for scan in scans):
-        raise ValueError("Source scans require at most three path/page records")
+        raise ValueError("Source scans require path/page records")
     paths = [Path(scan["path"]) for scan in scans]
     if any(not path.is_file() for path in paths):
         raise ValueError("Source scan image is missing")

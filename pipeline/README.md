@@ -261,7 +261,7 @@ python3 -m pipeline.editorial prepare content/dossiers/6728.json runs/editorial/
 
 ## Running agents
 
-By default, `run` invokes separate Codex agents using `gpt-6-luna` with low reasoning, live search, and a read-only sandbox. After `prepare`, the complete single-character run is:
+By default, `run` invokes separate Codex agents using `gpt-6-luna` with low reasoning, live search, full filesystem/network access and no approval prompts. After `prepare`, the complete single-character run is:
 
 ```bash
 python3 -m pipeline.editorial run runs/editorial/6728
@@ -274,11 +274,11 @@ For example, the Codex CLI invocation used by the sibling graded-readers harness
 ```bash
 python3 -m pipeline.editorial run runs/editorial/6728 \
   --model gpt-6-luna --reasoning low \
-  --command '["codex","--search","exec","--json","--ephemeral","--ignore-user-config","-s","read-only","-m","{model}","-c","model_reasoning_effort=\"{reasoning}\"","--output-schema","{schema}","-o","{output}","-"]' \
+  --command '["codex","--search","exec","--json","--ephemeral","-s","danger-full-access","-c","approval_policy=\"never\"","-m","{model}","-c","model_reasoning_effort=\"{reasoning}\"","--output-schema","{schema}","-o","{output}","-"]' \
   --timeout 600 --max-revisions 2
 ```
 
-The external command determines its own execution permissions; the example requests a read-only agent sandbox and enables live web search. Your chosen runner must expose a browser/search tool to the research agent. Each stage is a separate invocation. Factual and readability reviewers see the dossier and candidate article, without the other reviewer's verdict. A revision sees both reviews, and both reviewers assess the revised article again. Reviewers must produce `pass` with no findings or `revise` with actionable findings. There is no automatic conversion of a failed verdict to approval.
+The default preserves user-configured tools and integrations and explicitly sets the model, reasoning, sandbox and approval policy. Agents may use available tools, additional pages and original-pixel crops freely; coordinate shared-file writes to avoid collisions. The locator starts with a small set of leads for efficiency, but does not cap investigation or truncate supplied review pages. The external command determines its own execution permissions; the example requests full access (`danger-full-access`, `approval_policy="never"`) and enables live web search. Your chosen runner must expose a browser/search tool to the research agent. Each stage is a separate invocation. Factual and readability reviewers see the dossier and candidate article, without the other reviewer's verdict. A revision sees both reviews, and both reviewers assess the revised article again. Reviewers must produce `pass` with no findings or `revise` with actionable findings. There is no automatic conversion of a failed verdict to approval.
 
 The harness validates character identity, formation and component fields, and all citation IDs mechanically. A phonosemantic formation must identify semantic and phonetic component roles. An indivisible pictograph uses its whole form as the pictorial component. Pictorial components depict physical objects or forms in the original scene; semantic components contribute a lexical meaning or category. These roles are not interchangeable, and a compound classified as semantic may contain pictorial components. Corruption is distinct from a regular variant, stylization, simplification or deliberate replacement. Reviewers assess whether the cited evidence actually supports the prose. Dossier limitations must not be inflated into claims that scholarship does not know the answer.
 
@@ -565,7 +565,7 @@ entry. The new receipts still bind the exact complete candidate and dossier. If 
 the dossier, later rounds revert to full review scope.
 
 Use `--research-first` when new source evidence is required before editing. For a small
-scan-backed follow-up, feedback may include `source_scan_images`: up to three objects with an
+scan-backed follow-up, feedback may include `source_scan_images`: page records with an
 absolute `path`, integer `pdf_page`, and an optional verified `printed_page`. The Codex research
 stage receives the exact source images as attachments and their SHA-256 values in its input.
 The images make a prior OCR passage inspectable; they do not certify the OCR or replace the
