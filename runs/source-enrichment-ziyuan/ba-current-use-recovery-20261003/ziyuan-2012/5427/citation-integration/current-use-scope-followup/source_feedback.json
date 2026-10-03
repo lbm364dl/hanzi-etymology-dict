@@ -1,0 +1,21 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "allowed_edit_paths": [
+    "learner/components/1/text"
+  ],
+  "target_language": "zh",
+  "instruction": "Resolve only the current verified readability finding in learner.components[1].text. State plainly that 巴 bā / 吧 ba is a modern Mandarin comparison for the sentence-final particle. Say this comparison does not explain the separate whole-character English loan use in 酒吧, and its sound basis is not established. Keep the wording concise, learner-facing, and direct. Preserve the existing evidence_ids and all other fields exactly; put no source names or citation labels in prose.",
+  "prior_review_proposals": [
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `learner.components[1].text`, clarify that the bā/ba comparison is for 巴 and the sentence-final particle 吧, not the separate 酒吧 use. The card currently says “both read bā/ba in Mandarin in the particle use” but does not explicitly separate that comparison from the bar loan introduced in the overview. Cite `X-92fa7449e817b838541a`, `X-48441c15570c622cece2`, `X-df98e2b39c89a565bffe`, and `X-158bbcea28ebddcec00b` to state that the bar use is distinct and its sound basis is not established."
+      ],
+      "article_hash": "2a8ad03499314915d3f5e7fee50ab7ca0a4b41eb8aa0262066a062de0dcb6f5a",
+      "dossier_hash": "1451aa6e048a4b2c7723f4875b0d76b5b76d2256cbb80289f54c39e1b4490318",
+      "reviewer": "gpt-6-luna:low:readability:01a10002-444d-79a3-a812-c1367b379f45"
+    }
+  ],
+  "source_followup_policy": "The prior proposal is a hypothesis to independently recheck against the current article and cited evidence. It is not an approval or a command to force a verdict."
+}

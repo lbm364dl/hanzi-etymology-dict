@@ -1233,7 +1233,11 @@ class EditorialTests(unittest.TestCase):
                         "takeaway": None}
 
         runner = LearnerRunner()
-        repaired = editorial.repair_learner_length(article, DOSSIER, Path("unused"), runner)
+        context = {'verified_reviews': [{'role': 'readability', 'verdict': 'revise',
+                    'findings': ['Preserve the distinction between the current and historical host.']}]}
+        repaired = editorial.repair_learner_length(article, DOSSIER, Path("unused"), runner, context)
+        self.assertEqual(runner.inputs['required_correction_context'], context)
+        self.assertIn('instead of reverting a correction', runner.inputs['task'])
         self.assertEqual(runner.inputs["required_component_indices"], [0])
         self.assertEqual(repaired["components"], metadata_before)
         self.assertEqual([c["component_index"] for c in repaired["learner"]["components"]], [0])

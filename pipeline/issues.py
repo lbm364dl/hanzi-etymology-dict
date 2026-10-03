@@ -106,6 +106,9 @@ def triage_job(job, source, runner):
                       'future edits. Respect a current exact-pair source resolution; verified '
                       'citation provenance is not a remaining scan-identity error, though a '
                       'separately requested corpus metadata repair may remain unapplied. '
+                      'Before alleging a missing citation, quote the exact current field\'s '
+                      'evidence_ids and confirm the requested ID is actually absent there. '
+                      'Do not repeat an archived finding when that citation is already present. '
                       'Identify a concrete current defect or unapplied repair. '
                       'Umbrella work issues are tracking parents, not finding identities. '
                       'Keep public issue text concise and paraphrase books instead of quoting passages.'}

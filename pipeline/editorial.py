@@ -571,6 +571,14 @@ PROMPTS = {
 }
 
 
+PROMPTS['source_coverage'] += (
+    ' Exact printed transcriptions must preserve simplified versus traditional glyphs '
+    'and neighboring characters; do not normalize an observed quote silently. '
+    'A verified repair of one raw span does not verify or change its neighbors. '
+    'Keep observations scoped to what was actually read or independently checked. '
+    'The findings array lists corrective discrepancies, not positive observations; '
+    'a passing coverage receipt has no corrective findings.')
+
 PROMPTS['factual'] += (
     ' Before reporting an unwanted citation, locate the exact current field and '
     'copy its current evidence_ids into the finding. Confirm the alleged ID is '
@@ -1810,7 +1818,7 @@ def repair_reader_prose(article, dossier, directory, runner):
     return repaired
 
 
-def repair_learner_length(article, dossier, directory, runner):
+def repair_learner_length(article, dossier, directory, runner, review_context=None):
     """Use a bounded learner-only edit for length or coverage errors."""
     for attempt in range(2):
         try:
@@ -1826,12 +1834,16 @@ def repair_learner_length(article, dossier, directory, runner):
             "required_component_indices": [i for i, c in enumerate(article["components"])
                 if component_scope(c, article) == article["character"]],
             "validation_findings": [finding],
+            "required_correction_context": review_context or {},
             "task": "Edit only the learner layer to resolve the exact length or coverage error. "
                     "Include each required_component_index exactly once. Historical-only "
                     "component cards are optional in every language. "
                     "Keep the overview at most 35 words and each component explanation at most "
                     "25 words. Preserve essential meaning, construction and uncertainty. "
-                    "Do not repeat displayed readings or summarize expert alternative accounts. "
+                    "Preserve the specific scoped qualifications required by the supplied "
+                    "correction context; shorten wording instead of reverting a correction. "
+                    "Avoid repeating displayed readings unless needed for that contrast, "
+                    "and keep expert alternative accounts outside the learner layer. "
                     "Return only the learner schema; all expert material is frozen.",
         }, LEARNER, Path(directory) / f"learner-length-{attempt}")
         Draft202012Validator(LEARNER).validate(learner)
@@ -1917,6 +1929,7 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
     """Shared copy-edit, independent-review and bounded repair gates."""
     edit_scope = ({"allowed_edit_paths": feedback["allowed_edit_paths"]}
                   if isinstance(feedback, dict) and feedback.get("allowed_edit_paths") else {})
+    previous_reviews = []
     for revision in range(max_revisions + 1):
         editor_inputs = {"dossier": dossier, "article": article}
         if revision == 0 and feedback:
@@ -1937,7 +1950,8 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
             article = repair_reader_prose(article, dossier,
                 directory / f"round-{revision}", runner)
             article = repair_learner_length(article, dossier,
-                directory / f"round-{revision}", runner)
+                directory / f"round-{revision}", runner,
+                {"feedback": feedback, "verified_reviews": previous_reviews})
             validate_article(article, dossier)
             validate_new_reader_style(article, dossier)
         except (ValueError, ValidationError) as exc:
@@ -1991,6 +2005,7 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
                 directory / f"round-{revision}", runner, source_context))
         write(directory / "article.json", article)
         write(directory / "reviews.json", reviews)
+        previous_reviews = reviews
         state["revision"] = revision
         if all(r["verdict"] == "pass" for r in reviews):
             state["status"] = "approved"
