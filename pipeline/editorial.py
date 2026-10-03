@@ -1386,6 +1386,12 @@ class Runner:
                 if Path(command[0]).name == "codex" and "exec" in command:
                     at = command.index("exec") + 1
                     command[at:at] = ["--image", *map(str, image_paths)]
+                    # Preserve the image arguments without logging custom command secrets.
+                    # This proves delivery configuration, not that a model read the pixels.
+                    meta["image_argument_manifest"] = [
+                        {"path": str(path), "sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest()}
+                        for path in image_paths]
+                    write(meta_path, meta)
 
             with (directory / "stdout.log").open("w") as stdout, (directory / "stderr.log").open("w") as stderr:
                 process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=stdout, stderr=stderr,

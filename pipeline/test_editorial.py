@@ -310,6 +310,10 @@ class EditorialTests(unittest.TestCase):
             self.assertEqual([r['pdf_page'] for r in records], [277, 278])
             self.assertEqual([r['sha256'] for r in records], [
                 hashlib.sha256(scan.read_bytes()).hexdigest() for scan in scans])
+            receipt = json.loads((job / 'meta.json').read_text())
+            self.assertEqual(receipt['image_argument_manifest'], [
+                {'path': str(scan), 'sha256': hashlib.sha256(scan.read_bytes()).hexdigest()}
+                for scan in scans])
 
     def test_source_pixel_hash_is_distinct_from_attachment_file_hash(self):
         import hashlib
