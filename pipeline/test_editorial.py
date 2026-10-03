@@ -24,6 +24,9 @@ class ReviewComponentIndexPacketTests(unittest.TestCase):
                 {'form': '勺', 'scope_character': '旳', 'current_form_component': False},
                 {'form': '白', 'scope_character': '的', 'current_form_component': True},
                 {'form': '勺', 'scope_character': '的', 'current_form_component': True}]}
+            article['learner'] = {'components': [
+                {'component_index': 2, 'text': 'Deliberately mismatched 勺 card.'},
+                {'component_index': 3, 'text': 'Deliberately mismatched 白 card.'}]}
             runner = Runner([sys.executable, str(script), '{output}'], 'gpt-6-luna', 10, 'low')
             for role in ('factual', 'readability'):
                 directory = root/role
@@ -34,6 +37,12 @@ class ReviewComponentIndexPacketTests(unittest.TestCase):
                 self.assertEqual(packet['schema_contract']['current_form_component_indices'], [2, 3])
                 self.assertEqual(packet['article']['components'], article['components'])
                 self.assertIn('never renumber', packet['schema_contract']['component_index_instruction'])
+                targets = packet['schema_contract']['component_index_targets']
+                self.assertEqual(targets[2], {'component_index': 2, 'form': '白',
+                    'scope_character': '的', 'learner_card_texts': ['Deliberately mismatched 勺 card.']})
+                self.assertEqual(targets[3]['form'], '勺')
+                self.assertEqual(targets[0]['learner_card_texts'], [])
+
 
 
 class ResearchAuditURLSchemaTests(unittest.TestCase):

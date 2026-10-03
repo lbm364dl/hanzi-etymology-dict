@@ -1433,7 +1433,14 @@ class Runner:
                 "current_form_component_indices": [index for index, component in enumerate(
                     inputs['article'].get('components', []))
                     if component_is_current_form(component, inputs['article'])],
-                "component_index_instruction": "Learner component_index refers to the zero-based index in the complete article.components array. Historical records remain in that array; never renumber the current records after filtering. Required learner cards cover current_form_component_indices exactly once, while historical cards are optional.",
+                "component_index_targets": [
+                    {"component_index": index, "form": component.get('form'),
+                     "scope_character": component.get('scope_character'),
+                     "learner_card_texts": [card.get('text') for card in
+                         (inputs['article'].get('learner') or {}).get('components', [])
+                         if card.get('component_index') == index]}
+                    for index, component in enumerate(inputs['article'].get('components', []))],
+                "component_index_instruction": "Learner component_index refers to the zero-based index in the complete article.components array. Historical records remain in that array; never renumber the current records after filtering. Required learner cards cover current_form_component_indices exactly once, while historical cards are optional. Compare every card text with the resolved form in component_index_targets; numeric coverage alone does not prove that the text describes that component.",
                 "instruction": "These are the actual supported classifications. disputed is a valid formation type. Do not invent schema restrictions or fields. Evaluate proposed roles with their form_status, explanation, scope and edge certainty together. A whole-character simplified, variant, or derived relation belongs in a character-to-character relationship, never in a self-component card; replacement is for a distinct internal element within one host graph."}}
         if role in ("glyph_visual", "factual", "readability") and inputs.get("dossier", {}).get("glyph_assets"):
             from pipeline.glyph_assets import render_glyph_images
