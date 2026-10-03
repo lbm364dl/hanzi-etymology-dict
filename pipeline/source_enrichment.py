@@ -491,7 +491,18 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
         'An identity gap without such a proposal is not a rejected OCR replacement: '
         'use unresolved_identity_not_used only after independently verifying no article claim '
         'depends on that identity; otherwise pending. Applied repairs require supplied validated '
-        'producer/consumer checks. Retain every original finding.')
+        'producer/consumer checks. Retain every original finding. '
+        'Trace each allegedly affected claim through its actual cited evidence IDs '
+        'and read those records. Mentioning a graph also present in an ambiguous scan '
+        'does not prove dependence on that ambiguous occurrence: independently '
+        'verified transcriptions may support the same graph identity. Conversely, '
+        'a plausible alternative is not independent verification. A book citation '
+        'may support a whole-graph claim without supporting every adjacent claim '
+        'in the same section. For pending, identify the actual affected article '
+        'field and explain which necessary support depends on the unresolved '
+        'occurrence; do not substitute a scan-file path for a claim location. '
+        'Preserve the printed identity gap even when independent support makes '
+        'it immaterial to this exact article.')
     directory = job / "source-resolution"
     attempt = 1
     while directory.exists():
