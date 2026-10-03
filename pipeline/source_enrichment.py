@@ -488,13 +488,26 @@ def _verify_source_claim_checks(job, checks, scans):
 def _source_finding_class(finding):
     """Classify only explicit retained finding language; never infer OCR disposition from plausibility."""
     text = ' '.join(str(finding.get(k, '')) for k in ('title', 'details', 'verification'))
+    if ('[OCR CORRECTION REQUIRED]' in text or 'raw provisional OCR span' in text
+            or 'proposed source-bound OCR correction' in text
+            or ('raw OCR' in text and re.search(r'not use .{0,80}confirmed source text', text, re.I))):
+        return 'transcription_correction'
     if re.search(r'failed to open|not (?:directly )?inspected|was not inspected|not supplied|was not supplied', text, re.I):
         return 'primary_access_gap'
-    if re.search(r'\bidentity\b.{0,45}(?:unresolved|unclear|not established)', text, re.I):
+    identity_term = r'(?:\bidentit(?:y|ies)\b|\bidentification(?:s)?\b|\bUnicode scalar(?:s)?\b)'
+    identity_gap = re.search(identity_term + r'.{0,120}(?:unresolved|unclear|not established|'
+                              r'not (?:separately |individually |independently )?(?:checked|verified|identified)|'
+                              r'did not (?:separately |individually |independently )?(?:check|verify|identify)|'
+                              r'should be verified|not distinct enough|remain(?:s|ed)? uncertain)', text, re.I)
+    identity_gap = identity_gap or re.search(
+        r'did not (?:separately |individually |independently )?(?:check|verify|identify).{0,100}'
+        + identity_term, text, re.I)
+    specimen_gap = re.search(r'\b(?:glyph|specimen|graph|form)s?\b.{0,120}'
+                             r'(?:not (?:separately |individually |independently )?(?:identified|interpreted|checked|verified)|'
+                             r'did not (?:separately |individually |independently )?(?:identify|interpret|check|verify)|'
+                             r'not (?:all )?distinct enough to assign)', text, re.I)
+    if identity_gap or specimen_gap:
         return 'identity_gap'
-    if ('[OCR CORRECTION REQUIRED]' in text or 'raw provisional OCR span' in text
-            or 'proposed source-bound OCR correction' in text):
-        return 'transcription_correction'
     return 'other'
 
 
@@ -859,6 +872,297 @@ def refresh_source_resolution_status(job):
     return pending
 
 
+def auto_resolve_source_findings(job, runner, source_context=None):
+    """Run one separate source-resolution stage for a newly reviewed exact pair."""
+    job = Path(job)
+    article, dossier = editorial.read(job / 'article.json'), editorial.read(job / 'dossier.json')
+    reviews = editorial.read(job / 'reviews.json')
+    editorial.validate_reviews(article, dossier, reviews)
+    findings_path = job / 'source_findings.json'
+    if not findings_path.is_file():
+        return {'status': 'not_required'}
+    findings = editorial.read(findings_path)
+    if not findings.get('requires_coordinator_verification'):
+        return {'status': 'not_required', 'findings_hash': editorial.digest(findings)}
+    state_path = job / 'status.json'
+    state = editorial.read(state_path)
+    original_status = state.get('status')
+    if original_status not in ('approved', 'needs_source_verification', 'published'):
+        return {'status': 'held', 'reason': 'candidate reviews or source evidence are not approved'}
+    if original_status == 'published':
+        audit_path = job / 'source_audit.json'
+        if not audit_path.is_file():
+            return {'status': 'held', 'reason': 'published candidate has no current source audit'}
+        audit = editorial.read(audit_path)
+        saved_source = editorial.read(job / 'source.json')
+        if (audit.get('verified') is not True
+                or audit.get('article_hash') != editorial.digest(article)
+                or audit.get('dossier_hash') != editorial.digest(dossier)
+                or state.get('source_id') != saved_source.get('source_id')
+                or state.get('source_audit_hash') != editorial.digest(audit)):
+            return {'status': 'held', 'reason': 'published candidate source audit is not bound to the reviewed pair'}
+    before = {'article_hash': editorial.digest(article), 'dossier_hash': editorial.digest(dossier),
+              'reviews_hash': editorial.digest(reviews), 'findings_hash': editorial.digest(findings)}
+    attempt_path = (job / 'source-resolution-auto'
+                    / f"{before['article_hash'][:12]}-{before['dossier_hash'][:12]}-{before['findings_hash'][:12]}.json")
+    if attempt_path.is_file():
+        return {**editorial.read(attempt_path), 'status': 'already_attempted'}
+    try:
+        receipt = resolve_source_findings(job, runner, source_context=source_context)
+        state = editorial.read(state_path)
+        final_article, final_dossier = editorial.read(job / 'article.json'), editorial.read(job / 'dossier.json')
+        final_reviews = editorial.read(job / 'reviews.json')
+        if (editorial.digest(final_article) != before['article_hash']
+                or editorial.digest(final_dossier) != before['dossier_hash']
+                or editorial.digest(final_reviews) != before['reviews_hash']):
+            raise ValueError('Source resolution changed the reviewed article, dossier or approvals')
+        pending = _source_findings_pending(job)
+        if pending:
+            state.update(status='needs_source_verification', source_verification_pending=True)
+            editorial.write(state_path, state)
+        result_status = ('needs_source_verification' if pending else
+                         ('published' if original_status == 'published' else 'approved'))
+        record = {**before, 'source_resolution_hash': editorial.digest(receipt),
+                  'source_resolution_result_hash': receipt['result_hash'],
+                  'status': result_status,
+                  'resolved_at': datetime.now(timezone.utc).isoformat(),
+                  'creates_or_changes_authorship_or_review': False}
+    except Exception as exc:
+        state = editorial.read(state_path)
+        state.update(status='needs_source_verification', source_verification_pending=True)
+        editorial.write(state_path, state)
+        record = {**before, 'status': 'needs_source_verification', 'error': str(exc),
+                  'attempted_at': datetime.now(timezone.utc).isoformat(),
+                  'creates_or_changes_authorship_or_review': False}
+    editorial.write(attempt_path, record)
+    state = editorial.read(state_path)
+    state['source_resolution_auto_path'] = str(attempt_path.relative_to(job))
+    state['source_resolution_auto_hash'] = editorial.digest(record)
+    editorial.write(state_path, state)
+    return record
+
+
+def _retained_source_checks(job):
+    """Reuse only exact prior observation payloads whose source checks still verify."""
+    job = Path(job)
+    receipt_path = job / 'source_resolution.json'
+    if not receipt_path.is_file():
+        return {}
+    receipt = editorial.read(receipt_path)
+    checked = _historical_checked_keys(job)
+    fields = {
+        'literal_checks': 'rejected_proposal_scan_matches_corpus',
+        'applied_repairs': 'applied_repair_scan_matches_corpus',
+        'metadata_checks': 'verified_metadata_not_extracted',
+        'transcription_checks': 'verified_transcription_matches_corpus',
+    }
+    reusable = {}
+    for field, disposition in fields.items():
+        checks = receipt.get(field, [])
+        if checks and {item.get('key') for item in checks} <= checked[disposition]:
+            reusable[field] = copy.deepcopy(checks)
+    return reusable
+
+
+def _retained_finding_scans(job, source):
+    """Resolve marked PDF pages to exact current corpus scans for bounded review."""
+    job = Path(job)
+    checkpoint_path = job / 'source_checkpoint.json'
+    scans = []
+    if checkpoint_path.is_file():
+        scans.extend(copy.deepcopy(editorial.read(checkpoint_path).get('locator', {}).get('source_scan_images', [])))
+    findings_path = job / 'source_findings.json'
+    if not findings_path.is_file():
+        return scans
+    pages_needed = set()
+    for finding in editorial.read(findings_path).get('findings', []):
+        text = ' '.join(str(finding.get(field, '')) for field in ('title', 'details', 'verification'))
+        pages_needed.update(int(value) for value in re.findall(
+            r'\bPDF(?:\s+page)?\s*(?:p\.?\s*)?(\d+)\b', text, re.I))
+    if pages_needed:
+        with Path(source['corpus_path']).open() as corpus:
+            for line in corpus:
+                page = json.loads(line)
+                if (page.get('pdf_page_1based') in pages_needed and page.get('source_scan')
+                        and page.get('source_sha256')):
+                    scans.append({'path': page['source_scan'], 'pdf_page': page['pdf_page_1based'],
+                                  'source_pixel_sha256': page['source_sha256'],
+                                  'printed_page': page.get('printed_page')})
+    unique = {}
+    for scan in scans:
+        key = (str(Path(scan['path']).resolve()), scan.get('pdf_page'), scan.get('source_pixel_sha256'))
+        unique[key] = scan
+    return list(unique.values())
+
+
+def revalidate_published_source_jobs(jobs, runner, root=ROOT, workers=1, republish=True, plan_only=False):
+    """Freshly resolve retained source findings for unchanged, exactly published pairs.
+
+    Jobs are deduplicated by character and exact article/dossier hashes. Each candidate
+    must still equal the canonical pair and retain its exact reviews and verified source
+    audit. Prior literal/repair/metadata/transcription checks are replayed only when the
+    current source-bound receipt validates them. Successful formerly-published jobs are
+    returned through the ordinary publication gate; this function never edits authored
+    article, dossier or review data.
+    """
+    if runner.model != 'gpt-6-luna' or runner.reasoning != 'low':
+        raise ValueError('Source-only revalidation requires gpt-6-luna low')
+    if workers < 1:
+        raise ValueError('workers must be positive')
+    candidates, seen = [], set()
+    for raw_job in jobs:
+        job = Path(raw_job)
+        try:
+            article, dossier = editorial.read(job / 'article.json'), editorial.read(job / 'dossier.json')
+            character = article['character']
+            pair = (character, editorial.digest(article), editorial.digest(dossier))
+            canonical, canonical_dossier = _canonical(root, character)
+            if (pair[1] != editorial.digest(canonical)
+                    or pair[2] != editorial.digest(canonical_dossier)):
+                candidates.append((job, None, {'status': 'skipped', 'reason': 'canonical_pair_mismatch'}))
+                continue
+            if pair in seen:
+                candidates.append((job, None, {'status': 'skipped', 'reason': 'duplicate_exact_pair'}))
+                continue
+            seen.add(pair)
+            state = editorial.read(job / 'status.json')
+            if state.get('status') not in ('published', 'approved', 'needs_source_verification'):
+                candidates.append((job, None, {'status': 'skipped', 'reason': 'not_a_published_pair'}))
+                continue
+            reviews = editorial.read(job / 'reviews.json')
+            editorial.validate_reviews(article, dossier, reviews)
+            audit_path = job / 'source_audit.json'
+            audit = editorial.read(audit_path)
+            saved = editorial.read(job / 'source.json')
+            source = saved['registry_source']
+            if (audit.get('verified') is not True
+                    or state.get('source_audit_hash') != editorial.digest(audit)
+                    or not _recorded_source_hash_matches(audit.get('source_hash'),
+                        saved.get('registry_source'), source)
+                    or not _article_used_book_evidence(audit, article, dossier)):
+                candidates.append((job, None, {'status': 'skipped', 'reason': 'source_audit_not_current'}))
+                continue
+            findings = job / 'source_findings.json'
+            if not findings.is_file() or not editorial.read(findings).get('requires_coordinator_verification'):
+                candidates.append((job, None, {'status': 'skipped', 'reason': 'no_source_findings'}))
+                continue
+            pending = _source_findings_pending(job)
+            if not pending:
+                if (state.get('status') == 'approved' and state.get('published_at')
+                        and state.get('canonical_entry')):
+                    candidates.append((job, source, {'status': 'ready', 'action': 'publish_only',
+                        'pair': pair, 'original_status': 'published', 'checks': {},
+                        'article_hash': pair[1], 'dossier_hash': pair[2],
+                        'reviews_hash': editorial.digest(reviews)}))
+                else:
+                    candidates.append((job, None, {'status': 'skipped', 'reason': 'source_gate_already_current'}))
+                continue
+            candidates.append((job, source, {'status': 'ready', 'pair': pair,
+                'original_status': state.get('status'), 'checks': _retained_source_checks(job),
+                'article_hash': pair[1], 'dossier_hash': pair[2],
+                'reviews_hash': editorial.digest(reviews)}))
+        except (OSError, ValueError, KeyError, TypeError, editorial.ValidationError) as exc:
+            candidates.append((job, None, {'status': 'skipped', 'reason': 'invalid_candidate', 'error': str(exc)}))
+
+    if plan_only:
+        return [{'job': str(job), **{k: v for k, v in info.items() if k not in ('pair', 'checks')},
+                 'replayed_check_counts': {key: len(value) for key, value in info.get('checks', {}).items()}}
+                for job, _, info in candidates]
+
+    def process(candidate):
+        job, source, info = candidate
+        if info['status'] != 'ready':
+            return {'job': str(job), **{k: v for k, v in info.items() if k != 'checks'}}
+        pair = info['pair']
+        attempt_dir = job / 'source-only-revalidation' / f'{pair[1][:12]}-{pair[2][:12]}'
+        summary_path = attempt_dir / 'summary.json'
+        lock_dir = Path(root) / 'runs' / '.locks'
+        lock_dir.mkdir(parents=True, exist_ok=True)
+        claim_path = lock_dir / f"source-{_research_source_hash(source)[:16]}-{ord(pair[0]):04X}.lock"
+        try:
+            with claim_path.open('a') as claim:
+                try:
+                    fcntl.flock(claim, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except BlockingIOError:
+                    return {'job': str(job), 'status': 'already_running', 'lock': str(claim_path)}
+                with (job / 'coordinator.lock').open('a') as lock:
+                    try:
+                        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    except BlockingIOError:
+                        return {'job': str(job), 'status': 'already_running',
+                                'lock': str(job / 'coordinator.lock')}
+                    try:
+                        if summary_path.is_file():
+                            return {'job': str(job), **editorial.read(summary_path), 'status': 'already_attempted'}
+                        attempt_dir.mkdir(parents=True, exist_ok=True)
+                        current, current_dossier = editorial.read(job / 'article.json'), editorial.read(job / 'dossier.json')
+                        reviews = editorial.read(job / 'reviews.json')
+                        if (editorial.digest(current) != info['article_hash']
+                                or editorial.digest(current_dossier) != info['dossier_hash']
+                                or editorial.digest(reviews) != info['reviews_hash']):
+                            raise ValueError('Exact approved pair changed before source-only review')
+                        canonical, canonical_dossier = _canonical(root, pair[0])
+                        if (editorial.digest(canonical) != info['article_hash']
+                                or editorial.digest(canonical_dossier) != info['dossier_hash']):
+                            raise ValueError('Canonical pair changed before source-only review')
+                        prior_receipt = job / 'source_resolution.json'
+                        if prior_receipt.is_file():
+                            shutil.copy2(prior_receipt, attempt_dir / 'prior-source-resolution.json')
+                        editorial.write(attempt_dir / 'inputs.json', {
+                            'article_hash': info['article_hash'], 'dossier_hash': info['dossier_hash'],
+                            'reviews_hash': editorial.digest(reviews),
+                            'findings_hash': editorial.digest(editorial.read(job / 'source_findings.json')),
+                            'replayed_check_counts': {key: len(value) for key, value in info['checks'].items()},
+                        })
+                        summary = None
+                        if info.get('action') == 'publish_only':
+                            summary = {'status': 'approved', 'article_hash': info['article_hash'],
+                                'dossier_hash': info['dossier_hash'],
+                                'source_resolution_hash': editorial.digest(editorial.read(job / 'source_resolution.json')),
+                                'pending': False, 'scan_count': 0,
+                                'creates_or_changes_authorship_or_review': False}
+                        else:
+                            local_runner = copy.copy(runner)
+                            inherited = tuple(getattr(runner, 'inherited_lock_fds', ()))
+                            local_runner.inherited_lock_fds = tuple(dict.fromkeys(
+                                (*inherited, claim.fileno(), lock.fileno())))
+                            scan_context = _retained_finding_scans(job, source)
+                            receipt = resolve_source_findings(job, local_runner, source_context=scan_context,
+                                                              **info['checks'])
+                            pending = _source_findings_pending(job)
+                            summary = {'status': 'needs_source_verification' if pending else 'approved',
+                                'article_hash': info['article_hash'], 'dossier_hash': info['dossier_hash'],
+                                'result_hash': receipt['result_hash'], 'source_resolution_hash': editorial.digest(receipt),
+                                'pending': pending, 'scan_count': len(scan_context),
+                                'creates_or_changes_authorship_or_review': False}
+                        if (summary.get('status') == 'approved' and info['original_status'] == 'published'
+                                and republish):
+                            state = editorial.read(job / 'status.json')
+                            if state.get('issue_sync_status') == 'synced':
+                                summary['publication'] = _publish_job_locked(job, source, root)
+                                summary['status'] = summary['publication']['status']
+                            else:
+                                summary['publication'] = {'status': 'pending_issue_sync'}
+                        editorial.write(summary_path, summary)
+                        return {'job': str(job), **summary}
+                    except Exception as exc:
+                        summary = {'status': 'failed', 'error': str(exc),
+                            'article_hash': info['article_hash'], 'dossier_hash': info['dossier_hash'],
+                            'creates_or_changes_authorship_or_review': False}
+                        editorial.write(summary_path, summary)
+                        return {'job': str(job), **summary}
+                    finally:
+                        fcntl.flock(lock, fcntl.LOCK_UN)
+        except OSError as exc:
+            return {'job': str(job), 'status': 'failed', 'error': str(exc)}
+
+    if workers == 1:
+        return [process(candidate) for candidate in candidates]
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        return list(pool.map(process, candidates))
+
+
 def resolve_source_findings(job, runner, source_context=None, literal_checks=None, repair_checks=None,
                             metadata_checks=None, transcription_checks=None, source_claim_checks=None):
     """Check whether retained uncertainty is immaterial; actual OCR errors stay blocked."""
@@ -1062,7 +1366,9 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
                 'properties': {'key': {'type': 'string', 'enum': [c['key'] for c in claim_checks]},
                     'supported': {'type': 'boolean'},
                     'support_reason': {'type': 'string', 'minLength': 1}}}}
-    allowed_dispositions = ['pending', 'unresolved_identity_not_used']
+    allowed_dispositions = ['pending']
+    if identity_checks:
+        allowed_dispositions.append('unresolved_identity_not_used')
     if checks:
         allowed_dispositions.append('rejected_proposal_scan_matches_corpus')
     if repairs:
@@ -1561,6 +1867,11 @@ def _run_queue(cohort, source, output, runner, limit, workers, root, max_revisio
                 if state.get("status") == "approved":
                     state["status"] = "needs_source_verification"
             editorial.write(job / "status.json", state)
+            if (scan_findings["requires_coordinator_verification"]
+                    and state.get('status') == 'needs_source_verification'
+                    and audit.get('verified') is True):
+                auto_resolve_source_findings(job, runner, source_context=followup.get('source_scan_images'))
+                state = editorial.read(job / 'status.json')
             if state.get("status") == "approved":
                 return complete_approval(state)
             issue_sync = sync_findings(state)

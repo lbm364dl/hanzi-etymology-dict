@@ -41,9 +41,26 @@ class SourceEnrichmentTests(unittest.TestCase):
     def test_identity_gap_classifier_handles_identity_qualified_by_other_nouns(self):
         for details in ('the printed special component identity is unresolved',
                         'the printed unit identity remains unclear',
-                        'its exact Unicode identity is not established'):
+                        'its exact Unicode identity is not established',
+                        'their exact Unicode identities are not established',
+                        'individual specimen identities were not separately checked against cited works',
+                        'individual specimen identities or dates were not verified',
+                        'this research did not verify individual specimen identities or dates',
+                        'the identity and intended scope should be verified',
+                        'small individual glyph forms were not independently identified',
+                        'numbered glyph drawings and their identifications were not individually checked',
+                        'glyph specimens were not individually interpreted',
+                        'doubled forms are not all distinct enough to assign Unicode identities'):
             self.assertEqual(source_enrichment._source_finding_class({'kind': 'ocr', 'details': details}),
                              'identity_gap')
+
+    def test_source_finding_classifier_keeps_unresolved_ocr_literals_out_of_identity_lane(self):
+        self.assertEqual(source_enrichment._source_finding_class({'kind': 'ocr',
+            'details': '[OCR CORRECTION REQUIRED] raw OCR span has no verified replacement'}),
+            'transcription_correction')
+        self.assertEqual(source_enrichment._source_finding_class({'kind': 'ocr',
+            'details': '[SCAN VERIFICATION REQUIRED] raw OCR reads 升; do not use this scalar as confirmed source text'}),
+            'transcription_correction')
 
     def test_verified_source_claim_requires_hash_bound_luna_research_and_pixels(self):
         from PIL import Image
@@ -477,6 +494,129 @@ class SourceEnrichmentTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, 'Transport checked'):
                 source_enrichment.resolve_source_findings(job, Runner(), source_context=source_context,
                                                          repair_checks=[{'key':'repair'}])
+
+    def test_auto_source_resolution_is_a_bounded_separate_stage(self):
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        article, dossier = editorial.read(job/'source_article.json'), editorial.read(job/'source_dossier.json')
+        reviews = [editorial.make_review(role, 'pass', [], article, dossier, 'auto-' + role)
+                   for role in ('factual', 'readability')]
+        findings = {'requires_coordinator_verification': True,
+                    'findings': [{'key': 'glyph', 'kind': 'ocr', 'details': 'Printed identity unresolved.'}]}
+        for name, value in [('article.json', article), ('dossier.json', dossier),
+                            ('reviews.json', reviews), ('source_findings.json', findings),
+                            ('status.json', {'status': 'approved'})]:
+            editorial.write(job/name, value)
+        fake_receipt = {'result_hash': 'real-agent-result-fixture'}
+        with patch.object(source_enrichment, 'resolve_source_findings', return_value=fake_receipt) as resolve, \
+             patch.object(source_enrichment, '_source_findings_pending', return_value=False):
+            result = source_enrichment.auto_resolve_source_findings(job, object(), source_context=[])
+            self.assertEqual(result['status'], 'approved')
+            resolve.assert_called_once_with(job, resolve.call_args.args[1], source_context=[])
+            second = source_enrichment.auto_resolve_source_findings(job, object(), source_context=[])
+            self.assertEqual(second['status'], 'already_attempted')
+            self.assertEqual(resolve.call_count, 1)
+        self.assertEqual(editorial.digest(editorial.read(job/'article.json')), editorial.digest(article))
+        self.assertEqual(editorial.digest(editorial.read(job/'dossier.json')), editorial.digest(dossier))
+        self.assertEqual(editorial.digest(editorial.read(job/'reviews.json')), editorial.digest(reviews))
+
+    def test_auto_source_resolution_failure_keeps_exact_pair_held(self):
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        article, dossier = editorial.read(job/'source_article.json'), editorial.read(job/'source_dossier.json')
+        reviews = [editorial.make_review(role, 'pass', [], article, dossier, 'auto-fail-' + role)
+                   for role in ('factual', 'readability')]
+        findings = {'requires_coordinator_verification': True, 'findings': [{'key':'ocr', 'kind':'ocr'}]}
+        for name, value in [('article.json', article), ('dossier.json', dossier),
+                            ('reviews.json', reviews), ('source_findings.json', findings),
+                            ('status.json', {'status': 'approved'})]:
+            editorial.write(job/name, value)
+        with patch.object(source_enrichment, 'resolve_source_findings', side_effect=RuntimeError('fixture failure')):
+            result = source_enrichment.auto_resolve_source_findings(job, object())
+        self.assertEqual(result['status'], 'needs_source_verification')
+        self.assertEqual(editorial.read(job/'status.json')['status'], 'needs_source_verification')
+        self.assertIn('error', result)
+
+    def test_source_only_revalidation_preserves_exact_pair_and_republishes_through_gate(self):
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        article = editorial.read(job / 'source_article.json')
+        dossier = editorial.read(job / 'source_dossier.json')
+        reviews = [editorial.make_review(role, 'pass', [], article, dossier, 'revalidate-' + role)
+                   for role in ('factual', 'readability')]
+        for name, value in [('article.json', article), ('dossier.json', dossier), ('reviews.json', reviews)]:
+            editorial.write(job / name, value)
+        from pipeline.source_adoption import _used_ids
+        used = _used_ids(article)
+        citations = [e for e in dossier['evidence'] if e.get('id') in used]
+        audit = {'verified': True, 'source_hash': source_enrichment._research_source_hash(SOURCE),
+                 'citations': citations}
+        editorial.write(job / 'source_audit.json', audit)
+        editorial.write(job / 'source_findings.json', {'requires_coordinator_verification': True,
+            'findings': [{'key': 'identity', 'kind': 'ocr',
+                'details': 'The printed component identity remains unresolved.'}]})
+        editorial.write(job / 'status.json', {'status': 'published', 'source_audit_hash': editorial.digest(audit),
+            'issue_sync_status': 'synced'})
+        old_receipt = {'prior': 'preserved'}
+        editorial.write(job / 'source_resolution.json', old_receipt)
+
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+
+        def resolve(candidate, local_runner, source_context=None, **checks):
+            self.assertEqual(candidate, job)
+            self.assertEqual(source_context, [])
+            self.assertEqual(checks, {})
+            editorial.write(job / 'status.json', {'status': 'approved', 'source_audit_hash': editorial.digest(audit),
+                'issue_sync_status': 'synced'})
+            fresh = {'fresh': True}
+            editorial.write(job / 'source_resolution.json', fresh)
+            return {'result_hash': 'fresh-result', 'fresh_receipt': fresh}
+
+        with patch.object(source_enrichment, '_source_findings_pending', side_effect=[True, False]), \
+             patch.object(source_enrichment, 'resolve_source_findings', side_effect=resolve), \
+             patch.object(source_enrichment, '_publish_job_locked', return_value={'status': 'published'}) as publish:
+            rows = source_enrichment.revalidate_published_source_jobs([job], Runner(), self.root)
+        self.assertEqual(rows[0]['status'], 'published', rows[0])
+        self.assertTrue(rows[0]['creates_or_changes_authorship_or_review'] is False)
+        publish.assert_called_once()
+        self.assertEqual(editorial.digest(editorial.read(job / 'article.json')), editorial.digest(article))
+        self.assertEqual(editorial.digest(editorial.read(job / 'dossier.json')), editorial.digest(dossier))
+        self.assertEqual(editorial.digest(editorial.read(job / 'reviews.json')), editorial.digest(reviews))
+        self.assertEqual(editorial.read(job / 'source-only-revalidation' /
+            f"{editorial.digest(article)[:12]}-{editorial.digest(dossier)[:12]}" /
+            'prior-source-resolution.json'), old_receipt)
+        self.assertEqual(editorial.read(job / 'source_resolution.json'), {'fresh': True})
+
+    def test_source_only_revalidation_finalizes_helper_downgraded_published_job(self):
+        job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+        article = editorial.read(job / 'source_article.json')
+        dossier = editorial.read(job / 'source_dossier.json')
+        reviews = [editorial.make_review(role, 'pass', [], article, dossier, 'finalize-' + role)
+                   for role in ('factual', 'readability')]
+        for name, value in [('article.json', article), ('dossier.json', dossier), ('reviews.json', reviews),
+                            ('source_findings.json', {'requires_coordinator_verification': True,
+                                'findings': [{'key': 'identity', 'details': 'Identity unresolved.'}]}),
+                            ('source_resolution.json', {'verified': True})]:
+            editorial.write(job / name, value)
+        from pipeline.source_adoption import _used_ids
+        used = _used_ids(article)
+        audit = {'verified': True, 'source_hash': source_enrichment._research_source_hash(SOURCE),
+                 'citations': [e for e in dossier['evidence'] if e.get('id') in used]}
+        editorial.write(job / 'source_audit.json', audit)
+        editorial.write(job / 'status.json', {'status': 'approved', 'source_audit_hash': editorial.digest(audit),
+            'issue_sync_status': 'synced', 'published_at': '2026-10-03T00:00:00Z',
+            'canonical_entry': str(self.root / 'content/entries/6728.json')})
+
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+
+        with patch.object(source_enrichment, '_source_findings_pending', return_value=False), \
+             patch.object(source_enrichment, 'resolve_source_findings') as resolve, \
+             patch.object(source_enrichment, '_publish_job_locked', return_value={'status': 'published'}) as publish:
+            rows = source_enrichment.revalidate_published_source_jobs([job], Runner(), self.root)
+        self.assertEqual(rows[0]['status'], 'published', rows[0])
+        resolve.assert_not_called()
+        publish.assert_called_once()
 
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
