@@ -1595,6 +1595,8 @@ class Runner:
                 os.killpg(process.pid, signal.SIGKILL)
                 process.wait()
             meta.update(status="failed", error=str(exc))
+            from pipeline.agent_failures import failure_metadata
+            meta.update(failure_metadata(exc, directory))
             raise
         finally:
             try:
