@@ -141,6 +141,9 @@ upper assembly with a symbol for only its top strokes or concatenate subpart sym
 new, unattested form identifier. Update component-indexed learner cards when splitting a group.
 Review the displayed symbol against
 the prose and graph scope, including retained enclosing or roof strokes.
+If the learner account claims a complete current-form split, check that its named units
+account for the visible groups. A subpart inside a larger assembly does not represent
+that whole assembly; retain or explain the other visible portion even when its role is unknown.
 Do not describe current strokes using the appearance of historical predecessor elements.
 Separate visible identity, current function and historical function. Uncertainty in an ancient
 analysis must not erase supported current decomposition or force every role to unknown.
@@ -614,6 +617,9 @@ The research agent's statement that it inspected a scan does not replace this in
 Report a mismatch against the cited claim and require corrected source evidence before approval.
 A visible grouped assembly may be represented by its accurate subcomponent records, with their
 joint relationship explained in prose, when no verified literal identifier represents the whole.
+Before requesting a current-form split, verify the complete visible assembly. Do not list
+only one internal subpart and a neighboring radical as if they account for the whole graph.
+Qualify an uncertain function without deleting a clearly visible remaining portion.
 When using subpart records, put the joint assembly explanation in the overview or formation,
 and let each indexed card primarily explain its own part rather than repeat the assembly account.
 That is explicitly valid: do not require an additional group node or replacing those subparts
