@@ -126,6 +126,16 @@ class AttentionRepairTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'source refresh is required'):
                     attention_repair._check_locator(job, '木', {'id': 'book'}, {'character': '木'})
 
+    def test_only_literal_replacement_findings_block_continuation(self):
+        findings = {'findings': [
+            {'key': 'literal', 'kind': 'ocr', 'details':
+             '[OCR CORRECTION REQUIRED] Exact raw OCR span proposes replacing a character.'},
+            {'key': 'identity', 'kind': 'ocr', 'details':
+             '[SCAN VERIFICATION REQUIRED] Rare specimen identity remains unresolved; no article claim depends on it.'},
+        ]}
+        blockers = attention_repair._transcription_correction_findings(findings)
+        self.assertEqual([item['key'] for item in blockers], ['literal'])
+
     def test_runner_child_inherits_live_job_resource_lock(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

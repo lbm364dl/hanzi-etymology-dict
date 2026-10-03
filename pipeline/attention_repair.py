@@ -128,6 +128,12 @@ def _review_context(prior_job, error, findings):
     }
 
 
+def _transcription_correction_findings(findings):
+    """Only explicit literal-replacement proposals block reuse of research."""
+    return [item for item in findings.get('findings', [])
+            if source_enrichment._source_finding_class(item) == 'transcription_correction']
+
+
 def _retain_research(prior_job, new_job):
     """Copy exact completed Luna-low research result/receipt bytes for later source audit."""
     copied = []
@@ -168,8 +174,10 @@ def run_one(prior_job, output_job, source, runner, root=source_enrichment.ROOT,
             raise ValueError('Output already contains an attention-repair attempt; use a new directory')
         prior_dossier = editorial.read(prior_job / 'dossier.json') if \
             (prior_job / 'dossier.json').is_file() else editorial.read(prior_job / 'source_dossier.json')
-        if findings.get('findings') and any(item.get('kind') == 'ocr' for item in findings['findings']):
-            raise ValueError('Known OCR/source-literal findings must be verified before editorial continuation')
+        literal_blockers = _transcription_correction_findings(findings)
+        if literal_blockers:
+            keys = ', '.join(item.get('key', 'unkeyed') for item in literal_blockers)
+            raise ValueError('Unverified source transcription replacement blocks editorial continuation: ' + keys)
         latest = prior_job / 'article.json'
         dossier = prior_dossier
         article, used_article_path = _validated_draft(prior_job, dossier)

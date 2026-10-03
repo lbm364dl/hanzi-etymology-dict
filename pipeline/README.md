@@ -104,8 +104,10 @@ current source locator, and runs new Luna low authorship and independent reviews
 python3 -m pipeline.attention_repair --registry research/digitised-sources.json --source ziyuan-2012 --output runs/attention-repair-next --workers 6 --agents 24 runs/old-source-job/ziyuan-2012/5531
 ```
 
-Use a new output folder for each attempt. Known OCR findings require scan verification
-first. Optional `--edit-scopes` supplies a JSON object mapping characters to allowed
+Use a new output folder for each attempt. Proposed literal OCR replacements require
+scan verification first. Unresolved specimen identities can remain in the research
+and proceed to author/review repair; their findings are carried forward and the final
+source/publication gate remains held. Optional `--edit-scopes` supplies a JSON object mapping characters to allowed
 article paths; paths must not overlap. This command retains candidates and findings;
 normal source resolution, issue synchronization and publication gates still apply.
 Select `--source` explicitly when the registry contains more than one book.

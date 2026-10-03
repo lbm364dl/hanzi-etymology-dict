@@ -13,3 +13,7 @@ A separate timeout-recovery launch mistakenly supplied the full300 cohort to a s
 ## Live deployment finding
 
 A recovery supervisor loaded an intermediate shared-module version where the patch call referenced an overlap helper not available in its globals. Six author jobs failed with NameError; actual research receipts remain intact. The hot-path overlap checker is being made self-contained and exercised without the module helper. The affected supervisor received one SIGINT and drains its current work before a verified clean-process handoff; the saved tail cohort supervisor remains independent. New code alone does not repair these failed candidates or certify entries.
+
+## Distinguish literal replacement from specimen identity
+
+Fresh timeout recovery exposed a broader preflight defect: kind:ocr was used for both literal replacement proposals and unresolved historical specimens. Blocking all of them prevented independent author repair even when no raw text replacement was proposed. The helper now uses the shared finding classifier: explicit transcription corrections still require scan verification first; unresolved identities survive into fresh authorship/reviews and keep final source publication held. Contrasting tests protect both paths. Actual 电/歌 identity cases and 后 without findings are now in separate live fresh-author attempts; 错/关/汉 proposed replacements are being occurrence-verified first. No character-name conditions or source finding removals were introduced.
