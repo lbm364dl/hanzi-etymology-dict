@@ -22,9 +22,27 @@ def _used_ids(value):
 
 def valid_audit(job, audit, article, dossier):
     job = Path(job)
+    stage = audit.get('coverage_review_path', 'source-coverage')
+    if stage not in ('source-coverage', 'source-coverage-adjudication'):
+        return False
     try:
-        result = editorial.read(job / 'source-coverage/result.json')
-        meta = editorial.read(job / 'source-coverage/meta.json')
+        result = editorial.read(job / stage / 'result.json')
+        meta = editorial.read(job / stage / 'meta.json')
+        if stage == 'source-coverage-adjudication':
+            initial = editorial.read(job / 'source-coverage/result.json')
+            initial_meta = editorial.read(job / 'source-coverage/meta.json')
+            binding = editorial.read(job / stage / 'binding.json')
+            if (initial.get('verdict') != 'revise'
+                    or initial_meta.get('status') != 'complete'
+                    or initial_meta.get('role') != 'source_coverage'
+                    or initial_meta.get('model') != 'gpt-6-luna'
+                    or initial_meta.get('reasoning') != 'low'
+                    or initial_meta.get('result_hash') != editorial.digest(initial)
+                    or binding != {'article_hash': editorial.digest(article),
+                                   'dossier_hash': editorial.digest(dossier),
+                                   'initial_result_hash': editorial.digest(initial),
+                                   'final_result_hash': editorial.digest(result)}):
+                return False
     except (OSError, ValueError):
         return False
     return (audit.get('article_hash') == editorial.digest(article)
@@ -35,6 +53,45 @@ def valid_audit(job, audit, article, dossier):
             and meta.get('model') == 'gpt-6-luna' and meta.get('reasoning') == 'low'
             and result.get('verdict') == 'pass' and not result.get('findings')
             and bool(result.get('evidence_ids')))
+
+
+def check_coverage(inputs, schema, job, runner):
+    """Retain a failed check and obtain one independent exact-pair adjudication."""
+    if runner.model != 'gpt-6-luna' or runner.reasoning != 'low':
+        raise ValueError('Source coverage requires gpt-6-luna low')
+    job = Path(job)
+    result = runner.run('source_coverage', inputs, schema, job / 'source-coverage')
+    if editorial.read(job / 'source-coverage/result.json') != result:
+        raise ValueError('Source check differs from saved actual agent output')
+    if result['verdict'] != 'revise' or not result['findings']:
+        return result, 'source-coverage'
+    initial = copy.deepcopy(result)
+    initial_meta = editorial.read(job / 'source-coverage/meta.json')
+    if (initial_meta.get('status') != 'complete'
+            or initial_meta.get('role') != 'source_coverage'
+            or initial_meta.get('model') != 'gpt-6-luna'
+            or initial_meta.get('reasoning') != 'low'
+            or initial_meta.get('result_hash') != editorial.digest(initial)):
+        raise ValueError('Adjudication requires a completed actual initial coverage receipt')
+    result = runner.run('source_coverage', {**inputs,
+        'prior_review': initial,
+        'adjudication_task': 'Independently verify the prior corrective findings against '
+            'this exact article, cited evidence and attached original scans. Quote the '
+            'current field and citations before claiming omission or misattribution. '
+            'A proposal already reported with qualifications is not missing, and an '
+            'independently sourced modern decomposition need not be asserted by a '
+            'book discussing a different historical form. Preserve genuine remaining '
+            'defects; a pass is appropriate only if no material corrective finding '
+            'remains. Do not edit the candidate or manufacture observations.'},
+        schema, job / 'source-coverage-adjudication')
+    if editorial.read(job / 'source-coverage-adjudication/result.json') != result:
+        raise ValueError('Adjudication differs from saved actual agent output')
+    editorial.write(job / 'source-coverage-adjudication/binding.json', {
+        'article_hash': editorial.digest(inputs['article']),
+        'dossier_hash': editorial.digest(inputs['dossier']),
+        'initial_result_hash': editorial.digest(initial),
+        'final_result_hash': editorial.digest(result)})
+    return result, 'source-coverage-adjudication'
 
 
 def adopt(character, source, output, runner, root=se.ROOT):
@@ -83,19 +140,18 @@ def _adopt(character, source, output, runner, root):
                   'verdict': {'enum': ['pass', 'revise']},
                   'evidence_ids': {'type': 'array', 'items': {'type': 'string', 'enum': [e['id'] for e in citations]}},
                   'findings': {'type': 'array', 'items': {'type': 'string'}}}}
-    result = runner.run('source_coverage', {'character': character, 'source': se._research_source(source),
+    result, coverage_stage = check_coverage({'character': character, 'source': se._research_source(source),
         'article': article, 'dossier': dossier, 'book_evidence': citations,
-        'feedback': {**located, 'source_scan_images': located['source_scan_images']}}, schema, job / 'source-coverage')
-    if editorial.read(job / 'source-coverage/result.json') != result:
-        raise ValueError('Source check differs from saved actual agent output')
+        'feedback': {**located, 'source_scan_images': located['source_scan_images']}}, schema, job, runner)
     verified = result['verdict'] == 'pass' and not result['findings'] and bool(result['evidence_ids'])
     audit = {'source_id': source['id'], 'source_hash': se._research_source_hash(source),
              'mode': 'existing_approved_research', 'verified': verified,
              'coverage_result_hash': editorial.digest(result),
+             'coverage_review_path': coverage_stage,
              'article_hash': editorial.digest(article), 'dossier_hash': editorial.digest(dossier),
              'citations': [item for item in citations if item['id'] in result['evidence_ids']]}
     editorial.write(job / 'source_audit.json', audit)
-    editorial.write(job / 'source-coverage/verified-review.json', result)
+    editorial.write(job / coverage_stage / 'verified-review.json', result)
     editorial.write(job / 'source_checkpoint.json', {'character': character, 'source_id': source['id'],
         'registry_source_hash': se._research_source_hash(source), 'locator': located,
         'locator_hash': se._locator_hash(located), 'status': 'source_checked'})

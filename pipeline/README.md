@@ -159,6 +159,13 @@ The saved coverage result is bound to the exact article and dossier hashes and r
 when calculating source completion. This avoids unnecessary rewriting while retaining a
 reviewable source check; entries without used book evidence still require enrichment.
 
+An actual coverage `revise` receipt may receive one independent Luna-low original-scan
+adjudication through `source_adoption.check_coverage`. Both results remain separate and
+the final audit binds the initial/final result hashes to the unchanged exact pair.
+Adjudication checks the reported current fields and citation boundaries; a genuine
+remaining discrepancy still blocks adoption. It does not authorize a coordinator to
+change review verdicts, reuse a result on another candidate, or edit approved prose.
+
 ## GitHub findings
 
 Track material errors, mistakes, improvements and clarifications in GitHub issues. The current

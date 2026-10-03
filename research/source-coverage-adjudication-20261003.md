@@ -1,0 +1,7 @@
+# Exact-pair source coverage adjudication
+
+The 百 and 帮 smoke runs exposed false omission and source-mismatch findings from source coverage: one reviewer overlooked a proposal explicitly in the current fields; another treated an independently cited modern decomposition as a claim that must occur in the book's separate traditional-form account. Each earlier result was retained and a separate actual original-scan check resolved the disagreement. No coordinator converted a revise result to pass.
+
+The reusable adoption check now permits one separate Luna-low coverage adjudication after a completed actual revise receipt. It receives the unchanged exact candidate, book evidence, original scan attachments and prior findings. Genuine remaining discrepancies remain blocking. Initial and final results are retained in separate directories; a binding records their hashes and the exact article/dossier hashes. The source audit names the selected final review path. Current publication verification rejects changed bindings, original receipt/result hashes, wrong roles/models or unsupported paths. Existing unadjudicated actual passing receipts remain valid.
+
+Fixture tests demonstrate preserved rejected findings, unchanged published content, and invalidation when the adjudication binding changes. They are synthetic contract tests, not production source observations or review approvals. Actual 百 handoff must carry its real receipts and exact hashes through this gate before publication.

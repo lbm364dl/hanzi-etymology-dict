@@ -64,6 +64,9 @@ class SourceAdoptionTests(unittest.TestCase):
                 result = {'verdict': 'revise', 'evidence_ids': ['source:1'],
                           'findings': ['A material claim needs more research.']}
                 editorial.write(Path(directory) / 'result.json', result)
+                editorial.write(Path(directory) / 'meta.json', {
+                    'role': role, 'status': 'complete', 'model': self.model,
+                    'reasoning': self.reasoning, 'result_hash': editorial.digest(result)})
                 return result
         before = self.entry.read_bytes()
         with patch.object(se, '_load_source_tools', return_value=Locator()), \
@@ -82,6 +85,41 @@ class SourceAdoptionTests(unittest.TestCase):
             reasoning = 'low'
         with self.assertRaisesRegex(ValueError, 'No used page-specific evidence'):
             source_adoption.adopt('木', source, self.root / 'runs', Runner(), self.root)
+
+    def test_independent_adjudication_preserves_failed_check_and_binds_exact_pair(self):
+        class Locator(LocalSources):
+            def locate_sources(self, source, character, dossier):
+                return {**super().locate_sources(source, character, dossier),
+                        'source_scan_images': [{'path': '/original.png', 'pdf_page': 123}]}
+        class FixtureRunner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+            def run(self, role, inputs, schema, directory):
+                second = Path(directory).name == 'source-coverage-adjudication'
+                if second:
+                    self_case.assertEqual(inputs['prior_review']['verdict'], 'revise')
+                    self_case.assertIn('source_scan_images', inputs['feedback'])
+                result = {'verdict': 'pass' if second else 'revise',
+                          'evidence_ids': ['source:1'],
+                          'findings': [] if second else ['Fixture omission allegation.']}
+                editorial.write(Path(directory) / 'result.json', result)
+                editorial.write(Path(directory) / 'meta.json', {
+                    'role': role, 'status': 'complete', 'model': self.model,
+                    'reasoning': self.reasoning, 'result_hash': editorial.digest(result)})
+                return result
+        self_case = self
+        before = self.entry.read_bytes()
+        with patch.object(se, '_load_source_tools', return_value=Locator()):
+            result = source_adoption.adopt('木', SOURCE, self.root / 'runs', FixtureRunner(), self.root)
+            self.assertEqual(result['status'], 'published')
+            self.assertEqual(self.entry.read_bytes(), before)
+            job = se.job_path(self.root / 'runs', SOURCE['id'], '木')
+            self.assertEqual(editorial.read(job / 'source-coverage/result.json')['verdict'], 'revise')
+            self.assertTrue(se._published_matches(job, SOURCE, self.root))
+            binding = editorial.read(job / 'source-coverage-adjudication/binding.json')
+            binding['article_hash'] = 'changed-pair'
+            editorial.write(job / 'source-coverage-adjudication/binding.json', binding)
+            self.assertFalse(se._published_matches(job, SOURCE, self.root))
 
 
 if __name__ == '__main__':
