@@ -1,5 +1,17 @@
 # 《字源》 check: 学 / 學 and 教
 
+**2026-10-03 clarification:** Preserve this earlier research note as history,
+not a fresh review receipt. The formation passage separately prints two 臼
+forms and a graphic unit immediately before 亦声. Its sound-role statement
+must not be transferred to either 臼 or used to identify that printed unit as
+ordinary Unicode from OCR. Focused fresh research is retained at
+`runs/source-enrichment-ziyuan/xue-p277-formation-record-20261003/`. The additional
+parenthetical raw OCR `毚片` has conflicting literal reviews and is still under
+original-pixel verification; it is not a verified quotation or an applied fix.
+The complete 學 account ends on p277; p278 belongs to separate 斆, as correctly
+bounded below. Subsequent mixed evidence records with contrary boundaries must
+not be used just because this earlier note reported scan inspection.
+
 Checked 2026-09-30 against the live provisional OCR corpus and the original scan pixels. This is research evidence, not a source transcription approval or an entry review receipt.
 
 Follow-up: the verified 教 爻→交 substitution on PDF p.276 and inserted `heat` on p.277 were corrected in the book repository's page-local OCR correction layer. Its effective `ziyuan-pages.jsonl` was rebuilt; the raw OCR quoted below remains preserved as error evidence. Both pages remain unreviewed as complete transcriptions.

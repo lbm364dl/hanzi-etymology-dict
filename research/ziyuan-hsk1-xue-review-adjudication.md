@@ -1,5 +1,17 @@
 # 学 review adjudication: 子 and 《字源》 formation details
 
+**2026-10-03 correction:** This is a retained earlier diagnosis, not current
+source verification. X-88ac70e7a8e7d9f630d1 and related mixed records are being
+retired because their literal provenance/interpretation is inaccurate. The 學
+account ends with 張標 on PDF p277; p278 continues separate 斆. Fresh focused
+research at `runs/source-enrichment-ziyuan/xue-p277-formation-record-20261003/`
+distinguishes the two 臼 forms from the printed graphic unit immediately before
+亦声: the latter is assigned the sound role, not either individual 臼. Its exact
+Unicode identity remains unresolved. Do not use this note's older “臼-based”
+shorthand or recommendation to cite X-88 as current claim support. The distinction
+between retained written form and established current function still applies;
+current article publication requires fresh exact-pair independent reviews.
+
 This is an independent diagnosis of the conflicting final reviews in `runs/ziyuan-hsk1-smoke/5B66-component-repair/reviews.json`, not a publication approval. I read the job article and dossier, the four cited evidence records, and the scan for 《字源》 PDF page 277 (printed page 265). The source record says the scan was checked through the author credit and PDF page 278 was checked to bound the continuation.
 
 ## What the records support
