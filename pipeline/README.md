@@ -87,6 +87,15 @@ The previous exact pair and receipts remain in `before-citation-integration/`.
 This avoids restarting research merely to adopt a newly generated evidence ID.
 It neither inserts citations automatically nor releases OCR/source blocks.
 
+For a narrow agent-authored array removal, `apply_article_patch` accepts
+`preserve_array_items` in its inputs or feedback: map an existing array path
+to the exact existing records that must remain unchanged in their relative
+order. For example, protecting supported history records lets an author remove
+an irrelevant asset-only record without deleting other character history.
+Invalid removal, modification or reordering is rejected before review. This
+optional edit boundary does not approve the records or replace fresh reviews;
+expand the scope when supported facts themselves need correction.
+
 After a source repair, `run --continue-from /path/to/previous/character/job` can start a
 fresh single-character job from the previous unfinished draft. The previous coordinator
 and agents must have released their OS lock, and its canonical article/dossier baseline
