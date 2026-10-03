@@ -1,0 +1,18 @@
+{
+  "source_id": "ziyuan-2012",
+  "tracking_issue_url": null,
+  "requires_coordinator_verification": true,
+  "findings": [
+    {
+      "key": "ziyuan-2012:767E:7e2274815a7c",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 767E",
+      "details": "[SCAN VERIFICATION REQUIRED] 字源 (2012), PDF p. 303 / printed p. 291, 百 entry: the occurrences rendered in the OCR as glyph placeholders [g033], [g034], and [g035], under “百字在殷商时代并不统一，指事符号下作…”, are visible in the inspected scan but their exact Unicode identities are not established. Preserve the occurrence-bound shapes; do not substitute guessed characters. The scan directly supports the surrounding prose and printed page number.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: /home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/bai-two-20261003/ziyuan-2012/767E",
+        "Research output: initial-followup/research/result.json"
+      ]
+    }
+  ]
+}
