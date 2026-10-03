@@ -576,6 +576,11 @@ PROMPTS['source_coverage'] += (
     'and neighboring characters; do not normalize an observed quote silently. '
     'A verified repair of one raw span does not verify or change its neighbors. '
     'Keep observations scoped to what was actually read or independently checked. '
+    'When comparing competing source-specific proposals, require precise scope, '
+    'qualifications and supporting evidence_ids. Source attribution belongs in '
+    'clickable citations; do not request source names or research workflow remarks '
+    'inside explanation prose. Identify the exact material claim or omitted '
+    'qualification rather than demanding every detail of the book entry. '
     'The findings array lists corrective discrepancies, not positive observations; '
     'a passing coverage receipt has no corrective findings.')
 

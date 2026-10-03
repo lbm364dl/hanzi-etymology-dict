@@ -14,4 +14,6 @@ Publication used the genuine frozen research source instructions with current Gi
 
 The general lesson is to derive source configurations from the registry, preserve frozen instruction provenance, and distinguish source-specific proposals through precise qualifications and citations. A coverage review request to put source names in prose conflicts with the repository's citation standard; the author must resolve scope using citations and explanatory qualifications, not workflow prose.
 
+The generic source-coverage prompt now explicitly enforces that same citation boundary and asks for the exact material claim or omitted qualification. This instruction does not retroactively approve any old candidate; 帮's real new authored revision still requires fresh reviews and source coverage.
+
 After rebuilding the site and graph, the current whole-cohort source audit verifies 23/300 with zero scan errors. All 300 remain in the integrity cohort; this is not a claim that all 300 have consulted the book.
