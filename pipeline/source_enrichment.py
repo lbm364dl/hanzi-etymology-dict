@@ -65,6 +65,13 @@ Do not repair or normalize questionable OCR by inference. For each unresolved sc
     add a research gap beginning exactly `[SCAN VERIFICATION REQUIRED]` or
 `[OCR CORRECTION REQUIRED]`, followed by the exact
 suspect page/span and why it needs scan verification.
+Use those markers for checks that actually remain unresolved. A printed page number
+you directly read from the scan is verified citation provenance even when the corpus
+has not extracted it; report that metadata omission separately without describing the
+number as scan-unverified. Choosing not to replace existing article glyphs with the
+book's specimens is not itself an unresolved scan check. Identify a specific unread
+or disputed feature if a specimen really requires verification, and state whether an
+article claim depends on it. Preserve genuine identity, transcription and scope gaps.
 If an earlier attempt could not identify a printed component, a later assertion that it was
 inspected does not by itself resolve the gap. Inspect a targeted original-resolution crop,
 record the distinguishing visible strokes and exact raw occurrence, and preserve competing
