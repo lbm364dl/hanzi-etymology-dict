@@ -115,6 +115,69 @@ class SourceEnrichmentTests(unittest.TestCase):
             editorial.write(job / 'article.json', {**article, 'summary': 'Now cites a glyph.'})
             self.assertTrue(source_enrichment._source_findings_pending(job))
 
+    def test_verified_missing_page_metadata_requires_exact_observation_and_current_pixels(self):
+        import hashlib
+        import json
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as temp:
+            job = Path(temp)
+            image = Image.new('RGB', (8, 8), 'white')
+            scan = job / 'scan.png'
+            image.save(scan)
+            pixels = hashlib.sha256(image.tobytes()).hexdigest()
+            corpus = job / 'corpus.jsonl'
+            page = {'pdf_page_1based': 76, 'printed_page': None,
+                    'source_sha256': pixels, 'source_scan': str(scan)}
+            def save_page():
+                corpus.write_text(json.dumps(page) + '\n')
+            save_page()
+            findings = {'requires_coordinator_verification': True,
+                        'findings': [{'key': 'page-label'}]}
+            article, dossier = {'character': '八'}, {'evidence': []}
+            for name, value in [('source_findings.json', findings), ('article.json', article),
+                                ('dossier.json', dossier), ('source.json', {
+                                    'registry_source': {'corpus_path': str(corpus)}})]:
+                editorial.write(job / name, value)
+            check = {'key': 'page-label', 'pdf_page': 76, 'field': 'printed_page',
+                     'current_value': None, 'expected_value': '64', 'source_pixel_sha256': pixels}
+            result = {'findings': [{'key': 'page-label',
+                                   'disposition': 'verified_metadata_not_extracted'}],
+                      'metadata_observations': [{'key': 'page-label', 'observed_value': '64',
+                                                'pixel_reason': 'Fixture: lower-left label.'}]}
+            def save_result(checks):
+                editorial.write(job / 'source-resolution/result.json', result)
+                editorial.write(job / 'source-resolution/meta.json', {
+                    'role': 'source_resolution', 'status': 'complete', 'model': 'gpt-6-luna',
+                    'reasoning': 'low', 'result_hash': editorial.digest(result)})
+                editorial.write(job / 'source_resolution.json', {
+                    'findings_hash': editorial.digest(findings), 'article_hash': editorial.digest(article),
+                    'dossier_hash': editorial.digest(dossier), 'result_hash': editorial.digest(result),
+                    'model': 'gpt-6-luna', 'reasoning': 'low',
+                    'review_path': 'source-resolution/result.json', 'metadata_checks': checks})
+            save_result([])
+            self.assertTrue(source_enrichment._source_findings_pending(job))
+            save_result([check])
+            self.assertFalse(source_enrichment._source_findings_pending(job))
+            result['metadata_observations'][0]['observed_value'] = '65'
+            save_result([check])
+            self.assertTrue(source_enrichment._source_findings_pending(job))
+            result['metadata_observations'][0]['observed_value'] = '64'
+            result['findings'][0]['disposition'] = 'unresolved_identity_not_used'
+            save_result([check])
+            self.assertTrue(source_enrichment._source_findings_pending(job))
+            result['findings'][0]['disposition'] = 'verified_metadata_not_extracted'
+            save_result([check])
+            page['printed_page'] = '65'
+            save_page()
+            self.assertTrue(source_enrichment._source_findings_pending(job))
+            page['printed_page'] = None
+            save_page()
+            image.putpixel((0, 0), (0, 0, 0))
+            image.save(scan)
+            self.assertTrue(source_enrichment._source_findings_pending(job))
+            with self.assertRaises(ValueError):
+                source_enrichment._verify_missing_page_metadata(job, [{**check, 'field': 'text'}])
+
     def test_resolution_transport_limits_repair_observations_to_requested_keys(self):
         job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
         article = editorial.read(job/'source_article.json')

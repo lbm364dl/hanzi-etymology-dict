@@ -62,6 +62,15 @@ pixel crops may accompany the source scans. Confirmed OCR errors
 and material unresolved claims remain blocked for source repair or new research; this check
 does not replace factual/readability reviews.
 
+An absent corpus `printed_page` field can be checked separately with
+`resolve_source_findings(..., metadata_checks=[...])`. Each check binds a retained finding,
+PDF page, original decoded-pixel hash, absent current value and proposed citation label.
+The independent reviewer must read that label from the attached original scan. A matching
+`verified_metadata_not_extracted` disposition certifies citation provenance only; it does
+not claim that corpus metadata was populated or that OCR text was repaired. Changed source
+pixels, a different current field value, missing observations or mismatched labels invalidate
+the result. This disposition cannot discharge a transcription or character-identity repair.
+
 Applied literal OCR repairs can be checked through `resolve_source_findings(...,
 repair_checks=[...])`. Each check identifies the retained finding, producer page directory,
 raw start/end offsets, and original before/after literals. The actual producer correction

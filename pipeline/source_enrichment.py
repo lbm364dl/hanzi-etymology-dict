@@ -338,6 +338,37 @@ def _capture_scan_findings(job, source):
     return record
 
 
+def _verify_missing_page_metadata(job, checks):
+    """Bind citation-label observations to an absent field and original page pixels."""
+    job = Path(job)
+    registered = editorial.read(job / 'source.json')['registry_source']
+    findings = {f['key'] for f in editorial.read(job / 'source_findings.json')['findings']}
+    if len({c['key'] for c in checks}) != len(checks):
+        raise ValueError('Metadata checks must identify unique findings')
+    needed = {c['pdf_page'] for c in checks}
+    pages = {}
+    with Path(registered['corpus_path']).open() as corpus:
+        for line in corpus:
+            page = json.loads(line)
+            if page.get('pdf_page_1based') in needed:
+                if page['pdf_page_1based'] in pages:
+                    raise ValueError('Metadata page identity is ambiguous')
+                pages[page['pdf_page_1based']] = page
+    for check in checks:
+        page = pages.get(check['pdf_page'], {})
+        if (check['key'] not in findings or check.get('field') != 'printed_page'
+                or check.get('current_value') is not None
+                or page.get('printed_page') is not None
+                or not isinstance(check.get('expected_value'), str)
+                or not check['expected_value'].strip()
+                or ('source_scan' in check and check['source_scan'] != page.get('source_scan'))
+                or page.get('source_sha256') != check.get('source_pixel_sha256')):
+            raise ValueError('Metadata check requires an absent printed-page field and exact source identity')
+        editorial.source_scan_attachments([{'path': page['source_scan'],
+            'pdf_page': check['pdf_page'], 'source_pixel_sha256': check['source_pixel_sha256']}])
+    return [{**check, 'source_scan': pages[check['pdf_page']]['source_scan']} for check in checks]
+
+
 def _source_findings_pending(job):
     """Retain findings; only an exact independent resolution can release their gate."""
     job = Path(job)
@@ -360,6 +391,21 @@ def _source_findings_pending(job):
     if not review_path.is_file() or editorial.digest(editorial.read(review_path)) != resolution.get("result_hash"):
         return True
     result = editorial.read(review_path)
+    metadata_keys = {f['key'] for f in result['findings']
+                     if f['disposition'] == 'verified_metadata_not_extracted'}
+    metadata_checks = resolution.get('metadata_checks', [])
+    if metadata_keys or metadata_checks:
+        try:
+            _verify_missing_page_metadata(job, metadata_checks)
+            observations = result.get('metadata_observations', [])
+            observed = {o['key']: o for o in observations}
+            if (metadata_keys != {c['key'] for c in metadata_checks}
+                    or set(observed) != metadata_keys or len(observed) != len(observations)
+                    or any(observed[c['key']].get('observed_value') != c['expected_value']
+                           for c in metadata_checks)):
+                return True
+        except (OSError, ValueError, KeyError, ImportError):
+            return True
     checks = resolution.get('literal_checks', [])
     rejected_keys = {f['key'] for f in result['findings']
                      if f['disposition'] == 'rejected_proposal_scan_matches_corpus'}
@@ -412,10 +458,12 @@ def _source_findings_pending(job):
     keys = [item["key"] for item in result["findings"]]
     return (len(keys) != len(set(keys)) or set(keys) != {item["key"] for item in findings["findings"]}
             or any(item["disposition"] not in ("unresolved_identity_not_used",
-                    "rejected_proposal_scan_matches_corpus", "applied_repair_scan_matches_corpus") for item in result["findings"]))
+                    "rejected_proposal_scan_matches_corpus", "applied_repair_scan_matches_corpus",
+                    "verified_metadata_not_extracted") for item in result["findings"]))
 
 
-def resolve_source_findings(job, runner, source_context=None, literal_checks=None, repair_checks=None):
+def resolve_source_findings(job, runner, source_context=None, literal_checks=None, repair_checks=None,
+                            metadata_checks=None):
     """Check whether retained uncertainty is immaterial; actual OCR errors stay blocked."""
     job = Path(job)
     if runner.model != "gpt-6-luna" or runner.reasoning != "low":
@@ -437,6 +485,35 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
               "feedback": {"source_scan_images": (
                   list(checkpoint["locator"].get("source_scan_images", [])) + list(source_context or []))[:3]}}
     checks = list(literal_checks or [])
+    metadata = _verify_missing_page_metadata(job, list(metadata_checks or [])) if metadata_checks else []
+    if metadata:
+        scans = [{'path': c['source_scan'], 'pdf_page': c['pdf_page'],
+                  'source_pixel_sha256': c['source_pixel_sha256']} for c in metadata]
+        scans.extend(inputs['feedback']['source_scan_images'])
+        unique_scans = {}
+        for scan in scans:
+            unique_scans.setdefault((scan['path'], scan['pdf_page']), scan)
+        if len({(c['source_scan'], c['pdf_page']) for c in metadata}) > 3:
+            raise ValueError('Metadata checks exceed the source attachment budget')
+        inputs['feedback']['source_scan_images'] = list(unique_scans.values())[:3]
+        inputs['metadata_checks'] = metadata
+        inputs['metadata_check_instruction'] = (
+            'These are citation metadata omissions, not proposed OCR text replacements. '
+            'Independently read each original scan printed-page label. expected_value is '
+            'a hypothesis, not your observation. Report observed_value and the visible '
+            'label location; use null and pending if unclear. Use verified_metadata_not_extracted '
+            'only if the label matches expected_value, the retained finding concerns this '
+            'absent metadata field, and no transcription or identity correction is required '
+            'to support the affected article claims. This verifies citation provenance only; '
+            'the corpus metadata remains absent and no producer repair is claimed.')
+        schema['required'].append('metadata_observations')
+        schema['properties']['metadata_observations'] = {'type': 'array',
+            'minItems': len(metadata), 'maxItems': len(metadata), 'items': {
+            'type': 'object', 'additionalProperties': False,
+            'required': ['key', 'observed_value', 'pixel_reason'],
+            'properties': {'key': {'type': 'string', 'enum': [c['key'] for c in metadata]},
+                'observed_value': {'type': ['string', 'null']},
+                'pixel_reason': {'type': 'string', 'minLength': 1}}}}
     if checks:
         registered = editorial.read(job / 'source.json')['registry_source']
         needed = {check['pdf_page'] for check in checks}
@@ -501,6 +578,8 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
         allowed_dispositions.append('rejected_proposal_scan_matches_corpus')
     if repairs:
         allowed_dispositions.append('applied_repair_scan_matches_corpus')
+    if metadata:
+        allowed_dispositions.append('verified_metadata_not_extracted')
     schema['properties']['findings']['items']['properties']['disposition']['enum'] = allowed_dispositions
     inputs['disposition_policy'] = (
         'A rejected replacement requires a supplied exact literal_checks occurrence and proposal. '
@@ -534,7 +613,8 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
     record = {"findings_hash": editorial.digest(findings), "article_hash": editorial.digest(article),
               "dossier_hash": editorial.digest(dossier), "result_hash": editorial.digest(result),
               "review_path": str((directory / 'result.json').relative_to(job)), "model": runner.model,
-              "reasoning": runner.reasoning, "literal_checks": checks, "applied_repairs": repairs}
+              "reasoning": runner.reasoning, "literal_checks": checks, "applied_repairs": repairs,
+              "metadata_checks": metadata}
     editorial.write(job / "source_resolution.json", record)
     if not _source_findings_pending(job):
         state = editorial.read(job / "status.json")
