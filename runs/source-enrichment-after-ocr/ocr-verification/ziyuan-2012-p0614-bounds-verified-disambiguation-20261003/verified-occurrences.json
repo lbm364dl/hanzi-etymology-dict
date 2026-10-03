@@ -1,0 +1,68 @@
+{
+  "provenance": {
+    "source_id": "ziyuan-2012",
+    "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+    "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+    "pdf_page": 614,
+    "printed_page": 601,
+    "raw_span_start": 177,
+    "raw_span_end": 189,
+    "raw_text": "[glyph:p001]",
+    "anchor": "此字也通作",
+    "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0614/source.png",
+    "source_file_sha256": "5780bde47bb2fab153868ddf33db259f0d3ccd75d42ba65b80a26a4f23f15bdc",
+    "source_page_pixel_sha256": "e5c3740499352373582e7a99de9e1114ed3590dd728207f268e6ffe5cd3cbf88",
+    "paragraph_crop": {
+      "path": "/tmp/ziyuan-p0614-paragraph-full-bound-nearest2.png",
+      "crop_bounds_from_original_pixels": [
+        230,
+        310,
+        1500,
+        1000
+      ],
+      "resampling": "nearest-neighbor 2x; no strokes added or removed",
+      "pixel_sha256": "3285018adb51d0e419967e84990b2aba1c8d1b3f94ab426793db4b65dc46880c",
+      "contains": "the p614 paragraph including the source’s own 从日，勺声 control and target"
+    },
+    "target_crop": {
+      "path": "/tmp/ziyuan-p0614-glyph-full-bound-nearest3.png",
+      "crop_bounds_from_original_pixels": [
+        1100,
+        660,
+        1380,
+        900
+      ],
+      "resampling": "nearest-neighbor 3x; no strokes added or removed",
+      "pixel_sha256": "8180f590b76256b7f5949406b5935649040ce20e5aa22f64328577427b265410",
+      "contains": "complete target glyph with surrounding quote marks and visible space on all sides"
+    },
+    "prior_conflicting_hypothesis": {
+      "receipt": "runs/source-enrichment-after-ocr/ocr-verification/ziyuan-2012-p0614-tongzuo-juma-20261003/verified-occurrences.json",
+      "candidate": "駒 U+99D2 (馬 + 句)",
+      "warning": "This receipt conflicts with other visual readings and is only a hypothesis for this review."
+    },
+    "candidate_under_test": {
+      "character": "馰",
+      "scalar": "U+99B0",
+      "structure": "馬 + 勺"
+    },
+    "geometry_task": "Inspect the complete target in the source and enlarged crops. Compare the right-side interior with the actual printed 勺 (U+52FA) in the quotation 从日，勺声 on the same p614 paragraph. 勺 has a dot/open-hook interior; 句 (U+53E5) has a closed 口. State the target geometry and control geometry separately, with attachment references. Do not normalize, simplify, or substitute the left 馬 (U+99AC). Do not rely on meaning, OCR placeholder, or the earlier 駒 verdict. If the source pixels do not show the right-side interior clearly, return unresolved_identity with null printed_text."
+  },
+  "occurrences_hash": "6dd8eb11f207f8f2ab20000516521a576d53f9fd4d249cb784cdde0a9648a5d7",
+  "result": {
+    "occurrences": [
+      {
+        "id": "ziyuan-2012:p0614:177-189-bounds-verified-disambiguation",
+        "raw_text": "[glyph:p001]",
+        "printed_text": "馰",
+        "verdict": "confirmed_correction",
+        "reason": "In attachment 3, the complete target immediately follows the paragraph’s “此字也通作” anchor. Its right-side interior shows a dot and an open hook, not a closed 口. Attachment 2 shows the printed control 勺 in “从日，勺声”: that control also has a dot and open-hook interior. The target’s visible right side matches 勺, supporting 馰; the scan therefore distinguishes it from the proposed 駒 with a closed 口."
+      }
+    ]
+  },
+  "result_hash": "ab9025aebb742b1afa7cbb118d7f3c33de414167f6433c3d7948989bd74655d5",
+  "review_directory": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-after-ocr/ocr-verification/ziyuan-2012-p0614-bounds-verified-disambiguation-20261003/review",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "whole_page_reviewed": false
+}
