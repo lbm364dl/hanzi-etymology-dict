@@ -1,0 +1,46 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "edits"
+  ],
+  "properties": {
+    "edits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "value_json"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "meaning_history/senses",
+              "formation/text",
+              "formation/evidence_ids",
+              "components/0/text",
+              "components/0/evidence_ids",
+              "components/0/roles",
+              "components/1/text",
+              "components/1/evidence_ids",
+              "components/1/roles",
+              "components/1/sound",
+              "components/1/sound_limitation",
+              "relationships",
+              "history/2/text",
+              "history/2/evidence_ids",
+              "learner/components/1/text",
+              "learner/components/1/evidence_ids"
+            ]
+          },
+          "value_json": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
