@@ -1,0 +1,27 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "allowed_edit_paths": [
+    "meaning_history/senses/0"
+  ],
+  "verified_review_findings": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "8f8f5d2d13d8b7a9b4c5ca94bf62a5f373660c8f409f45049cbe6552009c9d07",
+      "dossier_hash": "2adddf4c23412c90c985158b9c7e87cea3224a568a832643a6254ed94f3dcf17",
+      "reviewer": "gpt-6-luna:low:factual:01a100cb-e7a0-7730-ae64-c004b31b9266"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses[0]` and its generated `meaning:菜:edible_vegetation` edge, `status: \"current\"` is unsupported by that record’s citations: they establish an ancient definition and historical spelling, not present-day Chinese usage. Add current Chinese dictionary evidence to both citations, or change the sense status and generated edge so they no longer claim a current sense. The separate modern-gloss sense cites E6 and E9, but that evidence is not cited on this sense or edge."
+      ],
+      "article_hash": "8f8f5d2d13d8b7a9b4c5ca94bf62a5f373660c8f409f45049cbe6552009c9d07",
+      "dossier_hash": "2adddf4c23412c90c985158b9c7e87cea3224a568a832643a6254ed94f3dcf17",
+      "reviewer": "gpt-6-luna:low:readability:01a100cc-5f99-72b0-8831-ace504740770"
+    }
+  ],
+  "editorial_adjudication": "Fix the exact unsupported current-sense citation finding. Independently inspect existing current dictionary evidence E6/E9 and current sense0 definition, not merely the reviewer summary. If they support this current meaning, attach their IDs to that record while preserving its existing historical citations, scope, certainty and limitations. If they do not support its current scope, classify the sense accurately; do not erase an ordinary present meaning solely because its early history is discussed elsewhere. Generated semantic edges are derived by the harness from this source record; do not patch them separately. Preserve all other senses, meanings, learner, history, components and claims. No canonical/producer/GitHub writes."
+}
