@@ -992,16 +992,19 @@ def _retained_source_checks(job):
     receipt = editorial.read(receipt_path)
     checked = _historical_checked_keys(job)
     fields = {
-        'literal_checks': 'rejected_proposal_scan_matches_corpus',
-        'applied_repairs': 'applied_repair_scan_matches_corpus',
-        'metadata_checks': 'verified_metadata_not_extracted',
-        'transcription_checks': 'verified_transcription_matches_corpus',
+        'literal_checks': ('literal_checks', 'rejected_proposal_scan_matches_corpus'),
+        # The saved receipt names producer results, while the resolver API accepts
+        # the same checks under repair_checks. Do not splat the receipt key into
+        # resolve_source_findings (which would fail before its model stage).
+        'applied_repairs': ('repair_checks', 'applied_repair_scan_matches_corpus'),
+        'metadata_checks': ('metadata_checks', 'verified_metadata_not_extracted'),
+        'transcription_checks': ('transcription_checks', 'verified_transcription_matches_corpus'),
     }
     reusable = {}
-    for field, disposition in fields.items():
-        checks = receipt.get(field, [])
+    for receipt_field, (argument_name, disposition) in fields.items():
+        checks = receipt.get(receipt_field, [])
         if checks and {item.get('key') for item in checks} <= checked[disposition]:
-            reusable[field] = copy.deepcopy(checks)
+            reusable[argument_name] = copy.deepcopy(checks)
     return reusable
 
 

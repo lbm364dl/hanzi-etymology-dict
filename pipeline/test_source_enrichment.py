@@ -711,7 +711,9 @@ class SourceEnrichmentTests(unittest.TestCase):
                 'details': 'The printed component identity remains unresolved.'}]})
         editorial.write(job / 'status.json', {'status': 'published', 'source_audit_hash': editorial.digest(audit),
             'issue_sync_status': 'synced'})
-        old_receipt = {'prior': 'preserved'}
+        repair_check = {'key': 'repair', 'pdf_page': 1, 'raw_start': 3, 'raw_end': 4,
+                        'before': '日', 'after': '曰'}
+        old_receipt = {'prior': 'preserved', 'applied_repairs': [repair_check]}
         editorial.write(job / 'source_resolution.json', old_receipt)
         pair_dir = job / 'source-only-revalidation' / (
             f"{editorial.digest(article)[:12]}-{editorial.digest(dossier)[:12]}")
@@ -725,14 +727,19 @@ class SourceEnrichmentTests(unittest.TestCase):
         def resolve(candidate, local_runner, source_context=None, **checks):
             self.assertEqual(candidate, job)
             self.assertEqual(source_context, [])
-            self.assertEqual(checks, {})
+            self.assertEqual(checks, {'repair_checks': [repair_check]})
             editorial.write(job / 'status.json', {'status': 'approved', 'source_audit_hash': editorial.digest(audit),
                 'issue_sync_status': 'synced'})
             fresh = {'fresh': True}
             editorial.write(job / 'source_resolution.json', fresh)
             return {'result_hash': 'fresh-result', 'fresh_receipt': fresh}
 
-        with patch.object(source_enrichment, '_source_findings_pending', side_effect=[True, False]), \
+        with patch.object(source_enrichment, '_historical_checked_keys', return_value={
+                'rejected_proposal_scan_matches_corpus': set(),
+                'applied_repair_scan_matches_corpus': {'repair'},
+                'verified_metadata_not_extracted': set(),
+                'verified_transcription_matches_corpus': set()}), \
+             patch.object(source_enrichment, '_source_findings_pending', side_effect=[True, False]), \
              patch.object(source_enrichment, 'resolve_source_findings', side_effect=resolve), \
              patch.object(source_enrichment, '_publish_job_locked', return_value={'status': 'published'}) as publish:
             rows = source_enrichment.revalidate_published_source_jobs([job], Runner(), self.root)
