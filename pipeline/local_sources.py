@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 import json
+import os
 from pathlib import Path
 import re
 
@@ -29,11 +30,34 @@ def load_registry(path):
     return registry
 
 
+def _file_identity(stat):
+    return (stat.st_dev, stat.st_ino, stat.st_mtime_ns, stat.st_ctime_ns, stat.st_size)
+
+
 @lru_cache(maxsize=8)
-def _pages(path, mtime_ns, size):
-    # The stat arguments invalidate the in-process cache after consumer OCR repairs.
+def _pages_snapshot(path, identity):
+    # Open one immutable edition. An atomic corpus replacement cannot splice pages
+    # from two versions; recheck the opened inode to avoid caching under a stale key.
     with Path(path).open() as stream:
-        return tuple(json.loads(line) for line in stream if line.strip())
+        if _file_identity(os.fstat(stream.fileno())) != identity:
+            raise _SnapshotChanged()
+        pages = tuple(json.loads(line) for line in stream if line.strip())
+        if _file_identity(os.fstat(stream.fileno())) != identity:
+            raise _SnapshotChanged()
+        return pages
+
+
+class _SnapshotChanged(Exception):
+    pass
+
+
+def _pages(path):
+    for _ in range(3):
+        try:
+            return _pages_snapshot(path, _file_identity(Path(path).stat()))
+        except _SnapshotChanged:
+            continue
+    raise ValueError('Consumer corpus is changing; retry after its atomic rebuild')
 
 
 def search_forms(character, dossier):
@@ -72,8 +96,7 @@ def locate_sources(registry, character, dossier):
             packet['access_gap'] = 'Registered consumer corpus is unavailable'
             leads.append(packet)
             continue
-        stat = path.stat()
-        pages = _pages(str(path), stat.st_mtime_ns, stat.st_size)
+        pages = _pages(str(path))
         if any(p.get('book_id') != source['book_id'] for p in pages):
             raise ValueError('Corpus book identity differs from registered source')
         ranked = []

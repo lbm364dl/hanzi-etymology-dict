@@ -3,9 +3,13 @@ from __future__ import annotations
 
 import argparse
 import copy
+import fcntl
+import hashlib
 import json
 from pathlib import Path
 import subprocess
+import tempfile
+import time
 
 from pipeline import editorial
 
@@ -17,6 +21,9 @@ FINDING_SCHEMA = {'type': 'object', 'additionalProperties': False, 'required': [
             'kind': {'enum': ['ocr', 'factual', 'readability', 'pipeline', 'clarification']},
             **{k: {'type': 'string', 'minLength': 1} for k in ('title', 'details', 'verification')},
             'evidence': {'type': 'array', 'items': {'type': 'string'}}}}}}}
+
+GH_TIMEOUT_SECONDS = 60
+SYNC_LOCK_WAIT_SECONDS = 90
 
 
 def triage_job(job, source, runner):
@@ -175,7 +182,8 @@ def triage_job(job, source, runner):
 
 
 def gh(*args):
-    result = subprocess.run(['gh', *args], check=True, text=True, capture_output=True)
+    result = subprocess.run(['gh', *args], check=True, text=True, capture_output=True,
+                            timeout=GH_TIMEOUT_SECONDS)
     return result.stdout.strip()
 
 
@@ -217,8 +225,8 @@ def _paginated_items(raw):
     return items
 
 
-def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, milestone=None, labels=(), parent_by_kind=None,
-         active_findings=False):
+def _sync_locked(findings, repository, receipt_path, invoke, parent_issue, milestone, labels,
+                 parent_by_kind, active_findings):
     """Create missing issues; preserve human discussion and never close by inference."""
     if not repository or len(repository.split('/')) != 2:
         raise ValueError('Repository must be owner/name')
@@ -310,6 +318,35 @@ def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, miles
         # Checkpoint immediately so interrupted syncs can be recovered by marker lookup.
         editorial.write(receipt_path, {'repository': repository, 'issues': receipts})
     return receipts
+
+
+def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, milestone=None, labels=(),
+         parent_by_kind=None, active_findings=False):
+    """Serialize a repository sync across processes before reading remote state.
+
+    The lock covers lookup and mutation together: serializing only issue creation
+    would still allow two workers to act on the same stale marker/parent snapshot.
+    """
+    if not repository or len(repository.split('/')) != 2:
+        raise ValueError('Repository must be owner/name')
+    lock_key = hashlib.sha256(repository.lower().encode('utf-8')).hexdigest()
+    lock_path = Path(tempfile.gettempdir()) / f'hanzi-issues-sync-{lock_key}.lock'
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open('a') as lock:
+        deadline = time.monotonic() + SYNC_LOCK_WAIT_SECONDS
+        while True:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise TimeoutError(f'Timed out waiting for GitHub sync lock for {repository}')
+                time.sleep(0.1)
+        try:
+            return _sync_locked(findings, repository, receipt_path, invoke, parent_issue, milestone,
+                                labels, parent_by_kind, active_findings)
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
 
 
 def main():

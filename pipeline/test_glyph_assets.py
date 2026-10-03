@@ -1,8 +1,12 @@
 import copy
+from concurrent.futures import ThreadPoolExecutor
+import hashlib
 import io
 import json
 from pathlib import Path
 import tempfile
+import threading
+import types
 import unittest
 from urllib.error import HTTPError
 from unittest.mock import patch
@@ -21,6 +25,39 @@ class Response(io.BytesIO):
         return self.url
 
 class GlyphAssetTests(unittest.TestCase):
+    def test_concurrent_downloads_use_independent_atomic_temporaries(self):
+        barrier = threading.Barrier(2)
+        def urlopen(_request, timeout=30):
+            barrier.wait(timeout=2)
+            return Response(SVG)
+        with tempfile.TemporaryDirectory() as root, patch("urllib.request.urlopen", side_effect=urlopen):
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                results = [pool.submit(snapshot_glyph_assets, DOSSIER, None, root)
+                           for _ in range(2)]
+                manifests = [future.result() for future in results]
+            self.assertEqual(manifests[0], manifests[1])
+            self.assertEqual(validate_glyph_assets({**DOSSIER, "glyph_assets": manifests[0]}, root)
+                             ["tree"].read_bytes(), SVG)
+            self.assertEqual(list(Path(root).rglob("*.tmp")), [])
+
+    def test_concurrent_svg_previews_keep_atomic_image_receipt_pair(self):
+        with tempfile.TemporaryDirectory() as root:
+            with patch("urllib.request.urlopen", return_value=Response(SVG)):
+                assets = snapshot_glyph_assets(DOSSIER, root=root)
+            dossier = {**DOSSIER, "glyph_assets": assets}
+            fake_cairo = types.SimpleNamespace(__version__="fixture",
+                svg2png=lambda **_kwargs: b"\x89PNG\r\n\x1a\nfixture-preview")
+            with patch.dict("sys.modules", {"cairosvg": fake_cairo}):
+                with ThreadPoolExecutor(max_workers=2) as pool:
+                    results = [pool.submit(render_glyph_images, dossier, root) for _ in range(2)]
+                    previews = [future.result()["tree"] for future in results]
+            preview = previews[0]
+            receipt = json.loads(preview.with_suffix(".json").read_text())
+            self.assertEqual(previews[0], previews[1])
+            self.assertEqual(receipt["preview_sha256"],
+                             hashlib.sha256(preview.read_bytes()).hexdigest())
+            self.assertEqual(image_mime(preview.read_bytes()), "image/png")
+
     def test_snapshot_reuse_and_tamper_detection(self):
         with tempfile.TemporaryDirectory() as root:
             with patch("urllib.request.urlopen", return_value=Response(SVG)) as download:

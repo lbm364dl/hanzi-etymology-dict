@@ -1,8 +1,11 @@
 import copy
+from concurrent.futures import ThreadPoolExecutor
 import json
 from pathlib import Path
 import sys
+import threading
 import tempfile
+import time
 import unittest
 from unittest.mock import patch
 
@@ -169,6 +172,101 @@ class BatchTests(unittest.TestCase):
                 packet = batch.prepare_job("木", root / "job", root)
                 editorial.write(root / "content/dossiers/6728.json", {**DOSSIER, "context": {"new": True}})
                 self.assertEqual(batch.prepare_job("木", root / "job", root), packet)
+
+    def test_publication_rejects_stale_source_baseline_but_allows_exact_retry(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            job = root / "runs/source-enrichment/source/6728"
+            baseline_article, baseline_dossier = copy.deepcopy(ARTICLE_V2), copy.deepcopy(DOSSIER)
+            baseline_dossier["glyph_research"] = {
+                "historical_glyphs": copy.deepcopy(baseline_article["historical_glyphs"])}
+            candidate = copy.deepcopy(ARTICLE_V2)
+            candidate["summary"]["text"] = "A freshly approved candidate."
+            reviews = [editorial.make_review(role, "pass", [], candidate, baseline_dossier, role)
+                       for role in ("factual", "readability")]
+            canonical_entry = root / "content/entries/6728.json"
+            canonical_dossier = root / "content/dossiers/6728.json"
+            baseline_reviews = [editorial.make_review(role, "pass", [], baseline_article,
+                                  baseline_dossier, "baseline-" + role)
+                                for role in ("factual", "readability")]
+            editorial.publish(baseline_article, baseline_dossier, baseline_reviews,
+                              canonical_entry.parent)
+            editorial.write(job / "status.json", {"status": "approved"})
+            editorial.write(job / "article.json", candidate)
+            editorial.write(job / "dossier.json", baseline_dossier)
+            editorial.write(job / "reviews.json", reviews)
+            editorial.write(job / "source_article.json", baseline_article)
+            editorial.write(job / "source_dossier.json", baseline_dossier)
+            editorial.write(job / "source.json", {"character": "木",
+                "article_hash": editorial.digest(baseline_article),
+                "dossier_hash": editorial.digest(baseline_dossier)})
+
+            external_change = copy.deepcopy(baseline_article)
+            external_change["summary"]["text"] = "Another job published first."
+            external_reviews = [editorial.make_review(role, "pass", [], external_change,
+                                  baseline_dossier, "external-" + role)
+                                for role in ("factual", "readability")]
+            editorial.publish(external_change, baseline_dossier, external_reviews,
+                              canonical_entry.parent)
+            with self.assertRaisesRegex(ValueError, "canonical baseline changed"):
+                batch.publish_job(job, root)
+            self.assertEqual(editorial.extract_article(editorial.read(canonical_entry)), external_change)
+            self.assertFalse((root / "content/review_history/batch/6728").exists())
+
+            # Recovery after an ambiguous successful publication is safe only
+            # when both canonical artifacts already equal this exact candidate.
+            editorial.publish(candidate, baseline_dossier, reviews, canonical_entry.parent)
+            batch.publish_job(job, root)
+            self.assertEqual(editorial.extract_article(editorial.read(canonical_entry))["summary"],
+                             candidate["summary"])
+
+    def test_publication_locks_serialize_same_character_but_not_other_characters(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            jobs = {}
+            for char in ("木", "火"):
+                job = root / "jobs" / f"{ord(char):04X}"
+                editorial.write(job / "article.json", {"character": char})
+                jobs[char] = job
+
+            entered = threading.Event()
+            release = threading.Event()
+            active = 0
+            peak = 0
+            active_lock = threading.Lock()
+            def slow_publish(_job, _root, char):
+                nonlocal active, peak
+                with active_lock:
+                    active += 1
+                    peak = max(peak, active)
+                    entered.set()
+                release.wait(2)
+                with active_lock:
+                    active -= 1
+                return char
+            with patch("pipeline.batch._publish_job_locked", side_effect=slow_publish):
+                barrier = threading.Barrier(2)
+                def publish_same():
+                    barrier.wait()
+                    return batch.publish_job(jobs["木"], root)
+                with ThreadPoolExecutor(max_workers=2) as pool:
+                    first = pool.submit(publish_same)
+                    second = pool.submit(publish_same)
+                    self.assertTrue(entered.wait(1))
+                    time.sleep(0.1)
+                    self.assertEqual(peak, 1)
+                    release.set()
+                    self.assertEqual(first.result(), "木")
+                    self.assertEqual(second.result(), "木")
+
+            # Different character locks allow independent canonical writes to
+            # enter concurrently; a repository-wide lock would fail this barrier.
+            parallel = threading.Barrier(2)
+            with patch("pipeline.batch._publish_job_locked",
+                       side_effect=lambda _job, _root, char: (parallel.wait(2), char)[1]):
+                with ThreadPoolExecutor(max_workers=2) as pool:
+                    results = [pool.submit(batch.publish_job, jobs[char], root) for char in ("木", "火")]
+                    self.assertEqual({future.result() for future in results}, {"木", "火"})
 
 
 if __name__ == "__main__":

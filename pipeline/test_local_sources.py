@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -66,6 +67,22 @@ class LocalSourceTests(unittest.TestCase):
             path.write_text(json.dumps({'book_id': 'different', 'text': '木'}))
             with self.assertRaises(ValueError):
                 locate_sources({'sources': [source]}, '木', {})
+
+    def test_same_size_same_mtime_atomic_rebuild_invalidates_cached_corpus(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'corpus'
+            source = {'id': 'book', 'title': 'Book', 'bibliography': 'Edition',
+                      'book_id': 'book', 'corpus_path': str(path)}
+            path.write_text(json.dumps({'book_id': 'book', 'text': '木'}))
+            stamp = path.stat().st_mtime_ns
+            self.assertTrue(locate_sources({'sources': [source]}, '木', {})['source_leads'][0]['candidates'])
+            pending = path.with_suffix('.new')
+            pending.write_text(json.dumps({'book_id': 'book', 'text': '火'}))
+            os.utime(pending, ns=(stamp, stamp))
+            self.assertEqual(path.stat().st_size, pending.stat().st_size)
+            pending.replace(path)
+            self.assertFalse(locate_sources({'sources': [source]}, '木', {})['source_leads'][0]['candidates'])
+            self.assertTrue(locate_sources({'sources': [source]}, '火', {})['source_leads'][0]['candidates'])
 
     def test_registry_rejects_duplicate_identity(self):
         with tempfile.TemporaryDirectory() as temp:

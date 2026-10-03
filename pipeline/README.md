@@ -30,6 +30,86 @@ python3 -m pipeline.source_enrichment status --registry research/digitised-sourc
 python3 -m pipeline.source_enrichment run --registry research/digitised-sources.json --source ziyuan-2012 --cohort content/cohorts/hsk3-2021-level-1.json --limit 3
 ```
 
+### Parallel operation and recovery
+
+Use one stable output folder and the complete cohort. `--workers` controls concurrent
+character jobs; `--limit` controls how many eligible jobs the invocation may attempt.
+Both accept any positive integer. `--agents` independently limits active model processes
+through inherited OS slots shared across workers; waiting stages record
+`waiting_for_agent_slot`, not an active model PID. Use the same slot capacity across live
+supervisors sharing a repository. Without `--agents`, capacity follows `--workers`.
+Each character still runs separate Luna low research,
+authorship and independent factual/readability stages. Increase concurrency after a small
+live smoke run; the machine's available memory and service throughput determine the useful
+setting, rather than a hardcoded three-character cap.
+
+```bash
+python3 -m pipeline.source_enrichment run \
+  --registry research/digitised-sources.json --source ziyuan-2012 \
+  --cohort content/cohorts/hsk3-2021-level-1.json \
+  --output runs/source-enrichment-scale-20261003 --limit 300 --workers 24 --agents 12 --publish-now
+```
+
+The durable manifest is `OUTPUT/SOURCE/queue.json`. It records every character, attempt,
+completion receipt, history and counts by recorded state. A rolling pool submits at most
+`workers` jobs at once. Every completed result is checkpointed immediately, including when
+an earlier job is slow. Rerun the same command after a supervisor exits; exact stage caches
+and genuine prior reviews remain bound to their original inputs. Omitted optional research
+or scan contexts resume the queue's frozen values. Changed source/cohort/context identity
+requires a fresh output folder. Increasing workers/limit or enabling publication can reuse
+that same queue.
+
+Failures, required revisions, missing source evidence and unresolved OCR go into the
+attention list. They do not consume later selections or repeatedly call expensive agents.
+Fix their cause, then use `--retry-attention` for an explicit retry, or start a fresh exact
+continuation where changed source inputs require it. Jobs with a live inherited lock return
+`already_running`; saved `running` alone is not proof of liveness. Least-attempted work is
+selected first. Use `--exclude 本边别茶` while those characters have separate owners; they
+stay visible in the manifest and can be picked up after removing the exclusion.
+
+Locks protect different resources at different boundaries:
+
+- A queue supervisor lock prevents concurrent schedulers from replacing one manifest.
+- A source/character claim spans output folders, followed by a job lock. Model children
+  inherit both, preventing duplicate research after an orphaned supervisor exits.
+- Publication takes the job lock then a canonical character lock. Different characters
+  publish independently; stale canonical baselines are rejected before archive or content
+  writes. Unchanged source gates and exact independent reviews remain required.
+- GitHub synchronization locks the repository before reading markers/labels/subissue counts.
+  Model triage remains parallel. Remote commands time out after 60 seconds and lock waits
+  after 90 seconds; pending sync is retryable and publication remains held.
+
+Shared JSON files use unique atomic temporaries. Corpus locators read an immutable opened
+edition and invalidate caches by inode, timestamps and size, including an atomic replacement
+that preserves size and mtime. Source repairs are a separate producer transaction: preserve
+raw OCR and exact independent scan receipts, serialize shared overlay/corpus writes, rebuild
+and verify consumer evidence before any dependent character can pass its source gates.
+Attention states are genuine unfinished work, not completed entries or invented approvals.
+
+### Live dashboard
+
+```bash
+python3 -m pipeline.dashboard --port 8765
+```
+
+Open **http://127.0.0.1:8765**. The local observer reads durable queues, genuine stage
+metadata, source findings and resolutions, review and issue receipts, repair transactions,
+and machine resources. Linux process observations distinguish live models from saved
+running stages, interrupted work and waiting agent slots. The UI refreshes every two
+seconds; new directory inventory is refreshed every five seconds. GitHub issue state,
+labels and milestones refresh independently every minute using bounded read-only calls.
+A collection failure retains the previous snapshot and marks it stale. Saved source
+coverage is labeled with its audit time, rather than certified anew by the dashboard.
+
+The dashboard does not start work, edit characters, apply repairs or approve reviews.
+Its `/api/artifact` viewer serves JSON receipts inside the repository only. Default
+binding is localhost. For background operation, retain the server PID and log in `runs/`.
+The board defaults to current queue work; **Include history** exposes archived attempts.
+Details show complete article/dossier hashes and distinguish review receipts matching the
+current pair from older receipts. Coordinator task records in
+`runs/operations/coordination.json` are labeled separately from observed process liveness.
+Character/source history and current queue state remain separately inspectable.
+
 Audit the entire cohort across all source batches and source-coverage jobs with
 the project environment (including the registered producer's verification dependencies):
 

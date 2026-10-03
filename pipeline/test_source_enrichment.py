@@ -65,6 +65,19 @@ class SourceEnrichmentTests(unittest.TestCase):
             self.assertEqual(rows[0]['status'], 'already_running')
             self.assertFalse((job / 'source_checkpoint.json').exists())
 
+    def test_cross_output_live_character_claim_prevents_duplicate_research(self):
+        lock_dir = self.root / 'runs/.locks'
+        lock_dir.mkdir(parents=True, exist_ok=True)
+        path = lock_dir / f"source-{source_enrichment._research_source_hash(SOURCE)[:16]}-6728.lock"
+        with path.open('a') as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            with patch.object(source_enrichment, '_load_source_tools', return_value=LocalSources()):
+                rows = source_enrichment.run({'characters': ['木']}, SOURCE, self.output,
+                                            object(), root=self.root, workers=24)
+            self.assertEqual(rows[0]['status'], 'already_running')
+            job = source_enrichment.job_path(self.output, SOURCE['id'], '木')
+            self.assertFalse((job / 'source_checkpoint.json').exists())
+
     def test_locator_hash_ignores_only_redundant_pixel_metadata(self):
         located = {'source_scan_images': [{'pdf_page': 13, 'path': '/scan.png'}],
                    'source_leads': [{'candidates': [{'pdf_page_1based': 13, 'source_sha256': 'pixels'}]}]}
@@ -349,13 +362,13 @@ class SourceEnrichmentTests(unittest.TestCase):
         self.assertFalse(receipt['creates_authorship_or_approval'])
         self.assertEqual(source_enrichment.recover_frozen_inputs(job, self.root), {'status': 'unchanged'})
 
-    def test_cohort_selection_is_bounded_and_workers_are_capped(self):
+    def test_cohort_selection_is_bounded_and_workers_must_be_positive(self):
         cohort = {"characters": ["木", "水", "火", "土"]}
         # Only 木 is canonical in the fixture; other entries fail preparation independently.
         result = source_enrichment.prepare(cohort, SOURCE, self.output, limit=2, root=self.root)
         self.assertEqual([row["status"] for row in result], ["prepared", "failed", "deferred", "deferred"])
-        with self.assertRaisesRegex(ValueError, "between 1 and 3"):
-            source_enrichment.run(cohort, SOURCE, self.output, object(), workers=4, root=self.root)
+        with self.assertRaisesRegex(ValueError, "must be positive"):
+            source_enrichment.run(cohort, SOURCE, self.output, object(), workers=0, root=self.root)
 
     def test_unfinished_draft_continuation_keeps_baseline_and_requires_fresh_gates(self):
         previous = source_enrichment.job_path(self.output, SOURCE['id'], '木')
@@ -500,7 +513,7 @@ class SourceEnrichmentTests(unittest.TestCase):
         self.assertEqual(captured['feedback']['additional_research_context'], extra_context)
         self.assertTrue(captured['feedback']['review_existing_glyphs'])
         self.assertEqual(editorial.read(job / 'research_context.json'), extra_context)
-        self.assertEqual(len(captured['runner'].inherited_lock_fds), 1)
+        self.assertEqual(len(captured['runner'].inherited_lock_fds), 2)
         self.assertEqual(captured["feedback"]["source_leads"], LOCATED["source_leads"])
         self.assertTrue(captured["feedback"]["reuse_existing_glyph_candidates"])
         self.assertIn("OCR", captured["feedback"]["source_enrichment"]["record_ocr_uncertainty"])

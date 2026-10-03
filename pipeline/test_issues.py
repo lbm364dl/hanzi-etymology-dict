@@ -1,9 +1,14 @@
 import json
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+import subprocess
 import tempfile
+import threading
+import time
 import unittest
+from unittest.mock import patch
 
-from pipeline.issues import sync, body, triage_job
+from pipeline.issues import GH_TIMEOUT_SECONDS, sync, body, triage_job, gh
 from pipeline import editorial
 
 
@@ -150,6 +155,47 @@ class IssueTests(unittest.TestCase):
             self.assertEqual(first, second)
             self.assertEqual(sum(c[:2] == ('issue', 'create') for c in calls), 1)
             self.assertFalse(any('close' in c for c in calls))
+
+    def test_concurrent_same_key_syncs_serialize_lookup_and_create(self):
+        finding = dict(key='source:木:claim', kind='factual', title='Verify claim',
+                       details='A cited claim needs checking.', verification='Fresh factual review.')
+        remote, calls = [], []
+        lock = threading.Lock()
+        def invoke(*args):
+            with lock:
+                calls.append(args)
+                if args[:2] == ('issue', 'list'):
+                    return json.dumps(list(remote))
+                if args[:2] == ('issue', 'create'):
+                    content = Path(args[args.index('--body-file') + 1]).read_text()
+                    # Widen the race window: without the repo lock both workers
+                    # observe an empty list before either issue is visible.
+                    time.sleep(0.05)
+                    issue = {'number': len(remote) + 1,
+                             'url': f'https://github.com/owner/repo/issues/{len(remote) + 1}',
+                             'body': content, 'state': 'OPEN'}
+                    remote.append(issue)
+                    return issue['url']
+                self.fail('Unexpected GitHub operation: ' + repr(args))
+        with tempfile.TemporaryDirectory() as temp:
+            receipts = [Path(temp) / 'first.json', Path(temp) / 'second.json']
+            barrier = threading.Barrier(2)
+            def run(receipt):
+                barrier.wait()
+                return sync([finding], 'owner/repo', receipt, invoke)
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                first, second = [future.result() for future in
+                                 [pool.submit(run, receipt) for receipt in receipts]]
+        self.assertEqual(first[0]['number'], second[0]['number'])
+        self.assertEqual(len(remote), 1)
+        self.assertEqual(sum(call[:2] == ('issue', 'create') for call in calls), 1)
+
+    def test_gh_subprocess_timeout_is_bounded_and_propagates_for_retry(self):
+        timeout = subprocess.TimeoutExpired(['gh', 'issue', 'list'], 1)
+        with patch('pipeline.issues.subprocess.run', side_effect=timeout) as run:
+            with self.assertRaises(subprocess.TimeoutExpired):
+                gh('issue', 'list')
+        self.assertEqual(run.call_args.kwargs['timeout'], GH_TIMEOUT_SECONDS)
 
     def test_empty_verification_is_rejected(self):
         with self.assertRaises(ValueError):

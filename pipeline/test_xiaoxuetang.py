@@ -1,6 +1,7 @@
 """Tests for the character-scoped Xiaoxuetang query adapter."""
 import io
 import json
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 import tempfile
 import unittest
@@ -79,6 +80,21 @@ class XiaoxuetangTests(unittest.TestCase):
             self.assertEqual([x["character"] for x in first["queries"]], ["電"])
             self.assertEqual(first, second)
             self.assertTrue((Path(temp) / "xiaoxuetang-query" / "96FB.json").exists())
+
+    def test_concurrent_queries_share_one_atomic_per_character_cache_fill(self):
+        dossier = {"character": "木", "context": {}}
+        result = {"character": "木", "status": "no_results", "candidates": [],
+                  "accessed_at": "2026-10-03"}
+        with tempfile.TemporaryDirectory() as temp:
+            with patch("pipeline.xiaoxuetang.fetch_character", return_value=result) as fetch:
+                with ThreadPoolExecutor(max_workers=2) as pool:
+                    jobs = [pool.submit(xiaoxuetang.query_dossier, dossier, temp) for _ in range(2)]
+                    outputs = [job.result() for job in jobs]
+            self.assertEqual(fetch.call_count, 1)
+            self.assertEqual(outputs[0], outputs[1])
+            cache = Path(temp) / "xiaoxuetang-query" / f"{ord('木'):04X}.json"
+            self.assertEqual(json.loads(cache.read_text()), result)
+            self.assertFalse(cache.with_suffix(".json.tmp").exists())
 
     def test_network_failure_is_a_recorded_gap_not_a_failed_entry(self):
         with patch("pipeline.xiaoxuetang._rate_limited_post", side_effect=OSError("offline")):

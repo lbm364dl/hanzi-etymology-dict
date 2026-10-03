@@ -19,6 +19,8 @@ from urllib.parse import parse_qs, urlencode, urljoin, urlparse
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
+from pipeline.atomic_files import atomic_write_text, file_lock
+
 
 BASE_URL = "https://xiaoxue.iis.sinica.edu.tw/yanbian"
 RESULT_URL = BASE_URL + "/PageResult/PageResult"
@@ -181,17 +183,18 @@ def query_dossier(dossier: dict, directory: Path | str, timeout: int = 30) -> di
     queries = []
     for character in query_targets(dossier):
         path = root / f"{ord(character):04X}.json"
-        if path.exists():
-            try:
-                cached = json.loads(path.read_text(encoding="utf-8"))
-            except (OSError, json.JSONDecodeError):
-                cached = None
-            if (isinstance(cached, dict) and cached.get("character") == character
-                    and cached.get("status") in {"found", "no_results"}):
-                queries.append(cached)
-                continue
-        result = fetch_character(character, timeout=timeout)
-        path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        with file_lock(path.with_suffix(".lock")):
+            if path.exists():
+                try:
+                    cached = json.loads(path.read_text(encoding="utf-8"))
+                except (OSError, json.JSONDecodeError):
+                    cached = None
+                if (isinstance(cached, dict) and cached.get("character") == character
+                        and cached.get("status") in {"found", "no_results"}):
+                    queries.append(cached)
+                    continue
+            result = fetch_character(character, timeout=timeout)
+            atomic_write_text(path, json.dumps(result, ensure_ascii=False, indent=2) + "\n")
         queries.append(result)
     candidates = [candidate for query in queries for candidate in query.get("candidates", [])]
     return {"entry_character": dossier.get("character"), "source": SOURCE_TITLE,

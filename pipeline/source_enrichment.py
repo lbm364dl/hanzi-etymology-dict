@@ -15,18 +15,15 @@ from __future__ import annotations
 import argparse
 import copy
 import fcntl
-from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import json
 import shutil
 from pathlib import Path
 import re
 
-from pipeline import batch, editorial
+from pipeline import batch, editorial, work_queue
 
 ROOT = editorial.ROOT
-MAX_SELECTION = 10
-MAX_WORKERS = 3
 ISSUE_METADATA = {"github_repo", "tracking_issue_url", "issue_parent_number",
                   "issue_milestone", "issue_labels", "issue_parent_by_kind"}
 
@@ -52,6 +49,26 @@ def _locator_hash(located):
 
 SOURCE_POLICY = """
 SOURCE-SPECIFIC CHINESE ENRICHMENT:
+Keep chronology and attestation tied to the actual evidence. A received dictionary
+or Shuowen gloss is an attested lexicographic interpretation; it does not by itself
+date a historical lexical use or establish the original sense. When dating is
+unresolved, do not call that use early without separate period evidence. A source
+saying that another spelling later came to be used does not demonstrate that one
+written graph changed into the other. Distinguish alternative graphs, later sense
+assignment and an evidenced graphic change in both learner wording and metadata.
+Do not add a whole-graph borrowing limitation when no supported borrowing account
+is at issue. State the specific evidential gap instead. Non-display of historical
+forms in consulted records establishes only what those records show, not their
+absence from an entire period or corpus.
+Modern visible assembly and ancient derivation require separate evidence. A source
+rejecting derivation from a look-alike graph does not itself negate a supported
+current decomposition. Verify the grouped modern unit or positional variant through
+current-form sources; do not promote mere resemblance to a standalone component
+identity or replace a supported current account with an ancient research gap.
+In expert phonetic comparisons, qualify approximate matches with the actual relevant
+sound contrast and identify the reconstruction/reading system; avoid an unexplained
+statement that sounds simply differ. Keep specialist contrasts after the learner
+account and do not invent a word pronunciation to justify proposed borrowing.
 The supplied source bibliography and corpus are research leads for this character, not
 pre-verified evidence. Search the supplied corpus and inspect all relevant records. Confirm
 the actual headword, passage, page continuation, component identity and any cited rare glyph
@@ -842,8 +859,8 @@ def status(cohort, source, output, root=ROOT):
 
 
 def prepare(cohort, source, output, limit=3, root=ROOT):
-    if limit < 1 or limit > MAX_SELECTION:
-        raise ValueError(f"Selection limit must be between 1 and {MAX_SELECTION}")
+    if limit < 1:
+        raise ValueError("Selection limit must be positive")
     rows, selected = [], 0
     verified = _verified_cohort_jobs(cohort, source, output, root)
     for char in cohort["characters"]:
@@ -942,22 +959,33 @@ def _continuation_inputs(previous, job, character, source, snapshot):
 
 
 def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revisions=3,
-        publish_now=False, source_context=None, continuation=None, research_context=None):
-    if not 1 <= workers <= MAX_WORKERS:
-        raise ValueError(f"Workers must be between 1 and {MAX_WORKERS}")
-    if not 1 <= limit <= MAX_SELECTION:
-        raise ValueError(f"Selection limit must be between 1 and {MAX_SELECTION}")
-    rows = {}
-    selected = []
+        publish_now=False, source_context=None, continuation=None, research_context=None,
+        retry_attention=False, excluded=()):
+    if workers < 1 or limit < 1:
+        raise ValueError("Workers and selection limit must be positive")
+    queue_dir = Path(output) / source['id']
+    with work_queue.supervisor(queue_dir / 'queue.lock'):
+        return _run_queue(cohort, source, output, runner, limit, workers, root,
+                          max_revisions, publish_now, source_context, continuation,
+                          research_context, retry_attention, excluded)
+
+
+def _run_queue(cohort, source, output, runner, limit, workers, root, max_revisions,
+               publish_now, source_context, continuation, research_context, retry_attention, excluded):
     verified = _verified_cohort_jobs(cohort, source, output, root)
-    for char in cohort["characters"]:
-        job = job_path(output, source["id"], char)
-        if char in verified:
-            rows[char] = {"character": char, "status": "published", "job": str(verified[char])}
-        elif len(selected) < limit:
-            selected.append(char)
-        else:
-            rows[char] = {"character": char, "status": "deferred", "job": str(job)}
+    queue_path = Path(output) / source['id'] / 'queue.json'
+    previous_identity = editorial.read(queue_path)['identity'] if queue_path.exists() else {}
+    # Omitted optional contexts resume their frozen queue values. Explicitly changed
+    # contexts require a fresh queue, just as changed per-job research inputs do.
+    source_context = source_context if source_context is not None else previous_identity.get('source_context')
+    research_context = research_context if research_context is not None else previous_identity.get('research_context')
+    continuation = continuation if continuation is not None else previous_identity.get('continuation')
+    queue = work_queue.Queue(queue_path, {
+        'characters': cohort['characters'], 'source_hash': _research_source_hash(source),
+        'root': str(Path(root).resolve()), 'source_context': source_context,
+        'continuation': str(continuation) if continuation else None,
+        'research_context': research_context})
+    queue.state['agent_capacity'] = getattr(getattr(runner, 'agent_slots', None), 'capacity', workers)
 
     def process_unlocked(char, runner):
         job = job_path(output, source["id"], char)
@@ -986,7 +1014,7 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
                 return {"character": char, "status": "pending_issue_sync", "job": str(job),
                         "error": issue_sync.get("error")}
             if publish_now:
-                return publish_job(job, source, root)
+                return _publish_job_locked(job, source, root)
             return {"character": char, "status": "approved", "job": str(job)}
 
         try:
@@ -1136,29 +1164,45 @@ def run(cohort, source, output, runner, limit=3, workers=1, root=ROOT, max_revis
     def process(char):
         job = job_path(output, source["id"], char)
         job.mkdir(parents=True, exist_ok=True)
-        # An OS lock releases on coordinator exit and prevents two harnesses from
-        # writing the same stage outputs. A status file is never proof of liveness.
-        with (job / "coordinator.lock").open("a") as lock:
+        # Share a claim across output folders, then protect the actual job files.
+        # Both locks survive an orphaned live model subprocess.
+        lock_dir = Path(root) / 'runs' / '.locks'
+        lock_dir.mkdir(parents=True, exist_ok=True)
+        claim_path = lock_dir / f"source-{_research_source_hash(source)[:16]}-{ord(char):04X}.lock"
+        with claim_path.open('a') as claim, (job / 'coordinator.lock').open('a') as lock:
             try:
+                fcntl.flock(claim, fcntl.LOCK_EX | fcntl.LOCK_NB)
                 fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
             except BlockingIOError:
                 return {"character": char, "status": "already_running", "job": str(job)}
             try:
                 local_runner = copy.copy(runner)
-                local_runner.inherited_lock_fds = (lock.fileno(),)
+                local_runner.inherited_lock_fds = (claim.fileno(), lock.fileno())
                 return process_unlocked(char, local_runner)
             finally:
                 fcntl.flock(lock, fcntl.LOCK_UN)
+                fcntl.flock(claim, fcntl.LOCK_UN)
 
-    if selected:
-        with ThreadPoolExecutor(max_workers=workers) as pool:
-            futures = {char: pool.submit(process, char) for char in selected}
-            for char in selected:
-                rows[char] = futures[char].result()
-    return [rows[char] for char in cohort["characters"]]
+    return queue.execute(cohort['characters'], process,
+                         lambda char: job_path(output, source['id'], char), verified,
+                         workers, limit, retry_attention, publish_now, excluded)
 
 
 def publish_job(job, source, root=ROOT):
+    """Lock the exact job before its source gates and canonical publication lock."""
+    job = Path(job)
+    with (job / 'coordinator.lock').open('a') as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as exc:
+            raise ValueError('Source job coordinator or agent is live') from exc
+        try:
+            return _publish_job_locked(job, source, root)
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
+
+
+def _publish_job_locked(job, source, root=ROOT):
     job = Path(job)
     state = editorial.read(job / "status.json")
     if state.get("status") != "approved":
@@ -1204,6 +1248,39 @@ def publish_job(job, source, root=ROOT):
             "batch_publication": str(result)}
 
 
+
+def sync_and_publish_job(job, source, runner, root=ROOT):
+    """Keep remote triage, saved status and publication under the same job lock."""
+    job = Path(job)
+    with (job / 'coordinator.lock').open('a') as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return {'character': editorial.read(job / 'source.json')['character'],
+                    'status': 'already_running', 'job': str(job)}
+        try:
+            state = editorial.read(job / 'status.json')
+            if state.get('status') != 'approved':
+                raise ValueError('Only an approved source job can be published')
+            local_runner = copy.copy(runner)
+            local_runner.inherited_lock_fds = (lock.fileno(),)
+            try:
+                issue_sync = _triage_and_sync_issues(job, source, local_runner)
+            except Exception as exc:
+                issue_sync = {'status': 'pending', 'repository': source.get('github_repo'),
+                              'error': str(exc)}
+                editorial.write(job / 'issue_sync.json', issue_sync)
+            state['issue_sync_status'] = issue_sync['status']
+            state['issue_receipts_hash'] = editorial.digest(issue_sync.get('issues', []))
+            editorial.write(job / 'status.json', state)
+            if issue_sync['status'] == 'pending':
+                return {'character': state['character'], 'status': 'pending_issue_sync',
+                        'job': str(job), 'error': issue_sync.get('error')}
+            return _publish_job_locked(job, source, root)
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=("prepare", "run", "publish", "status"))
@@ -1213,18 +1290,22 @@ def main():
     parser.add_argument("--output", type=Path, default=ROOT / "runs/source-enrichment")
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--limit", type=int, default=3)
-    parser.add_argument("--workers", type=int, default=1, help="Parallel character jobs, capped at 3")
+    parser.add_argument("--workers", type=int, default=1, help="Maximum concurrent character jobs (start small, then raise after a smoke run)")
+    parser.add_argument("--agents", type=int, help="Maximum active model processes, shared across character workers")
     parser.add_argument("--max-revisions", type=int, default=3)
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--command", default=json.dumps(editorial.DEFAULT_COMMAND), help="Custom command; stages remain gpt-6-luna/low")
     parser.add_argument("--publish-now", action="store_true")
+    parser.add_argument("--exclude", default="", help="Characters currently owned by separate work; leave them queued")
+    parser.add_argument("--retry-attention", action="store_true",
+                        help="Explicitly retry held failures/review/source blockers after fixing their cause")
     parser.add_argument("--scan-context", type=Path, help="JSON records with absolute path, pdf_page, optional printed_page")
     parser.add_argument("--continue-from", type=Path, help="Unfinished terminal source job; fresh research and reviews required")
     parser.add_argument("--research-context", type=Path, help="JSON object of additional source leads and findings to research directly")
     parser.add_argument("--tracking-issue-url", help="Existing GitHub issue for this enrichment or source finding")
     args = parser.parse_args()
-    if not 1 <= args.limit <= MAX_SELECTION:
-        parser.error(f"--limit must be between 1 and {MAX_SELECTION}")
+    if args.limit < 1 or args.workers < 1 or (args.agents is not None and args.agents < 1):
+        parser.error("--limit, --workers and --agents must be positive")
     registry = _source_registry(args.registry)
     source = _source(registry, args.source)
     tracking_issue = args.tracking_issue_url or source.get("tracking_issue_url") or registry.get("tracking_issue_url")
@@ -1233,6 +1314,8 @@ def main():
     cohort = load_cohort(args.cohort)
     context = editorial.read(args.scan_context) if args.scan_context else None
     runner = editorial.Runner(json.loads(args.command), "gpt-6-luna", args.timeout, "low")
+    from pipeline.agent_slots import AgentSlots
+    runner.agent_slots = AgentSlots(args.root / 'runs/.locks/agent-slots', args.agents or args.workers)
     if args.action == "prepare":
         result = prepare(cohort, source, args.output, args.limit, args.root)
     elif args.action == "status":
@@ -1248,30 +1331,17 @@ def main():
                 continue
             if approved:
                 try:
-                    state = editorial.read(job / "status.json")
-                    try:
-                        issue_sync = _triage_and_sync_issues(job, source, runner)
-                    except Exception as exc:
-                        issue_sync = {"status": "pending", "repository": source.get("github_repo"),
-                                      "error": str(exc)}
-                        editorial.write(job / "issue_sync.json", issue_sync)
-                    if issue_sync["status"] == "pending":
-                        state["issue_sync_status"] = "pending"
-                        editorial.write(job / "status.json", state)
-                        result.append({"character": row, "status": "pending_issue_sync", "job": str(job),
-                                       "error": issue_sync.get("error")})
-                        continue
-                    state["issue_sync_status"] = issue_sync["status"]
-                    state["issue_receipts_hash"] = editorial.digest(issue_sync.get("issues", []))
-                    editorial.write(job / "status.json", state)
-                    result.append(publish_job(job, source, args.root))
-                    published += 1
+                    publication = sync_and_publish_job(job, source, runner, args.root)
+                    result.append(publication)
+                    if publication['status'] == 'published':
+                        published += 1
                 except Exception as exc:
                     result.append({"character": row, "status": "failed", "job": str(job), "error": str(exc)})
     else:
         result = run(cohort, source, args.output, runner, args.limit, args.workers, args.root,
                      args.max_revisions, args.publish_now, context, args.continue_from,
-                     editorial.read(args.research_context) if args.research_context else None)
+                     editorial.read(args.research_context) if args.research_context else None,
+                     args.retry_attention, set(args.exclude))
     print(json.dumps(result, ensure_ascii=False, indent=2))
     if any(row.get("status") in ("failed", "needs_revision") for row in result):
         raise SystemExit(2)

@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from pipeline.editorial import dossier_update_is_safe
 from unittest.mock import patch
 
 from pipeline.editorial import (Runner, ARTICLE_SCHEMA, REVIEW_SCHEMA, digest, make_review, publish,
@@ -2049,6 +2050,26 @@ class EditorialTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Current source dossier changed"):
                 publish(ARTICLE, DOSSIER, self.reviews(), root / "entries")
             self.assertEqual(json.loads(path.read_text()), current)
+
+    def test_reviewed_exact_baseline_allows_inspection_notes_but_protects_language_metadata(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = root / 'dossiers/6728.json'
+            current = copy.deepcopy(DOSSIER)
+            write(path, current)
+            incoming = copy.deepcopy(current)
+            incoming['context']['editorial_rules'] = ['Original source images were inspected.']
+            with self.assertRaisesRegex(ValueError, 'Current source dossier changed'):
+                publish(ARTICLE, incoming, self.reviews(dossier=incoming), root / 'entries')
+            publish(ARTICLE, incoming, self.reviews(dossier=incoming), root / 'entries',
+                    reviewed_baseline_hash=digest(current))
+            self.assertEqual(json.loads(path.read_text()), incoming)
+            changed_language = copy.deepcopy(incoming)
+            changed_language['context']['target_language'] = 'ja'
+            self.assertFalse(dossier_update_is_safe(
+                incoming, changed_language, ARTICLE, digest(incoming)))
+            self.assertFalse(dossier_update_is_safe(
+                current, incoming, ARTICLE, 'stale-baseline'))
 
     def test_publication_preserves_current_external_evidence(self):
         with tempfile.TemporaryDirectory() as temp:

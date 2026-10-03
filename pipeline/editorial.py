@@ -12,6 +12,7 @@ from pathlib import Path
 import re
 import signal
 import subprocess
+import tempfile
 import time
 from urllib.parse import urlparse
 
@@ -715,9 +716,20 @@ def read(path):
 def write(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    temp = path.with_suffix(path.suffix + ".tmp")
-    temp.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
-    temp.replace(path)
+    # Shared caches and checkpoints can have simultaneous writers. Each writer
+    # replaces a complete file from its own temporary inode in the same directory.
+    temp = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
+                                         prefix=path.name + ".", suffix=".tmp", delete=False) as stream:
+            temp = Path(stream.name)
+            stream.write(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        temp.replace(path)
+    finally:
+        if temp is not None:
+            temp.unlink(missing_ok=True)
 
 
 def validate_dossier(dossier):
@@ -935,7 +947,7 @@ def validate_published(entry, current_dossier=None):
     return article
 
 
-def dossier_update_is_safe(current, incoming_dossier, article):
+def dossier_update_is_safe(current, incoming_dossier, article, reviewed_baseline_hash=None):
     """Allow reviewed retirement of unused evidence while protecting every live citation."""
     incoming = {item["id"]: item for item in incoming_dossier["evidence"]}
     used = set()
@@ -950,7 +962,14 @@ def dossier_update_is_safe(current, incoming_dossier, article):
                 collect(nested)
     collect(article)
     if current.get("context") != incoming_dossier.get("context"):
-        return False
+        # Exact reviewed source jobs can update inspection/provenance notes. Keep
+        # language, imported identity metadata and other context contracts protected.
+        if digest(current) != reviewed_baseline_hash:
+            return False
+        protected = lambda context: {k: v for k, v in (context or {}).items()
+                                     if k not in ('provenance', 'editorial_rules')}
+        if protected(current.get('context')) != protected(incoming_dossier.get('context')):
+            return False
     for item in current.get("evidence", []):
         replacement = incoming.get(item["id"])
         if replacement is None:
@@ -961,7 +980,8 @@ def dossier_update_is_safe(current, incoming_dossier, article):
     return True
 
 
-def publish(article, dossier, reviews, output_dir=ROOT / "content" / "entries"):
+def publish(article, dossier, reviews, output_dir=ROOT / "content" / "entries",
+            reviewed_baseline_hash=None):
     validate_reviews(article, dossier, reviews)
     entry = {**article, "evidence": dossier["evidence"], "dossier": dossier,
              "review": {"status": "approved", "article_hash": digest(article),
@@ -970,7 +990,7 @@ def publish(article, dossier, reviews, output_dir=ROOT / "content" / "entries"):
     dossier_path = path.parent.parent / "dossiers" / path.name
     if dossier_path.exists():
         current = read(dossier_path)
-        if not dossier_update_is_safe(current, dossier, article):
+        if not dossier_update_is_safe(current, dossier, article, reviewed_baseline_hash):
             raise ValueError("Current source dossier changed; research and review the updated inputs")
     write(dossier_path, dossier)
     write(path, entry)
@@ -1508,7 +1528,18 @@ class Runner:
                 "model": self.model, "reasoning": self.reasoning, "started_at": time.time()}
         write(meta_path, meta)
         process = None
+        lease = None
+        lease_fd = None
         try:
+            slots = getattr(self, 'agent_slots', None)
+            if slots is not None:
+                meta.update(status='waiting_for_agent_slot', queued_at=time.time())
+                write(meta_path, meta)
+                lease = slots.acquire()
+                lease_fd = lease.__enter__()
+                meta.update(status='running', started_at=time.time(), agent_capacity=slots.capacity,
+                            slot_wait_seconds=time.time() - meta['queued_at'])
+                write(meta_path, meta)
             command = [part.format(output=str(output.resolve()), schema=str((directory / "agent-schema.json").resolve()),
                                    model=self.model, reasoning=self.reasoning, role=role) for part in self.command]
             if image_paths:
@@ -1525,7 +1556,8 @@ class Runner:
             with (directory / "stdout.log").open("w") as stdout, (directory / "stderr.log").open("w") as stderr:
                 process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=stdout, stderr=stderr,
                                            text=True, start_new_session=True,
-                                           pass_fds=getattr(self, 'inherited_lock_fds', ()))
+                                           pass_fds=tuple(getattr(self, 'inherited_lock_fds', ())) +
+                                                    ((lease_fd,) if lease_fd is not None else ()))
                 process.communicate(prompt, timeout=self.timeout)
                 if process.returncode:
                     raise RuntimeError(f"Agent exited with status {process.returncode}; see {directory / 'stderr.log'}")
@@ -1554,8 +1586,12 @@ class Runner:
             meta.update(status="failed", error=str(exc))
             raise
         finally:
-            meta["finished_at"] = time.time()
-            write(meta_path, meta)
+            try:
+                meta["finished_at"] = time.time()
+                write(meta_path, meta)
+            finally:
+                if lease_fd is not None:
+                    lease.__exit__(None, None, None)
 
 
 def research_dossier(dossier, directory, runner, review_context=None):
