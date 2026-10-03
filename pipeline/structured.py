@@ -389,7 +389,12 @@ Use separate edges for competing analyses. A component role applies within the h
 do not assert that a component has that role everywhere. Do not create component-of-self edges for an indivisible whole-graph pictograph; its pictorial
 analysis belongs in its component record and formation. The harness derives has_sense and sense-development edges from meaning_history; the writer
 only emits supported component and graphic relationships. Do not repeat meaning relationships
-in the writer output. Give every sense an explicit certainty; do not invent connectivity. Readers should understand apparent contradictions
+in the writer output. A development record must express a sourced positive proposal
+about a relation in the stated direction, even when that proposal is disputed.
+Statements that no transition or connection is established belong in limitations,
+not developments: generating a directional edge from a denial invents connectivity.
+Preserve genuinely sourced uncertain proposals rather than deleting them merely
+because they are uncertain. Give every sense an explicit certainty; do not invent connectivity. Readers should understand apparent contradictions
 (e.g. a red pigment contributing the category color need not make the whole character mean red).
 """
 
@@ -661,6 +666,11 @@ For v2, history covers the written form; meaning_history covers senses and lexic
 Check each sense's status against its own cited evidence: a current sense needs evidence of
 present use, even when its paragraph also cites ancient attestations. Check the corresponding
 generated has_sense edge after any status or citation change.
+Check that every development has a sourced affirmative relational proposal in its
+stated direction. A mere statement that no connection is established belongs in
+limitations and must not produce a sense-development edge. Disputed positive
+proposals may retain qualified edges; missing certainty alone is not grounds to
+erase supported proposals.
 Read the whole entry before reporting missing information. Do not require a loan already
 explained in meaning_history to be duplicated in history, or demand that a stated limitation
 be repeated in every section. An empty history is acceptable when no additional supported

@@ -474,6 +474,10 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
             'The original before→after proposal was a genuine error, now repaired. '
             'Producer overlays and current consumer occurrences have been validated. '
             'Independently inspect exact original pixels: report the printed literal, not a guess. '
+            'observed_literal covers only the changed raw_start/raw_end span, never '
+            'the surrounding phrase or a normalized neighboring character. For a '
+            'single-character repair report only that character. If unreadable, '
+            'return null and disposition pending rather than guessing. '
             'Use applied_repair_scan_matches_corpus only if observed_literal equals after. '
             'Preserve original findings and report pending for unclear pixels or unsupported claims.')
         schema['required'].append('repair_observations')
@@ -481,8 +485,9 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
             'minItems': len(repairs), 'maxItems': len(repairs), 'items': {
             'type': 'object', 'additionalProperties': False,
             'required': ['key', 'observed_literal', 'pixel_reason'],
-            'properties': {**{f: {'type': 'string', 'minLength': 1}
-                           for f in ('observed_literal', 'pixel_reason')},
+            'properties': {'pixel_reason': {'type': 'string', 'minLength': 1},
+                           'observed_literal': {'type': ['string', 'null'], 'minLength': 1,
+                               'maxLength': max(max(len(r['before']), len(r['after'])) for r in repairs)},
                            'key': {'type': 'string', 'enum': [repair['key'] for repair in repairs]}}}}
     allowed_dispositions = ['pending', 'unresolved_identity_not_used']
     if checks:

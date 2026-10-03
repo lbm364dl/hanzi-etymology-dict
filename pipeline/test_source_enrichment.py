@@ -136,8 +136,10 @@ class SourceEnrichmentTests(unittest.TestCase):
                 validator.validate([valid])
                 test.assertTrue(list(validator.iter_errors([valid, {**valid, 'key':'identity'}])))
                 test.assertTrue(list(validator.iter_errors([{**valid, 'key':'identity'}])))
+                test.assertTrue(list(validator.iter_errors([{**valid, 'observed_literal':'皃鐘'}])))
+                validator.validate([{**valid, 'observed_literal':None}])
                 raise RuntimeError('Transport checked')
-        with patch('pipeline.source_repairs.verify', return_value={'key':'repair'}):
+        with patch('pipeline.source_repairs.verify', return_value={'key':'repair', 'before':'兒', 'after':'皃'}):
             with self.assertRaisesRegex(RuntimeError, 'Transport checked'):
                 source_enrichment.resolve_source_findings(job, Runner(), repair_checks=[{'key':'repair'}])
 

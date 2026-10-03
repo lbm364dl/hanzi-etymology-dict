@@ -1,0 +1,19 @@
+{
+  "instruction": "Use the prior writer+review packet to repair only `learner.overview.text` and its `evidence_ids`. Keep the learner overview at or below the 45-word mechanical maximum while preserving these distinct facts: (1) current 四 visibly has 囗 around inner 儿-form strokes, with no ancient roles implied; (2) early numeral 亖 directly wrote four and coexisted alongside forms written 四; (3) counting rods are a separate proposal about some 四 forms; (4) a breath depiction linked to 呬 is proposed as the earlier graph later borrowed for four, but its referent’s ancient name is not established; (5) a separate proposal says 四 was the original graph for 泗 (“nasal discharge”), later borrowed for four, and this proposal lacks textual attestation. Keep other article fields unchanged. Do not add a Modern Mandarin sound comparison to the unknown-role 儿 visual component; its dossier establishes current structure, not a phonetic role or an evidence-cited 儿 reading pair.",
+  "allowed_edit_paths": [
+    "learner/overview/text",
+    "learner/overview/evidence_ids"
+  ],
+  "verified_review_findings": [
+    "Both independent final reviews on the previous authored candidate require the learner overview to distinguish the directly numeral 亖 form and its coexistence with forms 四 from the separate counting-rod interpretation of some 四 forms; they also require distinct attributed 呬/breath and 泗/nasal-discharge borrowing proposals and the specific no-text-attestation caveat on 泗.",
+    "The earlier request for a current Mandarin 儿 ér / 四 sì pair in components[1].sound is not adopted: this component is visually identified by IDS, its ancient role is unknown, and no cited dossier evidence establishes that pair or a phonetic relation."
+  ],
+  "editorial_adjudication": "Author within the 45-word hard maximum; don’t rely on a second stage to compress away an essential fact. The dossier already supports the exact scoped claims: early 亖 directly writes four and coexists with 四 forms (X-e6d62080b1a5fc5178a4); counting rods is a distinct interpretation of some 四 forms (X-7b17032f87fb77433387); the attributed breath/呬 and separate original 泗 proposal are in X-2723cf5f9190c41c2cfe, X-4b62255296f832195814, and X-e6d62080b1a5fc5178a4. Only the 泗 proposal has an explicit no-text-attestation caveat. Current form identity ⿴囗儿 is X-741838c69c6335267eb0; keep it a current visible description and distinct from historical redraws/formation claims.",
+  "citation_correction_instructions": "Use evidence_ids arrays. X-741838c69c6335267eb0 supports only current visible ⿴囗儿; X-e6d62080b1a5fc5178a4 supports early 亖 and the 泗 proposal/no-text caveat; X-7b17032f87fb77433387 supports counting rods; X-2723cf5f9190c41c2cfe and X-4b62255296f832195814 support the attributed breath/呬 proposal and qualified comparison.",
+  "source_followup_questions": [
+    "Does the exact learner text fit the 45-word hard limit while retaining and citing each essential distinction?",
+    "Does the candidate keep early 亖, current visual ⿴囗儿 structure, and later 四 origin hypotheses distinct?",
+    "Is the unknown ancient name scope attached to the breath referent and lack of textual attestation attached only to the 泗 proposal?"
+  ],
+  "source_followup_policy": "Review the complete candidate against cited evidence. These notes are hypotheses to verify, not forced verdicts. Require all essential distinctions, but do not request a modern sound pair for an unknown-role visible component without source evidence."
+}
