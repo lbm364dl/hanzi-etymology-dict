@@ -1908,7 +1908,7 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
                 if guidance:
                     source_context = {**(source_context or {}),
                         "source_followup_questions": guidance,
-                        "source_followup_policy": "These notes and earlier findings are hypotheses to independently recheck against the exact current article and source evidence, not approvals or instructions to force a verdict. Check any named superseded record's provenance and use current verified support for required corrections. Do not invent a missing sound mechanism merely because an earlier review suggested one."}
+                        "source_followup_policy": "These notes and earlier findings are hypotheses to independently recheck against the exact current article and source evidence, not approvals or instructions to force a verdict. Author action instructions describe the requested prior repair; do not repeat them as commands to edit the current candidate. Array indices may shift after removal: identify the actual record by its current text and citations. If the requested defect is already absent, report no correction for it, and do not return revise solely to repeat the completed request. Check any named superseded record's provenance and use current verified support for required corrections. Do not invent a missing sound mechanism merely because an earlier review suggested one."}
             if approved_base and digest(dossier) == approved_base["dossier_hash"]:
                 source_context = {**(source_context or {}), "review_scope": "targeted_refinement",
                     "validated_base_article": approved_base["article"],
