@@ -738,6 +738,31 @@ class EditorialTests(unittest.TestCase):
         self.assertEqual(result['summary']['text'],article['summary']['text'])
         self.assertEqual(result['summary']['evidence_ids'],article['summary']['evidence_ids'])
 
+    def test_overlapping_patch_paths_get_specific_repair_feedback(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
+        article = copy.deepcopy(ARTICLE_V2)
+        dossier = {**DOSSIER, 'glyph_research': {'historical_glyphs': article['historical_glyphs']}}
+        calls = []
+        def invoke(role, inputs, schema, directory):
+            calls.append(inputs)
+            if len(calls) == 1:
+                return {'edits': [
+                    {'path': 'components/0', 'value_json': json.dumps(article['components'][0])},
+                    {'path': 'components/0/form', 'value_json': '木'},
+                ]}
+            finding = inputs['validation_findings'][0]
+            self.assertIn('distinct nonoverlapping paths', finding)
+            self.assertIn('parent path and its descendant', inputs['task'])
+            self.assertIn('either replace the complete array or edit individual items', inputs['task'])
+            self.assertEqual(inputs['article'], article)
+            return {'edits': [{'path': 'summary/text', 'value_json': 'A tree.'}]}
+        result = apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                     WRITER_SCHEMA, Path('/unused'), invoke)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(result['summary']['text'], 'A tree.')
+        self.assertEqual(result['components'], article['components'])
+        self.assertEqual(article, ARTICLE_V2)
+
     def test_targeted_patch_repairs_semantic_validation_before_review(self):
         from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
         article = copy.deepcopy(ARTICLE_V2)

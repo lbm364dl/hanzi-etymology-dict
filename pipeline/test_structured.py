@@ -1,11 +1,12 @@
 """Scope and unknown-reading regression tests independent of article authoring."""
 import copy
+import json
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from pipeline.editorial import validate_article
+from pipeline.editorial import validate_article, validate_published
 from pipeline.structured import (UNIHAN_HSK1_READINGS, REVIEW_V2_POLICY, V2_POLICY,
                                  default_unihan_readings_path, component_is_current_form,
                                  validate_modern_mandarin_sound)
@@ -232,6 +233,21 @@ class ComponentScopeTests(unittest.TestCase):
         edge['object']['id'] = '爱'
         article['relationships'].append(edge)
         validate_article(article, dossier)
+
+    def test_reviewed_legacy_descriptive_component_forms_remain_valid(self):
+        # These are existing approved legacy entries, not synthetic exceptions:
+        # 青 groups its lower component descriptively and 武 labels a changed 戈 shape.
+        root = Path(__file__).resolve().parents[1]
+        for character in ("青", "武"):
+            entry = json.loads((root / "content/entries" / f"{ord(character):04X}.json").read_text(encoding="utf-8"))
+            with self.subTest(character=character):
+                published = validate_published(entry)
+                forms = {component["form"] for component in published["components"]}
+                if character == "青":
+                    self.assertIn("月-shaped lower part", forms)
+                else:
+                    self.assertIn("戈 (altered)", forms)
+                self.assertTrue(all("element_kind" not in component for component in published["components"]))
 
     def test_legacy_components_keep_entry_scope_and_known_readings(self):
         article = copy.deepcopy(ARTICLE_V2)

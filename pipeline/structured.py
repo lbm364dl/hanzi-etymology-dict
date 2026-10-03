@@ -138,10 +138,17 @@ def validate_component_metadata(article, dossier, validate_sections):
         if not isinstance(scope, str) or len(scope) != 1 or not literal_form(scope):
             raise ValueError("Component scope_character must identify one literal host character")
         component_is_current_form(component, article)
+        # Archived reviewed articles predate the typed element contract and sometimes
+        # use descriptive form labels for visually altered/grouped parts. Preserve that
+        # legacy meaning exactly; explicit new writer records remain strictly typed.
+        has_element_kind = "element_kind" in component
         kind = component.get("element_kind", "glyph")
         element_id = component.get("element_id", "")
         element_label = component.get("element_label", "")
-        if kind == "glyph":
+        if not has_element_kind:
+            if element_id or element_label:
+                raise ValueError("element_id and element_label require an explicit element_kind")
+        elif kind == "glyph":
             if not literal_form(component.get("form", "")):
                 raise ValueError("Glyph components require a literal Han form")
             if element_id or element_label:
@@ -598,7 +605,9 @@ def validate_v2(article, dossier, validate_sections):
     if dossier.get("glyph_research", {}).get("historical_glyphs") != glyphs:
         raise ValueError("Historical glyphs must match the researched selection")
     for component in article["components"]:
-        if component.get("element_kind") == "noncharacter_mark":
+        # Typed components are a new authoring contract. Older reviewed records may
+        # carry descriptive legacy form labels and retain their original semantics.
+        if component.get("element_kind") == "noncharacter_mark" or "element_kind" not in component:
             continue
         for field in ("form", "origin_form"):
             if not all(any(term in unicodedata.name(char, "") for term in ("CJK", "KANGXI RADICAL", "IDEOGRAPHIC"))
