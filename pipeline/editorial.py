@@ -581,6 +581,11 @@ PROMPTS['source_coverage'] += (
     'clickable citations; do not request source names or research workflow remarks '
     'inside explanation prose. Identify the exact material claim or omitted '
     'qualification rather than demanding every detail of the book entry. '
+    'For a claimed source mismatch, inspect the exact field and its evidence_ids. '
+    'An independently sourced modern decomposition need not be asserted by the '
+    'book when its cited proposal concerns a different historical form. Compare '
+    'each claim with the source actually supporting it; preserve competing '
+    'accounts and do not require every consulted source to endorse every claim. '
     'The findings array lists corrective discrepancies, not positive observations; '
     'a passing coverage receipt has no corrective findings.')
 
