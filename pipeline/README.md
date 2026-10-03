@@ -71,6 +71,14 @@ not claim that corpus metadata was populated or that OCR text was repaired. Chan
 pixels, a different current field value, missing observations or mismatched labels invalidate
 the result. This disposition cannot discharge a transcription or character-identity repair.
 
+An already-accurate passage can be checked with `transcription_checks`, each binding
+a retained finding key, PDF page, exact current text offset/literal and original pixel
+hash. A separate Luna low reviewer observes that span; only an exact match permits
+`verified_transcription_matches_corpus`. The gate rechecks current corpus text and
+source pixels. No replacement hypothesis is required or invented. This verifies the
+specified transcription only, not neighboring passages, scholarly interpretation,
+missing page metadata or an entire page. Unclear or discrepant pixels remain pending.
+
 Applied literal OCR repairs can be checked through `resolve_source_findings(...,
 repair_checks=[...])`. Each check identifies the retained finding, producer page directory,
 raw start/end offsets, and original before/after literals. The actual producer correction

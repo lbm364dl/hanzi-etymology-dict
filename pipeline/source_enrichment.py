@@ -369,6 +369,39 @@ def _verify_missing_page_metadata(job, checks):
     return [{**check, 'source_scan': pages[check['pdf_page']]['source_scan']} for check in checks]
 
 
+def _verify_transcription_checks(job, checks):
+    """Bind an observation of existing text, without inventing a replacement proposal."""
+    job = Path(job)
+    source = editorial.read(job / 'source.json')['registry_source']
+    keys = {f['key'] for f in editorial.read(job / 'source_findings.json')['findings']}
+    if len({c['key'] for c in checks}) != len(checks):
+        raise ValueError('Transcription checks require unique retained findings')
+    pages = {}
+    needed = {c['pdf_page'] for c in checks}
+    with Path(source['corpus_path']).open() as corpus:
+        for line in corpus:
+            page = json.loads(line)
+            number = page.get('pdf_page_1based')
+            if number in needed:
+                if number in pages:
+                    raise ValueError('Transcription page identity is ambiguous')
+                pages[number] = page
+    normalized = []
+    for check in checks:
+        page = pages.get(check['pdf_page'], {})
+        start, current = check.get('text_offset'), check.get('current')
+        if (check['key'] not in keys or type(start) is not int or start < 0
+                or not isinstance(current, str) or not current
+                or page.get('text', '')[start:start + len(current)] != current
+                or page.get('source_sha256') != check.get('source_pixel_sha256')
+                or ('source_scan' in check and check['source_scan'] != page.get('source_scan'))):
+            raise ValueError('Transcription check requires exact current text and source pixels')
+        editorial.source_scan_attachments([{'path': page['source_scan'],
+            'pdf_page': check['pdf_page'], 'source_pixel_sha256': check['source_pixel_sha256']}])
+        normalized.append({**check, 'source_scan': page['source_scan']})
+    return normalized
+
+
 def _source_findings_pending(job):
     """Retain findings; only an exact independent resolution can release their gate."""
     job = Path(job)
@@ -391,6 +424,21 @@ def _source_findings_pending(job):
     if not review_path.is_file() or editorial.digest(editorial.read(review_path)) != resolution.get("result_hash"):
         return True
     result = editorial.read(review_path)
+    transcription_keys = {f['key'] for f in result['findings']
+                          if f['disposition'] == 'verified_transcription_matches_corpus'}
+    transcriptions = resolution.get('transcription_checks', [])
+    if transcription_keys or transcriptions:
+        try:
+            _verify_transcription_checks(job, transcriptions)
+            observations = result.get('transcription_observations', [])
+            observed = {o['key']: o for o in observations}
+            if (transcription_keys != {c['key'] for c in transcriptions}
+                    or set(observed) != transcription_keys or len(observed) != len(observations)
+                    or any(observed[c['key']].get('observed_literal') != c['current']
+                           for c in transcriptions)):
+                return True
+        except (OSError, ValueError, KeyError, ImportError):
+            return True
     metadata_keys = {f['key'] for f in result['findings']
                      if f['disposition'] == 'verified_metadata_not_extracted'}
     metadata_checks = resolution.get('metadata_checks', [])
@@ -459,11 +507,12 @@ def _source_findings_pending(job):
     return (len(keys) != len(set(keys)) or set(keys) != {item["key"] for item in findings["findings"]}
             or any(item["disposition"] not in ("unresolved_identity_not_used",
                     "rejected_proposal_scan_matches_corpus", "applied_repair_scan_matches_corpus",
-                    "verified_metadata_not_extracted") for item in result["findings"]))
+                    "verified_metadata_not_extracted", "verified_transcription_matches_corpus")
+                   for item in result["findings"]))
 
 
 def resolve_source_findings(job, runner, source_context=None, literal_checks=None, repair_checks=None,
-                            metadata_checks=None):
+                            metadata_checks=None, transcription_checks=None):
     """Check whether retained uncertainty is immaterial; actual OCR errors stay blocked."""
     job = Path(job)
     if runner.model != "gpt-6-luna" or runner.reasoning != "low":
@@ -485,17 +534,38 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
               "feedback": {"source_scan_images": (
                   list(checkpoint["locator"].get("source_scan_images", [])) + list(source_context or []))[:3]}}
     checks = list(literal_checks or [])
+    transcriptions = _verify_transcription_checks(job, list(transcription_checks or [])) if transcription_checks else []
+    if transcriptions:
+        inputs['transcription_checks'] = transcriptions
+        inputs['transcription_check_instruction'] = (
+            'These are exact existing corpus occurrences, with no proposed replacement. '
+            'Read original pixels independently; current is a locator, not your observation. '
+            'Report only the exact span, preserving printed character variants and neighbors. '
+            'Use null and pending if unclear. verified_transcription_matches_corpus applies '
+            'only when the observed literal equals current and this resolves the retained '
+            'transcription check. It does not certify a whole page, missing metadata, an '
+            'unseen index hit, or the interpretation of a book passage. No OCR repair is claimed.')
+        schema['required'].append('transcription_observations')
+        schema['properties']['transcription_observations'] = {'type': 'array',
+            'minItems': len(transcriptions), 'maxItems': len(transcriptions), 'items': {
+            'type': 'object', 'additionalProperties': False,
+            'required': ['key', 'observed_literal', 'pixel_reason'],
+            'properties': {'key': {'type': 'string', 'enum': [c['key'] for c in transcriptions]},
+                'observed_literal': {'type': ['string', 'null']},
+                'pixel_reason': {'type': 'string', 'minLength': 1}}}}
     metadata = _verify_missing_page_metadata(job, list(metadata_checks or [])) if metadata_checks else []
-    if metadata:
+    if metadata or transcriptions:
+        observations_to_attach = metadata + transcriptions
         scans = [{'path': c['source_scan'], 'pdf_page': c['pdf_page'],
-                  'source_pixel_sha256': c['source_pixel_sha256']} for c in metadata]
+                  'source_pixel_sha256': c['source_pixel_sha256']} for c in observations_to_attach]
         scans.extend(inputs['feedback']['source_scan_images'])
         unique_scans = {}
         for scan in scans:
             unique_scans.setdefault((scan['path'], scan['pdf_page']), scan)
-        if len({(c['source_scan'], c['pdf_page']) for c in metadata}) > 3:
-            raise ValueError('Metadata checks exceed the source attachment budget')
+        if len({(c['source_scan'], c['pdf_page']) for c in observations_to_attach}) > 3:
+            raise ValueError('Source observations exceed the source attachment budget')
         inputs['feedback']['source_scan_images'] = list(unique_scans.values())[:3]
+    if metadata:
         inputs['metadata_checks'] = metadata
         inputs['metadata_check_instruction'] = (
             'These are citation metadata omissions, not proposed OCR text replacements. '
@@ -580,6 +650,8 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
         allowed_dispositions.append('applied_repair_scan_matches_corpus')
     if metadata:
         allowed_dispositions.append('verified_metadata_not_extracted')
+    if transcriptions:
+        allowed_dispositions.append('verified_transcription_matches_corpus')
     schema['properties']['findings']['items']['properties']['disposition']['enum'] = allowed_dispositions
     inputs['disposition_policy'] = (
         'A rejected replacement requires a supplied exact literal_checks occurrence and proposal. '
@@ -614,7 +686,7 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
               "dossier_hash": editorial.digest(dossier), "result_hash": editorial.digest(result),
               "review_path": str((directory / 'result.json').relative_to(job)), "model": runner.model,
               "reasoning": runner.reasoning, "literal_checks": checks, "applied_repairs": repairs,
-              "metadata_checks": metadata}
+              "metadata_checks": metadata, "transcription_checks": transcriptions}
     editorial.write(job / "source_resolution.json", record)
     if not _source_findings_pending(job):
         state = editorial.read(job / "status.json")
