@@ -1,0 +1,91 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "findings",
+    "literal_observations"
+  ],
+  "properties": {
+    "findings": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "disposition",
+          "reason",
+          "affected_paths"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:672C:06ce4e28242c",
+              "ziyuan-2012:672C:6449793cd842"
+            ]
+          },
+          "disposition": {
+            "enum": [
+              "pending",
+              "unresolved_identity_not_used",
+              "rejected_proposal_scan_matches_corpus"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affected_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "literal_observations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "current_corpus_literal",
+          "proposed_literal",
+          "observed_literal",
+          "pixel_reason"
+        ],
+        "properties": {
+          "current_corpus_literal": {
+            "type": "string",
+            "minLength": 1
+          },
+          "proposed_literal": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observed_literal": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pixel_reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:672C:06ce4e28242c"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

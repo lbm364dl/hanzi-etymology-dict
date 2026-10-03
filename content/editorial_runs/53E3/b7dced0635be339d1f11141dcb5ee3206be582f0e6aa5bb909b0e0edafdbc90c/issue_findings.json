@@ -1,0 +1,69 @@
+{
+  "findings": [
+    {
+      "kind": "factual",
+      "title": "Keep the household-count sense historical without present-use evidence",
+      "details": "The revised article marks the household-count sense historical and removes the prior unsupported current classification. Its cited evidence documents historical-text uses, while the dossier reports no evidence establishing present use. Preserve that status unless current-use evidence is added.",
+      "verification": "Check that future article revisions and generated has_sense edges keep this sense historical unless cited evidence establishes present-day use.",
+      "evidence": [
+        "round-0/factual-verification/verified-review.json",
+        "current_article.meaning_history.senses[2]",
+        "current_article.relationships[2]",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:口:household-count-sense-current-status"
+    },
+    {
+      "kind": "clarification",
+      "title": "Keep the chronology of 口’s extended senses unresolved",
+      "details": "The article appropriately says the evidence does not date the beginnings of the opening and household-count uses or establish a semantic path from the mouth sense. Keep these limits explicit; historical examples and current definitions do not establish a chronological chain.",
+      "verification": "Check that revisions do not claim a dated origin or semantic development among these senses without evidence establishing it.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[1]",
+        "current_article.meaning_history.limitations[0]",
+        "current_article.uncertainties[1]",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:口:ziyuan-2012-oral-opening-household-sense-dating"
+    },
+    {
+      "kind": "clarification",
+      "title": "Do not present indexed oracle-bone examples as the first attestation",
+      "details": "The dossier says the exact first attestation of 口 is not established; the indexed oracle-bone examples are not verified as the earliest occurrence. The article preserves this qualification and uses dating unresolved for the mouth sense.",
+      "verification": "Check any future earliest-attested claim against evidence that establishes priority, rather than relying on indexed examples alone.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[0]",
+        "current_article.uncertainties[0]",
+        "current_article.meaning_history.senses[0]",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:口:ziyuan-2012-oral-first-attestation"
+    },
+    {
+      "kind": "clarification",
+      "title": "Retain the unverified 字源 graphic-history proposal as a research gap",
+      "details": "The research log says 字源’s proposal about ancient 口 forms generally having two strokes and three-stroke writing appearing by Han times has not been independently checked against inscriptions. The current article does not assert this sequence; preserve the gap if the proposal is added later.",
+      "verification": "Inspect the cited page and independently verify the proposed graphic history against source inscriptions before presenting it as established.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[2]",
+        "字源 PDF p. 87",
+        "current_article.history[0]",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:口:ziyuan-2012-page-87-two-stroke-writing-proposal"
+    },
+    {
+      "kind": "pipeline",
+      "title": "Record incomplete external verification of the Unihan reading",
+      "details": "The official character-specific Unihan page for U+53E3 could not be accessed. The local kMandarin row was inspected, but the research log says it lacks click-through corroboration from that official page. Do not describe that lookup as externally verified.",
+      "verification": "If external verification is needed, confirm U+53E3’s kMandarin entry from an accessible authoritative record and record the exact source.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[3]",
+        "local_primary_readings.unihan.rows",
+        "local_primary_readings.unihan.field",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:口:ziyuan-2012-unihan-access-53e3"
+    }
+  ]
+}

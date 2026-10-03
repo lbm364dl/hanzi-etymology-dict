@@ -1,0 +1,267 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "爱",
+        "愛"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000497",
+          "pdf_page_1based": 497,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0497/source.png",
+          "source_sha256": "cd2d1888199f1a005780526ec268e20c5cb162f83419a125fc426415981b75c7",
+          "evidence_sha256": "8f54971c427d8a3611ebeb5597b50dac290b632ab1d41486e1466861d1bc14bd",
+          "ocr_review_status": "unreviewed",
+          "applied_ocr_corrections": {
+            "original_evidence_sha256": "937582a72653536f9a309d81f7cc395d52b2d649dff42c750022f573202856cd",
+            "corrections_sha256": "6aaf5be393140138d8b10b5c9382fd76fcb0a07e18533ce5b9debfb3d750cc1e",
+            "text_patches": [
+              {
+                "start": 1028,
+                "end": 1029,
+                "before": "㤐",
+                "after": "㤅"
+              },
+              {
+                "start": 1034,
+                "end": 1035,
+                "before": "悉",
+                "after": "㤅"
+              },
+              {
+                "start": 1047,
+                "end": 1048,
+                "before": "㤐",
+                "after": "㤅"
+              },
+              {
+                "start": 1054,
+                "end": 1055,
+                "before": "㤐",
+                "after": "㤅"
+              },
+              {
+                "start": 1072,
+                "end": 1073,
+                "before": "兒",
+                "after": "皃"
+              },
+              {
+                "start": 1077,
+                "end": 1078,
+                "before": "㤐",
+                "after": "㤅"
+              },
+              {
+                "start": 1090,
+                "end": 1091,
+                "before": "㤐",
+                "after": "㤅"
+              },
+              {
+                "start": 1107,
+                "end": 1108,
+                "before": "恐",
+                "after": "㤅"
+              },
+              {
+                "start": 1154,
+                "end": 1155,
+                "before": "悉",
+                "after": "㤅"
+              },
+              {
+                "start": 1166,
+                "end": 1167,
+                "before": "悉",
+                "after": "㤅"
+              },
+              {
+                "start": 1181,
+                "end": 1182,
+                "before": "悉",
+                "after": "㤅"
+              }
+            ],
+            "scope": "Applied producer overlay, not whole-page approval. Compare current corrected corpus text with original pixels before proposing another correction."
+          },
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "愛(爱) ài 影纽、物部;影纽、代韵、乌代切。"
+          ],
+          "excerpt": "忧之意，如毛公鼎:“𦕒𢾔大命，康能三(四)国，俗(欲)我弗乍先王憂。”战国文字屡见恴字，知《说文》以恴为忧愁本字是正确的。上博简《孔子诗论》:“绿衣之恶思古人也。”用恴(恶)为忧愁意。战国中山王鼎:“旨忌(憂)愁邦家”，“憂愁”即憂勞。睡虎地秦简则用憂而不用恴，马王堆汉墓帛书憂、恴并用。(刘桓)\n\n愛(爱) ài 影纽、物部;影纽、代韵、乌代切。\n[glyph:g015]¹ [glyph:g016]² [glyph:g017]³ [glyph:g018]⁴ [glyph:g019]\n战国 战国 《说文》古文 《说文》小篆 楷书\n\n[glyph:g020]⁵ [glyph:g021]⁶ [glyph:g022]⁷ [glyph:g023]⁸ [glyph:g024]⁹ [glyph:g025]¹⁰ [glyph:g026] [glyph:g027]\n秦 《说文》小篆 汉 汉 汉 汉 楷书 楷书\n\n1、2、5《战文编》345页。3、4《说文》219页。6《说文》112页。7《银雀山》193页。8《西狭颂》。9《隶韵》161页。10《马王堆》220页。\n形声字。从夂，㤅声。爱实由㤅字演变而来。《玉篇》：“㤅，今作愛。”㤅、愛当为古今字。《说文》：“愛，行皃。从夂，㤅声。”《说文·心部》：“㤅，惠也。从心，旡声。慁，古文。”㤅加“夂”即成为愛字。《广雅·释诂一》：“爱，仁也。”战国文字如郭店楚墓竹简《老子》甲本：“甚㤅(爱)必大費(费)”，㤅用法同愛。中山王方壶铭：“䧹㤅深则辱人翕”，读“德爱深刻贤人亲”。汉代则多用愛字，如马王堆汉墓帛书《老子》甲本：“爱以身为天下。”(刘桓)\n\n𡕔 pū 並纽、屋部;並纽、屋韵、蒲木切。\n[glyph:g028]¹ [glyph:g029]\n《说文》小篆 楷书\n\n1《说文》112页。\n形声字。从夂，从仄。《说文》：“𡕔，行𡕔𡕔也。从夂，仄，读若僕。”为行走促迫之义。今语“风尘仆仆”之“仆仆”出此。(刘桓)\n\n韍 kān 溪纽、谈部;溪纽、感韵、苦感切。\n[glyph:g030]¹ [glyph:g031]² [glyph:g032]\n战国 《说文》小篆 楷书\n\n1《九店》64页。2《说文》112页。\n形声字。从夂，韍声。段注本《说文》：“韍，繇也，舞也。从夂，从章。樂有章也。夆声。《诗》曰：‘韍韍鼓我’。”按《诗·小雅·伐木》作：“坎坎鼓我，蹲蹲舞我。”“韍韍”通“坎坎”。清段玉裁《说文解字注》：“繇当作畚。畚，徒歌也。上‘也’字衍。‘谣舞’者，谣且舞也。”段注以为韍是“舞兼歌”，“故其字从章从夂”。分析字形不尽合理。《九店楚简》56号墓竹简13上：“韍(韍字异体)於巳”，秦简《日书》楚除与“韍”相当的字，甲种作“陷”，乙种作“窑”，韍、陷、窑三字古音相近可通。《说文》“陷”字重文作“𨺛”，为从𠂤声字与从韍声字相通之证。坎、𠂤皆溪纽侵部字，故可通假。(刘桓)\n\n夋 miǎn 並纽、侵部;明纽、忝韵、明忝切。\n又亡范切。\nmǎn 並纽、侵部;明纽、感韵、莫坎切。\n[glyph:g033]¹ [glyph:g034]\n《说文》小篆 楷书\n\n1《说文》112页。\n象形字。《说文》：“夋，瑙(钮树玉校作“瑵”)盖也。象皮包覆瑙下，有两臂而夂在下。读若范。”做脑盖讲时，字读miǎn音。夋后来作“鑡”，指马头上装饰物。典籍中夋字或讹作髪。《后汉书·马融传》：“扬金夋而拖玉瓖”，清段玉裁《说文解字注》“夋”字引马融《广成颂》作“揚金夋而拖玉瓖”，说“金夋”应作“金鑡”，夋是讹字。金鑡正指马头饰。(刘桓)\n\n484"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000355",
+          "pdf_page_1based": 355,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0355/source.png",
+          "source_sha256": "dae2a85e30b830e9f1a86f5e1c7a082463646451e5fdf3924a5e0b388d1a2e92",
+          "evidence_sha256": "0266ae4facfa959220f89a0f0c20f42d50605b0d9048a835f648c4e716e13fdc",
+          "ocr_review_status": "unreviewed",
+          "applied_ocr_corrections": {
+            "original_evidence_sha256": "17a3646d53c84618144b67e66862ad4cfb32a630b855febd70baefb43b964059",
+            "corrections_sha256": "b272b57917617500209e57e329500aba47116fa14ad8c2ac7819cf04976e3066",
+            "text_patches": [
+              {
+                "start": 796,
+                "end": 797,
+                "before": "爱",
+                "after": "爰"
+              }
+            ],
+            "scope": "Applied producer overlay, not whole-page approval. Compare current corrected corpus text with original pixels before proposing another correction."
+          },
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "放 敖 敷 𠬸 爱 𤔲 受\n\n注：“付,与也。”段氏还以为：“以覆手与之,以手受之,象上下相付。凡物隊(堕)落皆如是观。”所以由付给义可引申为物落义。《说文》：“𠬸,物落……读若《诗》‘摽有梅’。”段玉裁注：“见《周(召)南》。毛曰:‘摽,落也。’” “𠬸”还可假为饿死的人,这种意义后作“殍”、“莩”。《玉篇·殳部》：“𠬸,今作莩。”《广韵·小韵》：“莩,殍同。”《孟子·梁惠王上》：“狗彘食人食而不知检,涂有饿莩而不知发。”(齐航福)\n\n𤔲 luàn 来纽、元部;来纽、换韵、郎段切。\n\n[glyph:g001] [glyph:g002] 2 [glyph:g003] 4 [glyph:g004] 7\n西周 战国 汉\n[glyph:g005] 1 [glyph:g006] 3 [glyph:g007] 5 [glyph:g008] 6 [glyph:g009] 8 [glyph:g010] 9\n商 西周 战国 《说文》小篆 汉 汉 楷书\n1《合集》4532反“脎”字偏旁。2、3《金文编》273页。4《古文典》1036页。5《古文典》1036页“亂”字偏旁。6《说文》84页。7《隶辨》576页。8、9《隶辨》576页“亂”字偏旁。\n会意字。初文从𠬸,从幺,像上下两手执束丝形。金文以后习于幺形中部羡加一形饰画(或又于𤔲字两旁添加口旁)。隶变以后,一形饰画两边或向下拉长作门形,下部手形或写为寸。“𤔲”字本义包含治理和紊乱两个方面。《说文》：“𤔲,治也……读若乱同。一日理也。”金文中“𤔲”可引申为背叛、违乱义,读若“乱”。召伯簋：“余既讯厘(告)我考我母令(命),余勿敢𤔲。”(我既已讯告而明我父母之命,我不敢违乱)上述意义的𤔲后世别出“乱”字(参见“乱”字条)。金文中“𤔲”也可假为柔软的皮革,读若“靼(dá)”。番生簋：“朱鞸𤔲靳。”(朱色的柔软皮革蒙包的车轼)(齐航福)\n\n爰 yuán 匣纽、元部;云纽、元韵、雨元切。\n\n[glyph:g011] 5\n《说文》小篆\n[glyph:g012] 1 [glyph:g013] 2 [glyph:g014] 3 [glyph:g015] 4 [glyph:g016] 6 [glyph:g017] 7 [glyph:g018] 8 [glyph:g019] 9\n商 商 西周 西周 《说文》小篆 秦 汉 汉 楷书\n1、2《甲文编》195页。3、4《金文编》273页。5、6《说文》84页。7《睡甲》58页。8《汉印徵》卷4,11页。9《隶辨》145页。\n会意字。初文像上下两手中间持丨状,表援引义。周以后所持丨形音化作于(或讹作工)。隶变后则写作“爱”,亦别出“雪”字(参见雪字条)。“爱”字本义是指援引。《说文》：“爱,引也。”《合集》34133:“丁酉卜:王族爱多子族立(位)于舌?”(丁酉这天卜问,在舌这个祭祀场所王族援引多子族吗?)由援引义可引申为援助义。《史记·六国年表》:“(秦厉共公六年)绵诸乞援。”裴骃集解:“《音义》曰:‘援,一作爱。’”上述两种意义上的“爱”后世累加手旁别出“援”字(参见“援”字条)。“爱”还可用表变易、更换义。《小尔雅·广诂》:“爱,易也。”《合集》13555:“戊戌卜,穷贞:其爱东室?贞:弗其爱东室?”(在戊戌这一天卜,由贞人穷向神灵贞问:要更换东室吗?还是不要更换东室呢?)《书·盘庚上》:“既爰宅于兹。”清俞樾《群经平议·尚书二》:“爱之言易也。”“爱”亦可用为假借义。或假为语气词,起补充音节作用。商鞅方升:“爰积十分尊(寸)五分尊(寸)壹为升。”(以十六又五分之一的容积定为一升)《诗·邶风·凯风》:“爰有寒泉,在浚之下。”或假为连词。虢季子白盘:“王各(格)周庙宣阋(榭),爱卿(饗)。”(王来到成周太庙的宣榭,于是宴请虢季子)《书·无逸》:“作其即位,爰知小人之依,能保惠于庶民。”这种用法的“爱”相当于“于是”,表承接关系。或假为古代货币单位,读若“鍰”。《书·吕刑》:“其罚千爱。”这种用法后世别出“鍰”字(参见“鍰”字条)。(齐航福)\n\n受 shòu 禅纽、幽部;禅纽、有韵、殖酉切。\n\n[glyph:g020] 1 [glyph:g021] 3\n商 西周\n[glyph:g022] 5 [glyph:g023] 6 [glyph:g024] 9 [glyph:g025] 10\n春秋 战国"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000498",
+          "pdf_page_1based": 498,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0498/source.png",
+          "source_sha256": "a76de2c36c074989fd56ad62cdbb1c64d55176f0a2a204242fcf4c3e0078fe14",
+          "evidence_sha256": "5b9e8e7f71c613bd50755e7d0a9181dfb200734f6df6183dbacd3c829fe2d5f9",
+          "ocr_review_status": "unreviewed",
+          "match_type": "possible_continuation",
+          "headword_lines": [],
+          "excerpt": "爱 屋 夌 麥 夏 婴 夔 舛\n\n夏 xià 匣纽、鱼部; 匣纽、马韵、胡雅切。\n匣纽、鱼部; 匣纽、祃韵、胡驾切。\n[glyph:g001] 1\n西周\n[glyph:g002] 2\n春秋\n[glyph:g003] 3\n战国\n[glyph:g004] 4\n战国\n[glyph:g005] 5\n战国\n[glyph:g006] 6\n战国\n[glyph:g007] 7\n《说文》古文\n[glyph:g008] 8\n战国\n[glyph:g009] 9\n战国\n[glyph:g010] 10\n春秋\n[glyph:g011] 11\n战国\n[glyph:g012] 12\n战国\n[glyph:g013] 13\n秦\n[glyph:g014] 14\n《说文》小篆\n[glyph:g015] 15\n汉\n[glyph:g016] 16\n汉\n[glyph:g017] 17\n汉\n夏\n楷书\n1、10《金文编》384页。2《大系图录》247页。3-6、11《战文编》346页。7、14《说文》112页。8《篆文编》268页。9《郭店》91页。12、13《睡甲》81页。15《马王堆》219页。16、17《隶韵》176页。\n象形字。夏字与《说文》字形相合的写法见于春秋时秦国文字,当源于西周籀文。《说文》:“夏,中国之人也。从夊、从頁、从臼。臼,两手;夊,两足也。”此字在西周文字中已发生形变,字从日旁,“頁”下端的“人”已变成加“女”形。春秋战国时又出现“脜”字写法,及讹变形。楚简作虽的写法,可能是楚地的一种特殊写法,也可能是表示夏季天气炎热有虫类活动的会意字。周秦文字传统写法一脉相承,成为汉代隶定的根据。夏义指夏朝或夏族,亦指华夏。如秦公钟:“懿事䌋(蛮)夏”(《两周金文辞大系图录》290页)。亦用夏为雅,上博简《紂(缁)衣》中的“大脜”即“大雅”。夏用为地名如鄂君啓舟节:“逾頵(夏),内(入)𨛬。”学者疑此“夏”指《史记·越世家》的“夏路”。《楚辞·九章·哀郢》:“遵江夏以流亡”,“夏”指夏水。马王堆汉墓帛书《十六经》:“春夏为德”,“夏”指夏季。(刘桓)\n\n婴 cè 清纽、职部; 初纽、职韵、初力切。\njì 精纽、职部; 精纽、职韵、子力切。\n[glyph:g018] 1\n战国\n[glyph:g019] 2\n战国\n[glyph:g020] 3\n《说文》古文\n[glyph:g021] 4\n《说文》小篆\n[glyph:g022] 5\n汉\n婴\n楷书\n1、2《战文编》480页“稷”字所从。3《说文》144页“稷”字所从。4《说文》112页。5《马王堆》219页。\n会意字。《说文》:“婴,治稼嬰嬰進也。从田人,从夊。《诗》曰:‘嬰嬰良耜’。”从嬰的字如稷、䅼所从为鬼下端从女形,《汗简》见形与鬼字无异,推测婴乃鬼字繁形,由鬼字分化而来。婴下端初从女,后讹为夊。婴应与社稷之稷相通。典籍嬰与测通用。《说文》引《诗》“婴婴良耜”,见《诗·周颂·良耜》,毛传:“嬰嬰犹測測也。”婴与测古音相同。马王堆汉墓帛书用“婴”为“后稷”。(刘桓)\n\n夔 náo 泥纽、幽部; 泥纽、豪韵、奴刀切。\n[glyph:g023] 1\n商\n[glyph:g024] 2\n商\n[glyph:g025] 3\n商\n[glyph:g026] 4\n商\n[glyph:g027] 5\n西周\n[glyph:g028] 6\n《说文》小篆\n夔\n楷书\n1《甲文编》253页。2、3、4《甲文编》254页。5《殷周金文集录》125页。6《说文》112页。\n象形字。像猕猴形。《说文》训夔为“贪兽也。一日母猴”。母猴亦作猕猴解,因为象形字有局限,无法表示其性别。在商代甲骨文中,夔有勾勒形与单纯线条形之别。甲骨文夔为侧立之形,除表现猕猴头部有耳、目、口,身体上有又(手)、下有止(足)之外,还着意表示有尾之形。偶或省略尾形,字亦可识,但不属于标准写法。周代夔字写法出现繁复变化。甲骨文夔用做高祖名,学者多以为指帝喾。西周金文夔或假为援,鬤匜铭文记牧牛誓曰:“自今余敢夔乃大小史(事)”,意即从今天起我若是敢扰乱您的大小事情。(刘桓)\n\n舛部\n\n舛 chuǎn 昌纽、元部; 昌纽、猕韵、昌兖切。\n[glyph:g029] 1\n《说文》小篆\n[glyph:g030] 2\n《说文》小篆\n[glyph:g031] 3\n汉\n舛\n楷书\n1、2《说文》113页。3《隶韵"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0497/source.png",
+      "pdf_page": 497,
+      "source_pixel_sha256": "cd2d1888199f1a005780526ec268e20c5cb162f83419a125fc426415981b75c7"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0498/source.png",
+      "pdf_page": 498,
+      "source_pixel_sha256": "a76de2c36c074989fd56ad62cdbb1c64d55176f0a2a204242fcf4c3e0078fe14"
+    }
+  ],
+  "additional_research_context": {
+    "purpose": "Resolve actual remaining last-review findings, preserving researched work and source correction history.",
+    "prior_exact_review_findings": [
+      {
+        "role": "factual",
+        "verdict": "pass",
+        "findings": [],
+        "article_hash": "7abded072b15ecc30bc237f1f96901fc15bd267370122ec7bf15caa09cd10e23",
+        "dossier_hash": "4e682adcf6ed9f74fd6aac9e912e32b522630aaddc0edba6f6d93b1a3c3d3af2",
+        "reviewer": "gpt-6-luna:low:factual:01a0fe7e-d3bd-7213-a809-ce5a2c27e23e"
+      },
+      {
+        "role": "readability",
+        "verdict": "revise",
+        "findings": [
+          "In `components[6]`, `roles` includes `semantic`, but the `愛:夊:phonetic` relationship actually has predicate `semantic_component_of` and explains 夊 as the walking-related element. The component’s sound comparison is correctly qualified as not establishing an ancient sound role. Correct the relationship ID to match its semantic predicate (for example, `愛:夊:semantic`).",
+          "In `meaning_history.senses[0]`, the Warring States period label overstates what the evidence establishes for 愛’s affection sense: the text reports transmitted passages and source-reported artifact readings, while explicitly noting they do not establish the earliest physical witness. Qualify or remove the period claim, and make the generated `has_sense` edge match.",
+          "In `summary.text` and `learner.overview.text`, present the derivation of 爱’s lower 友-like shape from joined or abbreviated 心-and-夂 strokes as a proposed graphic account, as the cited evidence frames it. Preserve the point that this does not establish an ancient meaning or sound role for 友 in 愛."
+        ],
+        "article_hash": "7abded072b15ecc30bc237f1f96901fc15bd267370122ec7bf15caa09cd10e23",
+        "dossier_hash": "4e682adcf6ed9f74fd6aac9e912e32b522630aaddc0edba6f6d93b1a3c3d3af2",
+        "reviewer": "gpt-6-luna:low:readability:01a0fe7f-4e4a-7401-a716-9cfa5d0958a6"
+      }
+    ],
+    "instruction": "Recheck the findings independently against cited sources. For component relationship IDs, inspect the actual edge by subject/object/context and predicate, not stale numeric positions. If evidence supports a semantic predicate, any descriptive role label in its ID must agree; do not change one contradictory suffix to another. Qualify the proposed cursive derivation of current 友-like strokes explicitly in both summary and learner account. Qualify the period of source-reported affection readings precisely without denying attested historical usage merely because earliest priority is unverified. Current-source book records must be cited at supported article claims, not only stored in the dossier. Preserve the p497 corrected literal 行皃 and the applied source-bound overlay; do not recreate a pending OCRerror for an already repaired occurrence. Never put evidence IDs or source names in explanatory prose."
+  },
+  "additional_context_policy": "These source leads and prior findings are research tasks, not preverified dossier evidence. Consult the referenced sources directly, check exact graph identity and scope, and add cited evidence for useful claims before authorship. Recheck reviewer hypotheses; modern structure does not establish historical roles. Record inaccessible sources as gaps.",
+  "unfinished_draft_provenance": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/ai-edge-id-repaired/ziyuan-2012/7231",
+    "article_hash": "7abded072b15ecc30bc237f1f96901fc15bd267370122ec7bf15caa09cd10e23",
+    "dossier_hash": "4e682adcf6ed9f74fd6aac9e912e32b522630aaddc0edba6f6d93b1a3c3d3af2",
+    "previous_state_hash": "6cc42cd3facf66abc216927a594152525c570904884190e6e828f37278311325",
+    "canonical_article_hash": "3be3ca28097c2211be0d383889c478ba089a2371d531487de7eb5fbeb8752630",
+    "canonical_dossier_hash": "bac2c505b200f6292f243441f88aac8671da1e450f92b7c3dab477dc69a4d90a",
+    "requires_fresh_research_and_reviews": true,
+    "prior_review_proposals_hash": "05638d9fc42e90c395d117396087c49db057fc10ac8d580a0db34b74e6603de3"
+  },
+  "prior_review_proposals": [
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `components[6]`, `roles` includes `semantic`, but the `愛:夊:phonetic` relationship actually has predicate `semantic_component_of` and explains 夊 as the walking-related element. The component’s sound comparison is correctly qualified as not establishing an ancient sound role. Correct the relationship ID to match its semantic predicate (for example, `愛:夊:semantic`).",
+        "In `meaning_history.senses[0]`, the Warring States period label overstates what the evidence establishes for 愛’s affection sense: the text reports transmitted passages and source-reported artifact readings, while explicitly noting they do not establish the earliest physical witness. Qualify or remove the period claim, and make the generated `has_sense` edge match.",
+        "In `summary.text` and `learner.overview.text`, present the derivation of 爱’s lower 友-like shape from joined or abbreviated 心-and-夂 strokes as a proposed graphic account, as the cited evidence frames it. Preserve the point that this does not establish an ancient meaning or sound role for 友 in 愛."
+      ],
+      "article_hash": "7abded072b15ecc30bc237f1f96901fc15bd267370122ec7bf15caa09cd10e23",
+      "dossier_hash": "4e682adcf6ed9f74fd6aac9e912e32b522630aaddc0edba6f6d93b1a3c3d3af2",
+      "reviewer": "gpt-6-luna:low:readability:01a0fe7f-4e4a-7401-a716-9cfa5d0958a6"
+    }
+  ],
+  "prior_consulted_book_records": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/ai-edge-id-repaired/ziyuan-2012/7231",
+    "previous_audit_hash": "5bfced70249442a995d2676fa0bc44303affb27bf5117028ddd47b6057b28bbd",
+    "records": [
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "dbfe1981278e6b271cb4e3ff679374a44cc84f92946ae3138cd1e799da55de12",
+        "research_result_hash": "9c00d8811c1dfdc7af566725bd1c196fb699bcb854b56732681f98d21ed3f84c",
+        "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692",
+        "field": "PDF p.497, printed p.484; 愛(爱) entry; attached source scan pixels inspected",
+        "text": "The printed headword is 愛(爱). The entry says 愛 developed from 㤅, quotes 說文 as 愛，行皃。从夂，㤅聲, and separately quotes 㤅，惠也。从心，旡聲. It reports Guodian 老子甲 “甚㤅(爱)必大費” and says 㤅 is used there like 愛. The scan reads 皃 after 行, not 兒; the p.498 scan begins 夏 and does not continue the 愛 entry. These are the book’s reports, not an independent reading of the cited artifacts or a precise date for 愛’s affection sense.",
+        "evidence_ids": [
+          "X-c42a7e30519fe6868a64"
+        ]
+      }
+    ],
+    "requires_current_source_research": true
+  },
+  "continuation_policy": "This is an unapproved draft, not reusable approval. Recheck source-dependent claims against current source scans/corpus. Prior revise findings are hypotheses to recheck, including possible source identity errors; do not obey them merely because a previous verifier repeated them. Prior consulted book records identify exact retained evidence IDs and claims to recheck. After current-source verification, cite relevant supported claims through evidence_ids metadata; dossier-only records do not count as article source use. Preserve prior supported work and obtain fresh factual/readability reviews.",
+  "require_source_specific_page_evidence": true,
+  "current_uncited_book_records": [
+    {
+      "research_output": "initial-followup/research/result.json",
+      "research_receipt_hash": "37827e154e31362d6e693e158e93ec42183150aa8c765b64e3e3f92823e1b170",
+      "research_result_hash": "351490107d44847cebaa90ce08e3e2f309dad2cc88120da2419a102ed3aed144",
+      "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692",
+      "field": "PDF p.497, printed p.484; 愛(爱) entry; source scan pixels directly inspected",
+      "text": "The headword is 愛(爱), read ài. The entry describes 愛 as developed from 㤅, quotes 說文 as 愛，行皃。从夂，㤅聲, and separately quotes 㤅，惠也。从心，旡聲. It reports a Guodian 老子甲 example “甚㤅(爱)必大費” and a Zhongshan 方壺 inscription, among later uses. These are the book’s reports, not independent readings of the cited artifacts or a precise date for when 愛 acquired affection-related use. The scan reads 皃 after 行, not 兒.",
+      "evidence_ids": [
+        "X-bb8191780d26638faf75"
+      ]
+    },
+    {
+      "research_output": "initial-followup/research/result.json",
+      "research_receipt_hash": "37827e154e31362d6e693e158e93ec42183150aa8c765b64e3e3f92823e1b170",
+      "research_result_hash": "351490107d44847cebaa90ce08e3e2f309dad2cc88120da2419a102ed3aed144",
+      "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692",
+      "field": "PDF p.498, printed p.485; adjacent-page continuation check; source scan pixels directly inspected",
+      "text": "The running header includes 愛, but the entries begin 夏 and continue with other headwords. The 愛 entry on printed p.484 does not continue on this page.",
+      "evidence_ids": [
+        "X-3d76f367a35acb80573f"
+      ]
+    }
+  ],
+  "citation_integration_policy": "Research has already returned the supplied exact page-specific book records. Use the current retained evidence IDs on article claims that these records support. Unchanged supported prose plus a citation is sufficient. Do not invent support, put IDs in prose, or cite unrelated claims. If no record supports an article claim, retain a precise research gap. Obtain fresh independent factual and readability reviews."
+}

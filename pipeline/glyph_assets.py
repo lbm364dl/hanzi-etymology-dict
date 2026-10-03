@@ -10,6 +10,8 @@ from urllib.parse import parse_qs, quote, unquote, urlencode, urlparse
 import xml.etree.ElementTree as ET
 from xml.parsers import expat
 
+from pipeline.atomic_files import atomic_write_bytes, atomic_write_json, file_lock
+
 ROOT = Path(__file__).resolve().parent.parent
 MAX_BYTES = 8 * 1024 * 1024
 MIME_EXTENSIONS = {"image/png": "png", "image/jpeg": "jpg", "image/gif": "gif",
@@ -209,9 +211,7 @@ def snapshot_glyph_assets(dossier, previous_manifest=None, root=ROOT, timeout=30
         relative = f"content/glyph-assets/{sha}.{MIME_EXTENSIONS[mime]}"
         path = root / relative
         path.parent.mkdir(parents=True, exist_ok=True)
-        temp = path.with_suffix(path.suffix + ".tmp")
-        temp.write_bytes(data)
-        temp.replace(path)
+        atomic_write_bytes(path, data)
         result.append({"glyph_id": glyph["id"], "source_url": url, "sha256": sha,
                        "mime_type": mime, "path": relative, "byte_length": len(data)})
     validate_glyph_assets({**dossier, "glyph_assets": result}, root)
@@ -220,7 +220,6 @@ def snapshot_glyph_assets(dossier, previous_manifest=None, root=ROOT, timeout=30
 
 def render_glyph_images(dossier, root=ROOT):
     """Provide inspectable raster images; SVG previews derive from verified original bytes."""
-    import json
     root = Path(root)
     originals = validate_glyph_assets(dossier, root)
     assets = {asset["glyph_id"]: asset for asset in dossier.get("glyph_assets", [])}
@@ -233,28 +232,28 @@ def render_glyph_images(dossier, root=ROOT):
         import cairosvg
         preview = root / "content/glyph-previews" / (asset["sha256"] + ".png")
         receipt = preview.with_suffix(".json")
-        identity = {"source_sha256": asset["sha256"], "renderer": "cairosvg",
-                    "renderer_version": cairosvg.__version__, "output_width": 1000, "background": "white"}
-        reusable = False
-        if preview.is_file() and receipt.is_file() and not preview.is_symlink():
-            try:
-                meta = json.loads(receipt.read_text())
-                data = preview.read_bytes()
-                reusable = (all(meta.get(k) == v for k, v in identity.items())
-                            and meta.get("preview_sha256") == hashlib.sha256(data).hexdigest()
-                            and image_mime(data) == "image/png")
-            except (ValueError, OSError):
-                pass
-        if not reusable:
-            # Files have already passed the no-entity/no-external-resource SVG check.
-            data = cairosvg.svg2png(bytestring=original.read_bytes(), output_width=1000, background_color="white")
-            if len(data) > MAX_BYTES or image_mime(data) != "image/png":
-                raise ValueError("Glyph SVG preview is invalid or oversized")
-            preview.parent.mkdir(parents=True, exist_ok=True)
-            temp = preview.with_suffix(".tmp")
-            temp.write_bytes(data)
-            temp.replace(preview)
-            receipt.write_text(json.dumps({**identity,
-                "preview_sha256": hashlib.sha256(data).hexdigest()}, sort_keys=True) + "\n")
+        with file_lock(preview.with_suffix(".lock")):
+            identity = {"source_sha256": asset["sha256"], "renderer": "cairosvg",
+                        "renderer_version": cairosvg.__version__, "output_width": 1000, "background": "white"}
+            reusable = False
+            if preview.is_file() and receipt.is_file() and not preview.is_symlink():
+                try:
+                    meta = json.loads(receipt.read_text())
+                    data = preview.read_bytes()
+                    reusable = (all(meta.get(k) == v for k, v in identity.items())
+                                and meta.get("preview_sha256") == hashlib.sha256(data).hexdigest()
+                                and image_mime(data) == "image/png")
+                except (ValueError, OSError):
+                    pass
+            if not reusable:
+                # Files have already passed the no-entity/no-external-resource SVG check.
+                data = cairosvg.svg2png(bytestring=original.read_bytes(), output_width=1000,
+                                        background_color="white")
+                if len(data) > MAX_BYTES or image_mime(data) != "image/png":
+                    raise ValueError("Glyph SVG preview is invalid or oversized")
+                preview.parent.mkdir(parents=True, exist_ok=True)
+                atomic_write_bytes(preview, data)
+                atomic_write_json(receipt, {**identity,
+                    "preview_sha256": hashlib.sha256(data).hexdigest()}, sort_keys=True)
         result[glyph_id] = preview
     return result

@@ -1,0 +1,8 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "`meaning_history.senses[0].period` is “dating unresolved” while the sense is labeled `current`, and its text says illness is a common current meaning. Use a present-day period label; keep the uncertainty about the earliest noun use in the text. Update the generated `has_sense` edge to match. E6 and X-155a2ea362caa38bd4e9 support the current meaning.",
+    "`meaning_history.senses[2]` groups dictionary-listed uses as established historical senses, but X-9d2b988e23e1bb889dd2 and X-b1a32f8e10b4b1435f90 do not show that every listed gloss is historical rather than current. Narrow the record to specifically supported historical uses, or qualify the status and gloss so they do not imply all listed uses are established historical senses; align its generated `has_sense` edge.",
+    "`meaning_history.senses[0].text` calls the Shuowen gloss “a traditional dictionary gloss,” but this entry does not explain its content, and `history` leaves the key proposal from the inspected 字源 scan buried in the dossier. Explain that 病 is proposed there to have meant serious illness, distinguish this from Shuowen’s “illness worsening” gloss, and state that the earliest noun sense remains disputed. Cite X-61f3bcb64f23a3f4d9, X-2057ac3585f3dfdd7655, and the relevant uncertainty evidence."
+  ]
+}

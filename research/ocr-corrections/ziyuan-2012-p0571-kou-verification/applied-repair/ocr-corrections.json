@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "parent_evidence_sha256": "966cca40a708b8ce4569edef696005351a9b5682ecb80abb0f381084a05c146f",
+  "source_sha256": "8d3fcdcb07517bdbc7c19216df84c8f5ebb83ba8a8be014da1fa6dcd1a606045",
+  "patches": [
+    {
+      "start": 741,
+      "end": 742,
+      "before": "口",
+      "after": "囗",
+      "source_checked": true,
+      "reason": "Only this exact PDF p.571 / printed p.558 headword is corrected. In the original scan it is an empty enclosure, with no interior horizontal stroke; the separate p.87 口 kǒu control has a different, smaller mouth form. The target is read wéi, appears under the enclosure-radical heading, and its entry describes an enclosed region; the neighboring 圜/團/圓 entries are classified under 囗 by the official Taiwan MOE dictionary. The MOE character records distinguish 囗 wéi (enclosure; ancient 圍) from 口 kǒu (mouth), and its variants dictionary states that the regular 口 form is smaller than 囗 and does not list 囗 as a 口 variant. Unicode separately maps Kangxi Radical 30 MOUTH to U+53E3 and Radical 31 ENCLOSURE to U+56D7. The raster alone is near-homographic, so the codepoint decision uses this checked whole-entry context plus official identity references; it does not rely on the earlier false claim that p.571 contains an inner bar. Evidence/review details: runs/source-enrichment-ziyuan/third-expansion/ziyuan-2012/53E3/initial-followup/research/result.json; research/ocr-corrections/ziyuan-2012-p0571-kou-verification/identity-adjudication/result.json; exact original/crop artifacts and contrary review receipts in research/ocr-corrections/ziyuan-2012-p0571-kou-verification/.",
+      "source_crop_bounds": [
+        150,
+        2960,
+        1500,
+        3230
+      ],
+      "source_crop_pixel_sha256": "2e062fe66ffac2bb1a1ae010f13b6d40a2382693af9eb884800a3f92962504c0",
+      "reviewers": [
+        "gpt-6-luna:low source-identity research 2026-10-02 (see identity-adjudication result)",
+        "gpt-6-luna:low scan-control review 2026-10-02 (conflicting correct_raw disposition retained; see identity-adjudication/scan-control-review)"
+      ]
+    }
+  ],
+  "remove_glyph_ids": [],
+  "add_glyphs": [],
+  "added_uncertainties": [],
+  "verification": "source_checked_correction_not_edition_approval"
+}

@@ -1,0 +1,34 @@
+{
+  "provenance": {
+    "source_id": "ziyuan-2012",
+    "book": "李學勤主編《字源》, 2012",
+    "pdf_page": 1109,
+    "printed_page": 1094,
+    "source_scan_file_sha256": "8c2cad410c397a9d1bbab4f627fc9c973b942739f4c0063ceb9021b4dd5ad155",
+    "source_scan_pixel_sha256": "f57b420e60d20032f8df525c5dcae08228f9a01195720435613d53d0c14df040",
+    "targeted_crop_sha256": "595b768df376085d320b6ae7d88a84a6f989830e833d1aa92c56d6cce2ff40d8",
+    "unlabeled_controls_sha256": "b841b73b569f1901e6f505dabb27dd4afc544c037493da0ac01241ab59ec901b",
+    "controls_origin_pdf_pages": [
+      447,
+      446
+    ],
+    "text_offset": 1438
+  },
+  "occurrences_hash": "1680668089f7020aea3f20c0e13030579130bb58562f940ea9e3d79841bd0231",
+  "result": {
+    "occurrences": [
+      {
+        "id": "ziyuan-2012-p1109-hao-first-graph-blind-controls",
+        "raw_text": "虐",
+        "printed_text": "虐",
+        "verdict": "correct_raw",
+        "reason": "The target glyph’s lower component has right edges that close across the internal horizontal strokes, matching the closed-right control. The other control’s lower strokes remain open on the right. The scan supports the raw OCR character 虐."
+      }
+    ]
+  },
+  "result_hash": "59401444ab9bc0560b36bd5cafa3792724005ca7824d0528d31ce701d0c30521",
+  "review_directory": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/hao-evidence-caption-continuation/ziyuan-2012/597D/ocr-verification-first-graph-blind/review",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "whole_page_reviewed": false
+}

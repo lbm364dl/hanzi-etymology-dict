@@ -1,0 +1,31 @@
+{
+  "findings": [
+    {
+      "kind": "factual",
+      "title": "Correct the competing-identifications claim for 火’s star-name use",
+      "details": "The draft says one account tentatively identifies 火 as 火星 while other readings identify 大火/心宿二, implying disagreement. The recorded scan review says 字源 gives the broader name 火星 without specifying 心宿二 or the planet, while the inspected CUHK 火 and 晶 entries identify the referent as 大火/心宿二 and are consistent with that wording. Preserve the distinction in specificity and the unresolved motivation for the star’s name.",
+      "verification": "Check the cited 字源 scan and both CUHK entries. Revise the star-name sense, its has_sense relationship, and the matching limitation to remove the asserted disagreement; obtain fresh factual and readability approvals for the changed prose.",
+      "evidence": [
+        "actual_findings: initial-followup/research/result.json",
+        "actual_findings: round-0/factual-verification/verified-review.json",
+        "actual_findings: round-1/factual-verification/verified-review.json",
+        "actual_findings: round-3/factual-verification/verified-review.json",
+        "current_article.meaning_history.senses[1]",
+        "current_article.meaning_history.limitations[0]",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:火:star-name-identification"
+    },
+    {
+      "kind": "pipeline",
+      "title": "Keep evidence IDs out of reader-facing sense prose",
+      "details": "Round-2 validation rejected a reader-prose repair because it placed evidence IDs in meaning_history.senses[1].text. IDs belong in evidence_ids; the artifact does not establish that any particular proposed repair was approved.",
+      "verification": "Inspect the final authored article and validator behavior to confirm sense text contains no evidence IDs, citations remain in evidence_ids, and any prose repair receives the required fresh reviews.",
+      "evidence": [
+        "actual_findings: round-2/validation.json",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:火:sense-prose-evidence-id-leak"
+    }
+  ]
+}

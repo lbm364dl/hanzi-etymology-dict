@@ -1,0 +1,209 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "包"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000817",
+          "pdf_page_1based": 817,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0817/source.png",
+          "source_sha256": "6630e899bbb88b4e0eb8017c00cef031d729588b5e64fdac8817a14916b66304",
+          "evidence_sha256": "e08228c90ad104f890dbad5aa0b1a71fb828aa5ab3f48f4ddb77ac92c1f86b6d",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "包 bāo 帮组、幽部；帮组、肴韵、布交切。"
+          ],
+          "excerpt": "转。”又：“战国文字承袭金文。\n籒形或省作豕形，主形或讹变作㐅、刁、勹等形，或豕形与主\n形借用部分笔画。”西周金文中冢字多用为“大”义，而且\n冢字常见。大义与《说文》所释“高坟”之义也相因。冢字\n从豕(或豖)，主声(详“主”字条)，本义当与大、与豕皆有关。\n秦汉文字与冢混讹。(周宝宏)\n\n包 部\n\n包 bāo 帮组、幽部；帮组、肴韵、布交切。\n[glyph:g011]¹ [glyph:g012]² [glyph:g013]³ [glyph:g014]⁴ [glyph:g015]⁵ [glyph:g016]⁶ [glyph:g017]⁷ [glyph:g018]⁸ 包\n《说文》小篆 秦 秦 汉 汉 汉 汉 汉 楷书\n1《说文》188页。2《战文编》621页。3《睡\n甲》145页。4~8《篆隶表》645页。\n会意字。《说文》：“包，象人裹妊，巳在中，象子未成\n形也。”王筠句读：“据《玉篇》，知包为古胞字。”裹，后来\n通常写作懷(今怀字)。《众经音义》引作：“儿生裹衣者曰\n胞。”包从勹，表示包裹之义，从巳，巳字古文字形体(见于\n西周金文)像未出生的小儿形象，二者在一起表示胞衣之\n义。字未见于商代西周文字，但《诗》习见包字和苞字，说\n明西周时代应有包字。(周宝宏)\n\n胞 bāo 帮组、幽部；帮组、肴韵、布交切。\n[glyph:g019]¹ 胞\n《说文》小篆 楷书\n1《说文》188页。\n形声字。《说文》：“胞，儿生裹也。从肉，从包。”徐灏\n段注笺：“胞即包字，从包加肉旁，故不曰包声。”段玉裁\n注：“胞谓胎衣，《小雅》：‘不属于毛，不离于裹。’笺云：\n‘今我独不得父皮肤之气乎，独不处母之胞胎乎。’《释\n文》：‘胞，音包，今俗语同胞，是也。’”王筠《说文释例》：\n“《说文》之勹，今之包也，故以包裹说之。《说文》之包，\n今之胞也，其说解全是胞义。《玉篇》包下亦沿用其义，\n而又日今作胞。”包胞为古今字，包大约产生于西周，胞\n字则大约产生于战国秦汉时代。(周宝宏)\n\n匏 páo 并组、幽部；并组、肴韵、薄交切。\n[glyph:g020]¹ 匏\n《说文》小篆 楷书\n1《说文》188页。\n形声字。《说文》：“匏，瓠也。从包，从夸声。包，取其可\n包藏物也。”桂馥义证：“瓠也者，本书：瓠，匏也。《古今\n注》：‘匏，瓠也，悬瓠可以为笙。’《诗·公刘》：‘酌之用\n匏’。《匏有苦叶》传云：‘匏谓之瓠。’”可见匏字虽不见\n于先秦古文字，但见于西周文献。(周宝宏)\n\n苟 部\n\n苟 jì 见组、职部；见组、职韵、纪力切。\n[glyph:g021]¹ [glyph:g022]² [glyph:g023]³ [glyph:g024]⁴ [glyph:g025]⁵ [glyph:g026]⁶ [glyph:g027]⁷\n商 商 西周 西周 西周 西周 战国\n[glyph:g028]⁸ [glyph:g029]⁹ 苟\n《说文》小篆 秦 楷书\n1、2《甲文编》381 ~ 382页。3-6《金文编》\n652页。7《战文编》621页。8《说文》188页。9《篆\n隶表》646页“敬”字所从。\n象形字。《说文》：“苟，自急敕也。从羊省，从包省，\n从口。口犹慎言也。从羊，羊与義(义)、善、美同意。”苟字\n见于甲骨文和西周金文，甲骨文苟字不从口，上也不从\n羊或羊省，下也不从包省，本像一人跪坐之形。清饶炯\n《说文部首订》：“急敕义为敬，《仪礼·聘礼》云：‘宾为\n苟敬’，而以二字连文者，盖析言之曰苟曰敬。”又：“然则\n敬从苟而加攴，音义相同，固是一字矣。”西周金文正用\n苟为敬。大保簋铭文：“王降令于太保，大保克苟(敬)无\n遣(谴)。”班簋铭文：“唯苟(敬)德，无攸违。”师虎簋铭文：\n\n804"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000814",
+          "pdf_page_1based": 814,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0814/source.png",
+          "source_sha256": "8a2d95408394358e8be286890d9cf9409cee5dc314189aa0ace9874275f10ec1",
+          "evidence_sha256": "e90c6ae66b24aee17390543a617ed273c02d1565557a3ebefafbcb632186c499",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "音同义同，皆为乂字之后起字。刈字主要表示乂字之本义，璧字主要代表乂字之申义。但乂、刈二字在文献中常见。(周宝宏)\n\n勹 部\n\n勹 bāo 帮纽、幽部；帮纽、肴韵、布交切。\n\n[glyph:g004]¹ — 勹\n《说文》小篆 楷书\n\n1《说文》187页。\n\n会意字。《说文》：“勹，裹也。象人曲形，有所包裹。”勹字，有人认为是伏字之古文[glyph:g005]或旬之古文[glyph:g006]之变，但这都没有可信的证据。勹字当有自己的来源，与几、勹二字无涉。文献中未见用勹字者，皆以包字代替勹字。勹部所属之字形伏字的来源与勹字无关，完全是许慎将勹部所属形符之义理解错了，故放于勹部中。勹、包古今字，包字当与勹为一类。(周宝宏)\n\n匍 pú 并纽、鱼部；并纽、模韵、薄胡切。\n\n[glyph:g007]¹ — [glyph:g008]² — [glyph:g009]³ — [glyph:g010]⁴ — [glyph:g011]⁵ — 匍\n西周 西周 西周 西周 《说文》小篆 楷书\n\n1–4《金文编》649页。5《说文》187页。\n\n形声字。《说文》：“匍，手行也。从勹，甫声。”王筠句读：“《众经音义》、李注《长杨赋》皆引《说文》：匍匐，手行也。别引《字林》：匍，手行也；匐，伏也。然则今本乃以《字林》改也。……《诗》两言匍匐，《礼·问丧》一言匍匐，他书或作蒲伏、扶服、蒲服，二字双声，以声为用，不能单字成义，《字林》误也。”匍匐二字为联绵词，在文献中不分开使用，二字皆从勹，所从之勹不是勹(包字从)字，而是几(伏字初文)字之变形，本像人俯伏形，故匍匐二字以勹为形符，但西周金文、春秋金文匍字单独使用，用法与匍匐之义不同。西周金文大盂鼎、史墙盘铭文皆有“匍有”一词，金文研究诸家或读为抚有，或读为溥有，其义与包有、包举之义近。此义也许是匍字本义。(周宝宏)\n\n匐 fú 并纽、职部；奉纽、屋韵、房六切。\n\n[glyph:g012]¹ — 匐\n《说文》小篆 楷书\n\n1《说文》187页。\n\n形声字。《说文》：“匐，伏地也。从勹，畐声。”文献中皆匍匐连用，为联绵词，详上文“匍”字条。联绵词是口语的忠实记录，多用于《诗》、《楚辞》、汉赋之类。散文多以一字表示一词，当初也许只用匍字就可以表示匍匐之义，因此西周金文只见匍字，不见匐字。联绵词有些是以其中一字为重音表示义、一为衬音不表义的。匍、匐二字语音重在匍字上，匐只作为陪衬音而存在。(周宝宏)\n\n𥶡 jú 见纽、觉部；见纽、屋韵、居六切。\n\n[glyph:g013]¹ — [glyph:g014]² — 𥶡\n西周 《说文》小篆 楷书\n\n1《金文编》649页。2《说文》187页。\n\n会意字。《说文》：“𥶡，在手曰𥶡。从勹、米。”徐铉：“今俗作掬。”段玉裁注：“唐风：‘椒聊之实，蕃衍盈𥶡。’《小雅》：‘终朝采绿，不盈一𥶡。’毛传皆云：‘两手曰𥶡。’”桂馥义证：“或作掬。《释名》：‘掬，局也，使相局近也。’《小尔雅·广量》：‘一手之盛谓之溢，两手谓之掬。’”西周金文𥶡字从勹从米，与从勹(包)无关，勹旁也许是从[glyph:g015](手)形之讹，如此𥶡字正从手从米会意，后加手作掬，形符重复，如莫字加日作暮，采字加手作採等。但这只是合理的推测，没有证据。(周宝宏)\n\n801"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000818",
+          "pdf_page_1based": 818,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0818/source.png",
+          "source_sha256": "bc8d3c04ac52eb3824dfe73f234a0a91890b51bfeb9aa6eed020e50fc55d325d",
+          "evidence_sha256": "98bd9c5a5ded93d17f838a3aa4e9c7e67f09b69fe44f4263e069d360bfb30c4d",
+          "ocr_review_status": "unreviewed",
+          "match_type": "possible_continuation",
+          "headword_lines": [],
+          "excerpt": "包 胞 匏 苟 敬 鬼 魃 魂\n\n“苟(敬)夙夜无法(废)朕令(命)。”甲骨文用为祭祀对象,有人认为像狗跪坐之形,但甲骨文犬字形体与荀字形体区别明显,从形体上和辞例上都无法证明苟为狗字之初文。苟字,甲骨文不从口,但从西周早期金文开始已经有加“口”者,从口形当为装饰性符号,与说话之口无关。(周宝宏)\n\n敬 jìng 见组、耕部;见组、映韵、居庆切。\n[glyph:g001] 西周 1 [glyph:g002] 西周 2 [glyph:g003] 西周 3 [glyph:g004] 春秋 4 [glyph:g005] 战国 5 [glyph:g006] 战国 6 [glyph:g007] 秦 7\n[glyph:g008] 《说文》小篆 8 [glyph:g009] 秦 9 [glyph:g010] 秦 10 [glyph:g011] 汉 11 [glyph:g012] 汉 12 [glyph:g013] 楷书\n1、2、3《金文编》652页。4~7《战文编》621 ~ 622页。8《说文》188页。9、10《睡甲》145页。11、12《篆隶表》646页。\n形声字。《说文》:“敬,肃也,从攴苟。”徐灏段注笺:“《释名》曰:‘敬,警也,恒自肃警也。’按敬有戒谨义,苟训急敕,敕者,戒也。其义相近,声也相转,疑即古敬字,从苟加攴,攴,治也,治事肃恭之意。”西周早期金文以苟为敬,敬字是在西周早中期之间产生的,是在苟字基础上累加义符而成,作为表示肃敬之义的专字。西周金文中敬字多用为严肃、肃敬之义,如叔趯父卣铭文:“敬跸(义)乃身。”逆钟铭文:“敬乃夙夜,用男(屏)朕身,勿法(废)朕命,勿坠乃政。”恭敬之义始见于春秋金文。《诗》雅颂部分敬字用为严肃、恭敬之义并见,《周颂·闵予小子》:“维予小子,夙夜敬之。”郑玄笺:“敬,慎也。”慎也是严肃之义。总之,敬字之本义为严肃。(周宝宏)\n\n鬼 部\n\n鬼 guǐ 见组、微部;见组、尾韵、居伟切。\n[glyph:g014] 商 1 [glyph:g015] 商 2 [glyph:g016] 商 3 [glyph:g017] 西周 4 [glyph:g018] 西周 5 [glyph:g019] 西周 6 [glyph:g020] 战国 7\n[glyph:g021] 《说文》小篆 8 [glyph:g022] 秦 9 [glyph:g023] 汉 10 [glyph:g024] 汉 11 [glyph:g025] 汉 12 [glyph:g026] 楷书\n1、2、3《甲文编》382页。4、5、6《金文编》653页“鬼”字所从和“魍”字所从。7《战文编》622页。8《说文》188页。9《睡甲》145页。10、11、12《篆隶表》646页。\n象形字。《说文》:“鬼,人所归为鬼。从人,象鬼头。鬼,阴气贼害,从厶。”王筠释例:“鬼字当是全体象形,其物为人所不见之物,圣人知鬼神之情状,故造为此形,不必分析说之。”朱骏声通训定声:“按:厶声。”徐灏段注笺:“厶当为声。”厶即今天私字初文,战国秦汉文字中多作△形。甲骨文、西周金文鬼字皆不从厶,作[glyph:g027],[glyph:g028]形,下边所从确实是人,上边所从之“田”形,象征“鬼头”,但不是像鬼头形。鬼字之本义当是在原始社会和商周社会中人戴一种吓人的面具以代表人们观念中的鬼。鬼字甲骨文作[glyph:g029],甲骨文異字作[glyph:g030],后来孳乳为戴,即像人头戴一面具之形,因此有奇异之义,鬼字与異字二形相似,构形之义也相似。于省吾主编《甲骨文字诂林》“鬼”字条下姚孝遂按语:“《说文》以‘人所归为鬼’,卜辞云:‘贞亚多鬼梦(梦),亡疾。’‘贞多鬼梦,蚩言见。’皆用其本义。”“人所归为鬼”即人死为鬼。战国秦系文字鬼字作[glyph:g031],一直到汉代初年鬼字形体亦如此作,“[glyph:g032]”形是否是“厶”,很难说,但从西汉中晚期文字开始已经变为从“[glyph:g033](厶)”了。(周宝宏)\n\n魃 shēn 书组、真部;书组、真韵、失人切。\n[glyph:g034] 《说文》小篆 1 [glyph:g035] 楷书\n1《说文》188页。\n形声字。《说文》:“魃,神也。从鬼,申声。”王筠释例:“魃,神也。《玉篇》在后增字中,云:山神也。段氏引《山海经"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0817/source.png",
+      "pdf_page": 817,
+      "source_pixel_sha256": "6630e899bbb88b4e0eb8017c00cef031d729588b5e64fdac8817a14916b66304"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0818/source.png",
+      "pdf_page": 818,
+      "source_pixel_sha256": "bc8d3c04ac52eb3824dfe73f234a0a91890b51bfeb9aa6eed020e50fc55d325d"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0814/source.png",
+      "pdf_page": 814,
+      "source_pixel_sha256": "8a2d95408394358e8be286890d9cf9409cee5dc314189aa0ace9874275f10ec1"
+    }
+  ],
+  "target_language": "zh",
+  "additional_research_context": {
+    "task": "Resolve the one exact remaining review issue: make the Modern Mandarin sound comparison identify the source and page for each reading separately. The inspected p. 814 (printed 801) 勹 headword gives 勹 bāo; the inspected p. 817 (printed 804) 包 headword gives 包 bāo. Keep both citations attached to the modern pair. Preserve the historical Zhengzhang comparison and the limitation that current matching readings do not establish historical phonetic function.",
+    "prior_p817_p818_source_coverage_findings": {
+      "verdict": "revise",
+      "evidence_ids": [
+        "X-1c72a3d3b84d376b1af7"
+      ],
+      "findings": [
+        "The inspected scan calls 包 a 会意字 and explicitly reads 勹 as wrapping and 巳 as an unborn child, together conveying 胞衣. The current article reports that account, but its component roles do not represent the book’s stated analysis: the 巳 record has only “unknown,” and the 勹 record assigns semantic and phonetic roles while omitting the book’s semantic reading. Either preserve this as a distinct, qualified competing analysis or explain why the article rejects it; do not present the scan as supporting only the existing account.",
+        "The scan’s paragraph proposes that 包 arose around Western Zhou and cites the Shijing use, while the article leaves the writing period unresolved and says no dated forms establish a descent. The scan does not establish an earliest attestation, but the article should acknowledge this book-specific dating proposal as a qualified source interpretation and distinguish it from verified artifact evidence."
+      ]
+    },
+    "review_policy": "Treat the attached review proposal as a specific wording/citation task and independently check each claim against the cited record. Do not remove or downgrade a modern reading pair now directly supported by both inspected headwords.",
+    "component_policy": "For 巳, keep the Shuowen pictorial account distinct from 字源’s attributed semantic 会意 interpretation. For 勹, retain the source reading as wrapping with 巳 and the separately proposed phonetic role; report uncertainty about the earliest graph.",
+    "sound_policy": "The attached original p. 814 and p. 817 scans directly establish the separate headword readings 勹 bāo and 包 bāo. State explicitly which printed page gives which character reading, and cite the corresponding evidence for each endpoint. Keep the Zhengzhang Old Chinese reconstruction as a separate historical comparison; matching current readings do not prove a historical sound role.",
+    "learner_policy": "Preserve the supported learner sound cue's substance and citation. Include 字源's separate semantic reading and the proposed sound role. A literal *pruː need not appear in the short learner card if the expert sound record retains the explicit Zhengzhang comparison and the learner cue remains accurate. Fit learner limit concisely.",
+    "dating_policy": "Keep the Western Zhou idea as the source’s attributed proposal based on Shijing, not a verified chronology. Make clear which claim is in the 包 entry; distinguish the relationship proposal in the separate 胞 entry.",
+    "review_existing_glyphs": true,
+    "review_existing_glyphs_instruction": "Keep the curated glyph selection and asset provenance unchanged."
+  },
+  "review_existing_glyphs": true,
+  "additional_context_policy": "These source leads and prior findings are research tasks, not preverified dossier evidence. Consult the referenced sources directly, check exact graph identity and scope, and add cited evidence for useful claims before authorship. Recheck reviewer hypotheses; modern structure does not establish historical roles. Record inaccessible sources as gaps.",
+  "unfinished_draft_provenance": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/next-bao-bei-bei-20261003/bounded-sense-scope-repair-20261003/job-output-followup3/ziyuan-2012/5305",
+    "article_hash": "0bb9f31f677aee55ed96a9deefcac4cfaed04fd15ccade7eaed61aac82fc39ae",
+    "dossier_hash": "c01bab23c34c571142630b426e3fee9d3e0ae4818a57b5d343f844c31bbb4daf",
+    "previous_state_hash": "bf4c8d037652c4c11d55cde5856cddc4565b750676efb8d76e514b3c2b09db98",
+    "canonical_article_hash": "94aa15a0de0a090ab3dabbe0698ce1fcc20adddcf07064f0f7cc6a77320524fc",
+    "canonical_dossier_hash": "c8b1b3da86893827bca1d7be33397c2a5d845662240c8307940aeaa2ad602894",
+    "requires_fresh_research_and_reviews": true,
+    "prior_review_proposals_hash": "0d952007202b61eb775fc345af8529599bd94fa975f0abe8522dc9e813d26a54"
+  },
+  "prior_review_proposals": [
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `components[1].sound[1]`, cite the two readings to their respective inspected headwords: `X-b09cad75f70476a4bee8` supports 勹 bāo, while `X-1c72a3d3b84d376b1af7` or `X-693c9ac58326ac5f8235` supports 包 bāo. The current text says “the separate 勹 headword” gives both readings, which misattributes the 包 reading. Retain the existing limitation that this Modern Mandarin match does not establish 勹’s historical phonetic role."
+      ],
+      "article_hash": "0bb9f31f677aee55ed96a9deefcac4cfaed04fd15ccade7eaed61aac82fc39ae",
+      "dossier_hash": "c01bab23c34c571142630b426e3fee9d3e0ae4818a57b5d343f844c31bbb4daf",
+      "reviewer": "gpt-6-luna:low:readability:01a100b4-0c7e-7ff1-88ce-55d485a28df6"
+    }
+  ],
+  "prior_consulted_book_records": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/next-bao-bei-bei-20261003/bounded-sense-scope-repair-20261003/job-output-followup3/ziyuan-2012/5305",
+    "previous_audit_hash": "a73a7e327fde22ea7cb9d22c3c026b5114ec7df4500fba416b04ee1a0b1e7132",
+    "records": [
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "5a45de6fd54bc97a9c3ed59468aa400cdd140f0a55614bcd38240ec956eb979b",
+        "research_result_hash": "fa3b7c345e3ac73339f44ef4d7275a4e56d99e5225d64193abbe9472cb37f306",
+        "source": "Li Xueqin (李學勤), chief editor, 字源, Tianjin Guji Chubanshe / Liaoning People’s Publishing House, 2012, ISBN 9787552800692; direct inspection of supplied scan",
+        "field": "PDF p. 817, printed p. 804; 包部 heading and 包 entry; attached scan 1, decoded RGB pixel SHA-256 6630e899bbb88b4e0eb8017c00cef031d729588b5e64fdac8817a14916b66304; /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0817/source.png",
+        "text": "The scan shows the printed page number 804 and the 包部 / 包 bāo headword. Zhou Baohong calls 包 a 会意字, reads 勹 as wrapping and 巳 as an unborn child, and says they together express 胞衣. He also proposes that 包 should have existed in the Western Zhou because it occurs in the Shijing, while stating that it is not found in Shang or Western Zhou writing in his account. This is his received-form analysis and dating proposal, not independent proof of an early artifact or first attestation. The entry ends before the separate 胞 headword.",
+        "evidence_ids": [
+          "X-4ee9013b64478e472072"
+        ]
+      },
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "5a45de6fd54bc97a9c3ed59468aa400cdd140f0a55614bcd38240ec956eb979b",
+        "research_result_hash": "fa3b7c345e3ac73339f44ef4d7275a4e56d99e5225d64193abbe9472cb37f306",
+        "source": "Li Xueqin (李學勤), chief editor, 字源, 2012; direct inspection of supplied scan",
+        "field": "PDF p. 817, printed p. 804; separate 胞 headword immediately following 包; attached scan 1, decoded RGB pixel SHA-256 6630e899bbb88b4e0eb8017c00cef031d729588b5e64fdac8817a14916b66304",
+        "text": "The separate 胞 entry calls 胞 a phono-semantic compound, quotes 說文 as deriving it from 肉 and 包, and reports Zhou Baohong’s estimate that 包 arose around Western Zhou while 胞 arose around Warring States to Han. These are claims about the 包/胞 relationship in the 胞 entry and must not be assigned to 勹’s role in 包.",
+        "evidence_ids": [
+          "X-caed875e78acd9e50eb7"
+        ]
+      },
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "5a45de6fd54bc97a9c3ed59468aa400cdd140f0a55614bcd38240ec956eb979b",
+        "research_result_hash": "fa3b7c345e3ac73339f44ef4d7275a4e56d99e5225d64193abbe9472cb37f306",
+        "source": "Li Xueqin (李學勤), chief editor, 字源, 2012; direct inspection of supplied scan",
+        "field": "PDF p. 817, printed p. 804; 包 headword form-label sequence and entry boundary; attached scan 1, decoded RGB pixel SHA-256 6630e899bbb88b4e0eb8017c00cef031d729588b5e64fdac8817a14916b66304",
+        "text": "The scanned 包 form sequence is labeled 《说文》小篆, 秦, 睡甲, 汉, 《篆隶表》, and 楷书, with references to source compilations. This verifies what the page labels, not that the displayed specimens were independently authenticated against dated artifacts.",
+        "evidence_ids": [
+          "X-f3e5460b32bf092f5ff6"
+        ]
+      },
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "5a45de6fd54bc97a9c3ed59468aa400cdd140f0a55614bcd38240ec956eb979b",
+        "research_result_hash": "fa3b7c345e3ac73339f44ef4d7275a4e56d99e5225d64193abbe9472cb37f306",
+        "source": "Li Xueqin (李學勤), chief editor, 字源, 2012; direct inspection of supplied scan",
+        "field": "PDF p. 814, printed p. 801; 勹部 / 勹 headword and entry; attached scan 3, decoded RGB pixel SHA-256 8a2d95408394358e8be286890d9cf9409cee5dc314189aa0ace9874275f10ec1; /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0814/source.png",
+        "text": "The scan shows 勹部, 勹 bāo, and its separate entry. Zhou calls it a 会意字, quotes the Shuowen wrapping explanation, rejects derivations from 伏 or 旬 as unsupported, and says 勹 has its own source. He says texts used 包 in place of 勹 and describes 勹 and 包 as ancient/current forms of one another. This supports a separate account of 勹 and its later relationship with 包; it does not itself state that 勹 is phonetic in the 包 headword.",
+        "evidence_ids": [
+          "X-bac3f81fda668d01a5d9"
+        ]
+      },
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "5a45de6fd54bc97a9c3ed59468aa400cdd140f0a55614bcd38240ec956eb979b",
+        "research_result_hash": "fa3b7c345e3ac73339f44ef4d7275a4e56d99e5225d64193abbe9472cb37f306",
+        "source": "Li Xueqin (李學勤), chief editor, 字源, 2012; direct inspection of supplied scan",
+        "field": "PDF p. 814, printed p. 801; 勹 headword pronunciation line; attached scan 3, decoded RGB pixel SHA-256 8a2d95408394358e8be286890d9cf9409cee5dc314189aa0ace9874275f10ec1",
+        "text": "The 勹 entry’s heading gives modern pronunciation bāo and historical-category information 帮纽、幽部；帮纽、肴韵、布交切. This is the independent 勹 headword reading, not a reading inferred from 包.",
+        "evidence_ids": [
+          "X-b09cad75f70476a4bee8"
+        ]
+      },
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "5a45de6fd54bc97a9c3ed59468aa400cdd140f0a55614bcd38240ec956eb979b",
+        "research_result_hash": "fa3b7c345e3ac73339f44ef4d7275a4e56d99e5225d64193abbe9472cb37f306",
+        "source": "Li Xueqin (李學勤), chief editor, 字源, 2012; direct inspection of supplied continuation scan",
+        "field": "PDF p. 818 continuation check; attached scan 2, decoded RGB pixel SHA-256 bc8d3c04ac52eb3824dfe73f234a0a91890b51bfeb9aa6eed020e50fc55d325d; /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0818/source.png",
+        "text": "The top running header names 包, 胞, 匏, 苟, 敬, 鬼, 魃, 魂, but the page text continues separate 苟/敬 and later entries. It does not continue the 包 or 胞 entries, so no additional 包 claim is drawn from this page.",
+        "evidence_ids": [
+          "X-b69429098ef5fd2ed596"
+        ]
+      }
+    ],
+    "requires_current_source_research": true
+  },
+  "continuation_policy": "This is an unapproved draft, not reusable approval. Recheck source-dependent claims against current source scans/corpus. Prior revise findings are hypotheses to recheck, including possible source identity errors; do not obey them merely because a previous verifier repeated them. Prior consulted book records identify exact retained evidence IDs and claims to recheck. After current-source verification, cite relevant supported claims through evidence_ids metadata; dossier-only records do not count as article source use. Preserve prior supported work and obtain fresh factual/readability reviews.",
+  "require_source_specific_page_evidence": true
+}

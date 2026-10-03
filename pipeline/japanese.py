@@ -33,9 +33,11 @@ including pronouns and omitted subjects. Scope component roles and sound compari
 actual graph analyzed. A current component breakdown needs visible current components, not
 an inventory from a historical predecessor. Keep old analyses in expert discussion.
 Learner overview starts with useful Japanese meaning and a sourced logical current component
-split. Learner cards must cover each component scoped to the current Japanese character exactly
-once. Historical-only component cards are optional and usually belong in the expert explanation;
-do not expand the quick learner split merely to cover every detailed historical component.
+split. Learner cards must cover each component marked current_form_component=true exactly once.
+Mark expert-only historical analyses false even when scope_character equals the Japanese entry;
+absent or null retains the legacy scope-based rule. Historical-only component cards are optional
+and usually belong in the expert explanation; do not expand the quick learner split merely to
+cover every detailed historical component. This flag does not change evidence, roles, scopes or edges.
 Keep ancient Chinese sound roles separate from Japanese on/kun readings. A Chinese
 phonetic role need not predict a kun reading. If comparing Japanese on readings, provide supported
 component and host readings; matching current readings alone do not prove historical phonetic
@@ -113,10 +115,12 @@ class JapaneseRunner(editorial.Runner):
                 'learner_component_indices': [c['component_index'] for c in inputs['article'].get('learner', {}).get('components', [])],
                 'components': [{'component_index': i, 'form': c['form'],
                     'scope_character': c.get('scope_character', inputs['article']['character']),
+                    'current_form_component': c.get('current_form_component'),
                     'roles': c['roles']}
                     for i, c in enumerate(inputs['article']['components'])],
-                'instruction': 'Review inputs.article only. Historical scopes remain expert '
-                    'components; learner cards cover the current scope. Parent Chinese prose '
+                'instruction': 'Review inputs.article only. Use current_form_component when '
+                    'present; false marks expert-only history even at the entry scope and absent/null '
+                    'retains the old scope rule. Learner cards cover current members. Parent Chinese prose '
                     'is not the current draft.'}
         if role in ('writer', 'editor', 'revision'):
             schema = copy.deepcopy(schema)

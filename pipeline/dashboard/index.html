@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Hanzi Pipeline · Operations</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="timings.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Hanzi pipeline dashboard home">
+        <span class="brand-mark" aria-hidden="true">文</span>
+        <span><strong>Hanzi Pipeline</strong><small>Research operations</small></span>
+      </a>
+      <div class="topbar-right">
+        <div id="connection" class="connection is-loading"><span class="pulse"></span><span>Connecting</span></div>
+        <span class="top-divider"></span>
+        <span class="updated-label">Snapshot <time id="snapshot-time">Waiting for data</time></span>
+        <button id="refresh-now" class="icon-button" type="button" aria-label="Refresh dashboard snapshot" title="Refresh dashboard snapshot">↻</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro-row">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span>Live workbench</div>
+          <h1>Research, in motion<span class="period">.</span></h1>
+          <p class="intro-copy">A live view of character research, review gates, source fixes, and the machines running them.</p>
+        </div>
+        <div class="system-chip" id="machine-chip"><span class="chip-glyph">⌁</span><span>System snapshot pending</span></div>
+      </section>
+
+      <section class="metric-grid" aria-label="Pipeline overview">
+        <article class="metric-card metric-primary"><div class="metric-top"><span>Live or waiting</span><span class="metric-icon">◷</span></div><strong id="metric-active">—</strong><div id="metric-active-note" class="metric-note">Verified live or waiting for a slot</div></article>
+        <article class="metric-card"><div class="metric-top"><span>Needs attention</span><span class="metric-icon attention-icon">!</span></div><strong id="metric-attention">—</strong><div id="metric-attention-note" class="metric-note">Blocked or awaiting action</div></article>
+        <article class="metric-card"><div class="metric-top"><span>Characters tracked</span><span class="metric-icon">字</span></div><strong id="metric-characters">—</strong><div id="metric-characters-note" class="metric-note">In current queues</div></article>
+        <article class="metric-card"><div class="metric-top"><span>Live workers</span><span class="metric-icon worker-icon">↗</span></div><strong id="metric-workers">—</strong><div id="metric-workers-note" class="metric-note">Verified active processes</div></article>
+      </section>
+
+      <section class="panel coordination-panel" aria-label="Coordinating work">
+        <div class="panel-heading compact-heading"><div><div class="section-kicker">Across the project</div><h2>Pipeline work</h2></div><span id="repository-state" class="resource-caption">Repository state pending</span></div>
+        <div id="coordination-tasks" class="coordination-tasks"></div>
+        <p id="coordination-note" class="coordination-note"></p>
+      </section>
+
+      <section class="main-grid">
+        <article class="panel queue-panel">
+          <div class="panel-heading">
+            <div><div class="section-kicker">Work queues</div><h2>Character board</h2></div>
+            <span id="queue-count" class="count-pill">0 queues</span>
+          </div>
+          <div class="toolbar">
+            <label class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Find a character, job, or source" autocomplete="off" aria-label="Search jobs"></label>
+            <label class="select-wrap"><span class="sr-only">Filter by status</span><select id="status-filter"><option value="all">All status</option><option value="active">Active</option><option value="attention">Needs attention</option><option value="complete">Complete</option><option value="other">Other</option></select></label>
+            <label class="select-wrap"><span class="sr-only">Filter by source</span><select id="source-filter"><option value="all">All sources</option></select></label>
+            <label class="history-toggle"><input id="history-toggle" type="checkbox"><span>Include history</span></label>
+          </div>
+          <div id="queue-list" class="queue-list" aria-live="polite"><div class="empty-state">Waiting for the first snapshot…</div></div>
+        </article>
+
+        <aside class="side-stack">
+          <article class="panel workers-panel">
+            <div class="panel-heading compact-heading"><div><div class="section-kicker">Execution</div><h2>Live stages</h2></div><span id="stage-count" class="live-count"><i></i> 0 verified live</span></div>
+            <div id="capacity-strip" class="capacity-strip"><span>Queue workers <b>—</b></span><span>Agent slots <b>—</b></span></div>
+            <div id="stage-list" class="stage-list"><div class="empty-state small-empty">No active stage data yet.</div></div>
+          </article>
+          <article class="panel resource-panel">
+            <div class="panel-heading compact-heading"><div><div class="section-kicker">Machine</div><h2>Resource pulse</h2></div><span id="load-label" class="resource-caption">Awaiting sample</span></div>
+            <div class="resource-chart-wrap"><div id="load-chart" class="load-chart" aria-label="Recent system load"></div><div id="chart-axis" class="chart-axis"><span>Earlier</span><span>Now</span></div></div>
+            <div class="resource-stats">
+              <div><span>Memory</span><strong id="memory-stat">—</strong><div class="meter"><i id="memory-meter"></i></div></div>
+              <div><span>Swap</span><strong id="swap-stat">—</strong><div class="meter meter-swap"><i id="swap-meter"></i></div></div>
+            </div>
+          </article>
+        </aside>
+      </section>
+
+      <section class="panel timing-panel">
+        <div class="panel-heading"><div><div class="section-kicker">Where time goes</div><h2>Character timings</h2></div><span id="timing-count" class="count-pill"></span></div>
+        <p class="timing-note">Slowest first · follows board filters. Enable Include history for reused and older jobs. Clock time includes all work and waits. Recorded model stages include tool calls; overlapping stages can exceed clock time. Open a character for its full breakdown.</p>
+        <div id="timing-summary" class="timing-summary"></div>
+        <div class="timing-scroll"><table class="timing-table"><thead><tr><th>Character</th><th>Timing scope</th><th>Clock time</th><th>Model stages</th><th>Slot wait</th><th>Slowest stage</th><th>Attempts / failures</th></tr></thead><tbody id="timing-list"></tbody></table></div>
+      </section>
+
+      <section class="lower-grid">
+        <article class="panel activity-panel">
+          <div class="panel-heading"><div><div class="section-kicker">Recent movement</div><h2>Job activity</h2></div><span id="job-count" class="count-pill">0 jobs</span></div>
+          <div id="activity-list" class="activity-list"><div class="empty-state small-empty">No jobs in the current snapshot.</div></div>
+        </article>
+        <article class="panel signals-panel">
+          <div class="panel-heading"><div><div class="section-kicker">Source integrity</div><h2>Findings & repairs</h2></div><span id="repair-count" class="count-pill">0 repairs</span></div>
+          <div class="signal-columns"><div><h3>OCR repairs</h3><div id="repair-list" class="signal-list"><div class="empty-state small-empty">No repair records.</div></div></div><div><h3>Current findings</h3><div id="finding-list" class="signal-list"><div class="empty-state small-empty">No findings.</div></div></div></div>
+        </article>
+      </section>
+
+      <section class="bottom-grid">
+        <article class="panel issues-panel">
+          <div class="panel-heading compact-heading"><div><div class="section-kicker">GitHub handoff</div><h2>Issue tracker</h2></div><span id="issue-count" class="count-pill">GitHub sync pending</span></div>
+          <div id="issue-list" class="issue-list"><div class="empty-state small-empty">No linked issues in the current snapshot.</div></div>
+        </article>
+        <article class="panel warnings-panel">
+          <div class="panel-heading compact-heading"><div><div class="section-kicker">Snapshot health</div><h2>Notes</h2></div></div>
+          <div id="warning-list" class="warning-list"><div class="healthy-note"><span>✓</span> No warnings reported</div></div>
+          <div class="coverage-block"><div class="coverage-heading"><span>Source coverage</span><strong id="coverage-label">—</strong></div><div class="coverage-track"><i id="coverage-meter"></i></div><p id="coverage-note">Coverage will appear when reported by the collector.</p></div>
+        </article>
+      </section>
+    </main>
+    <footer><span>Hanzi Etymology Dictionary</span><span id="footer-meta">Local operations view · polling every 2 seconds</span></footer>
+  </div>
+
+  <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
+  <aside id="detail-drawer" class="detail-drawer" aria-hidden="true" aria-labelledby="drawer-title">
+    <div class="drawer-top"><div><div class="section-kicker">Job detail</div><h2 id="drawer-title">Select a job</h2></div><button id="drawer-close" class="icon-button close-button" type="button" aria-label="Close details">×</button></div>
+    <div id="drawer-content" class="drawer-content"><p class="drawer-placeholder">Select a character or job to inspect its current state, stage receipts, findings, and review hashes.</p></div>
+  </aside>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

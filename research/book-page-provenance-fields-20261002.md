@@ -1,0 +1,3 @@
+# Book page provenance fields (2026-10-02)
+
+The 备 book-coverage check refused genuine used book records because it searched only the field label for pages. These records put PDF p.718 / printed p.705 in reader-friendly source details, while field identifies the headword/explanation. The generic capture/adoption criteria now read source, field, text and title for explicit page provenance, using the same registered-book identity check. Edition year alone is not a page. Longer titles such as 字源考釋 are not the registered 字源. Source coverage still needs an actual independent scan-backed pass; this code change does not certify the entry.

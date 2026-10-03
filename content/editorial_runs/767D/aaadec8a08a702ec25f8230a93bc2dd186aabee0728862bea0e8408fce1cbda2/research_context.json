@@ -1,0 +1,25 @@
+{
+  "scope": "Two-character bounded smoke cohort: 白 and 百, separate graph identities and separate entries.",
+  "scan_budget": {
+    "max_distinct_original_source_pages_per_character": 3,
+    "policy": "Use at most three distinct 字源 original scan pages for each character in initial research, including continuation pages. Prefer the actual headword and only directly relevant continuation/comparator pages. Do not do whole-book searches, OCR, rendering or visual sweeps."
+  },
+  "research_tasks": {
+    "白": [
+      "Inspect the actual 白 headword and any immediately relevant continuation within the three-page cap. Verify the printed identity, printed/PDF page labels, named components, readings, and any historical-form claims against scan pixels.",
+      "The canonical entry also lists meanings beyond “white” (伯, place name, hundred, pure/unblemished, bright). Consult current authoritative Mandarin references independently; scope meanings by evidence and do not carry over character-history claims to unrelated senses. Determine whether “百” used as a value/sense in this separate entry requires an explicit relation and whether it is supported.",
+      "Compare the book’s account with authoritative paleographic/dictionary sources; preserve competing graph readings. Do not infer image identities, components, sound roles, or semantic history from familiar shapes."
+    ],
+    "百": [
+      "Inspect the actual 百 headword and any immediately relevant continuation within the three-page cap. Verify printed identity, printed/PDF page labels, the one-hundred/large-quantity sense distinctions, and historical-form claims against scan pixels.",
+      "The canonical entry describes disputed early construction (top marker above 白-like base versus 一 plus 白). Check precisely what the book claims and whether it treats the graph as compound/pictorial; compare authoritative paleographic/dictionary sources. Do not force a single analysis or treat modern strokes as historic component roles.",
+      "Consult current authoritative Mandarin references for current meanings/status. Keep attested meanings distinct from proposed original meanings; do not infer that 白 is a semantic or phonetic component without direct source support."
+    ]
+  },
+  "general_requirements": [
+    "Use repository sources, the registered digitized book, and additional authoritative sources. Keep book evidence page-specific and cite only claims it supports.",
+    "If the headword cannot be identified or a printed glyph is ambiguous, retain a page-bound glyph identity and precise gap; do not guess or normalize OCR. If a literal OCR error seems likely, report the exact raw span and original page/pixel evidence as a proposal, without changing producer data.",
+    "Never edit canonical articles/dossiers or repository source prose in the research role; do not create GitHub issues or perform git operations. Preserve prior evidence unless a verified correction requires review.",
+    "Research and reviews must use gpt-6-luna with low reasoning. The exact current article and dossier must receive fresh independent factual and readability approvals. Preserve current supported claims, uncertainty and citations."
+  ]
+}

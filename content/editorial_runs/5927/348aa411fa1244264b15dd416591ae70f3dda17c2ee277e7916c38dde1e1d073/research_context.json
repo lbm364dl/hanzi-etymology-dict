@@ -1,0 +1,17 @@
+{
+  "review_hypotheses": {
+    "factual": {
+      "verdict": "revise",
+      "findings": [
+        "`meaning_history.senses[1].status` is `historical`, but the cited bronze inscription is presented as an attested use of 大 meaning “big,” opposite 小, with no claim that this is merely a historical dictionary gloss. Set the sense status to `earliest_attested` if the source identifies this as the earliest documented corpus use, or retain `historical` and remove the unsupported earliest-attestation implication from `period`; the dossier does not establish a precise date or that this sense preceded every other early sense. Update the generated `has_sense` edge to match any status or citation change."
+      ]
+    },
+    "readability": {
+      "verdict": "revise",
+      "findings": [
+        "In `historical_glyphs.items[1].period`, “Early Western Zhou specimen is cited as a source” is misleading: the glyph is a modern redraw in Western Zhou style, and its cited source-image record identifies an early Western Zhou specimen without verifying that the redraw depicts that specimen. Replace this with wording that identifies the style and says it is a modern redraw; retain specimen provenance separately and qualify it as unverified. The attached image supports the caption’s broad description of a frontal figure, not a claim that this is the cited specimen. Evidence: X-613b3433916c7ff385f3, X-09e9d0f85820a5b2817a."
+      ]
+    }
+  },
+  "task": "Verify required factual/readability changes against exact source evidence. Distinguish older attestation from demonstrated priority, and modern script-style redraw from a verified depiction of a specific specimen. Preserve competing adult-figure and big-meaning proposals with exact evidence and qualified developments. Do not assume every prior finding is correct."
+}

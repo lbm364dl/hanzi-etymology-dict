@@ -1,0 +1,30 @@
+name: Character, source or pipeline finding
+description: Track an error, improvement, clarification or source correction.
+title: "Finding: "
+body:
+  - type: textarea
+    id: finding
+    attributes:
+      label: Finding
+      description: Explain the error, uncertainty or improvement and why it matters.
+    validations:
+      required: true
+  - type: textarea
+    id: affected
+    attributes:
+      label: Affected characters or source pages
+      description: Include character identity, book edition and PDF/printed pages when relevant.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Link sources, scan checks, research records or exact job artifacts. Distinguish observed evidence from a hypothesis.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification required
+      description: State what would demonstrate a fix. Changed explanations need fresh independent reviews; OCR fixes need scan verification and corrected corpus exports.
+    validations:
+      required: true

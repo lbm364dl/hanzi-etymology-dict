@@ -1,0 +1,36 @@
+{
+  "findings": [
+    {
+      "kind": "factual",
+      "title": "Support the current sense of 大 with current-use evidence",
+      "details": "The authored entry marks “big” as historical and the bronze example as an established historical use, while the current sense record omits “big” and relies on cited current glosses for “great,” “vast,” “large” and “high.” This leaves the ordinary present-day meaning “big” without a matching current sense record, despite the learner overview presenting it as current.",
+      "verification": "Check the cited current-use evidence for 大 meaning “big”; add or merge a current sense and ensure the generated has_sense edge and learner meaning agree. Keep the bronze example’s dating qualification and do not label it earliest_attested without evidence establishing priority.",
+      "evidence": [
+        "citation-integration/round-3/readability-verification/verified-review.json",
+        "current_article.meaning_history.senses[0]",
+        "current_article.meaning_history.senses[1]",
+        "current_article.learner.overview",
+        "X-6159f6ab0334b15a4d20",
+        "X-76529a19faea307ed935",
+        "X-30f633eacef2d6b6d523",
+        "E6",
+        "E9",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:大:datsu-current-sense-evidence"
+    },
+    {
+      "kind": "readability",
+      "title": "Remove unsupported stroke-by-stroke anatomy from 大 glyph captions",
+      "details": "An earlier readability review rejected captions that identify individual strokes as body parts because the cited image-provenance evidence does not verify those identifications. The current captions describe stroke positions and broad human-figure interpretation, but this rejection should remain tracked as a material presentation finding; the attached images are redraws, and their provenance does not establish anatomy.",
+      "verification": "Review the cited redraw and provenance evidence; keep captions limited to visible forms and script styles unless stroke-level anatomical identifications are independently supported. Preserve the disputed pose as an attributed interpretation.",
+      "evidence": [
+        "citation-integration/round-0/readability-verification/verified-review.json",
+        "current_article.historical_glyphs.items[0].caption",
+        "current_article.historical_glyphs.items[1].caption",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "pipeline:ocr-review:occurrence-context-overread"
+    }
+  ]
+}

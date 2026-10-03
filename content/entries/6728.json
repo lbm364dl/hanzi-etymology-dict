@@ -84,41 +84,46 @@
     "senses": [
       {
         "id": "木:tree",
-        "gloss": "tree; use in a tree-planting phrase",
-        "period": "dating unresolved",
-        "certainty": "probable",
-        "status": "historical",
-        "text": "The oracle-bone phrase 埶(藝)木 is interpreted as referring to planting trees, supporting a tree-related use. This example does not show whether that use predates the wood or board use.",
+        "gloss": "tree",
+        "period": "modern Chinese",
+        "certainty": "established",
+        "status": "current",
+        "text": "木 is currently used for ‘tree’. An oracle-bone phrase, 埶(藝)木, is reported as a tree-planting use; the rubbing was not independently checked. This evidence does not establish whether ‘tree’ or ‘wood’ came first.",
         "evidence_ids": [
+          "E6",
+          "E9",
           "X-c968eea23b72eeb177f0",
+          "X-1de8f56bea37e2bb28ff",
           "X-e9ace64efeee8c21e40b",
-          "X-39e70d0fed13fe85a6e8"
+          "X-7e38f1d40f1d9ce9d3cc"
         ]
       },
       {
         "id": "木:wood",
         "gloss": "wood; timber",
-        "period": "dating unresolved",
-        "certainty": "probable",
-        "status": "historical",
-        "text": "木枋 in a bronze inscription is interpreted as a wooden writing board, supporting a wood or timber use. Its exact date and chronology relative to the tree-planting phrase are unresolved.",
+        "period": "modern Chinese",
+        "certainty": "established",
+        "status": "current",
+        "text": "The graph is currently used for ‘wood’ or ‘lumber’. 木枋 in a bronze inscription is interpreted as a wooden writing board, supporting an older wood or timber use; its chronology relative to the tree-planting phrase is unresolved.",
         "evidence_ids": [
-          "X-966db1b310ed7426fc8d",
+          "E6",
+          "X-c45272f698b2734eda86",
           "X-87863282d25f5c4271ea",
           "X-39e70d0fed13fe85a6e8",
-          "X-9671fec828a12245923a"
+          "X-7e38f1d40f1d9ce9d3cc"
         ]
       },
       {
-        "id": "木:modern_tree_wood",
-        "gloss": "tree; wood; lumber; wooden",
+        "id": "木:wooden",
+        "gloss": "wooden",
         "period": "modern",
         "certainty": "established",
         "status": "current",
-        "text": "Current meanings include ‘tree’, ‘wood’ or ‘lumber’, and ‘wooden’. The evidence does not establish a dated sequence connecting these senses.",
+        "text": "The character is also currently used with the sense ‘wooden’. The cited evidence lists this current meaning but does not establish its historical development from ‘tree’ or ‘wood’.",
         "evidence_ids": [
           "E6",
-          "X-c45272f698b2734eda86"
+          "E9",
+          "X-7e38f1d40f1d9ce9d3cc"
         ]
       },
       {
@@ -139,13 +144,14 @@
     "developments": [],
     "limitations": [
       {
-        "text": "The tree-planting and wooden-board examples do not establish which sense came first or a development from ‘tree’ to ‘wood’ or ‘timber’. Dictionary citations for other senses, including ‘coffin’, do not establish chronology.",
+        "text": "The tree-planting and wooden-board examples do not establish which sense came first or a development from ‘tree’ to ‘wood’ or ‘timber’. The cited dictionary material also lists uses for leaves, coffins, wooden objects, instruments, the ‘wood’ phase, and ‘plain/simple’, but does not establish their chronology or semantic bridges.",
         "evidence_ids": [
           "X-c45272f698b2734eda86",
           "X-c968eea23b72eeb177f0",
           "X-87863282d25f5c4271ea",
           "X-e9ace64efeee8c21e40b",
-          "X-39e70d0fed13fe85a6e8"
+          "X-39e70d0fed13fe85a6e8",
+          "X-7e38f1d40f1d9ce9d3cc"
         ]
       },
       {
@@ -164,6 +170,116 @@
         ]
       }
     ]
+  },
+  "relationships": [
+    {
+      "id": "meaning:木:tree",
+      "subject": {
+        "kind": "character",
+        "id": "木"
+      },
+      "object": {
+        "kind": "sense",
+        "id": "木:tree"
+      },
+      "predicate": "has_sense",
+      "context_character": "木",
+      "certainty": "established",
+      "text": "木 is currently used for ‘tree’. An oracle-bone phrase, 埶(藝)木, is reported as a tree-planting use; the rubbing was not independently checked. This evidence does not establish whether ‘tree’ or ‘wood’ came first.",
+      "evidence_ids": [
+        "E6",
+        "E9",
+        "X-c968eea23b72eeb177f0",
+        "X-1de8f56bea37e2bb28ff",
+        "X-e9ace64efeee8c21e40b",
+        "X-7e38f1d40f1d9ce9d3cc"
+      ]
+    },
+    {
+      "id": "meaning:木:wood",
+      "subject": {
+        "kind": "character",
+        "id": "木"
+      },
+      "object": {
+        "kind": "sense",
+        "id": "木:wood"
+      },
+      "predicate": "has_sense",
+      "context_character": "木",
+      "certainty": "established",
+      "text": "The graph is currently used for ‘wood’ or ‘lumber’. 木枋 in a bronze inscription is interpreted as a wooden writing board, supporting an older wood or timber use; its chronology relative to the tree-planting phrase is unresolved.",
+      "evidence_ids": [
+        "E6",
+        "X-c45272f698b2734eda86",
+        "X-87863282d25f5c4271ea",
+        "X-39e70d0fed13fe85a6e8",
+        "X-7e38f1d40f1d9ce9d3cc"
+      ]
+    },
+    {
+      "id": "meaning:木:wooden",
+      "subject": {
+        "kind": "character",
+        "id": "木"
+      },
+      "object": {
+        "kind": "sense",
+        "id": "木:wooden"
+      },
+      "predicate": "has_sense",
+      "context_character": "木",
+      "certainty": "established",
+      "text": "The character is also currently used with the sense ‘wooden’. The cited evidence lists this current meaning but does not establish its historical development from ‘tree’ or ‘wood’.",
+      "evidence_ids": [
+        "E6",
+        "E9",
+        "X-7e38f1d40f1d9ce9d3cc"
+      ]
+    },
+    {
+      "id": "meaning:木:loan_mù",
+      "subject": {
+        "kind": "character",
+        "id": "木"
+      },
+      "object": {
+        "kind": "sense",
+        "id": "木:loan_mù"
+      },
+      "predicate": "has_sense",
+      "context_character": "木",
+      "certainty": "probable",
+      "text": "In a Mawangdui manuscript passage, 木 is reported as a sound-based spelling for 沐. This borrows the graph for another word rather than extending the meaning ‘tree’ or ‘wood’; the first use of this spelling is unresolved.",
+      "evidence_ids": [
+        "X-0070a60b04cd881608f1",
+        "X-74858128b75e17330b19",
+        "X-c187d65ef71e873b2343",
+        "X-dc850fc6eef1b8db15e2"
+      ]
+    }
+  ],
+  "learner": {
+    "overview": {
+      "text": "木 is a picture of a whole tree, including its trunk, branches, and roots.",
+      "evidence_ids": [
+        "X1",
+        "X-4c44336a651731cc031c",
+        "X-5b54d347ac6eaf0c37e0"
+      ]
+    },
+    "components": [
+      {
+        "component_index": 0,
+        "text": "The whole graph pictures a tree; its strokes are not separately established as individual parts.",
+        "evidence_ids": [
+          "X1",
+          "X-4c44336a651731cc031c",
+          "X-1de8f56bea37e2bb28ff"
+        ]
+      }
+    ],
+    "takeaway": null
   },
   "historical_glyphs": {
     "items": [
@@ -215,111 +331,6 @@
         ]
       }
     ]
-  },
-  "relationships": [
-    {
-      "id": "meaning:木:tree",
-      "subject": {
-        "kind": "character",
-        "id": "木"
-      },
-      "object": {
-        "kind": "sense",
-        "id": "木:tree"
-      },
-      "predicate": "has_sense",
-      "context_character": "木",
-      "certainty": "probable",
-      "text": "The oracle-bone phrase 埶(藝)木 is interpreted as referring to planting trees, supporting a tree-related use. This example does not show whether that use predates the wood or board use.",
-      "evidence_ids": [
-        "X-c968eea23b72eeb177f0",
-        "X-e9ace64efeee8c21e40b",
-        "X-39e70d0fed13fe85a6e8"
-      ]
-    },
-    {
-      "id": "meaning:木:wood",
-      "subject": {
-        "kind": "character",
-        "id": "木"
-      },
-      "object": {
-        "kind": "sense",
-        "id": "木:wood"
-      },
-      "predicate": "has_sense",
-      "context_character": "木",
-      "certainty": "probable",
-      "text": "木枋 in a bronze inscription is interpreted as a wooden writing board, supporting a wood or timber use. Its exact date and chronology relative to the tree-planting phrase are unresolved.",
-      "evidence_ids": [
-        "X-966db1b310ed7426fc8d",
-        "X-87863282d25f5c4271ea",
-        "X-39e70d0fed13fe85a6e8",
-        "X-9671fec828a12245923a"
-      ]
-    },
-    {
-      "id": "meaning:木:modern_tree_wood",
-      "subject": {
-        "kind": "character",
-        "id": "木"
-      },
-      "object": {
-        "kind": "sense",
-        "id": "木:modern_tree_wood"
-      },
-      "predicate": "has_sense",
-      "context_character": "木",
-      "certainty": "established",
-      "text": "Current meanings include ‘tree’, ‘wood’ or ‘lumber’, and ‘wooden’. The evidence does not establish a dated sequence connecting these senses.",
-      "evidence_ids": [
-        "E6",
-        "X-c45272f698b2734eda86"
-      ]
-    },
-    {
-      "id": "meaning:木:loan_mù",
-      "subject": {
-        "kind": "character",
-        "id": "木"
-      },
-      "object": {
-        "kind": "sense",
-        "id": "木:loan_mù"
-      },
-      "predicate": "has_sense",
-      "context_character": "木",
-      "certainty": "probable",
-      "text": "In a Mawangdui manuscript passage, 木 is reported as a sound-based spelling for 沐. This borrows the graph for another word rather than extending the meaning ‘tree’ or ‘wood’; the first use of this spelling is unresolved.",
-      "evidence_ids": [
-        "X-0070a60b04cd881608f1",
-        "X-74858128b75e17330b19",
-        "X-c187d65ef71e873b2343",
-        "X-dc850fc6eef1b8db15e2"
-      ]
-    }
-  ],
-  "learner": {
-    "overview": {
-      "text": "木 is a picture of a whole tree, including its trunk, branches, and roots.",
-      "evidence_ids": [
-        "X1",
-        "X-4c44336a651731cc031c",
-        "X-5b54d347ac6eaf0c37e0"
-      ]
-    },
-    "components": [
-      {
-        "component_index": 0,
-        "text": "The whole graph pictures a tree; its strokes are not separately established as individual parts.",
-        "evidence_ids": [
-          "X1",
-          "X-4c44336a651731cc031c",
-          "X-1de8f56bea37e2bb28ff"
-        ]
-      }
-    ],
-    "takeaway": null
   },
   "evidence": [
     {
@@ -849,6 +860,61 @@
       "url": "https://www.fdgwz.org.cn/Web/Show/2443",
       "title": "蕭旭：馬王堆帛書《胎產書》、《養生方》校補",
       "accessed_at": "2026-09-26"
+    },
+    {
+      "id": "X-7e38f1d40f1d9ce9d3cc",
+      "source": "李學勤主編《字源》",
+      "field": "木部 entry; PDF p. 503, printed p. 490",
+      "text": "The 木 entry calls the graph pictographic, describes its upper part as branches and lower part as roots, and gives ‘tree’ as its original sense. It lists uses for leaves, timber, wooden things, coffins, instruments in the ‘eight sounds’, the ‘wood’ phase of the Five Phases, and ‘plain/simple’. The entry does not date those uses or establish their order. I inspected the supplied page image directly; the entry and these lines are legible. PDF p. 504 (printed p. 491) continues other characters, not 木.",
+      "record_character": "木",
+      "kind": "book_scan_verified",
+      "url": "https://www.worldcat.org/search?q=9787552800692",
+      "title": "字源, 李學勤主編, 2012; ISBN 9787552800692",
+      "accessed_at": "2026-10-03"
+    },
+    {
+      "id": "X-86ca99f1ed28a3fe2c1e",
+      "source": "漢語多功能字庫 (CUHK Humanum)",
+      "field": "形義通解; early form and component analysis",
+      "text": "The entry describes oracle and bronze forms as depicting a tree, with upper branches and lower roots, and gives ‘tree’ as the original sense. It reports the received 說文 analysis as 屮 above roots, then quotes Wang Yun’s objection that resemblance to 屮 does not establish it as a component and analyzes 木 as a complete-body pictograph. This supports describing the current whole graph as a tree while presenting the 屮 analysis as a historical account rather than an established decomposition.",
+      "record_character": "木",
+      "kind": "external_research",
+      "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php?piece=%E6%9C%A8",
+      "title": "漢語多功能字庫 — 漢字甲骨部件分析",
+      "accessed_at": "2026-10-03"
+    },
+    {
+      "id": "X-d8a5602ebbca821cb761",
+      "source": "說文解字, received text via Shuowen.org",
+      "field": "木 entry; received explanation",
+      "text": "The entry reads 「冒也。冒地而生。東方之行。从屮，下象其根。凡木之屬皆从木。」 It is evidence for the traditional lexicographic account, not independent paleographic confirmation of the 屮 segmentation.",
+      "record_character": "木",
+      "kind": "external_research",
+      "url": "https://www.shuowen.org/view/3396",
+      "title": "說文解字「木」 — Shuowen.org",
+      "accessed_at": "2026-10-03"
+    },
+    {
+      "id": "X-07e97cdeeca2cd8933a1",
+      "source": "小學堂文字學資料庫 (Academia Sinica)",
+      "field": "字形演變",
+      "text": "The record indexes oracle-bone, bronze, Chu bamboo-and-silk, and seal-script forms, including bronze catalogue reference 集成08477. Its summary describes 木 as a pictograph depicting a tree’s trunk, branches, and roots. This corroborates the broad whole-tree analysis; I did not inspect the record’s glyph images.",
+      "record_character": "木",
+      "kind": "external_research",
+      "url": "https://chardb.iis.sinica.edu.tw/evolution.jsp?cid=13134",
+      "title": "漢字「木」：字形演變",
+      "accessed_at": "2026-10-03"
+    },
+    {
+      "id": "X-b6df778687ec91098380",
+      "source": "Local Unihan extract; upstream page lookup",
+      "field": "kMandarin; U+6728",
+      "text": "The supplied local row is U+6728, kMandarin, mù (pipeline/data/unihan-kmandarin-hsk1.tsv, line 294). Unicode’s official character-record URL was attempted but was inaccessible through the web tool, so this local row is recorded as a local reading check, not externally verified click-through evidence. 木 is analyzed here as a pictograph, so this reading does not establish a component sound role.",
+      "record_character": "木",
+      "kind": "local_reading_check",
+      "url": "https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=6728",
+      "title": "Unicode Unihan character record U+6728 (lookup inaccessible)",
+      "accessed_at": "2026-10-03"
     }
   ],
   "dossier": {
@@ -1381,6 +1447,61 @@
         "url": "https://www.fdgwz.org.cn/Web/Show/2443",
         "title": "蕭旭：馬王堆帛書《胎產書》、《養生方》校補",
         "accessed_at": "2026-09-26"
+      },
+      {
+        "id": "X-7e38f1d40f1d9ce9d3cc",
+        "source": "李學勤主編《字源》",
+        "field": "木部 entry; PDF p. 503, printed p. 490",
+        "text": "The 木 entry calls the graph pictographic, describes its upper part as branches and lower part as roots, and gives ‘tree’ as its original sense. It lists uses for leaves, timber, wooden things, coffins, instruments in the ‘eight sounds’, the ‘wood’ phase of the Five Phases, and ‘plain/simple’. The entry does not date those uses or establish their order. I inspected the supplied page image directly; the entry and these lines are legible. PDF p. 504 (printed p. 491) continues other characters, not 木.",
+        "record_character": "木",
+        "kind": "book_scan_verified",
+        "url": "https://www.worldcat.org/search?q=9787552800692",
+        "title": "字源, 李學勤主編, 2012; ISBN 9787552800692",
+        "accessed_at": "2026-10-03"
+      },
+      {
+        "id": "X-86ca99f1ed28a3fe2c1e",
+        "source": "漢語多功能字庫 (CUHK Humanum)",
+        "field": "形義通解; early form and component analysis",
+        "text": "The entry describes oracle and bronze forms as depicting a tree, with upper branches and lower roots, and gives ‘tree’ as the original sense. It reports the received 說文 analysis as 屮 above roots, then quotes Wang Yun’s objection that resemblance to 屮 does not establish it as a component and analyzes 木 as a complete-body pictograph. This supports describing the current whole graph as a tree while presenting the 屮 analysis as a historical account rather than an established decomposition.",
+        "record_character": "木",
+        "kind": "external_research",
+        "url": "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php?piece=%E6%9C%A8",
+        "title": "漢語多功能字庫 — 漢字甲骨部件分析",
+        "accessed_at": "2026-10-03"
+      },
+      {
+        "id": "X-d8a5602ebbca821cb761",
+        "source": "說文解字, received text via Shuowen.org",
+        "field": "木 entry; received explanation",
+        "text": "The entry reads 「冒也。冒地而生。東方之行。从屮，下象其根。凡木之屬皆从木。」 It is evidence for the traditional lexicographic account, not independent paleographic confirmation of the 屮 segmentation.",
+        "record_character": "木",
+        "kind": "external_research",
+        "url": "https://www.shuowen.org/view/3396",
+        "title": "說文解字「木」 — Shuowen.org",
+        "accessed_at": "2026-10-03"
+      },
+      {
+        "id": "X-07e97cdeeca2cd8933a1",
+        "source": "小學堂文字學資料庫 (Academia Sinica)",
+        "field": "字形演變",
+        "text": "The record indexes oracle-bone, bronze, Chu bamboo-and-silk, and seal-script forms, including bronze catalogue reference 集成08477. Its summary describes 木 as a pictograph depicting a tree’s trunk, branches, and roots. This corroborates the broad whole-tree analysis; I did not inspect the record’s glyph images.",
+        "record_character": "木",
+        "kind": "external_research",
+        "url": "https://chardb.iis.sinica.edu.tw/evolution.jsp?cid=13134",
+        "title": "漢字「木」：字形演變",
+        "accessed_at": "2026-10-03"
+      },
+      {
+        "id": "X-b6df778687ec91098380",
+        "source": "Local Unihan extract; upstream page lookup",
+        "field": "kMandarin; U+6728",
+        "text": "The supplied local row is U+6728, kMandarin, mù (pipeline/data/unihan-kmandarin-hsk1.tsv, line 294). Unicode’s official character-record URL was attempted but was inaccessible through the web tool, so this local row is recorded as a local reading check, not externally verified click-through evidence. 木 is analyzed here as a pictograph, so this reading does not establish a component sound role.",
+        "record_character": "木",
+        "kind": "local_reading_check",
+        "url": "https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=6728",
+        "title": "Unicode Unihan character record U+6728 (lookup inaccessible)",
+        "accessed_at": "2026-10-03"
       }
     ],
     "context": {
@@ -1661,6 +1782,22 @@
             "https://www.fdgwz.org.cn/Web/Show/2443"
           ],
           "outcome": "Commons searches surfaced the Inkscape redraw descriptions, hanziyuan image IDs and public-domain statements. The Fudan page search did not find the queried string."
+        },
+        {
+          "query": "site:humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php 木 形義通解 木 屮 樹枝 樹根; 木 character oracle bone pictograph tree Shuowen 屮 roots academic paleography",
+          "urls": [
+            "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php?piece=%E6%9C%A8",
+            "https://www.shuowen.org/view/3396"
+          ],
+          "outcome": "Searched and opened CUHK’s 木 analysis and Shuowen.org’s 木 entry. CUHK reports the whole-tree analysis, quotes the received 說文 account, and cites Wang Yun’s objection to treating 屮 as a component. Shuowen.org displays the received text."
+        },
+        {
+          "query": "site:unicode.org/cgi-bin/GetUnihanData.pl 木 U+6728 kMandarin; site:chardb.iis.sinica.edu.tw 木 字形演變 木 象形",
+          "urls": [
+            "https://chardb.iis.sinica.edu.tw/evolution.jsp?cid=13134",
+            "https://www.unicode.org/cgi-bin/GetUnihanData.pl?codepoint=6728"
+          ],
+          "outcome": "Opened Academia Sinica’s evolution record and inspected its script-stage coverage and whole-tree description. Attempted the official Unihan character URL; the web tool reported it inaccessible. Separately checked the provided local extract row."
         }
       ],
       "gaps": [
@@ -1692,7 +1829,12 @@
         "The oracle-bone and bronze examples are both reported by CUHK, but their exact dates and relative chronology are not established; neither meaning should be designated earliest on this evidence.",
         "The underlying oracle-bone rubbing and bronze inscription were not independently inspected in this turn.",
         "The linked image candidates are modern vector redraws, not artifact photographs; neither Commons page identifies a specific dated inscription for the chosen image.",
-        "The Fudan article page opened, but this turn did not independently locate its reported 木-for-沐 passage."
+        "The Fudan article page opened, but this turn did not independently locate its reported 木-for-沐 passage.",
+        "The attached scan of 字源 PDF p. 503 (printed p. 490) directly supports the 木 headword and cited explanation; the adjacent PDF p. 504 scan (printed p. 491) contains no continuation of that entry. No scan-based OCR correction was identified.",
+        "[SCAN VERIFICATION REQUIRED] 字源 PDF p. 503, glyph sequence shown beneath the 木 headword (labels 商, 西周, 战国, 《说文》小篆, 秦, 汉, 汉, 楷书): the scan visibly contains these forms, but individual glyph identities were not independently verified; do not use the sequence as artifact-specific graphic evidence.",
+        "The oracle-bone phrase 《合集》5749「埶(藝)木」 is reported by CUHK as tree planting; its underlying rubbing was not inspected in this research. The absolute date of the cited example and earliest attestation of the spoken word remain unestablished.",
+        "The book and consulted paleographic sources list several senses but do not establish a dated progression among tree, leaves, wood/timber, coffin, wooden objects, and figurative senses.",
+        "The official Unihan URL could not be accessed through the web tool; the supplied local reading row is available, but not an externally inspected official record."
       ]
     },
     "glyph_research": {
@@ -1796,24 +1938,24 @@
   },
   "review": {
     "status": "approved",
-    "article_hash": "80e4a5486030821358e23aa91d521c0a08a18851b3b96dcd86b397c0682a15f0",
-    "dossier_hash": "bef1249b0940d9038c8edd3c7aee66fc4ac0334f292e79298ae81cf4a666e79c",
+    "article_hash": "0654915b141e340098e48e45641cc9e49563a361288a1dd530c0a85604b34385",
+    "dossier_hash": "bba02a10a84010606d703d792231ef5988efc37d111466d547339eb7aef6b111",
     "reviews": [
       {
         "role": "factual",
         "verdict": "pass",
         "findings": [],
-        "article_hash": "80e4a5486030821358e23aa91d521c0a08a18851b3b96dcd86b397c0682a15f0",
-        "dossier_hash": "bef1249b0940d9038c8edd3c7aee66fc4ac0334f292e79298ae81cf4a666e79c",
-        "reviewer": "gpt-6-luna:low:factual:01a0dde4-5bd0-7782-85db-8b4485b44fa6"
+        "article_hash": "0654915b141e340098e48e45641cc9e49563a361288a1dd530c0a85604b34385",
+        "dossier_hash": "bba02a10a84010606d703d792231ef5988efc37d111466d547339eb7aef6b111",
+        "reviewer": "gpt-6-luna:low:factual:01a0fecc-ffbe-7f52-929e-210cbb2e9d83"
       },
       {
         "role": "readability",
         "verdict": "pass",
         "findings": [],
-        "article_hash": "80e4a5486030821358e23aa91d521c0a08a18851b3b96dcd86b397c0682a15f0",
-        "dossier_hash": "bef1249b0940d9038c8edd3c7aee66fc4ac0334f292e79298ae81cf4a666e79c",
-        "reviewer": "gpt-6-luna:low:readability:01a0dde4-69af-7ca2-b3e3-3efaf5a31e88"
+        "article_hash": "0654915b141e340098e48e45641cc9e49563a361288a1dd530c0a85604b34385",
+        "dossier_hash": "bba02a10a84010606d703d792231ef5988efc37d111466d547339eb7aef6b111",
+        "reviewer": "gpt-6-luna:low:readability:01a0fecd-c009-7b93-abbd-a32894827ee5"
       }
     ]
   }

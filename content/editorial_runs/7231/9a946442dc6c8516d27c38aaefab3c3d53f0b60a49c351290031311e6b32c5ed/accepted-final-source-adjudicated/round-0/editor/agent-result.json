@@ -1,0 +1,60 @@
+{
+  "edits": [
+    {
+      "path": "formation/type",
+      "value_json": "\"derived\""
+    },
+    {
+      "path": "formation/text",
+      "value_json": "爱 is the standardized simplified form of 愛. In current 爱, 爫 sits above 冖 and 友. One graphic-history proposal traces the 友-like lower shape to joined or abbreviated 心-and-夂 strokes in running script; this does not establish an ancient role for 友. In the received analysis of traditional 愛, the gloss is “appearance of walking,” with a walking-related element written 夂 in one account and 夊 in another, and 㤅 as the sound element. The evidence does not establish a chronological change from 夂 to 夊. Accounts differ separately on the upper element of early 㤅."
+    },
+    {
+      "path": "formation/evidence_ids",
+      "value_json": "[\"ref056\",\"ref065\",\"ref067\",\"ref080\",\"ref018\",\"ref112\",\"ref117\",\"ref111\",\"ref040\",\"ref016\",\"ref048\",\"ref051\"]"
+    },
+    {
+      "path": "components/4/sound/0/evidence_ids",
+      "value_json": "[\"ref070\"]"
+    },
+    {
+      "path": "components/5/sound",
+      "value_json": "[]"
+    },
+    {
+      "path": "components/5/sound_limitation",
+      "value_json": "null"
+    },
+    {
+      "path": "components/6/sound_limitation/text",
+      "value_json": "The matching current Mandarin readings of 㤅 and 愛 do not by themselves establish their historical sound relationship."
+    },
+    {
+      "path": "components/6/sound_limitation/evidence_ids",
+      "value_json": "[\"ref089\",\"ref077\",\"ref111\"]"
+    },
+    {
+      "path": "history/0/text",
+      "value_json": "No verified historical glyph image is included here."
+    },
+    {
+      "path": "history/0/evidence_ids",
+      "value_json": "[\"ref025\",\"ref026\"]"
+    },
+    {
+      "path": "history/1/text",
+      "value_json": "Accounts of early 愛 distinguish the 㤅 graph from forms analyzed as 愛 with an added 夂 or 夊. One account identifies the upper element of 㤅 as 兂; others identify it as 旡, and another discusses 既 variants. These are competing analyses and regional graphic histories, not one established universal sequence."
+    },
+    {
+      "path": "history/1/evidence_ids",
+      "value_json": "[\"ref015\",\"ref016\",\"ref017\",\"ref027\",\"ref038\",\"ref039\",\"ref040\",\"ref048\",\"ref051\",\"ref112\"]"
+    },
+    {
+      "path": "meaning_history/senses",
+      "value_json": "[{\"id\":\"爱:love_affection\",\"gloss\":\"love; affection; fondness; liking\",\"period\":\"current\",\"certainty\":\"established\",\"status\":\"current\",\"text\":\"Modern 爱 means love, affection, fondness, and liking; 愛 is its traditional counterpart. Transmitted literary passages also use 愛 for affection, including examples in the Zuozhuan and Classic of Poetry. These examples do not establish when the sense began or the earliest physical witness; the evidence does not establish a dated sequence among the current senses.\",\"evidence_ids\":[\"ref004\",\"ref010\",\"ref011\",\"ref013\",\"ref014\",\"ref020\",\"ref022\"]}]"
+    },
+    {
+      "path": "relationships",
+      "value_json": "[{\"id\":\"㤅:心:semantic\",\"subject\":{\"kind\":\"component\",\"id\":\"心\"},\"object\":{\"kind\":\"character\",\"id\":\"㤅\"},\"predicate\":\"semantic_component_of\",\"context_character\":\"爱\",\"certainty\":\"established\",\"text\":\"In early 㤅, 心 contributes the heart or feeling category.\",\"evidence_ids\":[\"ref015\",\"ref016\",\"ref038\",\"ref112\"]},{\"id\":\"㤅:兂:phonetic\",\"subject\":{\"kind\":\"component\",\"id\":\"兂\"},\"object\":{\"kind\":\"character\",\"id\":\"㤅\"},\"predicate\":\"phonetic_component_of\",\"context_character\":\"爱\",\"certainty\":\"disputed\",\"text\":\"One analysis identifies 兂 as the proposed sound element in early 㤅; competing accounts identify 旡, with 既 also discussed as a variant. No verified historical pronunciation comparison establishes the sound relationship.\",\"evidence_ids\":[\"ref015\",\"ref016\",\"ref017\",\"ref019\",\"ref031\",\"ref032\",\"ref073\"]},{\"id\":\"爱:simplified_from_愛\",\"subject\":{\"kind\":\"character\",\"id\":\"爱\"},\"object\":{\"kind\":\"character\",\"id\":\"愛\"},\"predicate\":\"simplified_from\",\"context_character\":\"爱\",\"certainty\":\"established\",\"text\":\"爱 is the officially adopted simplified form of 愛; its shape is described as cursive-derived regularization.\",\"evidence_ids\":[\"ref002\",\"ref018\",\"ref024\",\"ref040\"]},{\"id\":\"愛:derived_from_㤅\",\"subject\":{\"kind\":\"character\",\"id\":\"愛\"},\"object\":{\"kind\":\"character\",\"id\":\"㤅\"},\"predicate\":\"derived_from\",\"context_character\":\"爱\",\"certainty\":\"probable\",\"text\":\"Early bronze forms of 愛 are described as 㤅, while Qin-type forms add 夊. This connects 㤅 to 愛’s graphic history without asserting a single universal lineage.\",\"evidence_ids\":[\"ref015\",\"ref016\",\"ref017\",\"ref027\"]},{\"id\":\"愛:夊:semantic\",\"subject\":{\"kind\":\"component\",\"id\":\"夊\"},\"object\":{\"kind\":\"character\",\"id\":\"愛\"},\"predicate\":\"semantic_component_of\",\"context_character\":\"爱\",\"certainty\":\"established\",\"text\":\"In the received analysis of 愛, 夊 contributes the walking-related meaning, matching the gloss ‘appearance of walking’; 㤅 supplies the sound element. This is a historical analysis of 愛, not a role in current 爱.\",\"evidence_ids\":[\"ref007\",\"ref041\",\"ref068\",\"ref117\"]},{\"id\":\"愛:㤅:phonetic\",\"subject\":{\"kind\":\"component\",\"id\":\"㤅\"},\"object\":{\"kind\":\"character\",\"id\":\"愛\"},\"predicate\":\"phonetic_component_of\",\"context_character\":\"爱\",\"certainty\":\"established\",\"text\":\"The received analysis of 愛 identifies 㤅 as its sound element; matching current Mandarin readings do not independently establish the historical relationship.\",\"evidence_ids\":[\"ref117\",\"ref111\",\"ref089\",\"ref077\"]},{\"id\":\"meaning:爱:love_affection\",\"subject\":{\"kind\":\"character\",\"id\":\"爱\"},\"object\":{\"kind\":\"sense\",\"id\":\"爱:love_affection\"},\"predicate\":\"has_sense\",\"context_character\":\"爱\",\"certainty\":\"established\",\"text\":\"Modern 爱 means love, affection, fondness, and liking; transmitted literary examples also use 愛 for affection, without establishing when the sense began or its earliest physical witness.\",\"evidence_ids\":[\"ref004\",\"ref010\",\"ref011\",\"ref013\",\"ref014\",\"ref020\",\"ref022\"]}]"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+# Verify accurate OCR without inventing replacement proposals
+
+The 爸 smoke retained a scan-verification marker even though its research said the 爸妈/父母 analogy under 怕 was already visibly accurate and was not a 爸 headword. Existing source-resolution dispositions offered only an unused identity gap, rejected proposed replacement, applied repair, or absent page metadata. None honestly describes checking an accurate literal without a replacement hypothesis.
+
+The generic transcription_checks contract binds a retained finding to a current corpus page, exact offset/literal and original source pixel hash. It attaches that original scan to a separate actual Luna-low reviewer. The reviewer reports the observed literal independently; only an exact match allows verified_transcription_matches_corpus. The gate rechecks current text and pixels, exact keys, observations, actual stage receipt and article/dossier/finding hashes. No text or source metadata is mutated and no page-wide or interpretive approval follows.
+
+Negative regression checks reject missing check packets, unreadable observations, wrong text, normalized variants, unused-identity misclassification, changed consumer text, invalid offsets, duplicate finding keys and changed source pixels. The existing metadata and applied-repair schema tests also pass. This contract is available for future digitised books through their registered corpus/page identities. 爸 still requires actual integration, independent reviews and this source check; the code change does not certify the current draft.
+
+Verification also ran the complete source-enrichment module: 24 tests passed.
+
+A genuine 爸 source-resolution attempt checked only its transcription-check key and omitted two other retained findings. The harness correctly rejected incomplete coverage. The general output schema now requires the exact retained finding count and permitted keys, while the final gate still rejects duplicate keys. Instructions state that observation packets do not filter the required findings. A focused transport regression rejects the reproduced omission and unknown key; all 24 module tests pass.

@@ -1,0 +1,95 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "病"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000684",
+          "pdf_page_1based": 684,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0684/source.png",
+          "source_sha256": "7e7fc655ae563a14cbc365d1f04d2e87bfc4e2b41e20e94f845e5463b876f506",
+          "evidence_sha256": "5bd084e465fe84692d9baa8c75bf365e5ae131b16d2d0afc43f71e59b2cc6695",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "病 bìng 並纽、阳部;並纽、映韵、皮命切。"
+          ],
+          "excerpt": "54页。3《马王堆》315页。4、5《隶辨》478页。\n形声字。从疒,甬声。本义是疼痛,痛楚。《说文》:“痛,病也。从疒,甬声。”唐白居易《新丰折臂翁》:“至今风雨阴寒夜,直到天明痛不眠。”引申有悲伤、憎恨、怜爱、尽情地等意义。隶书中的“痛”有的另加意符“心”,但这种写法没有流传下来。(张玉金)\n\n病 bìng 並纽、阳部;並纽、映韵、皮命切。\n[glyph:g014]¹ [glyph:g015]³ [glyph:g016]⁴ [glyph:g017]⁵ 病\n战国 《说文》小篆 秦 汉 楷书\n[glyph:g018]² [glyph:g019]⁶ [glyph:g020]⁷\n战国 汉 汉\n1、2《战文编》519页。3《说文》153页。4《睡甲》120页。5、6、7《隶辨》611页。\n形声字。从疒,丙声(或从方声)。字中像床腿的部分,隶书中变为两点。𤕫上的一横后来加上一点,变为“疒”。“疒”旁在隶书中还有省略为“广”的。本义是重病。《说文》:“病,疾加也。从疒,丙声。”(“疾加”,意思是疾病加重)《论语·子罕》:“子疾病,子路使门人为臣。”(疾病,即指疾病加重)引申有患病、疾苦、贫困、疲惫、毛病、损害、侵犯、失败、忧虑、怜悯、为难、指责、耻辱、怨恨等意义。(张玉金)\n\n疴 kē 溪纽、哿韵、枯驾切。\n[glyph:g021]¹ 疴\n《说文》小篆 楷书\n1《说文》154页。\n形声字。《说文》:“疴,病也。从疒,可声。”晋谢灵运《登池上楼》:“徇禄反穷海,卧疴对空林。”还有排泄大小便的意思,这时同“屙”(ē)。又指小儿惊病,这时读qià。(张玉金)\n\n痛 pū 滂纽、鱼部;滂纽、模韵、普胡切。\n[glyph:g022]¹ 痛\n《说文》小篆 楷书\n1《说文》154页。\n形声字。《说文》:“从疒,甫声。”本义是疲困。《诗·周南·卷耳》:“我仆痡矣,云何吁矣。”孔颖达引孙炎曰:“痡,人疲不能行之病。”引申有衰竭、害等意义。还有“痞病”的意义,这时同“癖”,读为pù。(张玉金)\n\n671"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000688",
+          "pdf_page_1based": 688,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0688/source.png",
+          "source_sha256": "aff6a16998c27ff9bbe98754a3b3a275b35587880449706bcc109a7d055fffbd",
+          "evidence_sha256": "3de3a94e74001374d2c2a1e4765f83d5ff1bb1e30156288d1f5a7b4d71b0e330",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "痱 瘤 痤 疽 癩 瘛 癣 疥 痂 疠 瘧 店 痎 痳 痔\n\n一种皮肤病名,即疥疮。《文选·宋玉〈登徒子好色赋〉》:\n“又疥且痔。”(“疥”、“痔”这里作动词用,指生疥疮,生痔疮)\n引申有弄脏的意思。可通假为“痎”(jiē),指两日一发的\n疟疾。(张玉金)\n\n痂 jiā 见纽、歌部;见纽、麻韵、古牙切。\n[glyph:g001]¹—痂\n《说文》小篆 楷书\n1《说文》155页。\n形声字。《说文》:“痂,疥也。从疒,加声。”本义是\n疥疮,但通常把疮愈后上面结的硬壳叫“痂”。《宋书·刘\n穆之传附刘邕》:“邕所至嗜食疮痂,以为味似鳆鱼。”(张\n玉金)\n\n疠(疬) lì 来纽、月部;来纽、祭韵、力制切。\n[glyph:g002]¹—[glyph:g003]²—癘—疠\n《说文》小篆 汉 楷书 楷书\n1《说文》155页。2《隶辨》538页。\n形声字。《说文》:“癘,恶疾也。从疒,蠆省声。”本义\n是一种恶性皮肤病,即麻风病,也叫“癞”。《战国策·楚\n策四》:“癘人怜王。”吴师道补注:“癘,癞也。”引申有瘟\n疫、杀等意义。可通假为“励”,有劝勉的意思。“癘”的声\n符本作“萬”(《说文》认为是蠆省),“萬”的简体“万”在汉\n代就出现了,是根据当时章草的写法而改成的(不是源自\n章草“萬”的“万”出现得更早,甲骨文中已出现了)。新中国成立\n后简化汉字时,用“万”替代“萬”,相应地“癘”也类推简\n化为“疠”。(张玉金)\n\n瘧(疟) nüè 疑纽、药部;疑纽、药韵、鱼约切。\n[glyph:g004]¹—[glyph:g005]²—瘧—疟\n战国 《说文》小篆 楷书 楷书\n1《战文编》522页。2《说文》155页。\n会意兼形声字。《说文》:“瘧,热寒休作。从疒,从\n虐,虐亦声。”本义是疟疾。《素问·疟论》:“瘧之始发也,\n先起于毫发,伸久乃作,寒慄鼓颔,腰脊具痛。寒去则内\n外皆热,头痛如破,渴欲冷饮。”因为这个病折磨人,所以\n把这个病叫“虐疾”。但由于这是一种病,所以后来就在\n“虐”上加“疒”旁,形成“瘧”字。“瘧”书写不易,所以早\n在新中国成立前就出现了“疟”这种简体,这是去掉了\n“瘧”字中的“虍”。新中国成立后简化汉字时,用“疟”代\n替了“瘧”字。(张玉金)\n\n店 shān 书纽、谈部;书纽、盐韵、失廉切。\n[glyph:g006]¹—店\n《说文》小篆 楷书\n1《说文》155页。\n形声字。《说文》:“店,有热疟。从疒,占声。”本义是\n一种一日多发的疟疾。《左传·昭公二十年》:“齐侯疥,\n遂店。”杜预注:“店,疟疾。”引申有病的意思。可通假为\n“帖”,有临近(危息)的意思。(张玉金)\n\n痎 jiē 见纽、之部;见纽、皆韵、古谐切。\n[glyph:g007]¹—[glyph:g008]²—痎\n战国 《说文》小篆 楷书\n1《战文编》522页。2《说文》155页。\n形声字。《说文》:“痎,二日一发疟。从疒,亥声。”本\n义是两天一发作的疟疾。《素问·四气调神大论》:“逆之\n则伤心,秋为痎疟。”(张玉金)\n\n痳 lín 来纽、侵部;来纽、侵韵、荤针切。\nlìn 来纽、侵韵、力寻切。\n[glyph:g009]¹—痳\n《说文》小篆 楷书\n1《说文》155页。\n形声字。《说文》:“痳,疝病。从疒,林声。”本义是疝\n病。这时读为lín。此字还被用来表示另一种疾病,即一种\n小便困难的病。这时读为lìn。《释名·释疾病》:“痳,懔\n也。小便难,懔懔然。”(张玉金)\n\n痔 zhì 定纽、之部;澄纽、止韵、直里切。\n[glyph:g010]¹—[glyph:g011]²—痔\n战国 《说文》小篆 楷书\n1《汉语字形表》298页。2《说文》155页。\n形声字。《说文》:“痔,后病也。从疒,寺声。”本义\n是痔疮。《庄子·人间世》:“与人有痔病者不可适河。”\n成玄英疏:“痔,下漏病也。”还指耳、鼻所生赘瘤。“痔”\n\n675"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000685",
+          "pdf_page_1based": 685,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0685/source.png",
+          "source_sha256": "97f63ad3ba0748b020fdceb932436d903999522397fca1f9a8a643f6599284a6",
+          "evidence_sha256": "9623fb6ff9fa0cffb1367e59a6ff47034f2e667315c4f9c3e1891639a69e222b",
+          "ocr_review_status": "unreviewed",
+          "match_type": "possible_continuation",
+          "headword_lines": [],
+          "excerpt": "词“[glyph:p001]瘤”，是肌肉某处隆起的意思，这时读为jiū;还有“小痛”的意思，这时读为niú。(张玉金)\n\n癇(痫) xián 匣组、元部;匣组、山韵、户间切。\n\n[glyph:g002]¹ - 癇 - 痫\n《说文》小篆 楷书 楷书\n\n1 《说文》154页。\n\n形声字。《说文》：“癇，病也。从广，閒声。”本义是癫痫。汉王符《潜夫论·忠贵》：“哺乳太多，则必壅纵而生癇。”新中国成立后简化汉字时，把声符“閒”简化为“闲”。(张玉金)\n\n疵 cī 从组、支部; 从组、支韵、疾移切。\n\n[glyph:g003]¹ - [glyph:g004]² - [glyph:g005]³ - [glyph:g006]⁴ - 疵\n战国 战国 《说文》小篆 汉 楷书\n\n1《汉语字形表》297页。2《战文编》520页。\n3《说文》154页。4《马王堆》313页。\n\n形声字。《说文》：“疵，病也。从广，此声。”本义是病。《老子》第十章：“涤除玄览，能无疵乎！”引申有忧虑、缺点、非议、黑斑等意义。用来记录复合词“卑疵”，这时读为zī，指谄媚的样子;又用来记录复音词“疵睚”，这时读zhài，指恨视;还用来记录复音词“瘕疵”，这时读jī，有恨的意思。(张玉金)\n\n廢(废) fèi 帮组、月部;非组、废韵、方肺切。\n\n[glyph:g007]¹ - [glyph:g008]² - [glyph:g009]³ - 廢 - 废\n《说文》小篆 汉 汉 楷书 楷书\n\n1《说文》154页。2、3《隶辨》554页。\n\n形声字。《说文》：“廢，固病也。从广，發(发)声。”本义是残废。《周礼·地官·旅师》：“辨其贵贱老幼廢疾可任者。”贾公彦疏：“廢疾，谓廢于人事疾病。”引申有废弃的意思。古籍中往往不用“廢”，而借用“廢”字表示。“廢”一直沿用到清朝，与“廢”字并行。新中国成立后整理异体字时把“廢”作为“廢”的异体废弃了。另外“廢”字的声旁“發”也被类推简化为“发”。现在用“废”字。(张玉金)\n\n瘏 tú 定组、鱼部; 定组、模韵、同都切。\n\n[glyph:g010]¹ - [glyph:g011]² - 瘏\n战国 《说文》小篆 楷书\n\n1《汉语字形表》297页。2《说文》154页。\n\n形声字。《说文》：“瘏，病也。从广，者声。”本义是因劳累而生病。《诗·周南·卷耳》：“陟彼砠矣，我马瘏矣。”(张玉金)\n\n痟 xiāo 心组、宵部; 心组、宵韵、相邀切。\n\n[glyph:g012]¹ - [glyph:g013]² - 痟\n春秋 《说文》小篆 楷书\n\n1《汉语字形表》297页。2《说文》154页。\n\n形声字。《说文》：“痟，酸痛，头痛。从广，肖声。”本义是酸痛、头痛。《周礼·天官·疾医》：“春时有痟首疾。”郑玄注：“痟，酸削也。首疾，头痛也。”引申有衰微的意思。(张玉金)\n\n痒 yǎng 喻组、阳部; 以组、养韵、余两切。\nyáng 邪组、阳韵、似羊切。\n\n[glyph:g014]¹ - 痒\n《说文》小篆 楷书\n\n1《说文》154页。\n\n形声字。《说文》：“痒，疡也。从广，羊声。”本义是痈疮。《周礼·天官·疾医》：“夏时有痒疥疾。”在这个意义上今读为yáng。在古籍中又用“痒”表示忧思成病的意思。《诗·小雅·正月》：“哀我小心，癙忧以痒。”在这个意义上现在也读yáng。在这两个意义上，两个“痒”属于一对同形字。在古籍中有时还用“痒”表示搔痒的意思，在这个意义上今读yǎng。《玉篇·广部》：“痒，痛痒也。”《集韵·养韵》：“痒，肤欲搔也。或作‘癢’。”根据《说文》，“痒”表示搔痒的意思时是假借为“鲜”字。《说文·虫部》：“鲜，搔痒也。”唐玄应《一切经音义》卷五引《礼记·内则》：“鲜不敢搔。”今本《礼记·内则》作“癢不敢\n\n672"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0684/source.png",
+      "pdf_page": 684,
+      "source_pixel_sha256": "7e7fc655ae563a14cbc365d1f04d2e87bfc4e2b41e20e94f845e5463b876f506"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0685/source.png",
+      "pdf_page": 685,
+      "source_pixel_sha256": "97f63ad3ba0748b020fdceb932436d903999522397fca1f9a8a643f6599284a6"
+    }
+  ],
+  "target_language": "zh",
+  "additional_research_context": {
+    "scope": "Three-character batch: 边, 别, 病; separate research and authorship for each.",
+    "requirements": [
+      "Consult registered digitised source and additional authoritative references; inspect original headword and directly relevant continuation scans, at most three distinct initial pages per character.",
+      "Check current Chinese meanings independently and preserve uncertainty on proposed original meanings, component identities/functions, grouped components and historical phonetic roles.",
+      "When OCR seems wrong report exact raw page/span and source pixel evidence; no guessed replacement or producer edit. No canonical/source files, GitHub or Git writes by research or writer agents."
+    ]
+  },
+  "additional_context_policy": "These source leads and prior findings are research tasks, not preverified dossier evidence. Consult the referenced sources directly, check exact graph identity and scope, and add cited evidence for useful claims before authorship. Recheck reviewer hypotheses; modern structure does not establish historical roles. Record inaccessible sources as gaps.",
+  "require_source_specific_page_evidence": true
+}

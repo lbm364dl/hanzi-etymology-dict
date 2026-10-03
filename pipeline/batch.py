@@ -1,6 +1,8 @@
 """Explicit, bounded, resumable per-character editorial cohorts."""
 from __future__ import annotations
 import argparse
+import fcntl
+import hashlib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 import time
@@ -69,19 +71,56 @@ def prepare_job(character, job, root=ROOT):
     return packet
 
 
-def publish_job(job, root=ROOT):
+def _publish_job_locked(job, root, locked_character):
     """Archive replaced artifacts and retain real generation/review records before publication."""
     job, root = Path(job), Path(root)
     if editorial.read(job / "status.json").get("status") != "approved":
         raise ValueError("Only approved jobs can be published")
     article, dossier, reviews = [editorial.read(job / name) for name in ("article.json", "dossier.json", "reviews.json")]
+    if article.get("character") != locked_character:
+        raise ValueError("Publication character changed while acquiring its canonical lock")
     editorial.validate_reviews(article, dossier, reviews)
     name = f"{ord(article['character']):04X}.json"
     content = root / "content"
     current_path = content / "dossiers" / name
+
+    # Source-enrichment jobs are based on a frozen published pair. Refuse to
+    # publish if that pair changed since preparation, unless this exact candidate
+    # is already canonical (safe idempotent retry after a completed publication).
+    reviewed_baseline_hash = None
+    source_path = job / "source.json"
+    if source_path.is_file():
+        source = editorial.read(source_path)
+        baseline_article_hash = source.get("article_hash")
+        baseline_dossier_hash = source.get("dossier_hash")
+        snapshot_article_path, snapshot_dossier_path = job / "source_article.json", job / "source_dossier.json"
+        if not snapshot_article_path.is_file() or not snapshot_dossier_path.is_file():
+            raise ValueError("Source-enrichment job is missing its frozen canonical baseline")
+        if (editorial.digest(editorial.read(snapshot_article_path)) != baseline_article_hash
+                or editorial.digest(editorial.read(snapshot_dossier_path)) != baseline_dossier_hash):
+            raise ValueError("Source-enrichment frozen baseline hash does not match its snapshot")
+        current_entry_path = content / "entries" / name
+        if not current_entry_path.is_file() or not current_path.is_file():
+            raise ValueError("Source-enrichment canonical baseline is no longer published")
+        current_dossier = editorial.read(current_path)
+        current_entry = editorial.read(current_entry_path)
+        # Published entry files include wrapper evidence, dossier, and review
+        # receipts. Compare the exact validated article extracted from that
+        # wrapper, matching the article hash frozen by source preparation.
+        current_article = editorial.validate_published(current_entry, current_dossier)
+        current_article_hash = editorial.digest(current_article)
+        current_dossier_hash = editorial.digest(current_dossier)
+        baseline_matches = (current_article_hash == baseline_article_hash
+                            and current_dossier_hash == baseline_dossier_hash)
+        exact_candidate = (current_article_hash == editorial.digest(article)
+                           and current_dossier_hash == editorial.digest(dossier))
+        if not baseline_matches and not exact_candidate:
+            raise ValueError("Source-enrichment canonical baseline changed after job preparation")
+        reviewed_baseline_hash = current_dossier_hash
+
     if current_path.exists():
         current = editorial.read(current_path)
-        if not editorial.dossier_update_is_safe(current, dossier, article):
+        if not editorial.dossier_update_is_safe(current, dossier, article, reviewed_baseline_hash):
             raise ValueError("Current source dossier changed; review updated inputs before publishing")
     previous_path = content / "entries" / name
     if previous_path.exists():
@@ -94,13 +133,22 @@ def publish_job(job, root=ROOT):
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(path, target)
     retained = content / "editorial_runs" / name[:-5] / editorial.digest(article)
+    # Unchanged prose may receive new research/reviews; preserve the previous receipt set.
+    if retained.exists():
+        manifest = {str(path.relative_to(retained)): hashlib.sha256(path.read_bytes()).hexdigest()
+                    for path in sorted(retained.rglob("*")) if path.is_file()}
+        prior = content / "review_history" / "editorial_runs" / name[:-5] / editorial.digest(manifest)
+        if not prior.exists():
+            shutil.copytree(retained, prior)
+        shutil.rmtree(retained)
     # Keep exact model products/prompts/metadata; omit potentially large stdout/stderr logs.
     for path in job.rglob("*"):
         if path.is_file() and path.suffix in (".json", ".txt") and "attempts" not in path.relative_to(job).parts:
             target = retained / path.relative_to(job)
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(path, target)
-    result = editorial.publish(article, dossier, reviews, content / "entries")
+    result = editorial.publish(article, dossier, reviews, content / "entries",
+                               reviewed_baseline_hash=reviewed_baseline_hash)
     for folder, value in (("drafts", article), ("reviews", reviews)):
         editorial.write(content / folder / name, value)
     # The canonical research product represents all reviewed evidence and audits, including
@@ -121,6 +169,32 @@ def publish_job(job, root=ROOT):
         "retained_artifacts": str(retained.relative_to(root)), "article_hash": editorial.digest(article),
         "dossier_hash": editorial.digest(dossier), "reviewers": [r["reviewer"] for r in reviews]})
     return result
+
+
+def publish_job(job, root=ROOT):
+    """Publish under a cross-process lock for this canonical character.
+
+    Callers that also hold a job lock must acquire it first, then this canonical
+    lock. Keeping that order avoids a job/canonical lock cycle across pipelines.
+    """
+    job, root = Path(job), Path(root)
+    article_path = job / "article.json"
+    if not article_path.is_file():
+        raise ValueError("Publication job is missing its article")
+    # This preliminary read selects the lock only; the candidate is re-read and
+    # its character checked under the lock before any validation or mutation.
+    character = editorial.read(article_path).get("character")
+    if not isinstance(character, str) or len(character) != 1:
+        raise ValueError("Publication article requires one character")
+    lock_dir = root / "runs" / ".locks"
+    lock_dir.mkdir(parents=True, exist_ok=True)
+    lock_path = lock_dir / f"publish-{ord(character):04X}.lock"
+    with lock_path.open("a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        try:
+            return _publish_job_locked(job, root, character)
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
 
 
 def process_character(character, output, action, runner, root=ROOT, max_revisions=3, publish=False):

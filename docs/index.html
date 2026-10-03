@@ -95,6 +95,7 @@ details.editorial[open]>summary{margin-bottom:14px}
 .learner-component>:not(.component-symbol){grid-column:2}
 .learner-component .component-symbol{font-size:2.6em;line-height:1.3;grid-row:1 / 4;align-self:start}
 .learner-component .component-symbol a{text-decoration:none;color:var(--accent)}
+.learner-component .component-symbol.element-label{font-size:.9em;overflow-wrap:anywhere}
 .learner-component .component-roles{margin:0}
 .learner-component p{margin:0;font-size:.96em}
 .learner-component .sound-pair{font-size:.9em;margin:0}
@@ -646,6 +647,9 @@ function componentFormLabel(component){
   // Labels express the reviewed relationship, not a guess from the shapes or change category.
   return {full_form:'Full form',earlier_form:'Earlier form',variant_form:'Variant form',simplified_form:'Traditional form'}[component.origin_relation]||'Related form';
 }
+function componentIdentityIds(component){
+  return component.element_kind==='noncharacter_mark'?[component.element_id]:[component.form,component.origin_form].filter(Boolean);
+}
 function separateVariantForms(article){
   const ancestry=new Set();
   for(const edge of article.relationships||[]){
@@ -671,7 +675,7 @@ function learnerComponentCards(article){
     if(separateVariants.has(component.scope_character||article.character))return false;
     if((component.scope_character||article.character)===article.character)return true;
     if(article.language==='ja')return false;
-    return !current.some(c=>c.origin_form===component.form&&
+    return !current.some(c=>component.form&&c.origin_form===component.form&&
       ['full_form','earlier_form','variant_form','simplified_form'].includes(c.origin_relation)&&
       c.roles.some(role=>component.roles.includes(role)));
   });
@@ -686,7 +690,7 @@ function componentRoleLabel(article,component,role,label){
   const host=component.scope_character||article.character;
   const claims=(article.relationships||[]).filter(edge=>edge.predicate===role+'_component_of'&&
     edge.object.kind==='character'&&edge.object.id===host&&
-    edge.subject.kind==='component'&&[component.form,component.origin_form].includes(edge.subject.id));
+    edge.subject.kind==='component'&&componentIdentityIds(component).includes(edge.subject.id));
   if(!claims.length||claims.some(edge=>edge.certainty==='established'))return label;
   const prefix=claims.some(edge=>edge.certainty==='probable')?'Likely ':'Proposed ';
   return prefix+label.charAt(0).toLowerCase()+label.slice(1);
@@ -720,6 +724,8 @@ function articleHTML(r){
     const targetMode=mode==='ja'&&!D[char]?'zh':mode;
     return char!==r.c?`<a class="character-link" data-character="${char}" href="?q=${encodeURIComponent(char)}&amp;m=${targetMode}">${label}</a>`:label;
   });
+  const componentLabel=(component,heading=false)=>component.element_kind==='noncharacter_mark'
+    ?escapeHTML(component.element_label):characterLink(component.form,heading);
   const separateVariants=separateVariantForms(a);
   let h='<article class="article"><div class="article-status">AI-written · AI review against cited evidence</div>';
   if(a.language==='ja')h+='<p class="source-topic"><a href="?q='+encodeURIComponent(r.c)+'&amp;m=zh">View this character in the Chinese dictionary</a></p>';
@@ -732,7 +738,7 @@ function articleHTML(r){
       for(const brief of learnerCards){
         const component=a.components[brief.component_index];
         const whole=component.form===r.c&&a.components.length===1&&component.roles.includes('pictorial');
-        h+='<section class="learner-component"><div class="component-symbol">'+characterLink(component.form)+'</div><div class="component-roles">'+escapeHTML(whole?'One whole picture':component.roles.map(role=>componentRoleLabel(a,component,role,learnerRoles[role]||role)).join(' · '))+'</div>'+paragraph(brief);
+        h+='<section class="learner-component"><div class="component-symbol'+(component.element_kind==='noncharacter_mark'?' element-label':'')+'">'+componentLabel(component)+'</div><div class="component-roles">'+escapeHTML(whole?'One whole picture':component.roles.map(role=>componentRoleLabel(a,component,role,learnerRoles[role]||role)).join(' · '))+'</div>'+paragraph(brief);
         if(component.origin_form&&component.origin_form!==component.form)h+='<div class="source-topic">'+componentFormLabel(component)+': '+characterLink(component.origin_form)+'</div>';
         if(component.scope_character&&component.scope_character!==r.c)h+='<div class="source-topic">Component of '+characterLink(component.scope_character)+'</div>';
         const learnerSounds=learnerSoundComparisons(component,a.language);
@@ -755,7 +761,7 @@ function articleHTML(r){
     h+='<section class="component-analysis"><h2>Structure and components</h2><div class="formation-label">'+escapeHTML(types[a.formation.type]||a.formation.type)+'</div>'+paragraph(a.formation);
     h+='<div class="component-grid">';
     for(const component of (a.components||[]).filter(c=>!separateVariants.has(c.scope_character||r.c))){
-      h+='<section class="component"><h3>'+characterLink(component.form,true)+'</h3><div class="component-roles">'+component.roles.map(role=>'<button type="button" data-role-title="'+escapeHTML(componentRoleLabel(a,component,role,roles[role]||role))+'" data-role-text="'+escapeHTML(roleDefinitions[role]||'')+'" aria-haspopup="dialog">'+escapeHTML(componentRoleLabel(a,component,role,roles[role]||role))+'</button>').join('')+'</div>';
+      h+='<section class="component"><h3>'+componentLabel(component,true)+'</h3><div class="component-roles">'+component.roles.map(role=>'<button type="button" data-role-title="'+escapeHTML(componentRoleLabel(a,component,role,roles[role]||role))+'" data-role-text="'+escapeHTML(roleDefinitions[role]||'')+'" aria-haspopup="dialog">'+escapeHTML(componentRoleLabel(a,component,role,roles[role]||role))+'</button>').join('')+'</div>';
       h+='<div class="component-change">'+escapeHTML(changes[component.form_status]||component.form_status);
       if(component.origin_form&&component.origin_form!==component.form)h+=' · '+componentFormLabel(component)+': '+characterLink(component.origin_form);
       h+='</div>';

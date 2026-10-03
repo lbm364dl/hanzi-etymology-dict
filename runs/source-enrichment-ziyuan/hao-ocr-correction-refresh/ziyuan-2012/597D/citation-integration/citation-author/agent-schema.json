@@ -1,0 +1,194 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "edits",
+    "unsupported_records"
+  ],
+  "properties": {
+    "edits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "evidence_ids"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "summary/evidence_ids",
+              "formation/evidence_ids",
+              "components/0/evidence_ids",
+              "components/1/evidence_ids",
+              "history/0/evidence_ids",
+              "history/1/evidence_ids",
+              "history/2/evidence_ids",
+              "history/3/evidence_ids",
+              "uncertainties/0/evidence_ids",
+              "uncertainties/1/evidence_ids",
+              "uncertainties/2/evidence_ids",
+              "uncertainties/3/evidence_ids",
+              "meaning_history/senses/0/evidence_ids",
+              "meaning_history/senses/1/evidence_ids",
+              "meaning_history/senses/2/evidence_ids",
+              "meaning_history/senses/3/evidence_ids",
+              "meaning_history/developments/0/evidence_ids",
+              "meaning_history/developments/1/evidence_ids",
+              "meaning_history/limitations/0/evidence_ids",
+              "meaning_history/limitations/1/evidence_ids",
+              "relationships/0/evidence_ids",
+              "relationships/1/evidence_ids",
+              "relationships/2/evidence_ids",
+              "relationships/3/evidence_ids",
+              "relationships/4/evidence_ids",
+              "relationships/5/evidence_ids",
+              "relationships/6/evidence_ids",
+              "relationships/7/evidence_ids",
+              "learner/overview/evidence_ids",
+              "learner/components/0/evidence_ids",
+              "learner/components/1/evidence_ids"
+            ]
+          },
+          "evidence_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": [
+                "E1",
+                "E2",
+                "E3",
+                "E4",
+                "E5",
+                "E6",
+                "E7",
+                "E8",
+                "E9",
+                "E10",
+                "E11",
+                "X1",
+                "X-6c72d15bd0f08a4d2d28",
+                "X-7062a512b1d20c5bd4c9",
+                "X-7866b41f457b730b0521",
+                "X-bc4776b719ddbfd67cc0",
+                "X-b513d6ffcafa5a271c9c",
+                "X-d815ab7d73481d97319a",
+                "X-a6e1300ed048b3ebd331",
+                "X-5132d1be8bc74612b5a9",
+                "X-6ef1b3f05a49dbca52aa",
+                "X-50e15ba619d469c66ebb",
+                "X-29982ff050151df22087",
+                "X-82f4f441f0d5359ba0da",
+                "X-94b730845a395f448777",
+                "X-5492c9689424bcfb968c",
+                "X-5cf5fbb1572ccd1588c0",
+                "X-7d930b8bf3565bec0455",
+                "X-db5ffb42ef75cf24092a",
+                "X-283352c527e81032030a",
+                "X-62d892b4dce3d301568a",
+                "X-fab82fdfb1de5e627728",
+                "X-56b30b2d860afbb651a5",
+                "X-23d1bf1349ec8eff3088",
+                "X-8b58b6a256221fa7271f",
+                "X-ef939f90f55b1a456a7b",
+                "X-d84dc9f0a5b113e6382a",
+                "X-1fbf7b97b8f2eb937c34",
+                "X-13b2fc7cdfdf5ca967bd",
+                "X-25bd40d7c2b69651f2da",
+                "X-0ab051363c36ac29644c",
+                "X-7d4b6af9acbc8a9f48b1",
+                "X-7992c119ab4ced835d73",
+                "X-c4efde7fafd2060af814",
+                "X-7111409fb937bb791fd4",
+                "X-4bbb750063ebdb6f6ce4",
+                "X-16e99c246ced6cc50731",
+                "X-c2e662b9494d7b769d23",
+                "X-9fc29156321d774399dc",
+                "X-bb34c2e77d7da43f1592",
+                "X-467e9924a88577b1048d",
+                "X-a8ad1fe8bd0e840de724"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "unsupported_records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "reason"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "enum": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7",
+              "E8",
+              "E9",
+              "E10",
+              "E11",
+              "X1",
+              "X-6c72d15bd0f08a4d2d28",
+              "X-7062a512b1d20c5bd4c9",
+              "X-7866b41f457b730b0521",
+              "X-bc4776b719ddbfd67cc0",
+              "X-b513d6ffcafa5a271c9c",
+              "X-d815ab7d73481d97319a",
+              "X-a6e1300ed048b3ebd331",
+              "X-5132d1be8bc74612b5a9",
+              "X-6ef1b3f05a49dbca52aa",
+              "X-50e15ba619d469c66ebb",
+              "X-29982ff050151df22087",
+              "X-82f4f441f0d5359ba0da",
+              "X-94b730845a395f448777",
+              "X-5492c9689424bcfb968c",
+              "X-5cf5fbb1572ccd1588c0",
+              "X-7d930b8bf3565bec0455",
+              "X-db5ffb42ef75cf24092a",
+              "X-283352c527e81032030a",
+              "X-62d892b4dce3d301568a",
+              "X-fab82fdfb1de5e627728",
+              "X-56b30b2d860afbb651a5",
+              "X-23d1bf1349ec8eff3088",
+              "X-8b58b6a256221fa7271f",
+              "X-ef939f90f55b1a456a7b",
+              "X-d84dc9f0a5b113e6382a",
+              "X-1fbf7b97b8f2eb937c34",
+              "X-13b2fc7cdfdf5ca967bd",
+              "X-25bd40d7c2b69651f2da",
+              "X-0ab051363c36ac29644c",
+              "X-7d4b6af9acbc8a9f48b1",
+              "X-7992c119ab4ced835d73",
+              "X-c4efde7fafd2060af814",
+              "X-7111409fb937bb791fd4",
+              "X-4bbb750063ebdb6f6ce4",
+              "X-16e99c246ced6cc50731",
+              "X-c2e662b9494d7b769d23",
+              "X-9fc29156321d774399dc",
+              "X-bb34c2e77d7da43f1592",
+              "X-467e9924a88577b1048d",
+              "X-a8ad1fe8bd0e840de724"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

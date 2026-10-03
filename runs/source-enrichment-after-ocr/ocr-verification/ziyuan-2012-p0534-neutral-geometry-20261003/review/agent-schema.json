@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "visible_geometry",
+    "literal_identity",
+    "certainty",
+    "limitations"
+  ],
+  "properties": {
+    "visible_geometry": {
+      "type": "string"
+    },
+    "literal_identity": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "certainty": {
+      "enum": [
+        "resolved",
+        "unresolved"
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

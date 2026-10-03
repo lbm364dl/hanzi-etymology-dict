@@ -1,0 +1,22 @@
+[
+  {
+    "role": "factual",
+    "verdict": "revise",
+    "findings": [
+      "In `meaning_history.senses[0]` and generated edge `meaning:月:moon`, change `status: \"current\"` to `status: \"earliest_attested\"` and keep the edge synchronized. The cited Shang oracle-bone examples support early use for “moon,” while the record gives no evidence of present-day use for this sense; `X-0f45c27538fdbbd70f22` lists moon as a dictionary sense, and `X-85dfeb9453447c1103f0` supports the current reading, but neither is cited by this sense."
+    ],
+    "article_hash": "193f5a5599bac9297db6deff563d705184b8a7b72d44f0586c1ba760ea1ef0e7",
+    "dossier_hash": "791cca4bd8d1d325c59a30df2402d3c900bbc540f9aa4faed588e9c5fb032504",
+    "reviewer": "gpt-6-luna:low:factual:01a0fec0-6dc6-7ca0-ae53-703ce7d170a8"
+  },
+  {
+    "role": "readability",
+    "verdict": "revise",
+    "findings": [
+      "In `meaning_history.senses`, the entries for `月:moonlight`, `月:monthly`, `月:round_form`, `月:classifier`, and `月:surname` are marked `historical`, but their cited dictionary evidence only lists these as senses and does not establish that they are no longer current (`X-0f45c27538fdbbd70f22`). Set a sense to `current` only with evidence of present-day use; otherwise omit it or provide evidence for its historical status. Update each corresponding generated `has_sense` relationship to match any status changes."
+    ],
+    "article_hash": "193f5a5599bac9297db6deff563d705184b8a7b72d44f0586c1ba760ea1ef0e7",
+    "dossier_hash": "791cca4bd8d1d325c59a30df2402d3c900bbc540f9aa4faed588e9c5fb032504",
+    "reviewer": "gpt-6-luna:low:readability:01a0fec1-a4ee-7762-b2f0-078fdda85dd6"
+  }
+]

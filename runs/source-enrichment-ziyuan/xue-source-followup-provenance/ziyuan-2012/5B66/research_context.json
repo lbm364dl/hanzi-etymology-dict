@@ -1,0 +1,45 @@
+{
+  "task": "Fresh independent correction/review continuation of the terminal 学 source-repair draft. Use the existing retained, scan-backed and current-use evidence where it exactly supports the article. Recheck all source-specific reviewer claims against the attached p277 crop and the full original p277/p278 scans. Preserve genuine corrections, reject claims disproved by pixels, and obtain new factual/readability reviews. This is not permission to publish.",
+  "read_only_research_scope": "Read source evidence only. Do not run nested repository pipelines/cohorts/reviews, do not modify the book producer or corpus, and do not hand-edit article, dossier, or approval files. Return source findings and exact evidence citations through the source research interface only.",
+  "local_book_scope": {
+    "source": "李學勤主編《字源》, 2012, ISBN 978-7-5528-0069-2",
+    "p277_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0277/source.png",
+    "p277_encoded_png_sha256": "b058016d6914d7c19a11d120d8e37059bab845eb262c3b0312e478dbf7aa7836",
+    "p277_decoded_rgb_sha256": "d71826450bb411b40d34cabacceaf5870e0eac285824128d9ab27b5d5dcd777f",
+    "p278_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0278/source.png",
+    "p278_encoded_png_sha256": "410c585d18389e14106c1eecf8438c3cce12d73ff11294f72c0d22cd3a722d02",
+    "p278_decoded_rgb_sha256": "091aa2d809186dd662e72291108d46277293b559282398e1abb4b64c3e6d1c59",
+    "correct_page_boundary": "On PDF p. 277 (printed p. 265), the 学/學 discussion ends at the author credit (张标); a separate 斆 heading starts lower on that same page. PDF p. 278 (printed p. 266) continues the separate 斆 entry. It is not a continuation of 学.",
+    "direct学_statement": "The 学/學 passage on p. 277 itself says 本义是学习、效法, a source-attributed proposal of learning and emulation/following as a model as the original meaning.",
+    "superseded_record": "Preserve old evidence record X-44ca4c8dfdad9682d84c unchanged as provenance, but treat it as superseded because its locator and text wrongly attribute PDF p. 278 to 学. Do not cite it in new article material. A fresh record must identify only the 学 headword paragraph on p. 277 (printed p. 265) and say explicitly that p. 278 continues 斆, not 学. Keep the direct学 statement above; do not cite the separate 斆 wording 本义当如学为学习、效法 as support for 学.",
+    "fresh_page_evidence_requirement": "Personally inspect both original scan images in this invocation and return a new page-specific source-bound evidence item limited to 学 PDF p. 277 / printed p. 265, with the direct statement and exact boundary. Do not claim p. 278 is 学 continuation. If you mention p. 278, use it only as a separately bounded 斆 passage that helps distinguish entry hosts; do not use it to support 学's meaning or construction. Preserve unresolved printed glyph identities.",
+    "fresh_page_citation_requirement": "The new article must cite the fresh p277-only record on the precise qualified learning/emulation claim. Replace old X-44 only where a fresh record supports the same precise claim; remove it from unrelated article claims if it no longer supports them, retaining other accurate source IDs. Never insert IDs into prose."
+  },
+  "current_use_questions": [
+    "Find direct evidence that 学/學 is currently used in modern Chinese for learning or study, preferably an authoritative current dictionary entry with a usage example or a dated contemporary corpus example. A bare imported meaning gloss is not enough for this reviewer. Record the exact example, source, page/entry or corpus date/locator, URL, and whether the example demonstrates the whole character as a word or only a morpheme in a compound. Keep claims at the strength the evidence supports.",
+    "Assess whether ‘school’ is a current lexical sense of 学 itself or only an attested historical/compound use. If a modern authoritative source has a direct example that supports a current school meaning, record it precisely. Otherwise report the distinction and do not force a current sense label.",
+    "For the reported Han use of 學 for 覺, inspect the cited source wording. Do not state a sound-similarity mechanism unless an inspected source explicitly supports it; distinguish a source-reported borrowed spelling from a proven phonological rationale and report the evidence gap if needed."
+  ],
+  "previous_findings_to_recheck": [
+    "The latest independent factual finding says current 学 learning/study and school senses need direct present-use support beyond imported gloss metadata E3/E5/E13; verify this against reliable current Chinese usage evidence rather than accepting or rejecting it by reviewer assertion.",
+    "A separate finding says the Han 學-for-覺 account does not establish why the graph was borrowed; remove only an unsupported sound explanation if present and preserve the reported loan as properly qualified.",
+    "Other final review findings about the two-臼 construction and 子 were previously repaired, but recheck the current draft literally before proposing changes; do not repeat a finding if its exact current field already resolves it."
+  ],
+  "current_record_integration": {
+    "instruction": "The approved predecessor and the subsequent citation-integration attempt did not use the corrected p277-only record. Preserve both jobs and outputs. Add precise fresh page evidence and current-use evidence before article review. The final article must use the corrected p277-only evidence ID for its source-attributed early-meaning statement, plus genuinely supporting contemporary-use evidence for any sense marked current.",
+    "no_publication": "This is research context only. Keep the result unpublished; source audit and two fresh independent factual/readability pass receipts must match the exact candidate article/dossier before any publication step."
+  },
+  "superseded_book_evidence_ids": [
+    "X-44ca4c8dfdad9682d84c"
+  ],
+  "citation_correction_instructions": "Keep X-44ca4c8dfdad9682d84c preserved as historical provenance, but do not cite it in the new article because it incorrectly says p278 continues 学. Use a correctly scoped p277-only evidence record only for claims it directly supports; use the MOE evidence records for current 学 learning/study and bound school-compound examples. Do not attach the p277 historical proposal as the sole support for present-day meanings.",
+  "source_followup_questions": [
+    "The p277 scan-bound formation wording reads: “另一种以[glyph:g022](jù，两手或两爪之象)为声(兼形旁)；或从两臼(犹升)从冖，[臼]亦声(两臼或省作人形)。” Inspect the attached exact original crop. Does it support a nonstandard unresolved glyph read jù and described as hands/claws, followed by a separate construction with two standard 臼 forms plus 冖? Do not assign Unicode to glyph:g022; distinguish its reading jù from 臼 jiù.",
+    "Prior factual review proposed that the scan does not say “两臼” and later that the rare graph is “glossed as 踞.” Recheck the quoted exact printed line and pixels independently. These are hypotheses to assess, not instructions to accept.",
+    "The current article may retain both the rare jù element and the separate two-臼 construction only if source-supported and distinguished. If an identity cannot be resolved, preserve a page-bound occurrence description instead of guessing a glyph.",
+    "The source’s p277 学/學 entry states 本义是学习、效法 and proposes 子 was added in Western Zhou forms to mark a child learner. Keep this attributed, historical and qualified. Use the current p277-only evidence record on its exact supported claim, and do not use X-44ca4c8dfdad9682d84c.",
+    "For current use, the MOE evidence supports learning/study verbs and 学/學 as a morpheme in institution compounds 小學、中學、大學. Preserve the current bound-morpheme scope; do not claim an unsupported standalone “school” use or conflate it with bronze-period 學.",
+    "The Han-slip entry reports 學 written for 覺 (“feel/perceive”), but the direct page could not be opened and the evidence does not establish why. Remove any generic similar-pronunciation mechanism or claim of actual sound match; preserve only the reported spelling and the gap about its rationale."
+  ],
+  "review_policy": "All source-followup questions and prior review statements are hypotheses to independently check against the exact current article and attached source pixels, not approvals or forced verdicts. Cite only evidence that supports the precise claim. No article publication."
+}

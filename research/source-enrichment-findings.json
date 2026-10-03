@@ -1,0 +1,230 @@
+{
+  "findings": [
+    {
+      "key": "hsk1:source-enrichment:ziyuan-2012",
+      "kind": "work",
+      "title": "Enrich all 300 HSK1 entries with digitised 字源 and track source corrections",
+      "details": "Use the digitised 2012 字源 book to improve every character in content/cohorts/hsk3-2021-level-1.json. Research must verify used passages against original scans, retain competing interpretations and precise uncertainty, and consult additional authoritative references when useful. All research, authorship, review and repair agents must use gpt-6-luna with low reasoning. Confirmed OCR errors must also be corrected in the hanzi-etymology-books source-bound correction layer and republished to its searchable corpus. Support registering additional digitised books later. 半 and 教 have reviewed local updates; 学 and 备 have unresolved draft work. Prior 300/300 integrity checks do not establish that all entries have consumed this book.",
+      "evidence": [
+        "Cohort: content/cohorts/hsk3-2021-level-1.json",
+        "Workflow: pipeline/README.md",
+        "Existing source-consumption findings: research/ziyuan-hsk1-smoke.md",
+        "Source registry: research/digitised-sources.json"
+      ],
+      "verification": "All 300 entries have source-specific research records with scan-checked claims or honest source-access gaps, exact fresh independent factual/readability approvals and matching published artifacts. Resolve and source-verify discovered OCR errors, rebuild the corpus, refresh site and graph, and pass the cohort audit. Link individual findings and fixes to this issue."
+    },
+    {
+      "key": "pipeline:source-refresh:approved-entry-selection",
+      "kind": "pipeline",
+      "title": "Add resumable source enrichment for already approved entries",
+      "details": "pipeline.batch selects entries that are not yet ready, so it skips already approved HSK1 entries even when a newly digitised book has never been consulted. Implement a source-specific refresh workflow with registry identity, per-character evidence provenance, resumable checkpoints, exact publication checks and GitHub issue references. Do not use existing approval as proof of new-source coverage.",
+      "evidence": [
+        "pipeline/batch.py: ready/select_characters",
+        "New work: pipeline/source_enrichment.py and pipeline/local_sources.py"
+      ],
+      "verification": "Tests demonstrate that approved entries are selected for a new source, completed source jobs are skipped only when exact publication matches, stale source inputs are detected, and failed/revised jobs resume without fabricated approvals. Smoke-test contrasting real entries before expanding."
+    },
+    {
+      "key": "ziyuan-2012:备:whole-character-simplification",
+      "kind": "factual",
+      "title": "Complete 备 enrichment without inventing a historical split or self-component",
+      "details": "The 備 headword supports a person/quiver account and later simplification, but the rare printed phonetic graph was misread by OCR. Earlier repair attempts exceeded learner limits and invented a self-component for the whole-character simplification. Explain current visible shapes without turning them into an unsupported inherited etymological split; preserve unresolved rare printed identities with source-bound references.",
+      "evidence": [
+        "字源 PDF page 718 / printed page 705",
+        "research/ziyuan-hsk1-bei-nao.md",
+        "Existing unpublished run: runs/ziyuan-hsk1-smoke/5907"
+      ],
+      "verification": "Source-checked evidence, schema-valid agent-authored repair, fresh independent reviews and exact publication. Any Unicode identification must be verified from source strokes and authoritative evidence."
+    },
+    {
+      "key": "ziyuan-2012:ocr:consumer-corrections-276-277-718",
+      "kind": "ocr",
+      "title": "Track source-verified OCR corrections discovered during character research",
+      "details": "Dictionary research found a literal component-name substitution on PDF page 276, an inserted Latin word on page 277, and false familiar-character readings of rare printed forms on page 718. Corrections were applied locally to the book repo's source-hash-bound layer and its effective searchable corpus rebuilt. Raw OCR remains preserved and whole-page transcription is still unreviewed. The page-718 printed identities remain unresolved references rather than guessed Unicode. Track the source corrections and their consumer verification together.",
+      "evidence": [
+        "research/ziyuan-hsk1-xue-jiao.md",
+        "research/ziyuan-hsk1-bei-nao.md",
+        "Sibling book repo: research-ocr/ziyuan-full/page-0276/ocr-corrections.json",
+        "Sibling book repo: research-ocr/ziyuan-full/page-0277/ocr-corrections.json",
+        "Sibling book repo: research-ocr/ziyuan-full/page-0718/ocr-corrections.json"
+      ],
+      "verification": "Check each correction against exact source pixels and anchors, validate the correction layer, show corrected text in the regenerated consumer corpus, and retain explicit unresolved glyph identities. Link committed fixes or reviewable source artifacts before closing."
+    },
+    {
+      "key": "ziyuan-2012:ocr:pdf-613-di-headword",
+      "kind": "ocr",
+      "title": "Correct misread 旳 headword on 字源 PDF page 613",
+      "details": "The parenthetical heading for 的 on PDF page 613 / printed page 600 is OCR-transcribed as 昀(的). Direct scan inspection shows 旳 (日 plus 勺), and the Taiwan Ministry of Education variant dictionary independently identifies 旳 as a variant of 的. The g021 descriptive metadata also repeats the false 昀 identity. Apply a page-local source-bound correction to both text and descriptive metadata, preserving historical glyph IDs and raw OCR. This is literal transcription repair, not approval of the page or a character explanation.",
+      "evidence": [
+        "Source pixel SHA-256: 2a1c71643780eac70dea94cf857ef09c9369f5ac1880ea084ea580af98c69e98",
+        "Raw OCR evidence SHA-256: a8fe9ccff4fb0209b4dd2325531a90367f185c57e2f88c9de88b81186e0c3299",
+        "Text offset 1625: 昀(的) → 旳(的)",
+        "https://dict.variants.moe.edu.tw/dictView.jsp?ID=29217",
+        "https://www.cns11643.gov.tw/wordView.jsp?ID=140347",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "verification": "Verify the printed right-hand 勺 strokes against the scan, validate exact correction anchors/source hash and glyph metadata, regenerate corrected exports and consumer corpus, and confirm the locator shows corrected 旳(的) without claiming full-page approval."
+    },
+    {
+      "key": "pipeline:source-scan:hash-kinds",
+      "kind": "pipeline",
+      "title": "Distinguish decoded source-pixel hashes from encoded scan attachment hashes",
+      "details": "The real 爱 enrichment smoke research treated the corpus source_sha256 and the attachment SHA-256 as conflicting provenance. They intentionally hash different representations: decoded RGB pixels versus encoded PNG bytes. This false provenance gap obscured a genuine suspected OCR correction. Attachment metadata now labels each hash kind; when a source pixel hash is supplied, the harness independently verifies decoded pixels before attaching the image. Research instructions explicitly distinguish the kinds. Local tests exercise equal pixels with different PNG compression and changed pixels being rejected.",
+      "evidence": [
+        "runs/source-enrichment/ziyuan-2012/7231/initial-followup/research/result.json",
+        "pipeline/editorial.py: source_scan_attachments and RESEARCH_POLICY",
+        "pipeline/test_editorial.py: test_source_pixel_hash_is_distinct_from_attachment_file_hash",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "verification": "Review and merge the pipeline fix, demonstrate equal decoded pixels are accepted across PNG encodings and changed decoded pixels rejected, and verify the affected source OCR occurrence separately. A hash-kind difference alone is not evidence of a changed scan."
+    },
+    {
+      "key": "pipeline:ocr-review:occurrence-context-overread",
+      "kind": "pipeline",
+      "title": "Bind OCR scan reviews to exact occurrences and reject contextual overreads",
+      "details": "A first scan review proposed eleven 的-to-旳 changes on PDF page 614 after correctly identifying the rare headword on page 613. Reinspection of original pixels and printed controls withdrew all eleven: the raw 的 forms match the page. A separate CLI response returned no occurrences, and another mapped offset 10 to an unrelated 昧 while claiming correct_raw. No proposed page-614 replacements were applied. The pipeline now supplies exact anchors and surrounding context, requires complete unique occurrence coverage, checks raw-text identity and verdict consistency, and preserves uncertain printed identities without guessed Unicode.",
+      "evidence": [
+        "research/ziyuan-hsk1-de-ocr.md",
+        "pipeline/ocr_verification.py",
+        "pipeline/test_ocr_verification.py",
+        "runs/source-enrichment-ziyuan/ocr614-independent-check/result.json",
+        "runs/source-enrichment-ziyuan/ocr614-independent-cropped-check/result.json"
+      ],
+      "verification": "Verify exact-anchor and occurrence-coverage regression tests, inspect the independent source recheck, and exercise the verifier on another contrasting page before expanding OCR repairs. Literal replacements still require original pixel evidence; these guards do not certify transcription correctness."
+    },
+    {
+      "kind": "ocr",
+      "title": "Verify the two 㤐 OCR occurrences in the 愛 entry",
+      "details": "The research report identifies two OCR readings of 㤐 in 字源 PDF p. 497 / printed p. 484 and reports that the supplied scan shows 㤅. However, the scan attachment and local scan file have a SHA-256 metadata discrepancy, and the report says it did not create a hash-bound correction. Treat the replacement as a reported but not yet source-identity-bound correction; raw OCR remains unchanged.",
+      "verification": "Resolve the scan identity and hash discrepancy, inspect both exact occurrences against the verified scan pixels, then record source-hash-bound corrections and confirm the rebuilt consumer index displays 㤅 at both locations. Do not close based on the report alone.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[0]",
+        "initial-followup/research/result.json: gaps[3]",
+        "字源 PDF p. 497 / printed p. 484",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:爱:ziyuan-2012-ai-glyph-correction"
+    },
+    {
+      "kind": "clarification",
+      "title": "Keep the disputed early sound analysis unresolved",
+      "details": "The article retains 兂 and 旡 as competing proposed sound elements in early 㤅, but research did not establish a same-system historical pronunciation comparison for either candidate and 㤅. Current Mandarin pairs are explicitly limited and do not prove the ancient sound role. Preserve the competing analyses and do not present either sound relation as established.",
+      "verification": "On any revision, check the cited research for independently supported historical readings in a common system; retain the disputed status and the limitation unless such evidence is supplied. Ensure current Mandarin comparisons remain labeled as modern and do not establish the ancient relationship.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[5]",
+        "current_article.components[1]",
+        "current_article.relationships[1]",
+        "current_article.relationships[2]",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:爱:ziyuan-2012-ai-sound-evidence-gap"
+    },
+    {
+      "kind": "clarification",
+      "title": "Qualify dating and earliest-attestation claims for 愛",
+      "details": "The research did not establish the exact earliest physical attestation or absolute date for the affection-related use. It reports a Zhongshan bronze example and transmitted literary examples, while noting that no artifact catalogue image or dated original witness was inspected. The article appropriately marks the period as dating unresolved; avoid upgrading that evidence into a precise earliest date.",
+      "verification": "Verify any future earliest-attested or dated claim against a dated witness or artifact catalogue and distinguish an interpreted inscriptional use from proof that the graph 㤅 itself meant ‘love’.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[6]",
+        "current_article.meaning_history.senses[0]",
+        "current_article.meaning_history.limitations[0]",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:爱:ziyuan-2012-ai-earliest-attestation"
+    },
+    {
+      "kind": "pipeline",
+      "title": "Record inaccessible Unihan pages as an external verification gap",
+      "details": "The research attempted the official Unihan URLs for 㤂, 旡 and 㤅, but each was inaccessible in the web session. Local kMandarin rows are available but were explicitly not treated as externally verified evidence. Do not cite the failed pages or imply that the local rows were verified from them.",
+      "verification": "If these readings are needed for external citations, obtain accessible official records or another authoritative source and verify the exact character and reading before updating evidence or citations.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[8]",
+        "local_primary_readings.unihan.rows",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:爱:ziyuan-2012-ai-unihan-access"
+    },
+    {
+      "key": "pipeline:article-patch:relationship-contract",
+      "kind": "pipeline",
+      "title": "Give patch agents exact relationship names and endpoint kinds",
+      "details": "The 学 repair at runs/source-enrichment-ziyuan/xue-reviewcurrent-3/round-1/revision/result.json emitted literal _component_of predicates. The patch transport schema exposes paths and JSON strings, so its schema alone does not reveal the nested article relationship enum; the prompt used _component_of as shorthand. Article validation rejected the result before review. Every initial and repair packet now carries exact relationship predicates and endpoint kinds generated from the authoritative schema, with explicit instructions against literal suffixes and invented unknown-role edges. Existing approved prose is unchanged by this prompt fix.",
+      "evidence": [
+        "pipeline/editorial.py: apply_article_patch",
+        "pipeline/test_editorial.py: test_chinese_targeted_patch_preserves_unaffected_fields",
+        "runs/source-enrichment-ziyuan/xue-reviewcurrent-3/round-1/revision/result.json"
+      ],
+      "verification": "Regression checks confirm exact predicate and endpoint contracts reach patch agents, unsupported predicates remain rejected, and repaired character candidates still obtain fresh factual/readability approvals. Targeted editorial/source suite passes 75 tests; 学 awaits regeneration and actual approvals."
+    },
+    {
+      "key": "ziyuan-2012:ocr:pdf-614-horse-identity",
+      "kind": "clarification",
+      "title": "Resolve the unidentified printed horse graph on 字源 PDF page 614",
+      "details": "Original scan inspection and independent Luna low recheck reject raw OCR 駒 in the prose after 此字也通作 on PDF614 / printed601. The producer now preserves this exact occurrence as [glyph:p001], with source-bound metadata rather than guessing Unicode. The corrected searchable corpus is verified. The remaining task is identifying the printed graph from visible strokes and authoritative character references; it is not a pending full-page OCR rerun.",
+      "evidence": [
+        "research/ocr-corrections/ziyuan-2012-p0614/ocr-corrections.json",
+        "research/ocr-corrections/ziyuan-2012-p0614/verification.json",
+        "research/ziyuan-hsk1-de-ocr.md",
+        "Source-pixel SHA-256: e5c3740499352373582e7a99de9e1114ed3590dd728207f268e6ffe5cd3cbf88"
+      ],
+      "verification": "Identify the exact printed graph through original pixels and authoritative references before proposing a Unicode replacement. Until then retain the occurrence-specific glyph reference. Source repair is complete; identity remains unresolved."
+    },
+    {
+      "key": "pipeline:source-worker:process-locks",
+      "kind": "pipeline",
+      "title": "Prevent duplicate source-stage writes after interrupted coordinators",
+      "details": "Two source-worker command wrappers terminated with exit143. The later wrapper left a Codex research child orphaned under systemd, so wrapper termination alone was insufficient to prove all work stopped. Coordinator recovery detected and terminated that exact orphan before retaining the detached replacement worker. Source jobs now hold an OS lock that is inherited by agent children; competing harnesses return already_running without stage mutation. Long runs retain logs and process metadata; process inspection remains the liveness evidence, rather than status files.",
+      "evidence": [
+        "pipeline/source_enrichment.py: process coordinator lock",
+        "pipeline/editorial.py: Runner inherited_lock_fds",
+        "pipeline/test_source_enrichment.py: test_live_coordinator_lock_prevents_duplicate_stage_writes",
+        "runs/source-enrichment-after-ocr/worker-process.json",
+        "research/source-worker-recovery-20261002.json"
+      ],
+      "verification": "Verify live-lock exclusion and actual inherited descriptor transport, then observe the detached source worker complete its current jobs. Targeted editorial/source tests pass 77 tests. Do not claim completion from a running status or restart while a confirmed live child still owns a stage."
+    },
+    {
+      "key": "ziyuan-2012:ocr-p1191-g001",
+      "kind": "ocr",
+      "title": "Verify 弋 identity in 二 continuation on PDF1191",
+      "details": "The raw corpus leaves a named component as [glyph:g001]. A research repair proposed 戈, conflicting with the coordinator’s targeted scan reading 弋. Preserve both claims and verify the distinguishing strokes at the exact occurrence before applying a producer correction. No correction has been applied.",
+      "verification": "Independently inspect source PNG crop (200,240,1430,760), raw codepoints [49,61), and source/evidence hashes recorded in the research note. Apply only a verified source-bound replacement, rebuild consumer corpus, and recheck any dependent authored claims through independent reviews.",
+      "evidence": [
+        "research/ziyuan-hsk1-er-source-check.md",
+        "字源 PDF1191 / printed1176",
+        "Source pixel SHA256 8044120a4e8d1b1354406fc3a1d0b12435d3e9418598361f97821ea3cd0f600f",
+        "Raw evidence SHA256 0b520661f625f7d08b410a89d4f9bea644df397db86447aae401ef22c41b8131",
+        "PR #8 commit f8aca27f"
+      ]
+    },
+    {
+      "kind": "factual",
+      "title": "Consider omitted 字源 proposals about learning and imitation",
+      "details": "The scan review found that the current explanation omits 字源’s proposed original meanings of learning and imitation/efficacy, reciprocal 學/教 usage, and report that early structures began combining in Shang forms. These should be considered as attributed, qualified proposals or reports; the scan verifies what 字源 says, not the underlying cited analyses.",
+      "verification": "Revise the authored account if supported by the dossier, preserving attribution, proposal status, and the distinction between 字源’s report and verification of its cited scholarship; obtain fresh factual and readability review for changed prose.",
+      "evidence": [
+        "source-coverage/verified-review.json: revise finding 2",
+        "字源 PDF pages 277–278 / printed pages 265–266",
+        "current_article.formation",
+        "current_article.meaning_history",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:学:explanation-and-review"
+    },
+    {
+      "key": "ziyuan-2012:ocr-p0355-yuan-headword",
+      "kind": "ocr",
+      "title": "Correct 爱 OCR headword to 爰 on 字源 PDF355",
+      "details": "Fresh 愛 research found that the OCR headword 爱 yuán is actually printed 爰 yuán. Two independent targeted scan checks confirmed the literal substitution. The producer correction and rebuilt consumer corpus now contain 爰; raw OCR is preserved.",
+      "verification": "Check source-bound raw span [796,797), original page pixels and evidence hashes, producer effective correction, consumer page match and 1435-record corpus. Reviewable correction/verification artifacts are in research/ocr-corrections/ziyuan-2012-p0355, commit be6a2f7d, PR #8.",
+      "evidence": [
+        "字源 PDF355 / printed343",
+        "Source pixels dae2a85e30b830e9f1a86f5e1c7a082463646451e5fdf3924a5e0b388d1a2e92",
+        "Original evidence 17a3646d53c84618144b67e66862ad4cfb32a630b855febd70baefb43b964059",
+        "Effective consumer evidence 0266ae4facfa959220f89a0f0c20f42d50605b0d9048a835f648c4e716e13fdc",
+        "research/ocr-corrections/ziyuan-2012-p0355/verification.json",
+        "Character revisions remain separately tracked in #17, #27 and #28."
+      ]
+    }
+  ]
+}

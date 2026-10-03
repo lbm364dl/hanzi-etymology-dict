@@ -1,0 +1,38 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "verdict",
+    "evidence_ids",
+    "findings"
+  ],
+  "properties": {
+    "verdict": {
+      "enum": [
+        "pass",
+        "revise"
+      ]
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "X-326914a292c6b0a2bb70",
+          "X-b5d7e41af88c64f0a96d",
+          "X-ef7d9bef1ed86bea4365",
+          "X-1e8b893b3a53a1d38aab",
+          "X-b75386e2e25901f6af0a",
+          "X-860ceab763f4fe3410ca",
+          "X-7cc520b57364176e06dc"
+        ]
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

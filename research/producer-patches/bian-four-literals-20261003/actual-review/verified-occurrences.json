@@ -1,0 +1,50 @@
+{
+  "provenance": {
+    "source": "字源 (2012), p.145 / printed p.133, 邊(边) entry",
+    "producer_page_dir": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0145",
+    "raw_text_file": "ocr.json:ocr.text",
+    "raw_text_sha256": "a903b386a4e5d7a363226e01d59a824ab2dca0dbde68d374115401e19c668d65",
+    "raw_text_length_codepoints": 1945,
+    "original_scan_pixel_sha256": "8bd6a81012882e00aafbf6f3ead6d12a88aec9c0de60f1bfa224588fdbc06529",
+    "existing_overlay_file_sha256": "6f4f9e1e91544f5cee2c00f3196e949fbf3e20574e46342187deb3a3fb08eb97",
+    "scope": "Only four exact OCR literals 昪 at [1618,1619), [1662,1663), [1750,1751), [1809,1810) on PDF p.145; proposed printed literal 臱. No producer write."
+  },
+  "occurrences_hash": "6a4309b86501e9cc56fb371f098de85b0d3c64fdcebfb5ef46564106309a4d2c",
+  "result": {
+    "occurrences": [
+      {
+        "id": "ziyuan-2012:p145:bian:臱-occurrence-1",
+        "raw_text": "昪",
+        "printed_text": "臱",
+        "verdict": "confirmed_correction",
+        "reason": "In attachment 2, the complete paragraph crop shows the target after “形声字。从辵,” and before “声” as a compact upper cluster over a lower enclosed shape with a central horizontal stroke. This differs from the OCR’s 昪. The same crop visibly prints 臱 in the later phrase “声符‘臱’下半部”; its lower enclosure and inner stroke match the target."
+      },
+      {
+        "id": "ziyuan-2012:p145:bian:臱-occurrence-2",
+        "raw_text": "昪",
+        "printed_text": "臱",
+        "verdict": "confirmed_correction",
+        "reason": "In attachment 2, after “金文或从” and before “为止的变形,” the target has the same compact upper cluster and lower enclosed shape with a central horizontal stroke as the adjacent quoted glyph. The same crop prints that control in “声符‘臱’下半部,” where it is visibly 臱; the target’s lower part does not match 昪."
+      },
+      {
+        "id": "ziyuan-2012:p145:bian:臱-occurrence-3",
+        "raw_text": "昪",
+        "printed_text": "臱",
+        "verdict": "confirmed_correction",
+        "reason": "In attachment 2, the target after “至于汉代，声符” and before “下半部进而讹作” is a compact upper cluster over an enclosed lower shape with a central horizontal stroke. The same crop prints 臱 as the quoted control in the preceding “声符‘臱’下半部”; those visible parts match, unlike 昪."
+      },
+      {
+        "id": "ziyuan-2012:p145:bian:臱-occurrence-4",
+        "raw_text": "昪",
+        "printed_text": "臱",
+        "verdict": "confirmed_correction",
+        "reason": "In attachment 2, after “替换繁冗的” and before “形” in “现代简化字以‘力’替换繁冗的‘臱’形,” the target shows a compact upper cluster over a lower enclosure with a central horizontal stroke. The same crop’s earlier quoted control in “声符‘臱’下半部” has that same visible structure, supporting 臱 rather than OCR 昪."
+      }
+    ]
+  },
+  "result_hash": "682649804be5981806dffb23e4666db28aef6a99e157712a4ec722fe4f473613",
+  "review_directory": "runs/source-enrichment-ziyuan/bian-research-contract-continuation-20261003/ziyuan-2012/8FB9/p145-four-literal-ocr-verification-20261003/review",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "whole_page_reviewed": false
+}

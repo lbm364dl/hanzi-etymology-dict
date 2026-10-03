@@ -12,6 +12,8 @@ Do not solve recurring editorial problems through character-name conditionals, U
 
 ## Research and authorship
 
+Agents may use all available tools freely for their assigned work, including shell scripts, web/browser access, additional source pages, rendering and image crops. Do not impose a read-only sandbox, an arbitrary page cap or a requirement to ask permission for further investigation. Coordinate shared-file writes to avoid collisions and preserve the independent research, authorship and review gates. All introduced agents remain `gpt-6-luna` with low reasoning.
+
 Use separate `gpt-6-luna` agents with low reasoning for research, authorship and independent factual/readability review, following `pipeline/README.md`. Consult repository sources, acquired scholarly books described in `research/local-book-sources.md`, and external authoritative references. The coordinating agent implements the harness and instructions; it must not fabricate agent work, review approvals or research logs. Reuse historical research across languages only with exact character identity, provenance and verification; research Japanese meanings and form conventions separately.
 
 Outlier/Pleco, when the user's phone is available, is inspiration and a source-finding aid. Record bibliography, edition and page leads; consult the underlying references where possible. Distinguish observing a citation from reading its cited pages. Do not reproduce proprietary prose or make phone access a pipeline dependency.

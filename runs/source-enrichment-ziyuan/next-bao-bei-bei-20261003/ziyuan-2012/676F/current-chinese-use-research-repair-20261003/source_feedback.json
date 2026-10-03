@@ -1,0 +1,42 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "allowed_edit_paths": [
+    "meaning_history",
+    "relationships"
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0534/source.png",
+      "pdf_page": 534,
+      "source_pixel_sha256": "b1b8aa1a0816b15211ac2e5bf3c31ec681d8c077d8755d777df847c7d5902dfd"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0535/source.png",
+      "pdf_page": 535,
+      "source_pixel_sha256": "9b4c0882da766def379c638663830b1a887bfdc11ecfceb8e51d500089ba6509"
+    }
+  ],
+  "review_findings": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses[2]`, change the status from `current` or add cited evidence of present-day Chinese usage. Its wording says 盃 “is often used” for awards or trophies, but X-0010f41984f20ab6b919 only reports that use as common without establishing present-day Chinese usage, and E8 is Japanese dictionary metadata. Update the generated `has_sense` edge to match any status change."
+      ],
+      "article_hash": "c12c161f70eab2f748de193cfa8c2abbd5767b539dbf3e4c6493e386668fd87c",
+      "dossier_hash": "65c895147416a19ec219e8afef548f9895b16881ceb2b94b4e58bd74e2135c80",
+      "reviewer": "gpt-6-luna:low:factual:01a1006f-fa8d-75c1-b485-7143452c639f"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses[1]`, the classifier sense is marked `historical`, but its period says “historical and current” and its text says the cited evidence does not establish present-day Chinese use. The cited examples support historical use only: `E8` is Japanese metadata and does not establish current Chinese use, while `X-f4345f7d2863b6c42321` cites historical examples. Remove “and current” from the period; keep the sense historical and update the generated `meaning:杯:classifier` has_sense edge to match."
+      ],
+      "article_hash": "c12c161f70eab2f748de193cfa8c2abbd5767b539dbf3e4c6493e386668fd87c",
+      "dossier_hash": "65c895147416a19ec219e8afef548f9895b16881ceb2b94b4e58bd74e2135c80",
+      "reviewer": "gpt-6-luna:low:readability:01a10070-868a-7a53-a18f-083115ef16ed"
+    }
+  ],
+  "task": "Research present-day CHINESE uses of 杯 as classifier and cup/trophy/competition award; distinguish 杯 and 盃 form conventions using actual authoritative current Chinese dictionaries, not imported Japanese metadata. Consult external official dictionary entries and record exact URLs/provenance/evidence. Missing local evidence is a research gap; do not erase independently supported current uses merely to pass old feedback. Preserve attested historical examples without earliest-priority or invented semantic bridge. Cite current uses separately from ancient witnesses. Update meaning records and derived relationships only as justified by genuine new research, preserve other existing supported factual content. No canonical or producer writes, no GitHub writes. Fresh separate author, factual and readability stages required."
+}

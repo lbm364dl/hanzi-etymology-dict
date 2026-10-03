@@ -1,0 +1,19 @@
+{
+  "source_id": "ziyuan-2012",
+  "requires_coordinator_verification": true,
+  "findings": [
+    {
+      "kind": "pipeline",
+      "title": "Add verified printed-page metadata for 字源 PDF page 612",
+      "details": "Issue #179: printed page metadata is absent for PDF page 612; expected scan label 599 requires independent observation.",
+      "verification": "Add printed_page 599 to the source-bound page metadata with its provenance, rebuild the consumer corpus, and confirm the current metadata record exposes the verified value.",
+      "evidence": [
+        "current_source_page_metadata: page_id sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000612 has printed_page null",
+        "X-8638acacc16dbb55570a",
+        "X-221bbbf6c39f9ec4eee0",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:日:ziyuan-page-612-printed-page-metadata:p612"
+    }
+  ]
+}

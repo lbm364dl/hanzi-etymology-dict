@@ -1,0 +1,14 @@
+# 字源 PDF p. 739 printed-page metadata
+
+Issue #171 concerned the missing `printed_page` field for 北’s source page. The original p. 739 scan shows `726` at the lower-left edge. The scan was independently checked by a Luna-low `source_resolution` call bound to finding `ziyuan-2012:北:ziyuan-2012-bei-printed-page-metadata`, PDF page 739, absent current field, proposed label `726`, and decoded-RGB source hash `93340790449e8a235bdf892960bde34eb3ae2a3bc5855f79994ceaa599e0b736`.
+
+The exact run remains at `runs/source-enrichment-ziyuan/bei-p739-metadata-resolution-20261003/ziyuan-2012/5317`. Its independent result hash is `f08716a45471dc5c429e61e301ac597b2f15a71dd77455dbfe3b935a029298af`; it observed `726` at the bottom-left. The result, completed Luna-low metadata, and exact source-resolution binding are archived beside this note. The producer’s `page-metadata.json` is copied here as `page-metadata-overlay.json`.
+
+The producer loader `research_corrections.load_effective` and exporter `export_corrected` accepted the overlay. The effective and exported records expose printed page 726 while retaining the original OCR object and evidence hash. Raw `ocr.json` was not changed: its file SHA-256 remains `90706d0ac78164aa4329cb298aaa2e6b02fee6222574796cdef66b71b2071945`; raw evidence SHA-256 remains `2fcdcd111b235c622d9a22f4e81d5547b2181f869f3dd20d5a560c2e83b20e4f`.
+
+`source_corpus.build` rebuilt all 1,435 consumer rows. The p. 739 row retains its page ID, source-pixel hash, evidence hash, and text; it now has `printed_page: 726` and hash-bound `metadata_provenance`. Before/after row snapshots and the verification manifest are included here. Consumer JSONL SHA-256 changed from `959597b7d15cd5fe481308c6c41abf40c2260a81484987851e6265c30ef92a60` to `e995f810413fd2736e8289a47a078e1c5da643b8011a8a0a4cd5a17cf2598e98`.
+
+This page-metadata change changes 北’s current source locator hash from `5c8e1bf30599363b51613fc2b2edf12b0c35fab12d312475c7dc40768ce4267d` to `79aa52364d9202e528a694bbef1ec0016161ea231b0ada1b1781df572eae44ae`. The published job’s locator snapshot is therefore stale and its source-specific completion gate needs a fresh current-source adoption/locator check before it can be counted against the rebuilt corpus. Its existing exact article/dossier scan-coverage receipt remains unchanged; this metadata observation did not change the scan, OCR text, or cited page evidence.
+
+
+After the coordinated p. 534 producer correction was also included, the final combined 1,435-row consumer corpus has SHA-256 `7ef9649f9978a227e55971a1e49486f7390b383153435fadd79c466a4f6bf258`. Its p. 534 row contains the verified literal `桮(杯)` with source/evidence hashes unchanged, and its p. 739 row retains printed page 726 plus the verified metadata provenance. This combined-build receipt supersedes the earlier p. 739-only intermediate corpus hash above.

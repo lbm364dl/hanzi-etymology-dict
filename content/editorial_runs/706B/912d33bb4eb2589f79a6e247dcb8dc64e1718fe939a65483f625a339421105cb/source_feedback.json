@@ -1,0 +1,145 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "火"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000900",
+          "pdf_page_1based": 900,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0900/source.png",
+          "source_sha256": "26a0fcd6cc177411563ed1a33e68e6d517c73fe4cf251abc13bb1d8030fc6115",
+          "evidence_sha256": "16bac5d4d9d617e1d440c6aa631ff8f2e5821b93e50f1333513903a605046d88",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "火 huǒ 晓组、微部;晓组、果韵、呼果切。"
+          ],
+          "excerpt": "“能”,因“能”借用为能愿动词,故借表大火貌的“熊”为动物的“熊”。“熊”头大尾短,四肢粗短,脚掌大,能直立行走,也能爬树。种类很多。《说文》:“熊,兽,似豕,山居,冬蛰。”北方方言中“熊”可表示斥责、斥骂的意思,如“挨熊”、“熊了他一顿”;又可形容胆小无能,如“熊样”。(郭小武 叶青)\n\n火部\n\n火 huǒ 晓组、微部;晓组、果韵、呼果切。\n\n[glyph:g016]¹ [glyph:g017]² [glyph:g018]³ [glyph:g019]⁴ [glyph:g020]⁵ [glyph:g021]⁶ [glyph:g022]⁷ 火\n商 商 战国 战国 战国 《说文》小篆 汉 楷书\n\n1—5、7《甲金篆》690页。6《说文》207页。\n\n象形字。像物体燃烧时发出的光、焰之形。本义是火、火焰。《合集》2874:“丙寅卜,𡧊贞:其有火?”(丙寅日占卜,𡧊贞:会有火?)《合集》11503:“有新大晶(星)并火。”可能指的是火星。《书·盘庚上》:“若火之燎于原,不可向迩(靠近),其犹可扑灭?”《韩非子·五蠹》:“有圣人作,钻燧取火,以化腥臊。”“火”的引申义较多,由火焰引申为着火、火灾等义,由火焰又可引申为火把、火炬、火药、枪炮弹药等义,由火的颜色可引申为火红色,由火的旺盛引申为兴旺或暴躁、怒气,由着火、火灾\n\n885"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000904",
+          "pdf_page_1based": 904,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0904/source.png",
+          "source_sha256": "723062063428213a4121e1c782cc856566f7da6d07d166da0ea7a9df89370e41",
+          "evidence_sha256": "c55698fd57756decc8ab5d6c6661c5232f8ee7b95ebaf4318de173bf4abb4a99",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "炈 燻 烝 煦 煐 閃 爌 燎 炆 炏\n\n《合集》10172：“辛卯卜,戋贞:帝其奠我?”意思是问天帝是否使我承受旱灾之苦。由于燥引申为烘干、曝晒、焚烧等义。又读作rǎn,义为恭敬。《诗·小雅·楚茨》：“我孔焮矣,式礼莫愆。”(我们的态度很恭敬,礼节仪式无差错)甲骨文为会意字,上为捆绑的人形,下为火形,会以“火”焚“人”之意,也可认为是旱时将人置于火上祭天以求雨;小篆则在甲骨文的基础上又增加形符“火”,成为从火、从奠、奠亦声的会意兼形声字。(郭小武 叶青)\n\n閃 lǐn 来纽、真部;来纽、谆韵、良刃切。\n[glyph:g001]¹ [glyph:g002]² [glyph:g003]³ [glyph:g004]⁴ [glyph:g005]⁵ 閃\n商 商 春秋 战国 《说文》小篆 楷书\n1~4《甲金篆》693页。5《说文》207页。\n会意字。从火,从門。会门内有火意。《说文》说为形声字,从火,两(zhèn)省声。本义为火貌。《说文》：“閃,火兒。读若粦。”叶德辉《说文读若考》：“按‘门部’两,登也,从门、二。二古文下字,读若军(通‘阵’)之瞰。粦、陈,古音同部。”其实,《说文》此处的“读若”,也是在提示“閃”与“粦”的音义具有相近相通的同源关系,因为“粦”的后起字为“燐”“磷”(磷火、磷完)。这样,通过系联同源字,形成音义群,就更便于从整体上把握字的读音和意义了。甲骨文上为两扇对开的门形,下为火形,从“门”内有“火”会意。(郭小武 叶青)\n\n爌 yuè 喻纽、药部;以纽、药韵、以灼切。\n[glyph:g006]¹ [glyph:g007]² 爌\n《说文》小篆 汉 楷书\n1《说文》208页。2《甲金篆》693页。\n形声字。从火,龠声。本义为火光。《说文》：“爌,火飞也。从火,龠声。一日葵(ruò)也。”段玉裁依《文选》的《琴赋》《景福殿赋》注、玄应书卷九改作“火光也”。《史记·屈原贾生列传》：“弥融爌以隐处兮,夫岂从蚊与蛭蟥。”(远离光亮去隐居,岂能学那蚂蚁、水蛭和蚯蚓)由火光引申为用火照耀。《吕氏春秋·期贤》：“今夫瀹蝉者,务在乎明其火、振其树而已;火不明,虽振其树何益?”又引申为用火加热;由火光、照耀引申为光彩貌、炫耀诸义。(郭小武 叶青)\n\n燎 biāo 帮纽、宵部;帮纽、宵韵、甫遥切。\n[glyph:g008]¹ 燎\n《说文》小篆 楷书\n1《说文》208页。\n会意字。从火,从票,票亦声。是“票”的孳乳字。“票”字下部本从“火”形,义为火焰升腾。“燎”本义为火焰进飞。《说文》：“燎,火飞也。”段玉裁注:“玄应引《三仓》云:‘燎,进火也。’”按照同源字词的引导,可直接联想到音义相通的“飏”字。《吕氏春秋·慎小》：“巨防(堤防)容蝼而漂邑杀人,突(烟囱)泄一燎而焚宫烧积。”由火焰的迸飞引申为迅疾或焚烧,由火焰引申为闪光、赤色。(郭小武 叶青)\n\n炆 jiǎo 见纽、宵部;见纽、效韵、古孝切。\n[glyph:g009]¹ [glyph:g010]² [glyph:g011]³ [glyph:g012]⁴ 炆\n商 商 商 《说文》小篆 楷书\n1、2、3《甲金篆》693页。4《说文》208页。\n会意兼形声字。从火,从交,交亦声。从交在火上、燃以祭天会意。本义为用火烧燎祭天。《合集》29993:“今日炆,有雨?”问今日焚人牲以祭天,是否有雨。《说文》:“炆,交木然(燃)也。”徐锴系传:“架而烧之也。”《玉篇》:“炆,交木然(燃)之,以燎柴(chái,焚柴而祭)天也。”甲骨文字形中上为两腿交叉的人形,下为火形,有的火上还有一些小点像火焰上腾之形,还有的字形火上人下有木,表示架起的柴堆;小篆变成上下结构为左右结构,左“火”、右“交”;楷书由小篆演变而来。(郭小武 叶青)\n\n炏 chán 定纽、谈部;澄纽、盐韵、直廉切。又徒甘切。\nyín\n[glyph:g013]¹ 炏\n《说文》小篆 楷书\n1《说文》208页。\n形声字。从火,干声。本义为燃烧,读作chán。《说文》:“炏,小热也。”段玉裁据古本《毛诗》改作“小燕(ruò)也”,以“干”声略远,注作“羊声”,并注:“羊,各本误作干,篆体亦误,今正。”《诗·小雅·节南山》：“忧心如惔。”陆德明释文:“惔……《说文》作‘炏’字,才廉反,889"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000901",
+          "pdf_page_1based": 901,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0901/source.png",
+          "source_sha256": "43751f1cef2eee0d26ae1f95f300bcf2780ca58d17b1b1b94ebf900f4eb8da0a",
+          "evidence_sha256": "213d6e22f2d88d97c0c7620919058e2498d159c630aa743c5b88b410534384f3",
+          "ocr_review_status": "unreviewed",
+          "match_type": "possible_continuation",
+          "headword_lines": [],
+          "excerpt": "火部\n\n的刻不容缓引申为紧急,兹不详述。火可以取暖,又可以照明,尤其可以烧烤食物,使生食转为熟食,使人类卓然超越于其他动物之上,向文明社会挺进。甲骨文字形像物体燃烧时光、焰迸射之形;战国文字将火形拆成了四笔,但还保留了一点光、焰上冒的样子;其后的字形与战国文字一脉相承。(郭小武 叶青)\n\n燹 xiǎn 心组、文部;心组、铣韵、苏典切。\n\n[glyph:g001]1 商 [glyph:g002]2 商 [glyph:g003]3 商 [glyph:g004]4 西周 [glyph:g005]5 《说文》小篆 [glyph:g006]6 魏 [glyph:g007]7 楷书\n\n1、2、3《甲金篆》690页。4《甲金篆》691页。5《说文》207页。\n\n会意字。从火,从二豕。本义指火烧、燃烧。或认为是形声字,从火,豖(huān)声。也用作名词,指火。《说文》:“燹,火也。”后专指兵火、战火。即在战争中纵火焚烧。《正字通·火部》:“燹,兵火曰燹。”明高启《次韵杨孟载早春见寄》:“久闻离乱今始见,烟火高低变烽燹。”金文上为两个直立猪形(为书写方便),下为火苗上冒之形,或增表打击义的“攴”;小篆字形已线条化,楷书与小篆一脉相承,写作“燹”,变圆转线条为离散式的硬折线条,并有了点画。(郭小武 叶青)\n\n焌 jùn 精组、文部;精组、稕韵、子寸切。\nqū 清组、术韵、仓聿切。\n\n[glyph:g008]1 《说文》小篆 [glyph:g009]2 楷书\n\n1《说文》207页。\n\n形声字。从火,夋声。本义为点火,读作jùn。《说文》:“焌,然(‘燃’本字)火也。”《周礼·春官·蘪氏》:“凡卜,以明火爇燧,遂焌(chuī,‘吹’古字)其煖契(点燃柴枝,用以灼龟),以授卜师。”郑玄注:“焌,谓以契炷樵火而吹之也。”由点火义引申为用火烧、用火烫,由用火烧义引申指一种将蔬菜放入热油锅迅速炒熟的烹饪方法。“焌”还转指把燃烧物放入水中弄灭,这是因为,如果是用火烧烫水分大的物品,则温度降低,火就灭了,由此引申而来。所有的引申义均读作qū。(郭小武 叶青)\n\n寮 liào 来组、宵部;来组、笑韵、力照切。\nliáo 来组、萧韵、怜萧切。\n\n[glyph:g010]1 商 [glyph:g011]2 商 [glyph:g012]3 商 [glyph:g013]4 西周 [glyph:g014]5 《说文》小篆 [glyph:g015]6 魏 [glyph:g016]7 楷书\n\n1--4、6《甲金篆》691页。5《说文》207页。\n\n会意字。从火,从木及多寡不等的点画。本义指焚柴祭天,是古代的一种祭祀方法,“燎”的本字。《说文》:“寮,柴祭天也。”《合集》32302:“癸卯贞:其侑于高祖,(豕)寮六牛?”(癸卯日卜问:祭祀高祖,燎祭六头牛?)西周早期保员簋:“唯王既寮,伐东尸(夷)。”由焚柴引申泛指焚烧等义。后为了明确“寮”字与“火”有关,又加了火字旁成为“燎”,“寮”、“燎”遂成一对古今字。《汉书·礼乐志》:“朝陇首,览西垠,雷电寮,获白麟。”颜师古注:“寮,古燎字。”甲骨文字形1像以火燔木(木旁有火焰上腾之点)之形,或在字形1“木”下加“火”会意;小篆讹变,隶楷文字由小篆演变而来,下“火”成“灬”逐渐讹变成“小”。(郭小武 叶青)\n\n然 rán 日组、元部;日组、仙韵、如延切。\n\n[glyph:g017]3 《说文》或体\n[glyph:g018]5 汉 — [glyph:g019]6 楷书\n[glyph:g020]1 战国 [glyph:g021]2 秦 [glyph:g022]4 《说文》小篆 [glyph:g023]6 汉 [glyph:g024]7 汉 [glyph:g025]8 汉 [glyph:g026]9 楷书\n\n1、2、5-8《甲金篆》691页。3、4《说文》207页。\n\n形声字。从火,肰(rán)声;或体为从艸、難声的形声字。徐铉案语:“艸部有難,注云艸也。此重出。”段玉裁注:“按,篆当作龖;或古本作難,转写夸火耳。”按照段注,《说文》或体应作龖,或難,为从火、難声或難声的形声字。“然”字本义是燃烧。《说文》:“然,烧也。”徐铉注:“然,今俗别作燃。”《孟子·公孙丑上》:“凡有四端(仁、义、礼、智四种开端)于我者,知皆扩而充之矣,若火之始然,泉之始达。"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0900/source.png",
+      "pdf_page": 900,
+      "source_pixel_sha256": "26a0fcd6cc177411563ed1a33e68e6d517c73fe4cf251abc13bb1d8030fc6115"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0901/source.png",
+      "pdf_page": 901,
+      "source_pixel_sha256": "43751f1cef2eee0d26ae1f95f300bcf2780ca58d17b1b1b94ebf900f4eb8da0a"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0900/source.png",
+      "pdf_page": 900,
+      "source_pixel_sha256": "26a0fcd6cc177411563ed1a33e68e6d517c73fe4cf251abc13bb1d8030fc6115"
+    }
+  ],
+  "target_language": "zh",
+  "additional_research_context": {
+    "purpose": "Research the actual scope of the oracle star name in p900 and settle wording from direct source evidence, not review preference.",
+    "prior_review_findings_are_hypotheses": [
+      "Fresh factual reviewers have alternated between treating 字源 火星 vs CUHK 大火/心宿二 as a disputed celestial identity and treating these as differing levels of specificity for the historical star.",
+      "Fresh readability reviewers have alternated between saying the sources do not establish a conflicting object and asking that the possibility of a modern Mars interpretation remain unresolved."
+    ],
+    "research_questions": [
+      "Inspect the supplied p900/p901 source scans directly. Record only what 字源 prints in 合集 11503 and whether it itself specifies 心宿二 or the modern planet Mars. No OCR change is alleged; verify the actual current wording.",
+      "Open and compare the direct CUHK 火 entry for 合集 11503 with the direct CUHK 晶 entry. Determine exactly what each says about 火, 大火, 心宿二, and the historical name 火星. Distinguish same traditional star under different wording from genuinely conflicting referents; distinguish historical 火星 from the modern planet only if the inspected source explains that scope.",
+      "Inspect the current dossier references directly, especially X-c9906898947db9e1ac73, X-a602c44bb2ab2d2ecb36, X-7b0c28c0b19ce3360222, X-545b2dbbc2615091e8b6, and X-b6e5639abbf3b5853106. If they conflict, record the conflict rather than silently choosing one. Return article-relevant evidence with precise attribution and qualified certainty; do not decide the star-name motivation without evidence."
+    ]
+  },
+  "additional_context_policy": "These source leads and prior findings are research tasks, not preverified dossier evidence. Consult the referenced sources directly, check exact graph identity and scope, and add cited evidence for useful claims before authorship. Recheck reviewer hypotheses; modern structure does not establish historical roles. Record inaccessible sources as gaps.",
+  "unfinished_draft_provenance": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/fire-recovery/ziyuan-2012/706B",
+    "article_hash": "dc2c4963f3305a3855a907d910eb07450ac6a0a6b610212130df3efbdf3ea264",
+    "dossier_hash": "5c5750110953f7d1cf0eb69e1cf6e11a77ea77751c183248451ac9aced10854e",
+    "previous_state_hash": "e1f174bb3d31d215d6eb90c76c53f7039bad053ca38980089f89508ad1c48855",
+    "canonical_article_hash": "b1c5ab9ff12caf863c867fbc03714fe30b715a24e2c711040766aeef45164cb6",
+    "canonical_dossier_hash": "1e8b19d039d93920df0d1f8778137fc867c5bee3b4bdf445eb97ebe48f603b06",
+    "requires_fresh_research_and_reviews": true,
+    "prior_review_proposals_hash": "166a38bae4ab7f8635c46dabb7a6cff991357e7abe08ea9a33dbdd7ef1a9576a"
+  },
+  "prior_review_proposals": [
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses[1].text`, the assertion that the inscription’s stellar referent is disputed is too strong: the scan reports “可能指的是火星,” while the cited CUHK entries interpret 火星 here as the historical name for 大火/心宿二, not necessarily the planet Mars. Clarify that 字源 gives the broader historical name 火星 and does not itself specify 心宿二; the inspected references identify the star as 心宿二. Apply the same correction to `relationships[1].text` and `meaning_history.limitations[0].text`, removing the claim that the sources disagree on the celestial object while retaining that the naming motivation is unresolved. Cite X-c9906898947db9e1ac73, X-7b0c28c0b19ce3360222, X-545b2dbbc2615091e8b6, and X-b6e5639abbf3b5853106."
+      ],
+      "article_hash": "dc2c4963f3305a3855a907d910eb07450ac6a0a6b610212130df3efbdf3ea264",
+      "dossier_hash": "5c5750110953f7d1cf0eb69e1cf6e11a77ea77751c183248451ac9aced10854e",
+      "reviewer": "gpt-6-luna:low:readability:01a0fede-1f17-7271-afd2-5f0869cd8d97"
+    }
+  ],
+  "prior_consulted_book_records": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/fire-recovery/ziyuan-2012/706B",
+    "previous_audit_hash": "49d6b9463336ee13dccb816c77c595281eb7be745952c176dacdba6520a26d6e",
+    "records": [
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "e8fbe82e95252154f65a475a917b55528e85163fe94dcb69308f3ecf624eb00c",
+        "research_result_hash": "030de8e93d29466452a86d6eca12c8d2ba00d343d2d554b2428ace0c6f0a9a01",
+        "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692",
+        "field": "火 headword; PDF p. 900, printed p. 885; continuation PDF p. 901, printed p. 886",
+        "text": "I inspected the attached original scan pixels for PDF pp. 900–901, including the headword, the star passage, and the continuation. PDF p. 900 visibly prints 《合集》11503:“有新大星并火。” followed by “可能指的是火星”; the printed graph in “大星” is 晶, with the book glossing it as 星. The wording matches the provisional OCR; I found no literal OCR error in this passage. The entry continues on p. 901 with the graph-history discussion and ends before the next headword 燹. This scan confirms what the book says, not that its celestial identification is correct.",
+        "evidence_ids": [
+          "X-c9906898947db9e1ac73"
+        ]
+      }
+    ],
+    "requires_current_source_research": true
+  },
+  "continuation_policy": "This is an unapproved draft, not reusable approval. Recheck source-dependent claims against current source scans/corpus. Prior revise findings are hypotheses to recheck, including possible source identity errors; do not obey them merely because a previous verifier repeated them. Prior consulted book records identify exact retained evidence IDs and claims to recheck. After current-source verification, cite relevant supported claims through evidence_ids metadata; dossier-only records do not count as article source use. Preserve prior supported work and obtain fresh factual/readability reviews.",
+  "require_source_specific_page_evidence": true
+}

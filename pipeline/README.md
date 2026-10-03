@@ -2,6 +2,317 @@
 
 Entries are researched beyond the repository, written as neutral explanations, then independently reviewed for factual support and readability. The published article explains formation, meaningful component roles and graphic changes, followed by history and uncertainties. Source names belong in references; every explanatory section cites evidence.
 
+## Enriching approved entries with digitised books
+
+`pipeline.source_enrichment` processes existing approved entries for a newly available source;
+ordinary `pipeline.batch` readiness is not proof that an entry has consulted that source.
+Register digitised books in `research/digitised-sources.json`. Each registry record identifies
+the exact edition, book hash and consumer corpus; adding later books does not require changing
+character prompts or adding character-specific rules. Only 字源 is currently registered.
+
+Derive each job's source configuration from that registry. Isolated tasks may remove
+GitHub workflow fields listed in `ISSUE_METADATA`, but must not reconstruct a source
+dictionary with different research instructions. Instructions are frozen research inputs
+and contribute to the source hash. An older genuinely approved job can be published
+against its exact saved configuration with current issue settings; it still needs a fresh
+independent adoption check before counting against a changed current registry. Preserve
+the original snapshots and approvals; do not relabel their hashes as current.
+
+`status`, `prepare` and `run` reuse verified completions across `runs/`,
+`content/source_coverage/` and the requested output folder. A fresh batch folder
+does not restart entries already completed elsewhere. Reuse requires the current
+exact source, locator, audit, article, dossier and review/publication gates; stale
+jobs, legacy approvals and another book do not count. Returned published rows
+identify the actual verified job folder. The limit applies to remaining work.
+
+```bash
+python3 -m pipeline.source_enrichment status --registry research/digitised-sources.json --source ziyuan-2012 --cohort content/cohorts/hsk3-2021-level-1.json
+python3 -m pipeline.source_enrichment run --registry research/digitised-sources.json --source ziyuan-2012 --cohort content/cohorts/hsk3-2021-level-1.json --limit 3
+```
+
+### Parallel operation and recovery
+
+Use one stable output folder and the complete cohort. `--workers` controls concurrent
+character jobs; `--limit` controls how many eligible jobs the invocation may attempt.
+Both accept any positive integer. `--agents` independently limits active model processes
+through inherited OS slots shared across workers; waiting stages record
+`waiting_for_agent_slot`, not an active model PID. Use the same slot capacity across live
+supervisors sharing a repository. Without `--agents`, capacity follows `--workers`.
+For a live increase, an additional supervisor with a larger capacity can use the
+additional numbered slots while existing supervisors continue within their smaller
+range. Select initially disjoint work and plan a handoff before their queues overlap:
+character locks prevent simultaneous work, but an already running supervisor does
+not continuously refresh completion receipts from another queue. The dashboard's
+active process count measures actual concurrency; configured workers include jobs
+waiting for model slots.
+Each character still runs separate Luna low research,
+authorship and independent factual/readability stages. Increase concurrency after a small
+live smoke run; the machine's available memory and service throughput determine the useful
+setting, rather than a hardcoded three-character cap.
+
+```bash
+python3 -m pipeline.source_enrichment run \
+  --registry research/digitised-sources.json --source ziyuan-2012 \
+  --cohort content/cohorts/hsk3-2021-level-1.json \
+  --output runs/source-enrichment-scale-20261003 --limit 300 --workers 24 --agents 24 --publish-now
+```
+
+The durable manifest is `OUTPUT/SOURCE/queue.json`. It records every character, attempt,
+completion receipt, history and counts by recorded state. A rolling pool submits at most
+`workers` jobs at once. Every completed result is checkpointed immediately, including when
+an earlier job is slow. Rerun the same command after a supervisor exits; exact stage caches
+and genuine prior reviews remain bound to their original inputs. Omitted optional research
+or scan contexts resume the queue's frozen values. Changed source/cohort/context identity
+requires a fresh output folder. Increasing workers/limit or enabling publication can reuse
+that same queue.
+
+Failures, required revisions, missing source evidence and unresolved OCR go into the
+attention list. They do not consume later selections or repeatedly call expensive agents.
+Fix their cause, then use `--retry-attention` for an explicit retry, or start a fresh exact
+continuation where changed source inputs require it. Jobs with a live inherited lock return
+`already_running`; saved `running` alone is not proof of liveness. Least-attempted work is
+selected first. Use `--exclude 本边别茶` while those characters have separate owners; they
+stay visible in the manifest and can be picked up after removing the exclusion.
+
+Locks protect different resources at different boundaries:
+
+- A queue supervisor lock prevents concurrent schedulers from replacing one manifest.
+- A source/character claim spans output folders, followed by a job lock. Model children
+  inherit both, preventing duplicate research after an orphaned supervisor exits.
+- Publication takes the job lock then a canonical character lock. Different characters
+  publish independently; stale canonical baselines are rejected before archive or content
+  writes. Unchanged source gates and exact independent reviews remain required.
+- GitHub synchronization locks the repository before reading markers/labels/subissue counts.
+  Model triage remains parallel. Remote commands time out after 60 seconds and lock waits
+  after 90 seconds; pending sync is retryable and publication remains held.
+
+Shared JSON files use unique atomic temporaries. Corpus locators read an immutable opened
+edition and invalidate caches by inode, timestamps and size, including an atomic replacement
+that preserves size and mtime. Source repairs are a separate producer transaction: preserve
+raw OCR and exact independent scan receipts, serialize shared overlay/corpus writes, rebuild
+and verify consumer evidence before any dependent character can pass its source gates.
+Attention states are genuine unfinished work, not completed entries or invented approvals.
+
+### Live dashboard
+
+```bash
+python3 -m pipeline.dashboard --port 8765
+```
+
+Open **http://127.0.0.1:8765**. The local observer reads durable queues, genuine stage
+metadata, source findings and resolutions, review and issue receipts, repair transactions,
+and machine resources. Linux process observations distinguish live models from saved
+running stages, interrupted work and waiting agent slots. The UI refreshes every two
+seconds; new directory inventory is refreshed every five seconds. GitHub issue state,
+labels and milestones refresh independently every minute using bounded read-only calls.
+A collection failure retains the previous snapshot and marks it stale. Saved source
+coverage is labeled with its audit time, rather than certified anew by the dashboard.
+
+The dashboard does not start work, edit characters, apply repairs or approve reviews.
+Its `/api/artifact` viewer serves JSON receipts inside the repository only. Default
+binding is localhost. For background operation, retain the server PID and log in `runs/`.
+The board defaults to current queue work; **Include history** exposes archived attempts.
+Details show complete article/dossier hashes and distinguish review receipts matching the
+current pair from older receipts. Coordinator task records in
+`runs/operations/coordination.json` are labeled separately from observed process liveness.
+The Character timings table follows board filters and shows slowest jobs, clock time,
+recorded model-stage time, slot waits and failed calls. Details group durations by role
+and list retained attempts with metadata/result links. The default focuses on current
+attempts; Include history also exposes reused/older work. Latest queue timestamps bound
+the attempt, so imported approvals are not charged as new work. Stage sums can overlap,
+and include tools/network, not measured CPU or billing time; missing timings remain unknown.
+Character/source history and current queue state remain separately inspectable.
+
+Audit the entire cohort across all source batches and source-coverage jobs with
+the project environment (including the registered producer's verification dependencies):
+
+```bash
+python3 -m pipeline.source_progress --registry research/digitised-sources.json --source ziyuan-2012 --cohort content/cohorts/hsk3-2021-level-1.json --output research/hsk1-source-completion.json
+```
+
+The default roots are `runs/` and `content/source_coverage/`; repeat `--job-root`
+to audit other locations. The report uses the current exact source/publication
+gate for every candidate and counts each cohort character once. Legacy approvals,
+saved `published` labels, jobs for another book and archived input copies do not
+establish source completion. A later registered book gets its own audit by changing
+`--source`, with no character-specific rule changes.
+
+All agents introduced for this workflow, including findings triage, use `gpt-6-luna` with
+low reasoning. Jobs retain source and published-input snapshots, bounded locator leads,
+scan attachments, research, authored revisions and exact independent reviews. Header-like
+OCR lines, parenthetical counterparts and continuation pages are locator hypotheses, not
+verified headwords. Missing source access remains an explicit gap; external authoritative
+references can still improve an entry. Agents use reasoning to flag suspicious OCR, then
+verify replacements against scans. Corrections feed the book repository's source-bound
+layer and its rebuilt consumer corpus; raw OCR is preserved.
+
+For a bounded repair, use existing slash-separated article paths in `allowed_edit_paths`
+(for example, `components/1/sound`). Recheck the permitted paths against each fresh verified
+review: a newly identified required correction may fall outside the original repair scope.
+Preserve that review and widen only the necessary source fields in a new continuation;
+do not repeat authorship with a scope that cannot fix the finding. Protect semantic source
+records rather than derived relationship rows. Changes still require fresh independent
+factual/readability reviews and current source gates; a prior approval of another pair
+cannot certify the continuation.
+
+`pipeline.ocr_verification.verify` checks proposed literal replacements through a separate
+Luna low scan reviewer. Each proposal carries a stable occurrence ID, exact raw-text offsets,
+an anchor and surrounding context. Incomplete coverage, duplicate IDs, wrong raw text and
+contradictory verdicts are rejected. Unresolved identities retain no guessed Unicode replacement.
+The output is an occurrence check, not approval of a whole page; the coordinator still validates
+source-bound producer patches and their rebuilt consumer records.
+
+`pipeline.source_enrichment.resolve_source_findings(job, runner)` offers a separate scan-backed
+review of an exact already-approved candidate. It may release a retained unresolved identity
+only when that identity is not used to establish any article claim. The findings remain recorded,
+and the resolution is bound to exact article, dossier and finding hashes. A separate scan
+check can also reject a false replacement proposal when the current corpus already matches
+the pixels; its exact completed Luna low result and metadata are required. Targeted original
+pixel crops may accompany the source scans. Confirmed OCR errors
+and material unresolved claims remain blocked for source repair or new research; this check
+does not replace factual/readability reviews.
+
+An absent corpus `printed_page` field can be checked separately with
+`resolve_source_findings(..., metadata_checks=[...])`. Each check binds a retained finding,
+PDF page, original decoded-pixel hash, absent current value and proposed citation label.
+The independent reviewer must read that label from the attached original scan. A matching
+`verified_metadata_not_extracted` disposition certifies citation provenance only; it does
+not claim that corpus metadata was populated or that OCR text was repaired. Changed source
+pixels, a different current field value, missing observations or mismatched labels invalidate
+the result. This disposition cannot discharge a transcription or character-identity repair.
+
+An already-accurate passage can be checked with `transcription_checks`, each binding
+a retained finding key, PDF page, exact current text offset/literal and original pixel
+hash. A separate Luna low reviewer observes that span; only an exact match permits
+`verified_transcription_matches_corpus`. The gate rechecks current corpus text and
+source pixels. No replacement hypothesis is required or invented. This verifies the
+specified transcription only, not neighboring passages, scholarly interpretation,
+missing page metadata or an entire page. Unclear or discrepant pixels remain pending.
+
+Applied literal OCR repairs can be checked through `resolve_source_findings(...,
+repair_checks=[...])`. Each check identifies the retained finding, producer page directory,
+raw start/end offsets, and original before/after literals. The actual producer correction
+validator and the current consumer page must agree. A separate original-scan review then
+observes the repaired literal; changed overlay or consumer evidence invalidates resolution.
+This preserves a real corrected finding rather than reclassifying it as a false proposal.
+Registered producers using this adapter provide `scripts/research_corrections.py` and its
+source-bound `load_effective` contract; other corpus formats need a corresponding adapter.
+
+Source jobs acquire an OS coordinator lock before writing their stage files; agent subprocesses
+inherit that lock so an orphaned live agent still prevents duplicate writes after a coordinator
+exits. A second harness reports `already_running` without replacing the first job's status.
+For sustained runs, use a persistent process with captured logs. Inspect its actual process ID
+and child processes before resuming: a saved `running` status does not prove liveness, and a
+terminated command wrapper can leave its agent child alive. Retain previous stage artifacts
+when recovering interrupted work.
+
+If completed research returns page-specific book records that an otherwise approved
+article does not cite, the harness runs one bounded editing pass over that current
+dossier in `citation-integration/`. The editor chooses supported claims and attaches
+their evidence IDs; fresh independent factual and readability reviews follow.
+The previous exact pair and receipts remain in `before-citation-integration/`.
+This avoids restarting research merely to adopt a newly generated evidence ID.
+It neither inserts citations automatically nor releases OCR/source blocks.
+
+For a narrow agent-authored array removal, `apply_article_patch` accepts
+`preserve_array_items` in its inputs or feedback: map an existing array path
+to the exact existing records that must remain unchanged in their relative
+order. For example, protecting supported history records lets an author remove
+an irrelevant asset-only record without deleting other character history.
+Invalid removal, modification or reordering is rejected before review. This
+optional edit boundary does not approve the records or replace fresh reviews;
+expand the scope when supported facts themselves need correction.
+
+The patch contract also lists `array_item_targets` from the exact current article:
+zero-based paths alongside sense IDs/glosses and component identities. Match the
+requested item to that path before drafting an edit; earlier array order is not a
+current index map. These labels do not validate the replacement's meaning.
+
+After a source repair, `run --continue-from /path/to/previous/character/job` can start a
+fresh single-character job from the previous unfinished draft. The previous coordinator
+and agents must have released their OS lock, and its canonical article/dossier baseline
+must still match. The harness validates and saves the draft with exact provenance hashes;
+it never copies review approvals. Current-source research and fresh independent reviews
+remain required. Keep the previous job directory as the record of earlier failures.
+An approved source job whose locator inputs changed is held as `needs_source_refresh`;
+its previous status is preserved in `source-refresh-required.json`. Such a job can
+also supply a continuation draft, requiring fresh research and reviews. Unchanged
+approved jobs cannot be continued through this route.
+For old jobs affected by the editorial input collision, use
+`pipeline.source_enrichment.recover_frozen_inputs(job)` only after their
+coordinator and agent locks are released. It archives the collided files and
+restores the canonical baseline only when both original hashes still match;
+it never changes source identity, authored drafts or approvals. Publication
+also verifies the frozen snapshots and rejects a collision before writing.
+
+Use `--research-context path/to/context.json` to hand new source leads and findings to
+the actual research agent. The JSON object is frozen in the job and passed as research
+tasks; it does not create verified dossier evidence or approvals. The researcher must
+consult those sources directly, check identity/scope and cite useful claims before
+authorship. Repeating a lead in a coordinating chat does not put it in a CLI research
+packet. Changed context requires a fresh source job. For an example, see
+`research/source-followups/ai-current-structure.json`.
+
+`pipeline.source_adoption.adopt` can register book research already used by an approved
+article. It preserves the article, dossier and original factual/readability receipts, then
+requires a separate Luna low check against the original scans. Merely having book evidence
+in a dossier is insufficient: the article must actually cite page-specific book evidence.
+The saved coverage result is bound to the exact article and dossier hashes and rechecked
+when calculating source completion. This avoids unnecessary rewriting while retaining a
+reviewable source check; entries without used book evidence still require enrichment.
+
+An actual coverage `revise` receipt may receive one independent Luna-low original-scan
+adjudication through `source_adoption.check_coverage`. Both results remain separate and
+the final audit binds the initial/final result hashes to the unchanged exact pair.
+Adjudication checks the reported current fields and citation boundaries; a genuine
+remaining discrepancy still blocks adoption. It does not authorize a coordinator to
+change review verdicts, reuse a result on another candidate, or edit approved prose.
+
+## GitHub findings
+
+Track material errors, mistakes, improvements and clarifications in GitHub issues. The current
+work is [HSK1 book enrichment](https://github.com/lbm364dl/hanzi-etymology-dict/issues/1);
+`research/source-enrichment-issues.json` retains issue identities. An issue identifies the
+affected character or source page, actual evidence, and the check needed to verify a fix.
+Keep suspected OCR or scholarly disagreements explicitly uncertain. Rejected reviewer
+proposals are not established errors. Link repeated manifestations to the existing issue.
+
+`pipeline.issues.triage_job` invokes a separate Luna low agent over saved verified findings,
+research gaps and validation failures; it saves proposed issue records without inventing
+approvals. `pipeline.issues` synchronizes findings using stable markers, so reruns reuse
+existing issues and preserve human discussion. It never closes issues automatically.
+Triage receives the current exact source-resolution result and recovers issue identities
+from hash-bound previous sync receipts for the same repository, including newer batch
+jobs absent from the curated manifest. Unsynced proposals do not establish issue identities.
+Registered sources can set `issue_parent_number`, `issue_milestone` and `issue_labels`;
+new findings become native subissues with kind labels and the configured milestone.
+Current job findings reopen a matching closed issue: a newly failed check must remain
+visible as active work. Historical manifest synchronization preserves closure. Neither
+path closes issues automatically or treats a new finding as proof that prior approvals
+were fabricated or invalid.
+`source_enrichment.run` performs this sync even with `publish_now=False`. An isolated
+task that forbids GitHub writes should use `editorial.refine` directly or omit GitHub
+workflow fields from its source configuration. The coordinating publisher must still
+perform the configured real issue sync before publication.
+GitHub workflow settings are kept separate from book identity, so relabeling work does not
+invalidate completed research. Edition or corpus identity changes still require new jobs.
+
+```bash
+python3 -m pipeline.issues research/source-enrichment-findings.json --repo lbm364dl/hanzi-etymology-dict --receipts research/source-enrichment-issues.json
+```
+
+Close an issue only after its required checks are demonstrated and the fixing artifacts are
+reviewable. Local repairs should be recorded as local progress until their published code or
+content is linked. Source OCR corrections and character publication have separate verification
+requirements even when tracked by the same issue.
+
+After a successful publication, reconcile existing issues for that character or repaired
+source page against their individual verification requirements. Link the exact published
+pair, genuine review receipts and applicable build or source checks before closing each
+satisfied issue. A successful publication does not discharge unused OCR identity checks,
+and a triage result with no new findings does not close earlier issues. Record remaining
+requirements explicitly so resolved findings do not accumulate as apparent unfinished work.
+
 Install the harness dependencies with `python3 -m pip install -r pipeline/requirements.txt` (or use your existing project environment). Run commands from the repository root.
 
 ## Checked-in pilot
@@ -13,6 +324,18 @@ python3 -m pipeline.pilot check
 python3 -m pipeline.pilot publish
 python3 build_site.py
 python3 -m http.server 8000 --directory docs
+```
+
+When the upstream `sources/` files and full `output/hanzi_etymology.jsonl` are absent but
+`docs/data.json.gz` already contains the complete compiled legacy records, refresh only the
+approved Chinese article overlays with `python3 build_site.py --refresh-articles`. This
+validates each published article and dossier, preserves the legacy fields and all existing
+character records, and refuses missing or stale article records. Then regenerate the
+editorial graph and run the cohort audit:
+
+```bash
+python3 -m pipeline.graph --entries content/entries --output output/editorial-graph.json
+python3 -m pipeline.audit_cohort
 ```
 
 Open `http://localhost:8000` to browse the pilot. `publish` writes local artifacts; it does not deploy the site. See `content/README.md` for the evidence limitations and source attribution.
@@ -31,7 +354,7 @@ python3 -m pipeline.editorial prepare content/dossiers/6728.json runs/editorial/
 
 ## Running agents
 
-By default, `run` invokes separate Codex agents using `gpt-6-luna` with low reasoning, live search, and a read-only sandbox. After `prepare`, the complete single-character run is:
+By default, `run` invokes separate Codex agents using `gpt-6-luna` with low reasoning, live search, full filesystem/network access and no approval prompts. After `prepare`, the complete single-character run is:
 
 ```bash
 python3 -m pipeline.editorial run runs/editorial/6728
@@ -44,11 +367,11 @@ For example, the Codex CLI invocation used by the sibling graded-readers harness
 ```bash
 python3 -m pipeline.editorial run runs/editorial/6728 \
   --model gpt-6-luna --reasoning low \
-  --command '["codex","--search","exec","--json","--ephemeral","--ignore-user-config","-s","read-only","-m","{model}","-c","model_reasoning_effort=\"{reasoning}\"","--output-schema","{schema}","-o","{output}","-"]' \
+  --command '["codex","--search","exec","--json","--ephemeral","-s","danger-full-access","-c","approval_policy=\"never\"","-m","{model}","-c","model_reasoning_effort=\"{reasoning}\"","--output-schema","{schema}","-o","{output}","-"]' \
   --timeout 600 --max-revisions 2
 ```
 
-The external command determines its own execution permissions; the example requests a read-only agent sandbox and enables live web search. Your chosen runner must expose a browser/search tool to the research agent. Each stage is a separate invocation. Factual and readability reviewers see the dossier and candidate article, without the other reviewer's verdict. A revision sees both reviews, and both reviewers assess the revised article again. Reviewers must produce `pass` with no findings or `revise` with actionable findings. There is no automatic conversion of a failed verdict to approval.
+The default preserves user-configured tools and integrations and explicitly sets the model, reasoning, sandbox and approval policy. Agents may use available tools, additional pages and original-pixel crops freely; coordinate shared-file writes to avoid collisions. The locator starts with a small set of leads for efficiency, but does not cap investigation or truncate supplied review pages. The external command determines its own execution permissions; the example requests full access (`danger-full-access`, `approval_policy="never"`) and enables live web search. Your chosen runner must expose a browser/search tool to the research agent. Each stage is a separate invocation. Factual and readability reviewers see the dossier and candidate article, without the other reviewer's verdict. A revision sees both reviews, and both reviewers assess the revised article again. Reviewers must produce `pass` with no findings or `revise` with actionable findings. There is no automatic conversion of a failed verdict to approval.
 
 The harness validates character identity, formation and component fields, and all citation IDs mechanically. A phonosemantic formation must identify semantic and phonetic component roles. An indivisible pictograph uses its whole form as the pictorial component. Pictorial components depict physical objects or forms in the original scene; semantic components contribute a lexical meaning or category. These roles are not interchangeable, and a compound classified as semantic may contain pictorial components. Corruption is distinct from a regular variant, stylization, simplification or deliberate replacement. Reviewers assess whether the cited evidence actually supports the prose. Dossier limitations must not be inflated into claims that scholarship does not know the answer.
 
@@ -319,11 +642,40 @@ python3 -m pipeline.editorial refine runs/v2-smoke/4F86/article.json runs/refine
 The original feedback is snapshotted as `source_feedback.json`; it informs editing but never
 substitutes for fresh independent review.
 
+If a saved candidate already includes the verified corrections, use `refine ... --review-current`
+to send its exact article and adjacent dossier directly to fresh independent factual and
+readability review. This skips only the initial copy edit; validation, review, bounded repairs
+and publication gates still apply. For Chinese entries, a research follow-up preserves existing
+curated glyphs unless a finding concerns glyphs, captions, image rights or another visual issue.
+Do not combine `--review-current` with `--research-first`, since newly added evidence may require
+editing the candidate first.
+
+For a small correction to a candidate that already has genuine pass receipts, add
+`--approved-base-job <approved-job>` to `--review-current`. The harness verifies both base
+receipts and an identical dossier hash, computes every changed article path, and asks fresh
+factual and readability reviewers to assess those changes and their effects on the complete
+entry. The new receipts still bind the exact complete candidate and dossier. If research changes
+the dossier, later rounds revert to full review scope.
+
+Use `--research-first` when new source evidence is required before editing. For a small
+scan-backed follow-up, feedback may include `source_scan_images`: page records with an
+absolute `path`, integer `pdf_page`, and an optional verified `printed_page`. The Codex research
+stage receives the exact source images as attachments and their SHA-256 values in its input.
+The images make a prior OCR passage inspectable; they do not certify the OCR or replace the
+researcher's page-specific source check. The research agent must distinguish its own scan
+inspection from a prior agent's note. A changed image changes the stage fingerprint.
+When the scan reveals an OCR error, record its exact page and span and correct the book
+repository's source-bound OCR layer, then rebuild its effective consumer corpus. A dossier
+note alone does not repair the source text later entries will search.
+For a Chinese text-focused refinement whose existing glyph selection and snapshots remain valid,
+set `reuse_existing_glyph_candidates: true` in feedback. The pipeline verifies and retains those
+assets while researching the new text evidence; omit the flag if the finding concerns image choice.
+
 ## Brief learner layer
 
 New writer, revision and copy-editor outputs must include `learner`, independently cited and
 reviewed against the detailed account. Its `overview` is a cited paragraph of at most 40 words;
-`components` contains one cited explanation (at most 25 words) per detailed component, linked by
+`components` contains one cited explanation (at most 25 words) per current-form detailed component, linked by
 zero-based `component_index`; `takeaway` is a cited paragraph of at most 35 words or `null` when
 no essential present-meaning or borrowing caveat is needed. Existing component roles, forms and
 sound comparisons remain canonical; the learner layer does not duplicate pronunciation data.
@@ -478,3 +830,19 @@ article still passes the full schema before assembly and factual review.
 Read `AGENTS.md` and `research/local-book-sources.md` for the current editorial rules and bounded scan access. A scan citation must distinguish the original page actually inspected from unread references mentioned on it.
 
 Default Codex editor/revision calls now use the shared `apply_article_patch` mechanism for both Chinese and Japanese. Custom external commands retain their full-article contract. Patch candidates receive immediate schema, citation, component-role/edge, origin-relation and scope validation before independent review; sense edges are rebuilt from the candidate's meaning history. When a repair needs another attempt, that attempt receives the current candidate and preserves prior edits, rather than silently restarting from the original article. Independently approved artifacts remain the only publishable output.
+
+## Efficient repair of an approved pair
+
+For a bounded author edit with an unchanged dossier, pass an `approved_base` containing
+its exact `article`, `dossier` and genuine factual/readability `reviews` to
+`editorial.refine`. With `edit_first=True`, the initial article must exactly match that
+approved base and `research_first` must be false. The proof is validated and retained in
+`approved_base.json`; fresh independent reviews assess actual changed paths and direct
+citation/meaning/graph effects, binding the complete resulting pair. Changed dossiers
+require full review. This does not carry an old approval onto new prose or evidence.
+Automatic source citation integration uses this proof from its pre-edit approved pair.
+Preserve failed reviews and independently resolve conflicting findings before requesting
+another author rewrite. Do not restart completed research unless a concrete evidence gap
+requires it. Current-source and OCR gates still run on the final exact pair.
+
+For already-approved entries, `source_adoption.adopt(..., source_context=[scan_record, ...])` can attach additional discovered original scans when locator leads are text mentions. These records are validated and saved separately from the locator; never inject review attachments into the frozen locator to make a source gate pass.

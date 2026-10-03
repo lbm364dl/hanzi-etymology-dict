@@ -1,0 +1,42 @@
+{
+  "allowed_edit_paths": [
+    "formation/text",
+    "uncertainties/0/text"
+  ],
+  "additional_research_context": "Current exact child card (review this, do not act on a stale array index): text='子 is visible in 学. One proposal says it was added to 學 in Western Zhou forms to mark a child learner; its present-day function remains unresolved.'; evidence_ids=['X-17121f57851798e48e26', 'X-26f51caf14329c9ea28f', 'X-679a017187fd95210e08', 'X-b75386e2e25901f6af0a']. It contains no X-860ceab763f4fe3410ca. A previous factual reviewer claimed that it did, but the claim is contradicted by exact candidate article digest 579a48cce2825fae386cef3f546668b5d1e08bb1a33c59bc6d2ce0a94748a40c. Preserve this correct card unchanged. The valid narrow correction is only to clarify that the sound role in the source proposal concerns the printed graphic unit following 冖; do not assign it to either individual 臼 or to the entire 学 construction, and keep exact Unicode identity unresolved. Current p.277 raw OCR remains unchanged; unresolved [944,945) 升 and [1131,1133) 毚片 are not used as identities. Verify from attached actual original scan/crops and the exact evidence records.",
+  "source_followup_questions": {
+    "instruction": "Check exact candidate article and source records. Repair only the actual ambiguity in formation.text and uncertainties[0].text: specify that source attributes sound to the graphic unit following 冖, with no exact Unicode identity; state that this role is not assigned to either 臼 or the whole 学 construction. Do not broaden or infer the exact identity. Preserve the exact current learner/components[2] record and evidence_ids unchanged; factual note about X-860 is absent from the exact current card and is not a repair target."
+  },
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0277/source.png",
+      "pdf_page": 277,
+      "source_pixel_sha256": "d71826450bb411b40d34cabacceaf5870e0eac285824128d9ab27b5d5dcd777f"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-dict/research/source-crops/ziyuan-p0277-xue-formation.png",
+      "pdf_page": 277,
+      "source_pixel_sha256": "f32052d09a178499b555bd59b995e97ac0972efc1e44d6cab096e10bb62c9dad"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-dict/research/source-crops/ziyuan-p0277-xue-continuation.png",
+      "pdf_page": 277,
+      "source_pixel_sha256": "5f09615b76f71e7ddd2769d3fa9e1e019d96bb8d3c8364fa09f3e20bf57a19d5"
+    }
+  ],
+  "reuse_existing_glyph_candidates": true,
+  "preserve_array_items": {
+    "learner/components": [
+      {
+        "component_index": 2,
+        "text": "子 is visible in 学. One proposal says it was added to 學 in Western Zhou forms to mark a child learner; its present-day function remains unresolved.",
+        "evidence_ids": [
+          "X-17121f57851798e48e26",
+          "X-26f51caf14329c9ea28f",
+          "X-679a017187fd95210e08",
+          "X-b75386e2e25901f6af0a"
+        ]
+      }
+    ]
+  }
+}

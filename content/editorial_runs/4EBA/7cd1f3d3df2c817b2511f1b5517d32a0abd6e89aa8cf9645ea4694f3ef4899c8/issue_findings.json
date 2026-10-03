@@ -1,0 +1,60 @@
+{
+  "findings": [
+    {
+      "kind": "clarification",
+      "title": "Verify the individual glyphs in 人’s 字源 sequence",
+      "details": "The source report says the prose and headword on 字源 PDF p. 711 / printed p. 698 were readable, but the small glyphs in its historical sequence were not independently identified. The current article uses other checked accounts for its graphic explanation and does not rely on that unresolved sequence. No replacement or glyph identity is established.",
+      "verification": "Inspect the exact sequence against the source scan and identify each glyph independently before using the sequence or correcting its transcription. Retain the current qualification until then.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[0]",
+        "字源 PDF p. 711 / printed p. 698",
+        "current_article.formation",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:人:ziyuan-2012-ren-glyph-sequence"
+    },
+    {
+      "kind": "clarification",
+      "title": "Keep 人’s early-use dates and semantic chronology qualified",
+      "details": "The cited evidence reports oracle-bone uses for ‘person’ and ruler self-reference, and bronze uses for ‘people’ or ‘common people’, but supplies no individual specimen dates or complete semantic chronology. The article appropriately leaves exact dating and relationships among these uses unresolved.",
+      "verification": "For any more precise date, priority claim, or semantic-development edge, verify a dated witness and evidence for the proposed relationship; otherwise preserve the current qualifications.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[1]",
+        "initial-followup/research/result.json: gaps[2]",
+        "current_article.meaning_history.senses[0]",
+        "current_article.meaning_history.senses[1]",
+        "current_article.meaning_history.senses[2]",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:人:ziyuan-2012-ren-early-use-dating"
+    },
+    {
+      "kind": "clarification",
+      "title": "Do not present reported 人 uses for 夷 or 年 as established phonetic loans",
+      "details": "The research report notes claims that 人 was used for 夷 or 年, but the inspected evidence does not independently establish the sound correspondences behind those reports. It separately reports 人 as a phonetic element in 年; that is a distinct claim. The article preserves these distinctions and does not assert demonstrated loans.",
+      "verification": "Before describing either whole-graph use as a phonetic loan, verify the relevant word readings in a shared, identified sound system and keep the claim distinct from 人’s reported role inside 年.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[3]",
+        "current_article.uncertainties[1]",
+        "current_article.meaning_history.limitations[1]",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:人:ziyuan-2012-ren-reported-graphic-borrowings"
+    },
+    {
+      "kind": "pipeline",
+      "title": "Require direct present-use evidence for current sense records",
+      "details": "The round-0 readability review challenged a ‘someone else; other person’ sense marked current because its cited material did not establish present use. Round-1 factual review also rejected marking it historical, since the cited gloss and phonology metadata provided no contextual historical attestation. The sense was absent from the final article; later independent reviews passed. The reviews expose a need for sense-status guidance that distinguishes evidence for present use from evidence for a historical attestation.",
+      "verification": "Check the sense-writing and review instructions require direct present-use evidence for current status and contextual attestation for historical status, and verify the generated has_sense edge follows the supported status and evidence.",
+      "evidence": [
+        "round-0/readability-verification/verified-review.json",
+        "round-1/factual-verification/verified-review.json",
+        "round-2/factual-verification/verified-review.json",
+        "current_article.meaning_history.senses",
+        "reviews.json",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:人:pipeline-current-sense-evidence"
+    }
+  ]
+}

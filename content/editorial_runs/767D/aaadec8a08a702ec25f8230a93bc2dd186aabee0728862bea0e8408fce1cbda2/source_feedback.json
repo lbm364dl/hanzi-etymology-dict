@@ -1,0 +1,119 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "白"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000708",
+          "pdf_page_1based": 708,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0708/source.png",
+          "source_sha256": "fa20e8d355ce515c6d2fb88812a752f994b32b90562aefefeb6efa8fb3098c25",
+          "evidence_sha256": "81d61bae3cc72d27b97a3bd005fcc1e7336075bd42afb761bed502ba948349e2",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "白 bái 並组、铎部;並组、陌韵、傍陌切。"
+          ],
+          "excerpt": "逸《离骚经序》:“其词温而雅,其义皎而朗。”五代时有以皎为姓的。(胡伟)\n\n曉 xiǎo 晓组、宵部;晓组、篠韵、馨袅切。\n\n[glyph:g005]¹——晓\n《说文》小篆 楷书\n\n1《说文》160页。\n\n形声字。同晓。《说文》:“曉,日之白也。从白,堯声。”本义指天亮。(胡伟 郭敏珊)\n\n白部\n\n白 bái 並组、铎部;並组、陌韵、傍陌切。\n\n[glyph:g006]¹ [glyph:g007]² [glyph:g008]³ [glyph:g009]⁴ [glyph:g010]⁵ [glyph:g011]⁶ 白\n商 商 西周 《说文》小篆 秦 汉 楷书\n\n1、2《甲文编》336页。3《金文编》552页。4《说文》160页。5、6《篆隶表》542页。\n\n构形有争议,一说为象形字,像拇指。郭沫若:“拇为将指,在手足俱居首位,故白引申为伯仲之伯,又引申为王伯之伯,其用为白色字者,乃假借也。”甲骨文写作“[glyph:g012]”。金文形体由甲骨文演变而来,写作“[glyph:g013]”,小篆形体由金文演变来,写作“白”,楷书字形体由小篆演变来。假借为白,指白色。《诗·小雅·白驹》:“皎皎白驹,食我场苗。”由白色引申为纯洁。日出天明,白又表示明亮。如:“雄鸡一唱天下白”。由明亮引申为清楚,明白。如:真相大白,不白之冤。由清楚、明白,引申为表明、辩白。《楚辞·九章·惜诵》:“情沈抑而不达兮,又蔽而莫之白也。”进而引申为告诉,禀告。《史记·滑稽列传·西门\n\n晢 xī 心组、锡部;心组、锡韵、先击切。\n\n[glyph:g014]¹——晢\n《说文》小篆 楷书\n\n1《说文》160页。\n\n形声字。《说文》:“晢,人色白也。从白,析声。”本义指肤色洁白。《诗·鄘风·君子偕老》:“扬且之晢也。”毛传:“晢,白晢。”引申为白色。《左传·定公九年》:“晳帻而衣狸制。”杜预注:“晢,白也。”用于抽象意义,引申指清楚、明白。此义只用晰。晢原为皙之异体,现晰为正字。(胡伟)\n\n695"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000301",
+          "pdf_page_1based": 301,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0301/source.png",
+          "source_sha256": "2045885d248a194a925c9694bcc5fea872c6b56a744f3052ffd9f2155c82fe6e",
+          "evidence_sha256": "5188054c281914028107c515edd4e247a799b9fcd6f7ab51cfc13dd6a987a287",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "白(自) zì 从纽、质部；从纽、至韵、疾二切。"
+          ],
+          "excerpt": "嘉自乍（作）行壶。”假借作介词，从。《殷虚书契前编》3.20.1：“自今癸巳至于丁酉雨？”《殷虚书契后编》上13.1：“庚辰卜，行贞：王其步自杞？”《殷虚书契菁华》5：“王宾自武丁至于武乙，衣（殷）亡尤？”令鼎：“王归自萚田。”人名用字。《无想山房旧藏甲骨文字》11：“自入三。”（张标）\n\n白部\n\n白(自) zì 从纽、质部；从纽、至韵、疾二切。\n\n[glyph:g014]¹—[glyph:g015]²—[glyph:g016]³—[glyph:g017]⁴—[glyph:g018]⁵—[glyph:g019]⁶—白\n商    西周   西周   西周 《汗简》古文 《说文》小篆 楷书\n\n1《甲文编》163页。2《金文编》244页。3、4《汉语字形表》136页。5《汗简》8页。6《说文》74页。\n象形字。“自”的异体与简体，由“自”分化而出。商代甲骨文本有繁、简二体，繁体鼻身上有二横为饰笔，简体以一横为饰笔；繁体的终端是楷书自，简体的终端是楷书白。它们音义并同，作为一个词来使用，甲骨文时代混用，后代几乎只用自，不用白，这与白与白(bái)的形体容易混淆有关。作为原初构件与声音，它们都有很强的构字能量，各自形成了自己的构字体系。以白为基础构件，组成了皆、鲁、者、畴、智、百等字，但都来源于口或曰，与“白”没有直接关系。《玉篇》取消这一部首，《康熙字典》与《正字通》不设白字头。（张标）\n\n皆 jiē 见纽、脂部；见纽、皆韵、古谐切。\n\n              [glyph:g024]⁵\n              战国\n[glyph:g020]¹—[glyph:g021]²—[glyph:g022]³         [glyph:g025]¹²\n西周   战国   战国         汉\n              [glyph:g023]⁴—[glyph:g026]⁶—[glyph:g027]⁷—[glyph:g028]⁸—[glyph:g029]⁹\n              战国 《说文》小篆 汉    汉    汉\n[glyph:g030]¹⁰—[glyph:g031]¹¹—皆\n汉      汉      楷书\n\n1《金文编》245页。2《类编》208页。3《古文典》1183页。4、10《汉语字形表》136页。5《楚系简帛》289页。6《说文》74页。7–12《篆隶表》232页。\n会意字。西周金文从从，从曰。从表二人从行义；曰为指事字，示口在言语。两构件相合，盖会言行并相从意。战国时尚以此为主流结构，时构件从或作并（并），并的本义是二人相从，与构件从属于形义相近偏旁的更替。当时更主要的一个变化是在秦系文字中构件从易作比。《说文》把构件曰看作白(zì)则是错误的，战国、秦汉时绝大多数作曰不作白即可证明。隶变后楷书作皆，仍从小篆结构下部作白不作曰。郭店楚简皆作[glyph:g032]，是从比、从曰、从虐(niè)省，为皆之异体。《汗简》与《古文四声韵》所收三个皆字作[glyph:g033]、[glyph:g034]、[glyph:g035]，实乃虐(liè)字，多有讹变，虐头或讹作夂；虍(niè)或讹作[glyph:g036]。由于虐字假借作皆，故被郭、夏收入（二人书中多有假借字滥入本字）。郭店楚简的[glyph:g037]，亦此字，假借作皆。中山王三器的[glyph:g038]，为此字之讹，亦假作皆。《说文》本义为“俱词”，即今表示整体的范围副词全、都，当是“言行并相从”的引申。《金璋所藏甲骨卜辞》189：“雪（神祇）罘门皆配，又（有）雨？”\n\n289"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000709",
+          "pdf_page_1based": 709,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0709/source.png",
+          "source_sha256": "aef0586e6e34ed09f02596945ba6f83a97acd49396a91bd9d56d5d80b4c7b271",
+          "evidence_sha256": "fc2d07db2cef2cc115b3b51f412de616b7c756ccfb733eace96a3d80260375ce",
+          "ocr_review_status": "unreviewed",
+          "match_type": "possible_continuation",
+          "headword_lines": [],
+          "excerpt": "白部 㡀部 黹部\n\n皤 pó 並纽、歌部；並纽、戈韵、薄波切。\n\n[glyph:g001]1——[glyph:g002]2——皤\n《说文》小篆 汉 楷书\n1《说文》160页。2《篆隶表》542页。\n\n形声字。《说文》：“皤，老人白也。从白，番声。”本义形容老年人头白。《后汉书·樊宏传附樊准》：“故朝多皤皤之良，华首之老。”多指须发花白，引申指白色。《易·贲》：“贲如皤如。”引申指老人。宋宋祁《宋景文公笔记上》：“蜀人谓老为皤，取皤皤黄发义。”还可指肚子大。《左传·宣公二年》：“皤其腹。”（胡伟）\n\n確 hé 匣纽、药部；匣纽、沃韵、胡觉切。\n\n[glyph:g003]1——確\n《说文》小篆 楷书\n1《说文》161页。\n\n形声字。《说文》：“確，鸟之白也。从白，雀声。”本义指羽毛光泽洁白。三国魏何晏《景福殿赋》：“悠悠玄鱼，確確白鸟。”（胡伟）\n\n皚（皑） ái 疑纽、微部；疑纽、哈韵、五来切。\n\n[glyph:g004]1——皚——皑\n《说文》小篆 楷书 楷书\n1《说文》161页。\n\n形声字。《说文》：“皚，霜雪之白也。从白，豈声。”本义是霜雪洁白的样子。汉乐府诗《白头吟》：“皑如山上雪，皎若云间月。”皑皑，形容霜雪洁白。新中国成立后，偏旁“豈”简化为偏旁“岂”，依简化偏旁类推，“皚”简化为“皑”。（胡伟）\n\n𤽑 pā 滂纽、鱼部；滂纽、麻韵、普巴切。\nbà 並纽、鱼部；並纽、祃韵、白驾切。\n\n[glyph:g005]1——𤽑\n《说文》小篆 楷书\n1《说文》161页。\n\n形声字。《说文》：“𤽑，草华之白也。从白，巴声。”本义指草花之白，也泛指花，后作“葩”。《集韵·麻韵》：“葩，花也。又草花白。亦作𤽑。”读为bà时，指色不真。《集韵·祃韵》：“𤽑，色不真也。”（胡伟）\n\n皦 jiǎo 见纽、宵部；见纽、篠韵、古了切。\n\n[glyph:g006]1——[glyph:g007]2——皦\n《说文》小篆 汉 楷书\n1《说文》161页。2《篆隶表》543页。\n\n形声字。《说文》：“皦，玉石之白也。从白，敫声。”本义形容玉石洁白的样子。《北史·高闾传》：“佞者饰知以行事，忠者发心以附道，譬如玉石，皦然可知。”引申指白，明亮。《诗·王风·大车》：“谓予不信，有如皦日。”皦皦，洁白明亮的样子。又引申指清晰，分明。《论语·八佾》：“乐其可知也，始作翕如也，从之纯如也，皦如也。”再引申为清白。《后汉书·乐恢传》：“诸弟子皆以通关被系，恢独皦然不污于法。”（胡伟）\n\n𡩠 xi 溪纽、铎部；溪纽、陌韵、绮戟切。\n\n[glyph:g008]1——[glyph:g009]2——𡩠\n商 《说文》小篆 楷书\n1《合集》33871。2《说文》161页。\n\n会意字。像有光亮穿过的缝隙。同“隙”。甲骨文的“[glyph:g010]”，会日光穿过缝隙之意。下面两点演变成三点，“口”演变成“日”，楷书写作“𡩠”。《说文》：“𡩠，际见之白也。从白，上下小见。”段玉裁注：“际者，壁会也。壁会者，隙也。见读如现。壁隙之光，一线而已，故从二小。”《正字通·小部》：“𡩠，别作隙。”（胡伟）\n\n㡀 部\n\n㡀 bì 並纽、月部；並纽、祭韵、毗祭切。\n\n[glyph:g011]1——㡀\n《说文》小篆 楷书\n1《说文》161页。\n\n象形字。像破旧的巾形。《说文》：“㡀，败衣也。从巾，象衣败之形。”本义为破旧的衣服。又指衣服破旧的样子。《集韵·祭韵》：“㡀，衣坏貌。”引申指破旧，坏，困顿的样子。（胡伟）\n\n696"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0708/source.png",
+      "pdf_page": 708,
+      "source_pixel_sha256": "fa20e8d355ce515c6d2fb88812a752f994b32b90562aefefeb6efa8fb3098c25"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0301/source.png",
+      "pdf_page": 301,
+      "source_pixel_sha256": "2045885d248a194a925c9694bcc5fea872c6b56a744f3052ffd9f2155c82fe6e"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0709/source.png",
+      "pdf_page": 709,
+      "source_pixel_sha256": "aef0586e6e34ed09f02596945ba6f83a97acd49396a91bd9d56d5d80b4c7b271"
+    }
+  ],
+  "target_language": "zh",
+  "additional_research_context": {
+    "scope": "Two-character bounded smoke cohort: 白 and 百, separate graph identities and separate entries.",
+    "scan_budget": {
+      "max_distinct_original_source_pages_per_character": 3,
+      "policy": "Use at most three distinct 字源 original scan pages for each character in initial research, including continuation pages. Prefer the actual headword and only directly relevant continuation/comparator pages. Do not do whole-book searches, OCR, rendering or visual sweeps."
+    },
+    "research_tasks": {
+      "白": [
+        "Inspect the actual 白 headword and any immediately relevant continuation within the three-page cap. Verify the printed identity, printed/PDF page labels, named components, readings, and any historical-form claims against scan pixels.",
+        "The canonical entry also lists meanings beyond “white” (伯, place name, hundred, pure/unblemished, bright). Consult current authoritative Mandarin references independently; scope meanings by evidence and do not carry over character-history claims to unrelated senses. Determine whether “百” used as a value/sense in this separate entry requires an explicit relation and whether it is supported.",
+        "Compare the book’s account with authoritative paleographic/dictionary sources; preserve competing graph readings. Do not infer image identities, components, sound roles, or semantic history from familiar shapes."
+      ],
+      "百": [
+        "Inspect the actual 百 headword and any immediately relevant continuation within the three-page cap. Verify printed identity, printed/PDF page labels, the one-hundred/large-quantity sense distinctions, and historical-form claims against scan pixels.",
+        "The canonical entry describes disputed early construction (top marker above 白-like base versus 一 plus 白). Check precisely what the book claims and whether it treats the graph as compound/pictorial; compare authoritative paleographic/dictionary sources. Do not force a single analysis or treat modern strokes as historic component roles.",
+        "Consult current authoritative Mandarin references for current meanings/status. Keep attested meanings distinct from proposed original meanings; do not infer that 白 is a semantic or phonetic component without direct source support."
+      ]
+    },
+    "general_requirements": [
+      "Use repository sources, the registered digitized book, and additional authoritative sources. Keep book evidence page-specific and cite only claims it supports.",
+      "If the headword cannot be identified or a printed glyph is ambiguous, retain a page-bound glyph identity and precise gap; do not guess or normalize OCR. If a literal OCR error seems likely, report the exact raw span and original page/pixel evidence as a proposal, without changing producer data.",
+      "Never edit canonical articles/dossiers or repository source prose in the research role; do not create GitHub issues or perform git operations. Preserve prior evidence unless a verified correction requires review.",
+      "Research and reviews must use gpt-6-luna with low reasoning. The exact current article and dossier must receive fresh independent factual and readability approvals. Preserve current supported claims, uncertainty and citations."
+    ]
+  },
+  "additional_context_policy": "These source leads and prior findings are research tasks, not preverified dossier evidence. Consult the referenced sources directly, check exact graph identity and scope, and add cited evidence for useful claims before authorship. Recheck reviewer hypotheses; modern structure does not establish historical roles. Record inaccessible sources as gaps.",
+  "require_source_specific_page_evidence": true
+}

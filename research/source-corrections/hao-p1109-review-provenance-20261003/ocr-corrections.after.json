@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "parent_evidence_sha256": "4ad1c5141bed8484c5d9088ce5888c2293aa5357267fc4ba04554e6f41620b56",
+  "source_sha256": "f57b420e60d20032f8df525c5dcae08228f9a01195720435613d53d0c14df040",
+  "patches": [
+    {
+      "start": 1438,
+      "end": 1439,
+      "before": "虐",
+      "after": "虘",
+      "reason": "Source-bound scan comparison at printed p. 1094 / PDF p. 1109 verifies the first graph as 虘, not the OCR character 虐. The target crop has the closed lower rectangular component and internal horizontals of the p. 434 / PDF p. 446 printed headword 虘; the comparison control for 虐 (p. 435 / PDF p. 447) remains open on the right. A blind Luna-low morphology review selected the 虘 control. The adjacent second graph is independently scan-verified as simplified 钟 (钅+中), so the correction span covers only this first character.",
+      "source_checked": true,
+      "reviewers": [
+        "runs/source-enrichment-ziyuan/hao-evidence-caption-continuation/ziyuan-2012/597D/ocr-morphology-blind-comparison-highres/result.json; gpt-6-luna low; target_match=right_control; result hash 57da5e5c67578541b0fcaf419425fde74bb48fa50005c356d2f9de3c4d09b787",
+        "Independent source-resolution review: runs/source-enrichment-ziyuan/hao-evidence-caption-continuation/ziyuan-2012/597D/source-resolution/result.json; result hash e11c24b034be1b9bf4a41f24e0cfe5d177e26c999c028f9c18d5d8639567d8c1; retained as a contrary whole-pair account, accepted only for the first graph after per-character verification",
+        "Counterchecks preserved: runs/source-enrichment-ziyuan/hao-evidence-caption-continuation/ziyuan-2012/597D/ocr-verification-charwise/verified-occurrences.json and ocr-verification-first-graph-targeted/verified-occurrences.json; named-character checks misread the lower closure and were superseded by the blind morphology comparison"
+      ]
+    }
+  ],
+  "verification": "source_checked_correction_not_edition_approval",
+  "add_glyphs": [],
+  "remove_glyph_ids": [],
+  "glyph_description_patches": [],
+  "added_uncertainties": []
+}

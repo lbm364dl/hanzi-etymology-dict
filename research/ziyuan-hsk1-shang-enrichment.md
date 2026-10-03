@@ -1,0 +1,21 @@
+# 上 book enrichment (2026-10-02)
+
+The source job published with article hash `d494b9a259e4a23969351aad7fecd50b5ce2a6a1270c2d88264af7e6cb7bcd74` and dossier hash `0c15bcc75780a621710d6f4943fb9afab1c326e68f9c3f0142cf763fd867499c`. Authored prose is unchanged; the dossier now retains newly inspected book evidence. Independent factual and readability agents approved the exact candidate pair. Genuine research and review stage metadata and products are retained under `content/editorial_runs/4E0A/d494b9a259e4a23969351aad7fecd50b5ce2a6a1270c2d88264af7e6cb7bcd74/`. The previous receipt set is preserved under `content/review_history/editorial_runs/4E0A/`.
+
+The source audit cites inspected pages and has no pending tagged OCR findings. A primary-glyph provenance clarification remains open as issue #49: reading the book's reference leads does not mean its underlying inscription specimens have been verified. This publication is one entry's source enrichment, not certification of all 300 HSK1 entries.
+
+## Completion recheck
+
+The later used-book-evidence audit found that the newly researched book record is retained in the dossier but not cited by this article. Its real publication receipts remain preserved, but the stricter source-completion gate does not count it as complete. It needs fresh authorship to use relevant book evidence and fresh independent reviews; see `research/book-citation-completion-contract-20261002.md`.
+
+## Citation integration recheck
+
+The retained source record was checked against 字源 PDF p. 14 / printed p. 2 (上部, 上 headword; scan RGB pixel SHA-256 `23141ed35584acd043b76861abae6217528cb6dfea9388ab6792a3f0a47d7a49`). The page directly supports its indicative-graph analysis, early mark-above-line forms, later graphic variation, and spatial original meaning opposite 下. Page 15 starts 帝, so p. 14 is the complete 上 passage; no OCR correction was identified.
+
+The completion failure was an evidence-identity handoff problem: a newer genuine research result retained dossier ID `X-3beef39b65fe4a489a8f`, but the article cited an older same-page record `X-5b7928ec9f37d6daad17`. The exact-record audit correctly treated the newer item as uncited. A first generic citation-integration pass did not add the current ID; fresh review also found that “up” was not supported as a current sense by the cited sources, and that the 上帝/上甲 compound examples should not be treated as evidence for an independent single-character sense period. The focused authored continuation added the exact current source ID, changed the learner gloss to current “above/upper” wording, kept historical motion uses scoped as reported uses, and narrowed the historical spatial sense period to its direct evidence. It also retained the visual correction that the selected seal-style glyph has a distinct middle right-extending stroke.
+
+The focused final pair is approved by fresh independent factual/readability reviews (Luna low) at article hash `29b2414785efc37f7505e61a7698deec28bec99aec45d98242f0ed7dc7f43f5a` and dossier hash `84fc43feb1b4528a49e47118cd1c6918a8ab921d9c835bef0033cf55099976e9`. The source audit is verified using the exact retained research result and citation ID `X-3beef39b65fe4a489a8f`; no source OCR findings remain pending. Full pipeline receipts and earlier failed descendants remain in `runs/source-enrichment-ziyuan/shang-book-citation-integration/ziyuan-2012/4E0A/`. Publication remains for the coordinating agent after its source-gate inspection. Track the generic exact-record handoff behavior under source-refresh issue #2; this entry-specific citation integration is complete.
+
+## Publication verified (2026-10-02)
+
+The coordinating agent validated the exact article, dossier, reader style and genuine review receipts, confirmed article-used book evidence and no pending source findings, then published through `pipeline.source_enrichment publish`. The canonical pair matches the approved hashes above. Real stage artifacts and earlier canonical history are preserved; no prose was hand-edited. The full HSK1 source-completion audit now verifies 6/300: 半、备、人、上、小、一. Site data was refreshed with 312 approved overlays in 67,417 records. Issue #49 remains an explicit primary-inscription provenance lead; the published account does not claim the illustrative redraw itself proves a dated physical specimen.

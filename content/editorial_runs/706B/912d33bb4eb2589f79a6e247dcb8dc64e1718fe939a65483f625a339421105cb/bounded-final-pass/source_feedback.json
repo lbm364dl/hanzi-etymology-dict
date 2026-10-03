@@ -1,0 +1,15 @@
+{
+  "instruction": "Correct only the star-name claims in meaning_history.senses[1].text, relationships[1].text, and meaning_history.limitations[0].text, and retain the precise current 字源 p. 885 evidence ID in those evidence_ids arrays. The actual scan wording is “可能指的是火星”: 字源 gives the broader name 火星 and does not specify 心宿二 or the planet Mars. The inspected CUHK 火 and 晶 entries explain 火星 in this context as the historical short name for 大火/心宿二. That is complementary specificity, not a disagreement over which star. State those source scopes without saying “one account versus other readings,” “tentatively identified versus identified,” or claiming a conflict. Preserve the attested historical star-name sense, and say the sources do not establish why the star was called 火 or a semantic connection with literal fire. Do not insert evidence labels into prose; evidence belongs only in evidence_ids arrays.",
+  "editorial_adjudication": "Prior factual and readability findings independently rejected an asserted disagreement between 字源 and CUHK over the referent. Their exact retained finding is in ../reviews.json and each round’s review result; treat the specific source-scope correction as required and verify it directly against the cited dossier records.",
+  "citation_correction_instructions": "Attach the current retained 字源 page evidence X-17999ee51cf046684881 to those star-name claims; keep the existing relevant external reference IDs. Do not add any evidence IDs to text strings.",
+  "allowed_citation_edit_paths": [
+    "meaning_history/senses/1/evidence_ids",
+    "meaning_history/limitations/0/evidence_ids",
+    "relationships/1/evidence_ids"
+  ],
+  "source_followup_questions": [
+    "Does the directly scanned wording “可能指的是火星” identify a competing star, or does it leave the name 火星 broader/unspecified? Compare with the directly inspected CUHK 火 and 晶 records that interpret 火星 as the short historical name for 大火/心宿二.",
+    "Do not infer the motivation for the star-name from the current literal sense “fire”; keep that path unresolved unless cited evidence establishes it."
+  ],
+  "fresh_review_instruction": "Assess exact source scope and citation placement; reject any source-disagreement claim or evidence IDs embedded in explanatory prose."
+}

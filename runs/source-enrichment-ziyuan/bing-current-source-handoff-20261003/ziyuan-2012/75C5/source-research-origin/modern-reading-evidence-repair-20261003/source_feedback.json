@@ -1,0 +1,40 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "allowed_edit_paths": [
+    "components/1/sound",
+    "components/1/evidence_ids"
+  ],
+  "verified_review_findings": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "4bbf004740ae874478c6f5ad533df62440ea1445325b56610c7770eec22a8977",
+      "dossier_hash": "0acbd0cad16f8bce4c8ec47db0263f2f015a8ac0e0e775b47ed8af5cb439a5e8",
+      "reviewer": "gpt-6-luna:low:factual:01a100a8-acee-7d22-8ed3-bb1272ee9a42"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`components[1].sound` needs a cited Modern Mandarin comparison: the local Unihan rows give 丙 *bǐng* and 病 *bìng* (dossier evidence `X-4303f7ce39f52dbbd3fb` or `X-66e7b1f9391affbbd73e`). Keep the existing Old Chinese comparisons as separate rows."
+      ],
+      "article_hash": "4bbf004740ae874478c6f5ad533df62440ea1445325b56610c7770eec22a8977",
+      "dossier_hash": "0acbd0cad16f8bce4c8ec47db0263f2f015a8ac0e0e775b47ed8af5cb439a5e8",
+      "reviewer": "gpt-6-luna:low:readability:01a100a9-77da-7923-a1be-55de2ce8c0c9"
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0684/source.png",
+      "pdf_page": 684,
+      "source_pixel_sha256": "7e7fc655ae563a14cbc365d1f04d2e87bfc4e2b41e20e94f845e5463b876f506"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0685/source.png",
+      "pdf_page": 685,
+      "source_pixel_sha256": "97f63ad3ba0748b020fdceb932436d903999522397fca1f9a8a643f6599284a6"
+    }
+  ],
+  "task": "Research and independently inspect authoritative current Chinese dictionary entries for 丙 bǐng and 病 bìng, or actual source-verified book headword readings if appropriate. Add citable genuine source records with exact URLs/edition/pages/provenance. Existing local Unihan rows are validation inputs, not freshly inspected external records; do not relabel local row checks as external source access or cite a failed lookup as inspected content. Resolve fresh modern-reading comparison finding, retain Old Chinese rows separately and limitation that modern readings do not prove historical phonetic function. Keep all meaning, learner, formation, history and unrelated component records unchanged. Separate genuine author plus fresh factual/readability review; later original-scan source gates. No canonical/producer/GitHub writes."
+}

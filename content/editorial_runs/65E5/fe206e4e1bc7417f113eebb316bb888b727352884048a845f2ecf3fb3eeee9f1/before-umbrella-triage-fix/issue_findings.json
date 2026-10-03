@@ -1,0 +1,21 @@
+{
+  "findings": [
+    {
+      "kind": "clarification",
+      "title": "Reconcile 日 sense evidence and review history",
+      "details": "The final 日 article has matching current senses and has_sense edges for sun, daylight, the day unit, and Japan abbreviation, supported by present-day Chinese dictionaries; it excludes the Japanese-only day-counter gloss. Earlier review rounds repeatedly rejected or reversed these claims, while the final factual and readability reviews passed. Preserve the final dictionary-backed treatment and ensure future repairs check current dictionary senses before treating them as unsupported or historical.",
+      "verification": "Inspect any later 日 revision against the cited current Chinese dictionary evidence, verify sense status and generated has_sense edges agree, and confirm Japanese-only glosses are not imported as Chinese senses.",
+      "evidence": [
+        "current_article.meaning_history.senses",
+        "current_article.relationships",
+        "current_dossier_evidence X-e7518144c9191621be5c",
+        "current_dossier_evidence X-b8468b19ca8be16a0424",
+        "current_dossier_evidence X-57e5b74658482f393ae1",
+        "actual_findings round-0 through round-3 factual/readability reviews",
+        "actual_findings reviews.json",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "hsk1:source-enrichment:ziyuan-2012"
+    }
+  ]
+}

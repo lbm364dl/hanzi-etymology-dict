@@ -1,0 +1,389 @@
+"""Publish evidence-backed findings to GitHub with stable deduplication markers."""
+from __future__ import annotations
+
+import argparse
+import copy
+import fcntl
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+import tempfile
+import time
+
+from pipeline import editorial
+
+FINDING_SCHEMA = {'type': 'object', 'additionalProperties': False, 'required': ['findings'],
+    'properties': {'findings': {'type': 'array', 'items': {
+        'type': 'object', 'additionalProperties': False,
+        'required': ['topic', 'existing_key', 'kind', 'title', 'details', 'verification', 'evidence'],
+        'properties': {'topic': {'type': 'string', 'pattern': '^[a-z0-9][a-z0-9-]*$'}, 'existing_key': {'type': ['string', 'null']},
+            'kind': {'enum': ['ocr', 'factual', 'readability', 'pipeline', 'clarification']},
+            **{k: {'type': 'string', 'minLength': 1} for k in ('title', 'details', 'verification')},
+            'evidence': {'type': 'array', 'items': {'type': 'string'}}}}}}}
+
+GH_TIMEOUT_SECONDS = 60
+SYNC_LOCK_WAIT_SECONDS = 90
+
+
+def triage_state(state):
+    """A remote sync failure changes workflow, not the underlying editorial finding."""
+    return {key: value for key, value in state.items()
+            if key not in ('issue_sync_status', 'issue_receipts_hash')}
+
+
+def triage_job(job, source, runner):
+    """Use a separate Luna low agent to turn actual findings into issue records."""
+    import re
+    job = Path(job)
+    if runner.model != 'gpt-6-luna' or runner.reasoning != 'low':
+        raise ValueError('Finding triage requires gpt-6-luna low')
+    state = editorial.read(job / 'status.json')
+    records = []
+    for path in sorted(job.rglob('*.json')):
+        relative = path.relative_to(job)
+        if any(part in ('attempts', 'finding-triage', 'issue-bodies') or part.startswith('finding-triage-repair-') for part in relative.parts):
+            continue
+        if path.name in ('verified-review.json', 'validation.json', 'source-enrichment-failure.json'):
+            records.append({'artifact': str(relative), 'content': editorial.read(path)})
+        elif path.name == 'result.json' and ('research' in path.parent.name):
+            product = editorial.read(path)
+            if isinstance(product, dict) and 'search_audit' in product:
+                records.append({'artifact': str(relative), 'content': {
+                    'search_audit': product.get('search_audit', []), 'gaps': product.get('gaps', [])}})
+    reviews_path = job / 'reviews.json'
+    if reviews_path.is_file():
+        records.append({'artifact': 'reviews.json', 'content': editorial.read(reviews_path)})
+    if (job / 'source_resolution.json').is_file():
+        from pipeline.source_enrichment import _source_findings_pending
+        resolution = editorial.read(job / 'source_resolution.json')
+        records.append({'artifact': 'source_resolution.json', 'content': {
+            'pending': _source_findings_pending(job), 'binding': resolution,
+            'actual_result': editorial.read(job / resolution['review_path'])}})
+    known_path = editorial.ROOT / 'research/source-enrichment-findings.json'
+    known = editorial.read(known_path)['findings'] if known_path.is_file() else []
+    # Recover stable identities from actual previous syncs, including fresh batch jobs
+    # not yet incorporated into the curated manifest. Unsynced proposals are not issues.
+    if source.get('github_repo'):
+        known_keys = {f['key'] for f in known}
+        for root in (editorial.ROOT / 'runs', editorial.ROOT / 'content/source_coverage'):
+            for path in sorted(root.glob('**/issue_findings.json')):
+                try:
+                    receipt = editorial.read(path.parent / 'issue_receipts.json')
+                    if receipt.get('repository') != source['github_repo']:
+                        continue
+                    synced = {r['key']: r for r in receipt.get('issues', [])}
+                    for finding in editorial.read(path).get('findings', []):
+                        saved = synced.get(finding['key'], {})
+                        if (finding['key'] not in known_keys and saved.get('number')
+                                and saved.get('finding_hash') == editorial.digest(finding)):
+                            known.append(finding)
+                            known_keys.add(finding['key'])
+                except (OSError, ValueError, KeyError):
+                    continue
+    character = state.get('character') or editorial.read(job / 'source.json')['character']
+    # Character findings cannot be reused merely because another entry has the
+    # same failure class. Keep genuinely shared pipeline/source findings available.
+    def in_scope(finding):
+        if finding.get('kind') == 'work':
+            return False  # Umbrella work items are parents, never reusable findings.
+        pieces = finding['key'].split(':', 2)
+        if len(pieces) < 3:
+            return True
+        host = pieces[1]
+        if re.fullmatch(r'[0-9A-Fa-f]{4,6}', host):
+            codepoint = int(host, 16)
+            host = chr(codepoint) if codepoint <= 0x10ffff else host
+        if len(host) == 1 and ord(host) > 127:
+            return pieces[0] == source['id'] and host == character
+        return True
+    known = [finding for finding in known if in_scope(finding)]
+    current_article = editorial.read(job / 'article.json') if (job / 'article.json').is_file() else None
+    dossier_path = job / 'dossier.json'
+    current_dossier = editorial.read(dossier_path) if dossier_path.is_file() else None
+    # A review mentions evidence IDs, not their source contents. Triage must see
+    # the actual support before calling a repaired claim an unresolved gap.
+    packet_text = json.dumps([current_article, records], ensure_ascii=False)
+    evidence_packet = None if current_dossier is None else {
+        'character': current_dossier.get('character'),
+        'dossier_hash': editorial.digest(current_dossier),
+        'evidence': [e for e in current_dossier.get('evidence', [])
+                     if re.search(r'(?<![\w-])' + re.escape(e['id']) + r'(?![\w-])', packet_text)]}
+    inputs = {'character': character, 'source': source, 'job_state': triage_state(state),
+              'actual_findings': records, 'existing_findings': known,
+              'current_article': current_article, 'current_dossier_evidence': evidence_packet,
+              'task': 'Track material findings with evidence. Rejected proposals are not factual errors. '
+                      'An OCR suspicion needs source verification; never guess a replacement. '
+                      'Return no finding for correctly supported current prose, a resolved '
+                      'review disagreement, or advice to preserve a correct treatment in '
+                      'future edits. Respect a current exact-pair source resolution; verified '
+                      'citation provenance is not a remaining scan-identity error, though a '
+                      'separately requested corpus metadata repair may remain unapplied. '
+                      'Before alleging a missing citation, quote the exact current field\'s '
+                      'evidence_ids and confirm the requested ID is actually absent there. '
+                      'Do not repeat an archived finding when that citation is already present. '
+                      'Identify a concrete current defect or unapplied repair. '
+                      'Existing issue records establish identities, not current defects. '
+                      'An archived failed attempt alone does not establish a current pipeline '
+                      'failure: name a current failing stage or a failure reproduced against '
+                      'the current contract. Check current_source_page_metadata before '
+                      'alleging that a corpus printed-page field is still absent. '
+                      'Umbrella work issues are tracking parents, not finding identities. '
+                      'Keep public issue text concise and paraphrase books instead of quoting passages.'}
+    checkpoint_path = job / 'source_checkpoint.json'
+    corpus_path = Path(source.get('corpus_path', ''))
+    if checkpoint_path.is_file() and corpus_path.is_file():
+        locator = editorial.read(checkpoint_path).get('locator', {})
+        pages = {candidate['pdf_page_1based']
+                 for lead in locator.get('source_leads', [])
+                 for candidate in lead.get('candidates', []) if 'pdf_page_1based' in candidate}
+        pages.update(scan['pdf_page'] for scan in locator.get('source_scan_images', [])
+                     if 'pdf_page' in scan)
+        current_metadata = []
+        with corpus_path.open() as stream:
+            for line in stream:
+                page = json.loads(line)
+                if page.get('pdf_page_1based') in pages and page.get('book_id') == source.get('book_id'):
+                    current_metadata.append({key: page.get(key) for key in (
+                        'page_id', 'pdf_page_1based', 'printed_page', 'source_sha256',
+                        'evidence_sha256', 'metadata_provenance')})
+        inputs['current_source_page_metadata'] = current_metadata
+    known_by_key = {f["key"]: f for f in known}
+    schema = copy.deepcopy(FINDING_SCHEMA)
+    schema["properties"]["findings"]["items"]["properties"]["existing_key"]["enum"] = [None, *known_by_key]
+    for attempt in range(3):
+        stage = job / ('finding-triage' if attempt == 0 else f'finding-triage-repair-{attempt}')
+        try:
+            result = runner.run('finding_triage', inputs, schema, stage)
+            if any(item.get('existing_key') is not None and item['existing_key'] not in known_by_key
+                   for item in result['findings']):
+                raise ValueError('Triage selected an unknown existing finding key; choose a supplied key or null for a new finding')
+            break
+        except (ValueError, editorial.ValidationError) as exc:
+            if attempt == 2:
+                raise
+            inputs = {**inputs, 'validation_error': str(exc),
+                      'repair_task': 'Repair only the invalid issue-record contract. Topic must be a lowercase English slug without source prefixes, colons or Han characters. Keep the actual evidence and scope.'}
+    findings = []
+    known_by_key = {f['key']: f for f in known}
+    for item in result['findings']:
+        existing_key = item.get('existing_key')
+        if existing_key:
+            if existing_key not in known_by_key:
+                raise ValueError('Triage selected an unknown existing finding key')
+            key = existing_key
+        else:
+            if not re.fullmatch(r'[a-z0-9][a-z0-9-]*', item['topic']):
+                raise ValueError('Finding topic must be a stable lowercase identifier')
+            key = f"{source['id']}:{character}:{item['topic']}"
+        finding = {k: item[k] for k in ('kind', 'title', 'details', 'verification', 'evidence')}
+        finding['key'] = key
+        if source.get('tracking_issue_url'):
+            finding['evidence'].append('Parent work: ' + source['tracking_issue_url'])
+        validate_finding(finding)
+        if not any(f['key'] == key for f in findings):
+            findings.append(finding)
+    editorial.write(job / 'issue_findings.json', {'findings': findings})
+    return findings
+
+
+class GitHubCommandError(subprocess.CalledProcessError):
+    def __str__(self):
+        detail = (self.stderr or '').strip()
+        return super().__str__() + (': ' + detail[-3000:] if detail else '')
+
+
+def gh(*args):
+    try:
+        result = subprocess.run(['gh', *args], check=True, text=True, capture_output=True,
+                                timeout=GH_TIMEOUT_SECONDS)
+    except subprocess.CalledProcessError as exc:
+        raise GitHubCommandError(exc.returncode, exc.cmd, output=exc.output,
+                                 stderr=exc.stderr) from exc
+    return result.stdout.strip()
+
+
+def validate_finding(finding):
+    for key in ('key', 'kind', 'title', 'details', 'verification'):
+        if not isinstance(finding.get(key), str) or not finding[key].strip():
+            raise ValueError(f'Finding requires {key}')
+    if '\n' in finding['key'] or '-->' in finding['key']:
+        raise ValueError('Invalid finding identity')
+    if finding['kind'] not in ('work', 'ocr', 'factual', 'readability', 'pipeline', 'clarification'):
+        raise ValueError('Unknown finding kind')
+
+
+def marker(finding):
+    return '<!-- hanzi-finding:' + finding['key'] + ' -->'
+
+
+def body(finding):
+    validate_finding(finding)
+    evidence = finding.get('evidence', [])
+    text = f"{marker(finding)}\n\n{finding['details']}\n\n"
+    if evidence:
+        text += 'Evidence and affected artifacts:\n\n' + '\n'.join('- ' + item for item in evidence) + '\n\n'
+    text += 'Verification required:\n\n' + finding['verification'] + '\n'
+    return text
+
+
+def _paginated_items(raw):
+    """gh api --paginate emits consecutive JSON arrays on older CLI versions."""
+    items = []
+    decoder = json.JSONDecoder()
+    while raw.strip():
+        raw = raw.lstrip()
+        page, end = decoder.raw_decode(raw)
+        if not isinstance(page, list):
+            raise ValueError('Expected a GitHub list response')
+        items.extend(page)
+        raw = raw[end:]
+    return items
+
+
+def _sync_locked(findings, repository, receipt_path, invoke, parent_issue, milestone, labels,
+                 parent_by_kind, active_findings):
+    """Create missing issues; preserve human discussion and never close by inference."""
+    if not repository or len(repository.split('/')) != 2:
+        raise ValueError('Repository must be owner/name')
+    findings = list(findings)
+    for finding in findings:
+        validate_finding(finding)
+    if len({finding['key'] for finding in findings}) != len(findings):
+        raise ValueError('Duplicate finding keys')
+    existing = json.loads(invoke('issue', 'list', '--repo', repository, '--state', 'all',
+                                 '--limit', '1000', '--json', 'number,url,body,state,labels,milestone'))
+    parents = {(parent_by_kind or {}).get(finding['kind'], parent_issue)
+               for finding in findings} - {None}
+    child_numbers = {parent: {item['number'] for item in _paginated_items(
+        invoke('api', '--paginate', f'repos/{repository}/issues/{parent}/sub_issues'))} for parent in parents}
+    if labels or parent_issue is not None:
+        expected = set(labels) | {'kind:' + finding['kind'] for finding in findings}
+        present = {item['name'] for item in json.loads(invoke('label', 'list', '--repo', repository,
+                                                             '--limit', '1000', '--json', 'name'))}
+        for label in sorted(expected - present):
+            invoke('label', 'create', label, '--repo', repository, '--color', 'bfd4f2',
+                   '--description', 'Source enrichment finding classification')
+    receipts = []
+    for finding in findings:
+        target_parent = (parent_by_kind or {}).get(finding['kind'], parent_issue)
+        created = False
+        matches = [item for item in existing if marker(finding) in item.get('body', '')]
+        if len(matches) > 1:
+            raise ValueError('Duplicate GitHub issue markers require reconciliation')
+        if matches:
+            issue = matches[0]
+            if active_findings and issue['state'].upper() == 'CLOSED':
+                invoke('issue', 'reopen', str(issue['number']), '--repo', repository)
+                issue['state'] = 'OPEN'
+            # Preserve the original issue and discussion; append new evidence once.
+            if issue.get('body', '').strip() != body(finding).strip():
+                update_marker = '<!-- hanzi-finding-update:' + editorial.digest(finding) + ' -->'
+                discussion = json.loads(invoke('issue', 'view', str(issue['number']), '--repo',
+                                               repository, '--json', 'comments'))
+                if not any(update_marker in c.get('body', '') for c in discussion.get('comments', [])):
+                    target = Path(receipt_path).parent / 'issue-bodies' / (editorial.digest(finding) + '.md')
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_text(update_marker + '\n\nFinding update:\n\n' + body(finding))
+                    invoke('issue', 'comment', str(issue['number']), '--repo', repository,
+                           '--body-file', str(target))
+        else:
+            target = Path(receipt_path).parent / 'issue-bodies' / (editorial.digest(finding['key']) + '.md')
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(body(finding))
+            url = invoke('issue', 'create', '--repo', repository, '--title', finding['title'],
+                         '--body-file', str(target))
+            issue = {'url': url, 'number': int(url.rstrip('/').split('/')[-1]), 'state': 'OPEN',
+                     'body': body(finding)}
+            existing.append(issue)
+            created = True
+        if labels or parent_issue is not None or milestone:
+            args = ['issue', 'edit', str(issue['number']), '--repo', repository]
+            present_labels = {item['name'] for item in issue.get('labels', [])}
+            for label in sorted(set([*labels, 'kind:' + finding['kind']]) - present_labels):
+                args.extend(['--add-label', label])
+            current_milestone = issue.get('milestone') or {}
+            same_milestone = str(milestone) in {
+                str(current_milestone.get('title')), str(current_milestone.get('number'))}
+            if milestone and issue['number'] != parent_issue and not same_milestone:
+                args.extend(['--milestone', str(milestone)])
+            if len(args) > 5:
+                invoke(*args)
+        attach = target_parent is not None and issue['number'] != target_parent and issue['number'] not in child_numbers[target_parent]
+        if attach and not created:
+            try:
+                existing_parent = json.loads(invoke('api', f"repos/{repository}/issues/{issue['number']}/parent"))
+            except subprocess.CalledProcessError as exc:
+                if '404' not in (exc.stderr or ''):
+                    raise
+                existing_parent = None
+            # Preserve a hierarchy curated by the user; new issues get configured parents.
+            if existing_parent:
+                attach = False
+        if attach:
+            if len(child_numbers[target_parent]) >= 100:
+                raise ValueError(f'GitHub parent #{target_parent} has 100 direct subissues; '
+                                 'configure a nested findings parent and retry the existing '
+                                 'issue marker without duplicating the finding')
+            remote = json.loads(invoke('api', f"repos/{repository}/issues/{issue['number']}"))
+            invoke('api', '--method', 'POST', f'repos/{repository}/issues/{target_parent}/sub_issues',
+                   '-F', f"sub_issue_id={remote['id']}")
+            child_numbers[target_parent].add(issue['number'])
+        receipts.append({'key': finding['key'], 'kind': finding['kind'], 'url': issue['url'],
+                         'number': issue['number'], 'state': issue['state'],
+                         'finding_hash': editorial.digest(finding)})
+        # Checkpoint immediately so interrupted syncs can be recovered by marker lookup.
+        editorial.write(receipt_path, {'repository': repository, 'issues': receipts})
+    return receipts
+
+
+def sync(findings, repository, receipt_path, invoke=gh, parent_issue=None, milestone=None, labels=(),
+         parent_by_kind=None, active_findings=False):
+    """Serialize a repository sync across processes before reading remote state.
+
+    The lock covers lookup and mutation together: serializing only issue creation
+    would still allow two workers to act on the same stale marker/parent snapshot.
+    """
+    if not repository or len(repository.split('/')) != 2:
+        raise ValueError('Repository must be owner/name')
+    findings = list(findings)
+    if not findings:
+        # The independent triage found nothing to write. Keep historical receipts
+        # and issues intact, without waiting for unrelated remote synchronization.
+        return []
+    lock_key = hashlib.sha256(repository.lower().encode('utf-8')).hexdigest()
+    lock_path = Path(tempfile.gettempdir()) / f'hanzi-issues-sync-{lock_key}.lock'
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open('a') as lock:
+        deadline = time.monotonic() + SYNC_LOCK_WAIT_SECONDS
+        while True:
+            try:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise TimeoutError(f'Timed out waiting for GitHub sync lock for {repository}')
+                time.sleep(0.1)
+        try:
+            return _sync_locked(findings, repository, receipt_path, invoke, parent_issue, milestone,
+                                labels, parent_by_kind, active_findings)
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('findings', type=Path, help='JSON document containing a findings array')
+    parser.add_argument('--repo', required=True)
+    parser.add_argument('--receipts', type=Path, required=True)
+    parser.add_argument('--parent', type=int, help='GitHub parent issue number')
+    parser.add_argument('--milestone', help='GitHub milestone title or number')
+    parser.add_argument('--label', action='append', default=[])
+    args = parser.parse_args()
+    records = editorial.read(args.findings)['findings']
+    print(json.dumps(sync(records, args.repo, args.receipts, parent_issue=args.parent,
+                          milestone=args.milestone, labels=args.label), ensure_ascii=False, indent=2))
+
+
+if __name__ == '__main__':
+    main()

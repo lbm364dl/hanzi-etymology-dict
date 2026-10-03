@@ -1,0 +1,7 @@
+# Verify the printed referent of a sound-role claim
+
+While inspecting the 学 formation passage directly at original resolution, the coordinator saw that the printed graph immediately before 亦声 is a compound/rare form rather than a clearly printed ordinary 臼. Existing paraphrases, including the fresh bounded record, had assigned sound to 臼 or substituted it in brackets. This is a claim requiring focused independent scan verification; the coordinator has not asserted a replacement Unicode identity or authored an etymological repair.
+
+Research and independent factual review instructions now require checking the exact named/printed referent of a role statement. A role assigned to a grouped graph must not be transferred to one member merely by decomposition. Brackets do not make an inferred Unicode substitution source-backed. Preserve a verified group role with an occurrence-bound identity gap when necessary, and retain genuinely explicit individual roles when the source establishes them.
+
+The same original crop exposes a suspicious parenthetical OCR literal currently rendered 毚片. A separate Luna-low occurrence verification must decide the actual reading before any producer correction; plausible context alone is not sufficient. Confirmed fixes must reach the source overlay and rebuilt consumer while preserving raw OCR. This stays within existing 学 issue #3, with current authored work held. No character conditional, universal sound rule or approved-prose edit is introduced.

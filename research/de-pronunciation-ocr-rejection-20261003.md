@@ -1,0 +1,9 @@
+# Reject the proposed pronunciation OCR replacements
+
+Issue #50 proposed 端组 → 端纽 in the pronunciation lines on 字源 PDF page 613 (printed 600). The independently reviewed four exact raw spans at offsets 1633, 1640, 1654 and 1661 all returned `correct_raw`, with printed text 端组. The coordinator also inspected the original full-page image. No pronunciation replacement is justified.
+
+Actual receipt: `runs/source-enrichment-after-ocr/ocr-verification/ziyuan-2012-p0613-duanzhu-exact-20261003/verified-occurrences.json`; result digest `46898c5d342b4fd09e088060ff4cf250cbab9efdfff71a1d6a76ccad38c02eec`; genuine Luna low reviewer thread `01a10076-b70c-7ef1-a589-f0cbf0064cf3`. Raw-file/text hashes, four nonoverlapping anchored spans, result digest, completed reviewer metadata and both attachment file hashes were checked against the current files.
+
+The genuine receipt is retained unchanged. Its reasons misname the neighboring headword as 昀(的), and the fourth reason inaccurately describes the crop's contents; these ancillary statements are not accepted as evidence. The verdicts concern only the four pronunciation tokens and are independently visible on the original full-page scan. The prior headword correction 昀 → 旳 remains separate. Nothing here resolves the page 614 continuation identity or approves the whole page.
+
+Failure class: a plausible pronunciation term and an earlier mistaken scan reading became a proposed OCR repair. Proposed replacements must remain hypotheses until occurrence-bound independent scan verification. An earlier packet contained overlapping duplicates and was invalid; the generic packet preflight now rejects duplicate or overlapping targets before invoking an agent. Retain failed receipts and reject incorrect proposals rather than altering raw or corrected text to satisfy an issue.

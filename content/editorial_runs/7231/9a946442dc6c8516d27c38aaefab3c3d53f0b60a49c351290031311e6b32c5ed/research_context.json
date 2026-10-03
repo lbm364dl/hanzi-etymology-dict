@@ -1,0 +1,26 @@
+{
+  "purpose": "Resolve actual remaining last-review findings, preserving researched work and source correction history.",
+  "prior_exact_review_findings": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "7abded072b15ecc30bc237f1f96901fc15bd267370122ec7bf15caa09cd10e23",
+      "dossier_hash": "4e682adcf6ed9f74fd6aac9e912e32b522630aaddc0edba6f6d93b1a3c3d3af2",
+      "reviewer": "gpt-6-luna:low:factual:01a0fe7e-d3bd-7213-a809-ce5a2c27e23e"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `components[6]`, `roles` includes `semantic`, but the `愛:夊:phonetic` relationship actually has predicate `semantic_component_of` and explains 夊 as the walking-related element. The component’s sound comparison is correctly qualified as not establishing an ancient sound role. Correct the relationship ID to match its semantic predicate (for example, `愛:夊:semantic`).",
+        "In `meaning_history.senses[0]`, the Warring States period label overstates what the evidence establishes for 愛’s affection sense: the text reports transmitted passages and source-reported artifact readings, while explicitly noting they do not establish the earliest physical witness. Qualify or remove the period claim, and make the generated `has_sense` edge match.",
+        "In `summary.text` and `learner.overview.text`, present the derivation of 爱’s lower 友-like shape from joined or abbreviated 心-and-夂 strokes as a proposed graphic account, as the cited evidence frames it. Preserve the point that this does not establish an ancient meaning or sound role for 友 in 愛."
+      ],
+      "article_hash": "7abded072b15ecc30bc237f1f96901fc15bd267370122ec7bf15caa09cd10e23",
+      "dossier_hash": "4e682adcf6ed9f74fd6aac9e912e32b522630aaddc0edba6f6d93b1a3c3d3af2",
+      "reviewer": "gpt-6-luna:low:readability:01a0fe7f-4e4a-7401-a716-9cfa5d0958a6"
+    }
+  ],
+  "instruction": "Recheck the findings independently against cited sources. For component relationship IDs, inspect the actual edge by subject/object/context and predicate, not stale numeric positions. If evidence supports a semantic predicate, any descriptive role label in its ID must agree; do not change one contradictory suffix to another. Qualify the proposed cursive derivation of current 友-like strokes explicitly in both summary and learner account. Qualify the period of source-reported affection readings precisely without denying attested historical usage merely because earliest priority is unverified. Current-source book records must be cited at supported article claims, not only stored in the dossier. Preserve the p497 corrected literal 行皃 and the applied source-bound overlay; do not recreate a pending OCRerror for an already repaired occurrence. Never put evidence IDs or source names in explanatory prose."
+}

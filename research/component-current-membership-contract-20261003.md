@@ -1,0 +1,9 @@
+# Current-form membership is not the same as graph scope
+
+A source-enrichment repair exposed a gap between expert component records and learner-card coverage. `scope_character` names the graph analyzed; it does not always tell whether a record describes a part of the graph's current standard form. Ancient analyses can be preserved under the same named host as the modern entry, so requiring every entry-scoped record as a learner card can force expert alternatives into the basic explanation. Moving such a record to another scope is also incorrect when the source does not identify a separate historical host, and deleting it can invalidate its cited graph edge.
+
+The component record now has an optional `current_form_component` field. `true` identifies a current-form part and requires exactly one learner card. `false` retains an expert-only historical analysis without requiring a card, including when `scope_character` equals the entry. `null` or omission preserves the prior behavior: entry-scoped records are treated as current. The field changes only learner-card coverage; component identity, scope, cited roles, relationships, graph-edge validation, and evidence requirements continue to apply to every record.
+
+The writer's strict JSON output includes the field as a nullable boolean so older or unresolved records can emit `null`; the stored article schema keeps it optional for compatibility. Research guidance asks whether the part is actually in the current form, and writer/reviewer guidance distinguishes that membership from analytical host scope. Tests cover same-host current and historical records, an empty learner component list when no record is current, legacy omission, and continued enforcement of graph edges.
+
+This is a general schema distinction. It must not be inferred or backfilled automatically on already-reviewed articles; changed membership claims require ordinary authorship and fresh reviews.

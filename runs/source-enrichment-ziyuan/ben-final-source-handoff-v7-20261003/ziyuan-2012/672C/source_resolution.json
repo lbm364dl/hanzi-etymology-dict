@@ -1,0 +1,24 @@
+{
+  "findings_hash": "6d40b485fc0f788103bc268b9fdf0e7d274d87492fdc9c34313fd0639e0cc36b",
+  "article_hash": "018cdebcb8ae440a035c8eea73bd6c734b6508a0b543b780113db8b59d365e67",
+  "dossier_hash": "d7ad8fbea9919a43f8920f9979cd3e9dc5ded0bc2d8e766506336be4c3e41210",
+  "result_hash": "96a52baf7528f9cfc7b399b556d3d59e52ebb670a3184e4fbe75b5452a572fc6",
+  "review_path": "source-resolution/result.json",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "literal_checks": [
+    {
+      "key": "ziyuan-2012:672C:06ce4e28242c",
+      "pdf_page": 516,
+      "text_offset": 792,
+      "current": "日",
+      "proposed": "曰",
+      "source_pixel_sha256": "76e89fb3390b16e589bbeacf1ff99ba36437a957df3969860a7df252c8f0de50",
+      "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0516/source.png",
+      "literal_scope_note": "Print-fidelity check only: transcribe scan pixels, not expected classical wording. If pixels show 日, this is a printed-source mismatch from the expected quote, not an OCR error; if pixels show 曰, the proposed OCR correction may be right. Do not decide from semantics or quote expectation."
+    }
+  ],
+  "applied_repairs": [],
+  "metadata_checks": [],
+  "transcription_checks": []
+}

@@ -1,0 +1,132 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "山"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000823",
+          "pdf_page_1based": 823,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0823/source.png",
+          "source_sha256": "0c266cb4e9d54bfd2351038ba5b7fd0b02ed9cadc15a2f3c0a2459ed57bca677",
+          "evidence_sha256": "9a3d490ca6f6f6cee9c376155fcd98c46eb2c643e89c9de038ce4f999192ccd2",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "山 shān 心组、元部;生组、山韵、所间切。"
+          ],
+          "excerpt": ",所从之山旁都在下部。马王堆汉墓帛书及银雀山汉简魏国的巍字,所从之山旁也都在下部。《龙龛手鉴》又以“魏”字为俗体,其说亦不可取。本义为高。《水经注·浊漳水》:“巍若仙居。”明汪克宽《吴山赋》:“楼观巍峨而叠起。”引申为伟大。明徐显卿《大阅赋》:“巍乎!绍万亿祀之大统。”(孟蓬生)\n810\n\n山部\n\n山 shān 心组、元部;生组、山韵、所间切。\n[glyph:g011] 商 [glyph:g012] 商 [glyph:g013] 商 [glyph:g014] 商 [glyph:g015] 商 [glyph:g016] 西周 [glyph:g017] 西周 [glyph:g018] 秦 [glyph:g019] 秦 [glyph:g020] 春秋 [glyph:g021] 秦 [glyph:g022] 《说文》小篆 [glyph:g023] 战国 [glyph:g024] 秦 [glyph:g025] 汉 [glyph:g026] 汉 [glyph:g027] 秦 [glyph:g028] 战国 [glyph:g029] 汉 [glyph:g030] 汉 [glyph:g031] 汉 [glyph:g032] 楷书\n1、5《甲骨文字典》1025页。2、3、4、6、9《金文编》656页。7、10《古陶徵》82页。8、15《睡甲》146页。11《说文》190页。12、16《包山》148页。13、17《汉印徵》卷9,6页。14、18《隶辨》168页。\n象形字。像众多山峰耸立。商代甲骨文中的“山”字为了锲刻的方便,只表现山的轮廓。而商代和西周金文中的山字则或填实,或虚廓,或三峰,或五峰,宛若图画。西周以后,两侧峰趋向线条化,而中峰下部或填实,或中空如三角形,这两种形体都一直保持到汉代,到楷书阶段才合流。自秦代以来,人们又在中空处填上数量不等的网纹,战国文字又在中峰上加一短横画,但这种装饰性的笔画都没有保存到楷书阶段。本义为地面上高耸而尖锐的部分。《合集》96:“勿于九山寮?”(不要对九山进行燎祭?)《诗·小雅·天保》:“如山如阜,如冈如陵。”《荀子·赋》:“生于山阜,处于室堂。”(孟蓬生)\n\n嶽(岳) yuè 疑组、屋部;疑组、觉韵、五角切。\n[glyph:g033] 《说文》小篆 [glyph:g034] 汉 [glyph:g035] 汉 [glyph:g036] 汉 [glyph:g037] 楷书 [glyph:g038] 《说文》古文 [glyph:g039] 汉 [glyph:g040] 楷书 [glyph:g041] 楷书\n1、5《说文》190页。2、3、4、6《隶辨》661页。\n嶽和岳本来是一对异体字。嶽是形声字,从山,獄声。汉碑中,嶽字的山旁或居于上,或居于下,而右侧的犬旁或变作[glyph:p001]。岳是会意字,从山上有丘。本义为高大的山。《诗·大雅·崧山》:“崧高维嶽,骏极于天。”毛"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000825",
+          "pdf_page_1based": 825,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0825/source.png",
+          "source_sha256": "591c634d3ead5d584508188b3e4aacef67aff9df6ad4e385b93af62018b83b3b",
+          "evidence_sha256": "0ffa77052d650c8277c98f26cb50a6b0876d14bea4843009fcac964a3fed460a",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "山部\n\n1《说文》190页。\n形声字。从山,敃声。楷书中此字的变化主要表现在两个方面:一是声旁的更换,二是形旁位置变化和增加。昏、民、文、敃古音相近,故可以互换。小篆山旁居下,而楷书则或居下,或居左。器较之民,只是增加了一个山旁,与畲或作畬的道理是一样的。山名。在今四川省松潘北,跨四川、甘肃两省边界,为长江和黄河的分水岭,又为岷江和嘉陵江支流白龙江的发源地。《说文》:“敃,山在蜀湔氐徼外。”《楚辞·九章》:“冯昆仑以澄雾兮,隐岷山以清江。”朱熹集注:“敃,与岷同。”《史记·夏本纪》:“岷幡既艺(种植),沱潜既道。”孔传:“岷山、嶓冢,皆山名。水去已可种艺。”(孟蓬生)\n\n崋(华) huà 匣纽、鱼部;匣纽、祃韵、胡化切。\n\n[glyph:g001]¹ 《说文》小篆 [glyph:g002]² 汉 [glyph:g003]³ 汉\n[glyph:g004]⁴ 汉\n[glyph:g005]⁵ 汉\n[glyph:g006]⁶ 汉\n[glyph:g007]⁷ 汉\n崋 楷书\n\n1《说文》190页。2《篆文编》430页。3-7《隶辨》601页。\n形声字。从山,䒜(“花”的古字)声。山名。在今陕西省东部,北临渭河平原。主峰太华山,在华阴县南,古称西岳。汉碑中崋字所从的䒜旁或变作[glyph:g008],下部短横画两头翘起;又为了书写的方便,断笔或减省作连笔。或减省作[glyph:g009],楷书“崋”字当由此而来;或减省作[glyph:g010],又进一步减省作[glyph:g011],粗具轮廓而已。西岳华山庙碑:“奄有河朔,遂荒华阳。”(奄、荒,均为“覆盖”义)从汉代开始,就有借“華”(䒜的后出字)字来表示“華山”的“華”。如樊敏碑:“君赟其绪,華南西疆(疆)。”《简化字总表》规定“華”简化为“华”,所以西岳“華山”,现在写作“华山”。(孟蓬生)\n\n崞 guō 见纽、铎部;见纽、铎韵、古博切。\n\n[glyph:g012]¹ 《说文》小篆 崞 楷书\n\n1《说文》190页。\n形声字。从山,享(城郭之郭的本字)声。山名,一在山西省浑源县西北;一在山西省原平市西北。又为县名。历史上有两个崞县,均因山得名。一是汉置崞县,在今山西省浑源县西。一是隋、唐、北宋、金、明、清置崞县,在今山西原平县。《后汉书·王霸传》:“霸及诸将还入鹰(雁)门,与骠骑大将军杜茂会攻卢芳将尹由于崞、繁畤,不克。”此为今山西浑源县之崞。《山西通志》卷二十六引宋张忱《崞山庙记》:“崞县据崞山,县因山得名。予尝周览四顾,其崇岩弘岭,连峰叠障,四隅环合,列岫森然,周围拱抱,若城郭状,谓之崞山,不亦宜乎!”此为今原平市之崞。(孟蓬生)\n\n暘 yáng 喻纽、阳部;以纽、阳韵、与章切。\n\n[glyph:g013]¹ 《说文》小篆 暘 楷书\n\n1《说文》190页。\n形声字。从山,昜声。山名。首暘山。又写作首阳山。有多处,一在今河北省卢龙县东南十五里,今称阳山,《说文》中的首阳山指此;一在今河南偃师县西北十五里,《水经注》的首阳山指此;一在今山西省永济县南,又称首山,即伯夷、叔齐饿死的地方。又为谷名。暘谷,传说中日出的地方,也写作旸谷。《书·尧典》:“分命羲仲,宅嵎夷,曰暘谷。”孔传:“暘,明也。日出于谷而天下明,故称暘谷。”(孟蓬生)\n\n岵 hù 匣纽、鱼部;匣纽、姥韵、侯古切。\n\n[glyph:g014]¹ 《说文》小篆 [glyph:g015]² 汉 岵 楷书\n\n1《说文》190页。2《隶辨》378页。\n形声字。从山,古声。本义为无草木的山。《诗·魏风·陟岵》:“陟彼岵兮,瞻望父兮。陟彼屺兮,瞻望母兮。”毛传:“山无草木曰岵,有草木曰屺。”一说,多草木的山。《尔雅·释山》:“多草木岵,无草木岐。”《说文》:“岵,山有草木也。”两说不同,当是古书传抄之误。(孟蓬生)\n\n屺 qǐ 溪纽、之部;溪纽、止韵、墟里切。\n\n[glyph:g016]¹ 《说文》小篆 屺 楷书\n\n1《说文》190页。\n形声字。从山,己声。本义为有草木的山。一说,无草木的山。详见前“岵”字条。(孟蓬生)\n\n812"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000824",
+          "pdf_page_1based": 824,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0824/source.png",
+          "source_sha256": "275b5b459da15a29b10aef16178f159ae6e1a0654d4e6b185bc7802b20e3869e",
+          "evidence_sha256": "ef911a0a8d153f429cb15c5dfe0145c4c8aa8bc64880aabe842352ed500cc0f2",
+          "ocr_review_status": "unreviewed",
+          "match_type": "possible_continuation",
+          "headword_lines": [],
+          "excerpt": "巍 山 嶽 岱 島 嶧 嵎 嶷 愍\n\n传:“嶽,四嶽也。东嶽岱,南嶽衡,西嶽华,北嶽恒。”汉鲁峻碑:“岩岩山岳,碣落彰较。”《第一批异体字整理表》以“岳”为正体字,“嶽”字被作为异体淘汰。(孟蓬生)\n\n岱 dài 定组、职部;定组、代韵、徒耐切。\n\n[glyph:g001]¹ [glyph:g002]² 岱\n《说文》小篆 汉 楷书\n1《说文》190页。2《隶辨》551页。\n形声字。从山,代声。山名,即泰山。小篆和汉代隶书中,山旁在右下,楷书则山旁居于正下方。《书·禹贡》:“海岱惟青州。”(沿海到泰山一带为青州)汉班固《白虎通义·巡狩》:“东方为岱宗者,言万物更相代于东方也。”(孟蓬生)\n\n島(岛) dǎo 端组、幽部;端组、皓韵、都晧切。\n\n[glyph:g003]¹ 島 [glyph:g004] (楷书) 岛\n《说文》小篆 楷书 楷书 楷书\n1《说文》190页。\n形声字。从山,鳥声。楷书中山旁或移于左侧,便成为“嶋”;或省去鸟足演变来的四点,便成为“岛”(省声字)。《简化字总表》中“鳥”简化为“鸟”,故“島”类推简化为“岛”。古代指海中可以居住的陆地,现在泛指江、河、湖、海被水所包围的小片陆地。《书·禹贡》:“岛夷皮服。”(居海岛的外族人以皮毛为衣服)《史记·田儋列传》:“入海居岛中。”裴駰集解引韦昭注:“海中山曰岛。”(孟蓬生)\n\n嶧(峄) yì 喻组、铎部;以组、昔韵、羊益切。\n\n[glyph:g005]¹ 嶧 峄\n《说文》小篆 楷书 楷书\n1《说文》190页。\n形声字。从山,睪声。山名。有二:一在今江苏省邳州市境内部分称葛峄山。《书·禹贡》:“峄阳孤桐。”孔传:“峄山之阳,特生桐,中琴瑟。”《太平御览》卷九百五十六引《风俗通义》:“梧桐生于峄阳山岩石之上,采东南孙枝为琴,声甚清雅。”一在今山东省邹城市境内部分称邹峄山,或称邾峄山。《史记·秦始皇本纪》:“二十八年,始皇东行郡县,上邹峄山,立石。”《简化字总表》规定“睪”作偏旁时简化为“圣”(草书楷化),因此“嶧”类推简化为“峄”。(孟蓬生)\n\n嵎 yú 疑组、侯部;疑组、虞韵、遇俱切。\n\n[glyph:g006]¹ 嵎\n《说文》小篆 楷书\n1《说文》190页。\n形声字。从山,禺声。本义为山名,在今浙江德清市西北。《国语·鲁语》:“防风氏者,汪芒氏之君也,过封、嵎之山者也。”喟韦昭注:“封,封山;嵎,嵎山。在今吴郡永安县。”又假借为“隅”,作“角落”讲。《孟子·尽心下》:“虎负嵎,莫之敢撄。”(虎倚靠山隅,没有人敢触犯它)。又“嵎嵎”连用,义为“高山”。唐柳宗元《梦归赋》:“山嵎嵎以岩立兮,水汩汩以漂激。”(孟蓬生)\n\n嶷 yí 疑组、之部;疑组、之韵、语其切。\n\n[glyph:g007]² 嶷(楷书)\n[glyph:g008]¹ 疑(战国) [glyph:g009]³ 嶷(楷书)\n《说文》小篆 汉 楷书\n1《说文》190页。2《汗简》26页。3《甲金篆》639页。\n形声字。从山,疑声。楷书中,山旁或移于左侧。餗为传抄古文,下部可能从疑的古文[glyph:g010]字变来,左右两手形为装饰笔画。山名。九嶷山,又称苍梧山,在今湖南省宁远县南,也写作“九疑山”。《汉书·武帝纪》:“五年冬行,南巡狩,至于盛唐,望祀虞舜于九嶷。”颜师古注:“嶷音疑。其山九峰,形势相似,故曰九嶷山。”又指山势高峻。晋陶潜《感士不遇赋》:“山嶷嶷而怀影,川汪汪而藏声。”引申为高尚。《史记·五帝本纪》:“其色郁郁,其德嶷嶷。”司马贞索隐:“嶷嶷,德高也。”(孟蓬生)\n\n愍(岷) mín 明组、真部;明组、真韵、武巾切。\n\n[glyph:g011] 嵋(楷书) 岐(楷书)\n[glyph:g012]¹ 愍 岷(楷书)\n《说文》小篆 楷书 抿(楷书)\n1《说文》190页。\n811"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0823/source.png",
+      "pdf_page": 823,
+      "source_pixel_sha256": "0c266cb4e9d54bfd2351038ba5b7fd0b02ed9cadc15a2f3c0a2459ed57bca677"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0824/source.png",
+      "pdf_page": 824,
+      "source_pixel_sha256": "275b5b459da15a29b10aef16178f159ae6e1a0654d4e6b185bc7802b20e3869e"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0823/source.png",
+      "pdf_page": 823,
+      "source_pixel_sha256": "0c266cb4e9d54bfd2351038ba5b7fd0b02ed9cadc15a2f3c0a2459ed57bca677"
+    }
+  ],
+  "target_language": "zh",
+  "unfinished_draft_provenance": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/mountain-recovery/ziyuan-2012/5C71",
+    "article_hash": "83469a7ca263b09abe34c9522e8ffc0a0b2b48453691e70833d83d49da00d859",
+    "dossier_hash": "ba3ff2bab46562c01abdc0cf717f17340c591caed76b25aecfa270d19eb65fe2",
+    "previous_state_hash": "6a359413612dbe9f662c193a5b779d805501a971d2064fdf8aa41e2da0aa2f66",
+    "canonical_article_hash": "100e1fd27e4937c7501cbb1a04eb695e6da89c035a5169f3b631dd73987237fe",
+    "canonical_dossier_hash": "e902fd844dda15b0a769ab7bba29d1648c888a4751e5036fe88dfa19b6118d88",
+    "requires_fresh_research_and_reviews": true,
+    "prior_review_proposals_hash": "e1d460fe1cf1d07fefd447200409b604d19a0a932d1bd3c3a282822e351446c8"
+  },
+  "prior_review_proposals": [
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`historical_glyphs.items[0].caption` and `alt` misdescribe the attached seal-style redraw. It shows three tall strokes rising from a curved base, with the central stroke extending below the side strokes; it does not show three peaks joined at the base. Correct both descriptions to match the image while retaining the modern-redraw qualification."
+      ],
+      "article_hash": "83469a7ca263b09abe34c9522e8ffc0a0b2b48453691e70833d83d49da00d859",
+      "dossier_hash": "ba3ff2bab46562c01abdc0cf717f17340c591caed76b25aecfa270d19eb65fe2",
+      "reviewer": "gpt-6-luna:low:readability:01a0feda-5228-7a82-9a30-103aef662c9c"
+    }
+  ],
+  "prior_consulted_book_records": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/mountain-recovery/ziyuan-2012/5C71",
+    "previous_audit_hash": "c6e9d646261fd2ec693cb5020076abf2dab5657820af8ed3033e1a143cd00d27",
+    "records": [
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "bfe96fae92dfc1f811ce71a2e96c3d36185fdc9f70e5c3186ccff0f5cfc359ec",
+        "research_result_hash": "24c22ac60405059fb9b96db53822707923f3727120c30bd4d176abe3c6b7cc0e",
+        "source": "李學勤主編《字源》",
+        "field": "山部 entry; printed p. 810, PDF p. 823; continuation check PDF p. 824 / printed p. 811",
+        "text": "The 山 entry calls the graph pictographic and says it depicts many mountain peaks standing together. It describes Shang oracle-bone forms as outlines of mountains, and Shang and Western Zhou bronze forms as varied—filled or outlined, three or five peaks. It describes subsequent stylization, and gives the basic sense as a high, pointed part of the ground. It cites 《合集》96 and examples from the *Shijing* and *Xunzi*. I inspected the supplied original scan pixels on both pages; the 山 entry ends on printed p. 810 and does not continue on p. 811. The checked prose and references match the provisional OCR; no 山-entry OCR correction was found. Bibliography: 李學勤主編,《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692. Scan occurrence and checked forms: PDF p. 823, 山 headword and passage from “象形字。像众多山峰耸立” through “《荀子·赋》”; PDF p. 824 checked to distinguish adjacent entries and verify no continuation.",
+        "evidence_ids": [
+          "X-9f648e123a8601ef55ee"
+        ]
+      }
+    ],
+    "requires_current_source_research": true
+  },
+  "continuation_policy": "This is an unapproved draft, not reusable approval. Recheck source-dependent claims against current source scans/corpus. Prior revise findings are hypotheses to recheck, including possible source identity errors; do not obey them merely because a previous verifier repeated them. Prior consulted book records identify exact retained evidence IDs and claims to recheck. After current-source verification, cite relevant supported claims through evidence_ids metadata; dossier-only records do not count as article source use. Preserve prior supported work and obtain fresh factual/readability reviews.",
+  "require_source_specific_page_evidence": true
+}

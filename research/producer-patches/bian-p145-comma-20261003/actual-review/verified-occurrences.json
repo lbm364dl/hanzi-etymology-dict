@@ -1,0 +1,35 @@
+{
+  "provenance": {
+    "source_id": "ziyuan-2012",
+    "pdf_page": 145,
+    "printed_page": 133,
+    "producer_ocr_json": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0145/ocr.json",
+    "producer_ocr_json_sha256": "118a2219e88ae1668936af90056c5e09f7482cc90af71e825ba9adf08c5446b5",
+    "producer_raw_text_sha256": "a903b386a4e5d7a363226e01d59a824ab2dca0dbde68d374115401e19c668d65",
+    "producer_evidence_sha256": "c693cae0863cf19606d13f5ed0c18f62f5bc1d7eac0632b9572b4329fd4a1de2",
+    "consumer_jsonl": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+    "consumer_record_text_sha256": "a903b386a4e5d7a363226e01d59a824ab2dca0dbde68d374115401e19c668d65",
+    "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0145/source.png",
+    "source_pixel_sha256": "8bd6a81012882e00aafbf6f3ead6d12a88aec9c0de60f1bfa224588fdbc06529",
+    "raw_occurrence_offset": 1615,
+    "consumer_occurrence_offset": 1615,
+    "scope": "One exact punctuation occurrence in the 邊 entry; no component or graph correction proposed."
+  },
+  "occurrences_hash": "1a58da5a41bf57cd4c795c396993be465ed72d5c2fead9c84506cb253027d566",
+  "result": {
+    "occurrences": [
+      {
+        "id": "bian-p145-main-clause-comma",
+        "raw_text": "从辵,昪声",
+        "printed_text": "从辵，昪声",
+        "verdict": "confirmed_correction",
+        "reason": "In attachment 1 (the page 145 scan), at the printed 邊 entry after “形声字。” and before “金文或从”, the punctuation after 辵 is visibly a full-width Chinese comma, with the broad curved mark of ， rather than the short baseline mark of an ASCII comma. Thus the raw OCR comma is corrected to ，. Nearby punctuation in the same entry includes Chinese commas, but no separate claimed control is needed for this clear punctuation shape."
+      }
+    ]
+  },
+  "result_hash": "ba6c5a7d607b4847e2d221b6b0fb29fad73440ee313ac903aeba4c8142fa5291",
+  "review_directory": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/bian-research-contract-continuation-20261003/ziyuan-2012/8FB9/p145-comma-occurrence-verification-20261003/review",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "whole_page_reviewed": false
+}

@@ -1,0 +1,17 @@
+{
+  "findings": [
+    {
+      "kind": "factual",
+      "title": "Cite current dictionary support for the bar sense",
+      "details": "The current 吧:bar sense and its generated has_sense relationship cite records that do not establish present-day Chinese use. The dossier includes current dictionary evidence for 酒吧 as the Chinese word for an English bar, but the sense and relationship omit it.",
+      "verification": "Add X-052e4b77548f8a805191 to the current bar sense and generated has_sense relationship, then obtain fresh factual and readability reviews.",
+      "evidence": [
+        "current_article.meaning_history.senses[2]",
+        "current_article.relationships[meaning:吧:bar]",
+        "X-052e4b77548f8a805191",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:吧:ba-current-bar-sense-citation"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "source_id": "ziyuan-2012",
+  "requires_coordinator_verification": true,
+  "findings": [
+    {
+      "kind": "pipeline",
+      "title": "Populate verified printed-page metadata for 字源 pages 613–614",
+      "details": "Issue #178: printed page metadata is absent for PDF page 613; expected scan label 600 requires independent observation.",
+      "verification": "Add source-bound printed-page metadata for PDF pages 613 and 614, validate it against the supplied scans, and confirm regenerated locators expose printed pages 600 and 601 without changing the source images or OCR.",
+      "evidence": [
+        "current_source_page_metadata: page 613 and 614 have printed_page null",
+        "X-4db903dea17c943b8ca7",
+        "X-741782b1753d46f0cb7b",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:的:de-page-613-print-page-metadata:p613"
+    },
+    {
+      "kind": "pipeline",
+      "title": "Populate verified printed-page metadata for 字源 pages 613–614",
+      "details": "Issue #178: printed page metadata is absent for PDF page 614; expected scan label 601 requires independent observation.",
+      "verification": "Add source-bound printed-page metadata for PDF pages 613 and 614, validate it against the supplied scans, and confirm regenerated locators expose printed pages 600 and 601 without changing the source images or OCR.",
+      "evidence": [
+        "current_source_page_metadata: page 613 and 614 have printed_page null",
+        "X-4db903dea17c943b8ca7",
+        "X-741782b1753d46f0cb7b",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:的:de-page-613-print-page-metadata:p614"
+    }
+  ]
+}

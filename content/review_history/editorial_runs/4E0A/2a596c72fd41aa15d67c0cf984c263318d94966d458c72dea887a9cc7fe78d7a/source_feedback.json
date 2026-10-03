@@ -1,0 +1,25 @@
+{
+  "task": "This is a narrowly scoped glyph repair. Preserve existing reviewed prose, sound tables, graph and evidence. Research only the candidate images and their provenance; do not add local reading checks as new external evidence or repeat unrelated reading research. Let the visual curator inspect actual attachments and make any required image description changes. Independently determine the visible stroke shapes; the two findings phrase them differently, so inspect pixels before choosing wording.",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`historical_glyphs.items[1].caption` and `.alt` misdescribe the attached seal-script rendering. It has a long horizontal baseline, a central upright, and an upper stroke curving down into that upright; it does not have a middle stroke extending right. Correct both descriptions to match the image."
+      ],
+      "article_hash": "8011d0d97295897b20016bb557c637c04bd09be882caea3e4dab6175b579084a",
+      "dossier_hash": "28ee06d91c063e9a9b320d51df10508f5a1b4148b39d6feb49fc5031caf43c40",
+      "reviewer": "gpt-6-luna:low:factual:01a0e124-163b-7981-83bc-b3b789d24536"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `historical_glyphs.items[1].caption` and `historical_glyphs.items[1].alt`, replace the description of a middle stroke and separate baseline with one matching the attached seal-script rendering: a long curved upper stroke bends right, followed by a lower horizontal stroke. Keep the existing qualification that it is a modern rendering, not evidence of a dated transition."
+      ],
+      "article_hash": "8011d0d97295897b20016bb557c637c04bd09be882caea3e4dab6175b579084a",
+      "dossier_hash": "28ee06d91c063e9a9b320d51df10508f5a1b4148b39d6feb49fc5031caf43c40",
+      "reviewer": "gpt-6-luna:low:readability:01a0e124-59c8-7533-8fe7-54cc5c89c9d9"
+    }
+  ]
+}
