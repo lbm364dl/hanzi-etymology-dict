@@ -82,6 +82,10 @@ Use other authoritative references to test the book's claims and preserve disagr
 uncertainty. Add only source-backed findings with page-specific provenance; retain all existing
 evidence unless a reviewed correction is necessary. Do not infer missing evidence from the
 existing article. Preserve the current historical glyph selection for this text-focused task.
+For a source's report that a graph has not been found, preserve its combined period,
+corpus and author scope. Do not turn reported non-attestation into proven absence from
+all writing in each named period. Keep an inferred date from a transmitted text distinct
+from a verified dated artifact, even when both appear in the same paragraph.
 """.strip()
 
 
