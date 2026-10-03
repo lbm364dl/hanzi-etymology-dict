@@ -162,6 +162,16 @@ class SiteArticleRefreshTests(unittest.TestCase):
 
 
 class ScopedRefinementTests(unittest.TestCase):
+    def test_generated_edges_are_not_authored_array_protection_targets(self):
+        from pipeline.editorial import apply_article_patch
+        edge = {'id': 'sense', 'predicate': 'has_sense'}
+        inputs = {'article': {'relationships': [edge]},
+                  'feedback': {'preserve_array_items': {'relationships': [edge]}}}
+        def never_invoke(*args):
+            raise AssertionError('Reject incompatible generated-edge protection before agent work')
+        with self.assertRaisesRegex(ValueError, 'Protect source sense/development records'):
+            apply_article_patch('editor', inputs, {}, Path('unused'), never_invoke)
+
     def test_preserved_record_cannot_also_be_an_allowed_leaf_edit(self):
         from pipeline.editorial import apply_article_patch
         item = {'text': 'Preserved claim.', 'evidence_ids': ['E1']}

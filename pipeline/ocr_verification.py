@@ -20,6 +20,7 @@ def packet(text, proposals):
     """Bind proposed replacements to exact offsets, anchors and visible context."""
     result = []
     seen = set()
+    spans = []
     for proposal in proposals:
         identity, start, end = proposal["id"], proposal["start"], proposal["end"]
         if identity in seen or not identity:
@@ -28,6 +29,9 @@ def packet(text, proposals):
         if (type(start) is not int or type(end) is not int
                 or not 0 <= start < end <= len(text)):
             raise ValueError("Invalid OCR span")
+        if any(start < previous_end and previous_start < end for previous_start, previous_end in spans):
+            raise ValueError("OCR occurrence spans must be distinct and nonoverlapping")
+        spans.append((start, end))
         before = proposal["before"]
         if text[start:end] != before:
             raise ValueError("OCR proposal does not match its exact raw span")

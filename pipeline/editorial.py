@@ -1134,6 +1134,8 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
     for path, records in preserved.items():
         if path not in paths or not isinstance(records, list):
             raise ValueError('Preserved array items must name existing array fields')
+        if path == 'relationships' and any(record.get('predicate') in derived_predicates for record in records):
+            raise ValueError('Protect source sense/development records, not generated relationship records')
         node = article
         for part in paths[path]: node = node[part]
         if not isinstance(node, list) or not contains_in_order(node, records):
