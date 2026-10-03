@@ -158,9 +158,15 @@ cannot certify the continuation.
 `pipeline.ocr_verification.verify` checks proposed literal replacements through a separate
 Luna low scan reviewer. Each proposal carries a stable occurrence ID, exact raw-text offsets,
 an anchor and surrounding context. Incomplete coverage, duplicate IDs, wrong raw text and
-contradictory verdicts are rejected. Unresolved identities retain no guessed Unicode replacement.
-The output is an occurrence check, not approval of a whole page; the coordinator still validates
-source-bound producer patches and their rebuilt consumer records.
+contradictory verdicts are rejected. `unresolved_identity` means the scan does not establish
+whether the raw OCR scalar matches. `unsupported_raw_identity` means the scan affirmatively
+contradicts the raw scalar while leaving the printed graph's exact Unicode identity unknown;
+it must not include a guessed scalar. Only the latter can authorize a source-bound replacement
+with the producer's page-specific `[glyph:pNNN]` marker and an `unidentified_printed_character`
+record. That transaction preserves raw OCR and records the exact scan review, crop attachments,
+and uncertainty while rebuilding and validating the consumer corpus. The output is an
+occurrence check, not approval of a whole page; the coordinator still validates source-bound
+producer patches and their rebuilt consumer records.
 
 `pipeline.source_enrichment.resolve_source_findings(job, runner)` offers a separate scan-backed
 review of an exact already-approved candidate. It may release a retained unresolved identity

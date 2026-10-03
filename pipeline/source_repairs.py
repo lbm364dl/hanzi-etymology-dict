@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import signal
 import subprocess
@@ -283,7 +284,7 @@ def verify(source, check):
         return _verify_locked(source, check)
 
 
-def _validated_occurrence(verified_path, occurrence_id):
+def _validated_occurrence(verified_path, occurrence_id, *, expected_verdict="confirmed_correction"):
     """Validate all standard OCR-verification receipt and attachment bindings."""
     verified_path = Path(verified_path).expanduser().resolve()
     record = editorial.read(verified_path)
@@ -373,13 +374,23 @@ def _validated_occurrence(verified_path, occurrence_id):
     if len(reviewed) != 1:
         raise ValueError("OCR result must include the requested occurrence exactly once")
     observation = reviewed[0]
-    if observation["verdict"] != "confirmed_correction":
-        raise ValueError("Only a confirmed correction can be applied")
-    if (not isinstance(proposal.get("after"), str) or not proposal["after"]
-            or proposal["after"] == proposal["before"]
-            or observation["printed_text"] != proposal["after"]
-            or observation["raw_text"] != proposal["before"]):
-        raise ValueError("Reviewed literal does not match the exact proposed replacement")
+    if observation["verdict"] != expected_verdict:
+        raise ValueError(f"OCR receipt must resolve as {expected_verdict}")
+    if observation["raw_text"] != proposal["before"]:
+        raise ValueError("Reviewed raw literal does not match the exact proposed occurrence")
+    if expected_verdict == "confirmed_correction":
+        if (not isinstance(proposal.get("after"), str) or not proposal["after"]
+                or proposal["after"] == proposal["before"]
+                or observation["printed_text"] != proposal["after"]):
+            raise ValueError("Reviewed literal does not match the exact proposed replacement")
+    elif expected_verdict == "unresolved_identity":
+        if proposal.get("after") is not None or observation["printed_text"] is not None:
+            raise ValueError("Unresolved identity must not supply a guessed Unicode replacement")
+    elif expected_verdict == "unsupported_raw_identity":
+        if proposal.get("after") is not None or observation["printed_text"] is not None:
+            raise ValueError("Unsupported raw identity must not supply a guessed Unicode replacement")
+    else:
+        raise ValueError("Unsupported OCR repair disposition")
     return {"verified_path": verified_path, "record": record,
             "occurrences_path": occurrences_path, "occurrences_record": occurrences_record,
             "occurrences": occurrences, "proposal": proposal, "observation": observation,
@@ -485,6 +496,18 @@ def _copy_proof(proof, archive):
     if review_dest.exists():
         shutil.rmtree(review_dest)
     shutil.copytree(proof["review_dir"], review_dest)
+    meta = editorial.read(proof["meta_path"])
+    attachments = []
+    for index, item in enumerate(meta.get("image_argument_manifest", []), 1):
+        source = Path(item["path"]).expanduser().resolve()
+        if not source.is_file() or _bytes_hash(source) != item.get("sha256"):
+            raise ValueError("OCR proof attachment changed before transaction archival")
+        destination = proof_dir / "attachments" / f"{index:02d}-{source.name}"
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+        attachments.append({"source_path": str(source), "archive_path": str(destination),
+                            "sha256": item["sha256"]})
+    return attachments
 
 
 def _build_corpus(source, pages_root, timeout, python_executable=None):
@@ -513,9 +536,37 @@ def apply_verified(source, verified_occurrences_path, occurrence_id,
                                       timeout=timeout, python_executable=python_executable)
 
 
+def apply_unidentified_printed_character(source, verified_occurrences_path, occurrence_id,
+                                         producer_page_dir, pages_root, archive_dir, *,
+                                         description, uncertainty,
+                                         current_overlay_sha256, timeout=300,
+                                         python_executable=None):
+    """Replace an unsupported OCR scalar with the producer's page-bound glyph reference.
+
+    The independent occurrence receipt must say ``unsupported_raw_identity`` and
+    leave ``printed_text`` null. This is distinct from ordinary uncertainty: it
+    records that the visible graph does not support the raw scalar. The transaction adds the producer-native
+    ``unidentified_printed_character`` record and uncertainty; it never guesses a
+    Unicode scalar.  Raw ``ocr.json`` and the original OCR evidence remain intact.
+    """
+    if timeout <= 0:
+        raise ValueError("timeout must be positive")
+    if not isinstance(description, str) or not description.strip():
+        raise ValueError("An unresolved printed glyph needs a visual/context description")
+    if not isinstance(uncertainty, str) or not uncertainty.strip():
+        raise ValueError("An unresolved printed glyph needs an explicit uncertainty")
+    with producer_lock(source):
+        return _apply_verified_locked(
+            source, verified_occurrences_path, occurrence_id, producer_page_dir,
+            pages_root, archive_dir, current_overlay_sha256=current_overlay_sha256,
+            timeout=timeout, python_executable=python_executable,
+            unresolved_reference={"description": description.strip(),
+                                  "uncertainty": uncertainty.strip()})
+
+
 def _apply_verified_locked(source, verified_occurrences_path, occurrence_id,
                            producer_page_dir, pages_root, archive_dir, *, current_overlay_sha256,
-                           timeout=300, python_executable=None):
+                           timeout=300, python_executable=None, unresolved_reference=None):
     """Apply one verified exact-literal correction as a producer/corpus transaction.
 
     ``current_overlay_sha256`` is the observed byte hash (or ``None`` if the
@@ -532,7 +583,9 @@ def _apply_verified_locked(source, verified_occurrences_path, occurrence_id,
     pages_root = Path(pages_root).expanduser().resolve()
     page_dir.relative_to(root)
     pages_root.relative_to(root)
-    proof = _validated_occurrence(verified_occurrences_path, occurrence_id)
+    proof = _validated_occurrence(
+        verified_occurrences_path, occurrence_id,
+        expected_verdict="unsupported_raw_identity" if unresolved_reference else "confirmed_correction")
     overlay_path = page_dir / "ocr-corrections.json"
     if ("overlay_sha256" not in proof["record"]["provenance"]
             or current_overlay_sha256 != proof["record"]["provenance"]["overlay_sha256"]):
@@ -542,7 +595,7 @@ def _apply_verified_locked(source, verified_occurrences_path, occurrence_id,
     transaction_id = f"ocr-repair-{time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())}-{uuid.uuid4().hex[:12]}"
     archive = archive_root / transaction_id
     archive.mkdir()
-    _copy_proof(proof, archive)
+    proof_attachments = _copy_proof(proof, archive) or []
 
     raw, raw_text, start, end = _bind_to_source(
         proof, source, page_dir, current_overlay_sha256)
@@ -550,6 +603,19 @@ def _apply_verified_locked(source, verified_occurrences_path, occurrence_id,
     if (effective_before.get("pdf_page_1based") != proof["record"]["provenance"].get("pdf_page")
             or effective_before.get("source_sha256") != raw.get("source_sha256")):
         raise ValueError("Producer effective page does not match OCR receipt")
+    reference_record = None
+    if unresolved_reference:
+        used_ids = {glyph.get("id") for glyph in effective_before["ocr"].get("glyphs", [])}
+        number = 1
+        while f"p{number:03d}" in used_ids:
+            number += 1
+        glyph_id = f"p{number:03d}"
+        marker = f"[glyph:{glyph_id}]"
+        reference_record = {"id": glyph_id, "kind": "unidentified_printed_character",
+                            "description": unresolved_reference["description"]}
+        patch_after = marker
+    else:
+        patch_after = proof["proposal"]["after"]
     old_rows = _jsonl_pages(corpus)
     page_key = (source["book_id"], raw["pdf_page_1based"])
     if page_key not in old_rows:
@@ -575,11 +641,11 @@ def _apply_verified_locked(source, verified_occurrences_path, occurrence_id,
             raise ValueError("Existing producer patch has invalid offsets")
         if start < pend and pstart < end:
             if (pstart, pend, prior.get("before"), prior.get("after")) == (
-                    start, end, proof["proposal"]["before"], proof["proposal"]["after"]):
+                    start, end, proof["proposal"]["before"], patch_after):
                 raise ValueError("The verified correction is already present in producer overlay")
             raise ValueError("Verified correction overlaps an existing producer patch")
     patch = {"start": start, "end": end, "before": proof["proposal"]["before"],
-             "after": proof["proposal"]["after"], "source_checked": True,
+             "after": patch_after, "source_checked": True,
              "reason": proof["observation"]["reason"],
              "reviewers": [f"{proof['record']['model']}:{proof['record']['reasoning']}:{occurrence_id}"],
              "verification": {"verified_occurrences_sha256": _bytes_hash(proof["verified_path"]),
@@ -587,6 +653,12 @@ def _apply_verified_locked(source, verified_occurrences_path, occurrence_id,
                               "occurrence_id": occurrence_id}}
     new_overlay = copy.deepcopy(overlay)
     new_overlay["patches"] = sorted([*patches, patch], key=lambda item: item["start"])
+    if reference_record:
+        existing_added = new_overlay.setdefault("add_glyphs", [])
+        if any(item.get("id") == reference_record["id"] for item in existing_added):
+            raise ValueError("Unresolved glyph reference ID already exists in producer overlay")
+        existing_added.append(reference_record)
+        new_overlay.setdefault("added_uncertainties", []).append(unresolved_reference["uncertainty"])
 
     pages_catalog = corpus.parent / "books.json"
     mutable = [overlay_path, page_dir / "reading-corrected.md", page_dir / "ocr-corrected.json",
@@ -601,7 +673,10 @@ def _apply_verified_locked(source, verified_occurrences_path, occurrence_id,
                    "pdf_page": raw["pdf_page_1based"], "raw_ocr_sha256": raw_hash_before,
                    "current_overlay_sha256": current_overlay_sha256,
                    "new_occurrence": {"id": occurrence_id, "start": start, "end": end,
-                                      "before": patch["before"], "after": patch["after"]},
+                                      "before": patch["before"], "after": patch["after"],
+                                      "disposition": "unsupported_raw_identity" if reference_record else "confirmed_correction",
+                                      "glyph_reference": reference_record},
+                   "archived_review_attachments": proof_attachments,
                    "before": snapshots}
     editorial.write(archive / "transaction.json", transaction)
     try:
@@ -617,6 +692,11 @@ def _apply_verified_locked(source, verified_occurrences_path, occurrence_id,
         if (effective_after["ocr"]["text"][current_offset:current_offset + len(patch["after"])]
                 != patch["after"]):
             raise ValueError("Producer effective text does not contain the exact verified occurrence")
+        if reference_record:
+            actual_glyphs = [item for item in effective_after["ocr"].get("glyphs", [])
+                             if item.get("id") == reference_record["id"]]
+            if actual_glyphs != [reference_record]:
+                raise ValueError("Producer effective OCR omitted the unidentified printed-character record")
         export_script = _producer_script(source, "research_corrections.py")[1]
         executable = python_executable or source.get("python_executable") or sys.executable
         export_code = (
@@ -639,6 +719,16 @@ def _apply_verified_locked(source, verified_occurrences_path, occurrence_id,
                                            "producer_page_dir": str(page_dir), "raw_start": start,
                                            "raw_end": end, "before": patch["before"],
                                            "after": patch["after"]}, timeout, python_executable)
+        if reference_record:
+            current_page = new_rows[page_key]
+            referenced_assets = [item for item in current_page.get("glyph_assets", [])
+                                 if item.get("id") == reference_record["id"]]
+            if (len(referenced_assets) != 1
+                    or referenced_assets[0].get("kind") != "unidentified_printed_character"):
+                raise ValueError("Rebuilt consumer omitted the occurrence's unresolved glyph reference")
+            applied["glyph_reference"] = {"id": reference_record["id"],
+                                           "kind": reference_record["kind"],
+                                           "consumer_asset": referenced_assets[0]}
         after_dir = archive / "after"
         after_snapshots = [_snapshot(path, after_dir, f"files/{index:02d}-{path.name}")
                            for index, path in enumerate(mutable)]

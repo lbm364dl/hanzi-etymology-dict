@@ -56,6 +56,15 @@ class OCRVerificationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_result({'occurrences': [dict(id='p614:1', raw_text='的', printed_text='旳', verdict='unresolved_identity', reason='Unclear')]}, self.occurrences)
 
+    def test_unsupported_raw_identity_is_distinct_from_unresolved_match_and_has_no_guess(self):
+        unsupported = {'occurrences': [dict(id='p614:1', raw_text='的', printed_text=None,
+            verdict='unsupported_raw_identity', reason='Visible strokes do not support raw scalar; exact Unicode unresolved')]}
+        self.assertEqual(validate_result(unsupported, self.occurrences), unsupported)
+        for printed in ('的', '旳'):
+            with self.assertRaisesRegex(ValueError, 'must not guess Unicode'):
+                validate_result({'occurrences': [{**unsupported['occurrences'][0],
+                    'printed_text': printed}]}, self.occurrences)
+
 
 if __name__ == '__main__':
     unittest.main()

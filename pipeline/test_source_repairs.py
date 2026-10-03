@@ -8,6 +8,7 @@ in a disposable fixture edition with a mocked local corpus builder.
 import hashlib
 import fcntl
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -60,6 +61,87 @@ class SourceRepairReceiptTests(unittest.TestCase):
                                                      "result_hash": editorial.digest(result)})
             with self.assertRaisesRegex(ValueError, "review result or metadata"):
                 source_repairs._validated_occurrence(stage / "verified-occurrences.json", "p1")
+
+    def test_unresolved_receipt_requires_null_identity_and_cannot_masquerade_as_literal_repair(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            stage = root / "unresolved"
+            review = stage / "review"
+            review.mkdir(parents=True)
+            scan = root / "source.png"
+            Image.new("RGB", (8, 8), (255, 255, 255)).save(scan)
+            pixel_hash = hashlib.sha256(Image.open(scan).convert("RGB").tobytes()).hexdigest()
+            text = "before兒after"
+            start, end = text.index("兒"), text.index("兒") + 1
+            provenance = {"raw_ocr_path": str(root / "ocr.json"),
+                          "source_scan_path": str(scan), "pdf_page": 1,
+                          "raw_text_sha256": hashlib.sha256(text.encode()).hexdigest(),
+                          "ocr_evidence_sha256": "raw-fixture", "source_pixel_sha256": pixel_hash,
+                          "overlay_sha256": None}
+            proposal = {"id": "p1", "start": start, "end": end, "before": "兒", "after": None,
+                        "anchor": "before", "context_before": "before",
+                        "context_after": "after"}
+            occurrences = [proposal]
+            result = {"occurrences": [{"id": "p1", "raw_text": "兒", "printed_text": None,
+                                       "verdict": "unresolved_identity",
+                                       "reason": "Target differs from the named raw scalar; exact Unicode remains unresolved."}]}
+            editorial.write(stage / "occurrences.json", {"provenance": provenance,
+                                                           "occurrences": occurrences})
+            editorial.write(review / "result.json", result)
+            (review / "prompt.txt").write_text("Independent test receipt\nINPUTS:\n" + json.dumps(
+                {"provenance": provenance, "occurrences": occurrences,
+                 "feedback": {"source_scan_images": [{"path": str(scan), "pdf_page": 1,
+                                                        "source_pixel_sha256": pixel_hash}]},
+                 "attached_source_scans": [{"path": str(scan), "pdf_page": 1,
+                                            "source_pixel_sha256": pixel_hash}]}, ensure_ascii=False),
+                encoding="utf-8")
+            editorial.write(review / "meta.json", {"status": "complete", "role": "ocr_verification",
+                "model": "gpt-6-luna", "reasoning": "low", "fingerprint": "fixture-fingerprint",
+                "agent_thread_ids": ["fixture-thread"], "result_hash": editorial.digest(result),
+                "image_argument_manifest": [{"path": str(scan),
+                    "sha256": hashlib.sha256(scan.read_bytes()).hexdigest()}]})
+            verified = {"provenance": provenance, "occurrences_hash": editorial.digest(occurrences),
+                        "result": result, "result_hash": editorial.digest(result),
+                        "review_directory": str(review), "model": "gpt-6-luna", "reasoning": "low",
+                        "whole_page_reviewed": False}
+            editorial.write(stage / "verified-occurrences.json", verified)
+            accepted = source_repairs._validated_occurrence(stage / "verified-occurrences.json", "p1",
+                                                              expected_verdict="unresolved_identity")
+            self.assertIsNone(accepted["observation"]["printed_text"])
+            with self.assertRaisesRegex(ValueError, "OCR receipt must resolve as unsupported_raw_identity"):
+                source_repairs._validated_occurrence(stage / "verified-occurrences.json", "p1",
+                                                      expected_verdict="unsupported_raw_identity")
+            with self.assertRaisesRegex(ValueError, "OCR receipt must resolve as confirmed_correction"):
+                source_repairs._validated_occurrence(stage / "verified-occurrences.json", "p1")
+
+
+class ProofArchivalTests(unittest.TestCase):
+    def test_copy_proof_archives_exact_source_crop_attachments(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            review = root / "review"
+            review.mkdir()
+            proof_dir = root / "proof-source"
+            proof_dir.mkdir()
+            attached_crop = root / "target-crop.png"
+            Image.new("RGB", (5, 7), (1, 2, 3)).save(attached_crop)
+            for name, content in (("verified-occurrences.json", "{}"),
+                                  ("occurrences.json", "{}")):
+                path = proof_dir / name
+                path.write_text(content, encoding="utf-8")
+            (review / "result.json").write_text("{}", encoding="utf-8")
+            editorial.write(review / "meta.json", {"image_argument_manifest": [{
+                "path": str(attached_crop), "sha256": hashlib.sha256(attached_crop.read_bytes()).hexdigest()}]})
+            (review / "prompt.txt").write_text("frozen input packet", encoding="utf-8")
+            proof = {"verified_path": proof_dir / "verified-occurrences.json",
+                     "occurrences_path": proof_dir / "occurrences.json",
+                     "result_path": review / "result.json", "meta_path": review / "meta.json",
+                     "review_dir": review}
+            archived = source_repairs._copy_proof(proof, root / "archive")
+            self.assertEqual(len(archived), 1)
+            archived_path = Path(archived[0]["archive_path"])
+            self.assertEqual(hashlib.sha256(archived_path.read_bytes()).hexdigest(), archived[0]["sha256"])
+            self.assertEqual(archived_path.read_bytes(), attached_crop.read_bytes())
 
 
 class ExistingRepairVerificationTests(unittest.TestCase):
@@ -114,7 +196,7 @@ class TransactionFixtureTests(unittest.TestCase):
 
         correction_script = scripts / "research_corrections.py"
         correction_script.write_text('''
-import copy, hashlib, json
+import copy, hashlib, json, re
 from pathlib import Path
 from PIL import Image
 def digest(value):
@@ -139,6 +221,12 @@ def load_effective(root):
     for patch in sorted(overlay['patches'], key=lambda p:p['start'], reverse=True):
         text=text[:patch['start']]+patch['after']+text[patch['end']:]
     result=copy.deepcopy(raw); result['ocr']['text']=text
+    result['ocr']['glyphs'].extend(copy.deepcopy(overlay.get('add_glyphs', [])))
+    result['ocr']['uncertainties'].extend(copy.deepcopy(overlay.get('added_uncertainties', [])))
+    ids=[glyph['id'] for glyph in result['ocr']['glyphs']]
+    refs=re.findall(r'\\[glyph:([^\\]]+)\\]',text)
+    if len(ids)!=len(set(ids)) or set(ids)!=set(refs):
+        raise ValueError('fixture producer has unbound glyph reference')
     result['original_evidence_sha256']=raw['evidence_sha256']
     result['evidence_sha256']=digest({k:result[k] for k in ('source_sha256','request_cache_key','ocr')})
     return result
@@ -158,7 +246,7 @@ p=argparse.ArgumentParser(); sub=p.add_subparsers(dest='cmd',required=True); b=s
 rows=[]
 for rawpath in sorted(Path(a.pages_root).rglob('ocr.json')):
     value=research_corrections.load_effective(rawpath.parent)
-    rows.append({'book_id':'fixture-book','pdf_page_1based':value['pdf_page_1based'],'source_sha256':value['source_sha256'],'evidence_sha256':value['evidence_sha256'],'text':value['ocr']['text']})
+    rows.append({'book_id':'fixture-book','pdf_page_1based':value['pdf_page_1based'],'source_sha256':value['source_sha256'],'evidence_sha256':value['evidence_sha256'],'text':value['ocr']['text'],'glyph_assets':[{'id':g['id'],'kind':g.get('kind','historical_form'),'description':g['description']} for g in value['ocr']['glyphs']]})
 output=Path(a.output); output.parent.mkdir(parents=True,exist_ok=True)
 if (output.parent.parent/'BUILD_FAIL').exists():
     output.write_text('partial corpus\\n'); (output.parent/'books.json').write_text('{"fixture":"partial"}\\n'); raise SystemExit(9)
@@ -173,14 +261,14 @@ print(json.dumps({'pages':len(rows)}))
             raw = editorial.read(page_dir / "ocr.json")
             row = {"book_id": "fixture-book", "pdf_page_1based": number,
                    "source_sha256": raw["source_sha256"], "evidence_sha256": raw["evidence_sha256"],
-                   "text": raw["ocr"]["text"]}
+                   "text": raw["ocr"]["text"], "glyph_assets": []}
             with corpus.open("a", encoding="utf-8") as stream:
                 stream.write(json.dumps(row, ensure_ascii=False) + "\n")
         catalog = corpus.parent / "books.json"
         catalog.write_text('{"fixture":"old"}\n', encoding="utf-8")
         return producer, pages, corpus, catalog
 
-    def _proof(self, root, producer, page_dir, *, occurrence_id="p1"):
+    def _proof(self, root, producer, page_dir, *, occurrence_id="p1", verdict="confirmed_correction"):
         raw = editorial.read(page_dir / "ocr.json")
         text = raw["ocr"]["text"]
         start = text.index("兒")
@@ -191,7 +279,8 @@ print(json.dumps({'pages':len(rows)}))
         verified = stage / "verified-occurrences.json"
         occurrences_file = stage / "occurrences.json"
         result_path, meta_path = review / "result.json", review / "meta.json"
-        proposal = {"id": occurrence_id, "start": start, "end": end, "before": "兒", "after": "皃",
+        proposal = {"id": occurrence_id, "start": start, "end": end,
+                    "before": "兒", "after": "皃" if verdict == "confirmed_correction" else None,
                     "anchor": "start",
                     "context_before": text[max(0, start - 40):start],
                     "context_after": text[end:end + 40]}
@@ -205,7 +294,7 @@ print(json.dumps({'pages':len(rows)}))
                       "ocr_evidence_sha256": raw["evidence_sha256"],
                       "pdf_page": raw["pdf_page_1based"],
                       "source_pixel_sha256": raw["source_sha256"]}}
-        observation = {"verdict": "confirmed_correction", "printed_text": "皃",
+        observation = {"verdict": verdict, "printed_text": "皃" if verdict == "confirmed_correction" else None,
                        "reason": "fixture-bound observation"}
         return {"verified_path": verified, "occurrences_path": occurrences_file,
                 "occurrences_record": {}, "occurrences": [proposal], "proposal": proposal,
@@ -225,7 +314,7 @@ print(json.dumps({'pages':len(rows)}))
             proof = self._proof(root, producer, page_dir)
             archive = root / "dictionary-research" / "producer-patches" / "fixture"
             with patch.object(source_repairs, "_validated_occurrence", return_value=proof), \
-                    patch.object(source_repairs, "_copy_proof"):
+                    patch.object(source_repairs, "_copy_proof", return_value=[]):
                 receipt = source_repairs.apply_verified(source, proof["verified_path"], "p1", page_dir,
                     pages, archive, current_overlay_sha256=None, timeout=20)
             self.assertEqual(receipt["unchanged_other_page_count"], 1)
@@ -238,6 +327,68 @@ print(json.dumps({'pages':len(rows)}))
             self.assertEqual(editorial.read(catalog), {"fixture": "rebuilt"})
             transaction = editorial.read(Path(receipt["archive_path"]) / "transaction.json")
             self.assertEqual(transaction["status"], "complete")
+
+    def test_unsupported_raw_identity_adds_reference_and_preserves_raw(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            producer, pages, corpus, catalog = self._fixture(root)
+            page_dir = pages / "page-0001"
+            source = {"id": "fixture-edition", "producer_root": str(producer),
+                      "corpus_path": str(corpus), "pages_root": str(pages),
+                      "book_id": "fixture-book", "python_executable": sys.executable}
+            raw_hash = source_repairs._bytes_hash(page_dir / "ocr.json")
+            old_rows = source_repairs._jsonl_pages(corpus)
+            proof = self._proof(root, producer, page_dir, verdict="unsupported_raw_identity")
+            archive = root / "dictionary-research" / "producer-patches" / "fixture"
+            with patch.object(source_repairs, "_validated_occurrence", return_value=proof), \
+                    patch.object(source_repairs, "_copy_proof", return_value=[]):
+                receipt = source_repairs.apply_unidentified_printed_character(
+                    source, proof["verified_path"], "p1", page_dir, pages, archive,
+                    description="Unresolved printed token in the fixture paragraph after its anchor.",
+                    uncertainty="The exact Unicode identity of the printed occurrence is unresolved.",
+                    current_overlay_sha256=None, timeout=20)
+            self.assertEqual(source_repairs._bytes_hash(page_dir / "ocr.json"), raw_hash)
+            overlay = editorial.read(page_dir / "ocr-corrections.json")
+            glyph = overlay["add_glyphs"][0]
+            self.assertEqual(glyph["kind"], "unidentified_printed_character")
+            marker = f"[glyph:{glyph['id']}]"
+            self.assertEqual(overlay["patches"][0]["after"], marker)
+            self.assertEqual(overlay["added_uncertainties"], [
+                "The exact Unicode identity of the printed occurrence is unresolved."])
+            new_rows = source_repairs._jsonl_pages(corpus)
+            page = new_rows[("fixture-book", 1)]
+            self.assertEqual(page["text"], f"start{marker}end")
+            self.assertEqual(page["glyph_assets"][0]["kind"], "unidentified_printed_character")
+            self.assertEqual(new_rows[("fixture-book", 2)], old_rows[("fixture-book", 2)])
+            transaction = editorial.read(Path(receipt["archive_path"]) / "transaction.json")
+            self.assertEqual(transaction["status"], "complete")
+            self.assertEqual(transaction["new_occurrence"]["disposition"], "unsupported_raw_identity")
+            self.assertEqual(transaction["new_occurrence"]["glyph_reference"]["id"], glyph["id"])
+
+    def test_general_unresolved_identity_cannot_replace_raw_scalar_with_glyph_marker(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            producer, pages, corpus, _ = self._fixture(root)
+            page_dir = pages / "page-0001"
+            source = {"id": "fixture-edition", "producer_root": str(producer),
+                      "corpus_path": str(corpus), "pages_root": str(pages),
+                      "book_id": "fixture-book", "python_executable": sys.executable}
+            proof = self._proof(root, producer, page_dir, verdict="unresolved_identity")
+            before = corpus.read_bytes()
+            def validate_expected(path, identity, *, expected_verdict):
+                if proof["observation"]["verdict"] != expected_verdict:
+                    raise ValueError(f"OCR receipt must resolve as {expected_verdict}")
+                return proof
+            with patch.object(source_repairs, "_validated_occurrence", side_effect=validate_expected), \
+                    patch.object(source_repairs, "_copy_proof", return_value=[]):
+                with self.assertRaisesRegex(ValueError, "must resolve as unsupported_raw_identity"):
+                    source_repairs.apply_unidentified_printed_character(
+                        source, proof["verified_path"], "p1", page_dir, pages, root / "archive",
+                        description="Unresolved printed character.",
+                        uncertainty="Exact identity remains unresolved.",
+                        current_overlay_sha256=None, timeout=20)
+            self.assertFalse((page_dir / "ocr-corrections.json").exists())
+            self.assertEqual(corpus.read_bytes(), before)
 
     def test_new_verification_provenance_binds_raw_source_pixels_and_overlay(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -361,7 +512,7 @@ print(json.dumps({'pages':len(rows)}))
             proof["record"]["provenance"].pop("overlay_sha256")
             before_corpus = corpus.read_bytes()
             with patch.object(source_repairs, "_validated_occurrence", return_value=proof), \
-                    patch.object(source_repairs, "_copy_proof"):
+                    patch.object(source_repairs, "_copy_proof", return_value=[]):
                 with self.assertRaisesRegex(ValueError, "Expected current overlay hash"):
                     source_repairs.apply_verified(source, proof["verified_path"], "p1", page_dir,
                         pages, root / "archive", current_overlay_sha256=None, timeout=20)
@@ -400,7 +551,7 @@ print(json.dumps({'pages':len(rows)}))
             proof["record"]["provenance"]["overlay_sha256"] = overlay_hash
             before_overlay, before_corpus = overlay_path.read_bytes(), corpus.read_bytes()
             with patch.object(source_repairs, "_validated_occurrence", return_value=proof), \
-                    patch.object(source_repairs, "_copy_proof"):
+                    patch.object(source_repairs, "_copy_proof", return_value=[]):
                 with self.assertRaisesRegex(ValueError, "already present|overlaps"):
                     source_repairs.apply_verified(source, proof["verified_path"], "p1", page_dir,
                         pages, root / "archive", current_overlay_sha256=overlay_hash, timeout=20)
@@ -419,7 +570,7 @@ print(json.dumps({'pages':len(rows)}))
             (producer / "BUILD_FAIL").write_text("fail after partial build", encoding="utf-8")
             proof = self._proof(root, producer, page_dir)
             with patch.object(source_repairs, "_validated_occurrence", return_value=proof), \
-                    patch.object(source_repairs, "_copy_proof"):
+                    patch.object(source_repairs, "_copy_proof", return_value=[]):
                 with self.assertRaisesRegex(RuntimeError, "consumer corpus rebuild failed"):
                     source_repairs.apply_verified(source, proof["verified_path"], "p1", page_dir,
                         pages, root / "archive", current_overlay_sha256=None, timeout=20)
@@ -433,6 +584,36 @@ print(json.dumps({'pages':len(rows)}))
             transaction = editorial.read(transactions[0])
             self.assertEqual(transaction["status"], "rolled_back")
             self.assertTrue(list((transactions[0].parent / "failed-after").rglob("*.jsonl")))
+
+    def test_unresolved_glyph_builder_failure_rolls_back_reference_and_corpus(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            producer, pages, corpus, catalog = self._fixture(root)
+            page_dir = pages / "page-0001"
+            source = {"id": "fixture-edition", "producer_root": str(producer),
+                      "corpus_path": str(corpus), "pages_root": str(pages),
+                      "book_id": "fixture-book", "python_executable": sys.executable}
+            before_raw, before_corpus, before_catalog = (
+                source_repairs._bytes_hash(page_dir / "ocr.json"), corpus.read_bytes(), catalog.read_bytes())
+            (producer / "BUILD_FAIL").write_text("fail after partial build", encoding="utf-8")
+            proof = self._proof(root, producer, page_dir, verdict="unsupported_raw_identity")
+            with patch.object(source_repairs, "_validated_occurrence", return_value=proof), \
+                    patch.object(source_repairs, "_copy_proof", return_value=[]):
+                with self.assertRaisesRegex(RuntimeError, "consumer corpus rebuild failed"):
+                    source_repairs.apply_unidentified_printed_character(
+                        source, proof["verified_path"], "p1", page_dir, pages, root / "archive",
+                        description="An unresolved printed graph in the fixture paragraph.",
+                        uncertainty="Its exact Unicode identity is unresolved.",
+                        current_overlay_sha256=None, timeout=20)
+            self.assertEqual(source_repairs._bytes_hash(page_dir / "ocr.json"), before_raw)
+            self.assertFalse((page_dir / "ocr-corrections.json").exists())
+            self.assertEqual(corpus.read_bytes(), before_corpus)
+            self.assertEqual(catalog.read_bytes(), before_catalog)
+            transaction_paths = list((root / "archive").glob("*/transaction.json"))
+            self.assertEqual(len(transaction_paths), 1)
+            transaction = editorial.read(transaction_paths[0])
+            self.assertEqual(transaction["status"], "rolled_back")
+            self.assertEqual(transaction["new_occurrence"]["disposition"], "unsupported_raw_identity")
 
 
 if __name__ == "__main__":

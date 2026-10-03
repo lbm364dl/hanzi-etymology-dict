@@ -11,7 +11,8 @@ OCCURRENCE = {
     "properties": {
         "id": {"type": "string"}, "raw_text": {"type": "string"},
         "printed_text": {"type": ["string", "null"]},
-        "verdict": {"enum": ["correct_raw", "confirmed_correction", "unresolved_identity"]},
+        "verdict": {"enum": ["correct_raw", "confirmed_correction", "unresolved_identity",
+                             "unsupported_raw_identity"]},
         "reason": {"type": "string", "minLength": 1},
     },
 }
@@ -62,6 +63,8 @@ def validate_result(result, occurrences):
             raise ValueError("Confirmed correction must establish the proposed literal replacement")
         if verdict == "unresolved_identity" and printed is not None:
             raise ValueError("Unresolved printed identity must not guess Unicode text")
+        if verdict == "unsupported_raw_identity" and printed is not None:
+            raise ValueError("Unsupported raw identity must not guess Unicode text")
     return result
 
 
@@ -80,7 +83,7 @@ def verify(text, proposals, scans, provenance, runner, output):
                   "minItems": len(occurrences), "maxItems": len(occurrences)}}}
     inputs = {"occurrences": occurrences, "provenance": provenance,
               "feedback": {"source_scan_images": scans},
-              "instruction": "Offsets refer to the supplied exact raw text, not visual reading order. Use each ID and its before/after context to find the printed occurrence. Inspect pixels and neighboring controls. Identify the target attachment and adjacent printed anchor in your reason. For every claimed control identify the actual attachment and adjacent printed text or supplied crop label; do not invent controls not visible in the images. Describe the discriminating visible geometry before identifying the character: closed versus open outlines, actual joins, inner bars, and endpoints. Distinguish observed strokes from an imagined candidate shape. Shared upper components or a plausible familiar word do not settle a differing lower component. Check every character in a multi-character span independently; preserve the printed simplified/traditional mixture and do not normalize an otherwise correct adjacent character. A proposed replacement is only a hypothesis; reject it when the original OCR matches the scan. Prior verdicts do not establish what the pixels show. If named controls or proposed Unicode identities bias a conflicting review, use separately prepared source-raster controls in a blind visual comparison before mapping its result to character identities; do not claim a blind comparison occurred unless its actual attachments and genuine review receipt are retained. Return unresolved_identity with null printed_text if the replacement cannot be established."}
+              "instruction": "Offsets refer to the supplied exact raw text, not visual reading order. Use each ID and its before/after context to find the printed occurrence. Inspect pixels and neighboring controls. Identify the target attachment and adjacent printed anchor in your reason. For every claimed control identify the actual attachment and printed label; do not invent controls not visible in the images. Describe the discriminating visible geometry before identifying the character: closed versus open outlines, actual joins, inner bars, and endpoints. Distinguish observed strokes from an imagined candidate shape. Shared upper components or a plausible familiar word do not settle a differing lower component. Check every character in a multi-character span independently; preserve the printed simplified/traditional mixture and do not normalize an otherwise correct adjacent character. A proposed replacement is only a hypothesis; reject it when the original OCR matches the scan. Prior verdicts do not establish what the pixels show. Keep a graph printed inside an ancient quotation distinct from the Unicode identity transmitted by that quotation in another source. Use correct_raw only when the source pixels match the raw scalar's actual form; use confirmed_correction only when a different exact scalar is independently established. Use unsupported_raw_identity only when the visible printed graph does not support the raw scalar but its exact Unicode identity remains unknown; its printed_text must be null. Use unresolved_identity when the available pixels do not establish whether the raw scalar matches. Never force one of these dispositions to satisfy a downstream repair. If named controls or proposed Unicode identities bias a conflicting review, use separately prepared source-raster or authoritative glyph controls before mapping observations to character identities; do not claim such a comparison occurred unless its actual attachments and genuine review receipt are retained."}
     output = Path(output)
     editorial.write(output / "occurrences.json", {"provenance": provenance, "occurrences": occurrences})
     for attempt in range(3):
