@@ -1,0 +1,23 @@
+{
+  "allowed_edit_paths": [
+    "summary",
+    "formation",
+    "history/0"
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0708/source.png",
+      "pdf_page": 708,
+      "source_pixel_sha256": "fa20e8d355ce515c6d2fb88812a752f994b32b90562aefefeb6efa8fb3098c25"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0709/source.png",
+      "pdf_page": 709,
+      "source_pixel_sha256": "aef0586e6e34ed09f02596945ba6f83a97acd49396a91bd9d56d5d80b4c7b271"
+    }
+  ],
+  "source_coverage_findings": [
+    "The current candidate materially uses the inspected 字源 entry for the 帛-to-巾 proposal, but several paragraphs misstate its scope. In `article.summary.text`, “its relation to 幫 … require qualification” is vague; in `article.formation.text`, “One account proposes that 帮 arose by simplifying the lower 帛 in 幫” does not preserve 字源’s explicit modern-period 俗字 account, and the alternative analysis is not clearly assigned to its source. `article.history[0].text` likewise compresses that proposal without saying it is 字源’s account. Revise these passages to distinguish the book’s specific proposed graphic reduction from the MOE editor’s separate phonosemantic analysis, while retaining that neither supplies a dated, step-by-step route. The scan supports these claims on printed p.695; it does not establish a first attestation or a complete graphic history."
+  ],
+  "task": "Independently inspect the actual cited X-bb98d9ba88c32bd4568f book account and original scans. Resolve the material scope finding: distinguish its modern-period nonstandard-form proposal involving lower 帛 to 巾 from the separate phonosemantic analysis, preserving qualifications and no invented dated sequence. Do not put source names or workflow commentary in explanatory prose; use specific scope and existing evidence_ids to attribute proposals. Source review requested source names but repository standards require attribution through citations. Preserve all unrelated fields and uncertainty. Fresh independent factual and readability reviews required."
+}
