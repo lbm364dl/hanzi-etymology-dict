@@ -14,6 +14,9 @@ class SourceAdoptionTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
+        self.scan = self.root / 'original.png'
+        from PIL import Image
+        Image.new('RGB', (2, 2), 'white').save(self.scan)
         dossier = copy.deepcopy(DOSSIER)
         dossier['evidence'][0].update(source='李學勤主編《字源》', field='木; PDF p.123, printed p.110')
         dossier.update(glyph_research={'historical_glyphs': copy.deepcopy(GLYPHS)}, glyph_assets=[])
@@ -24,10 +27,11 @@ class SourceAdoptionTests(unittest.TestCase):
         self.entry = self.root / 'content/entries/6728.json'
 
     def test_registers_actual_source_check_without_rewriting_published_content(self):
+        scan = str(self.scan)
         class Locator(LocalSources):
             def locate_sources(self, source, character, dossier):
                 return {**super().locate_sources(source, character, dossier),
-                        'source_scan_images': [{'path': '/original.png', 'pdf_page': 123}]}
+                        'source_scan_images': [{'path': scan, 'pdf_page': 123}]}
         class Runner:
             model = 'gpt-6-luna'
             reasoning = 'low'
@@ -54,9 +58,10 @@ class SourceAdoptionTests(unittest.TestCase):
             self.assertFalse(se._published_matches(job, SOURCE, self.root))
 
     def test_failed_source_check_tracks_findings_without_publishing(self):
+        scan = str(self.scan)
         class Locator(LocalSources):
             def locate_sources(self, source, character, dossier):
-                return {'source_scan_images': [{'path': '/original.png', 'pdf_page': 123}]}
+                return {'source_scan_images': [{'path': scan, 'pdf_page': 123}]}
         class Runner:
             model = 'gpt-6-luna'
             reasoning = 'low'
@@ -87,10 +92,11 @@ class SourceAdoptionTests(unittest.TestCase):
             source_adoption.adopt('木', source, self.root / 'runs', Runner(), self.root)
 
     def test_independent_adjudication_preserves_failed_check_and_binds_exact_pair(self):
+        scan = str(self.scan)
         class Locator(LocalSources):
             def locate_sources(self, source, character, dossier):
                 return {**super().locate_sources(source, character, dossier),
-                        'source_scan_images': [{'path': '/original.png', 'pdf_page': 123}]}
+                        'source_scan_images': [{'path': scan, 'pdf_page': 123}]}
         class FixtureRunner:
             model = 'gpt-6-luna'
             reasoning = 'low'
@@ -120,6 +126,20 @@ class SourceAdoptionTests(unittest.TestCase):
             binding['article_hash'] = 'changed-pair'
             editorial.write(job / 'source-coverage-adjudication/binding.json', binding)
             self.assertFalse(se._published_matches(job, SOURCE, self.root))
+
+    def test_coverage_preflight_rejects_missing_scans_without_invoking_reviewer(self):
+        class Runner:
+            model = 'gpt-6-luna'
+            reasoning = 'low'
+            def run(self, *args):
+                raise AssertionError('Reviewer must not run without original scans')
+        job = self.root / 'no-scan-review'
+        with self.assertRaisesRegex(ValueError, 'requires original source scan'):
+            source_adoption.check_coverage({'feedback': {'source_scan_images': []}}, {}, job, Runner())
+        with self.assertRaisesRegex(ValueError, 'image is missing'):
+            source_adoption.check_coverage({'source_scan_images': [
+                {'path': str(self.root/'missing.png'), 'pdf_page': 123}]}, {}, job, Runner())
+        self.assertFalse(job.exists())
 
 
 if __name__ == '__main__':

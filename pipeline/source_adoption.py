@@ -59,6 +59,12 @@ def check_coverage(inputs, schema, job, runner):
     """Retain a failed check and obtain one independent exact-pair adjudication."""
     if runner.model != 'gpt-6-luna' or runner.reasoning != 'low':
         raise ValueError('Source coverage requires gpt-6-luna low')
+    scans = inputs.get('source_scan_images')
+    if scans is None:
+        scans = inputs.get('feedback', {}).get('source_scan_images', [])
+    if not scans:
+        raise ValueError('Source coverage requires original source scan attachments')
+    editorial.source_scan_attachments(scans)
     job = Path(job)
     result = runner.run('source_coverage', inputs, schema, job / 'source-coverage')
     if editorial.read(job / 'source-coverage/result.json') != result:
