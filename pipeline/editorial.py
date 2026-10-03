@@ -565,6 +565,14 @@ PROMPTS = {
 }
 
 
+PROMPTS['factual'] += (
+    ' Before reporting an unwanted citation, locate the exact current field and '
+    'copy its current evidence_ids into the finding. Confirm the alleged ID is '
+    'actually in that array; its presence elsewhere in the dossier or article '
+    'does not establish that this field cites it. Never request removal of an '
+    'absent ID. For a support mismatch, quote the current claim and the cited '
+    'record whose scope differs.')
+
 PROMPTS['article_patch'] += (
     ' Locate each affected relationship by its subject, object, context and predicate '
     'in the supplied current article before choosing an array path; indices can change '
