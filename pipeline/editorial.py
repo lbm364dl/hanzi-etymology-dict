@@ -150,6 +150,7 @@ def strip_inline_citation_aliases(article):
             for nested in value:
                 visit(nested)
     visit(article)
+
     return article
 
 
@@ -1058,6 +1059,23 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
         elif isinstance(value, list):
             for index, child in enumerate(value): visit(child, (*parts, index))
     visit(article)
+    feedback = inputs.get('feedback')
+    preserved = inputs.get('preserve_array_items',
+                           feedback.get('preserve_array_items', {}) if isinstance(feedback, dict) else {})
+    if not isinstance(preserved, dict):
+        raise ValueError('Preserved array items must map paths to existing records')
+    preserved_arrays = {}
+    def contains_in_order(values, required):
+        cursor = iter(values)
+        return all(any(value == item for value in cursor) for item in required)
+    for path, records in preserved.items():
+        if path not in paths or not isinstance(records, list):
+            raise ValueError('Preserved array items must name existing array fields')
+        node = article
+        for part in paths[path]: node = node[part]
+        if not isinstance(node, list) or not contains_in_order(node, records):
+            raise ValueError('Preserved array items must already exist in their original order')
+        preserved_arrays[path] = (paths[path], copy.deepcopy(node), copy.deepcopy(records))
     allowed = inputs.get('allowed_edit_paths') or inputs.get('feedback', {}).get('allowed_edit_paths')
     if allowed is not None:
         if not isinstance(allowed, list) or not allowed or not set(allowed) <= paths.keys():
@@ -1100,6 +1118,9 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
         'value_json must encode a replacement of the indicated type. Object fields such '
         'as summary and formation require a complete object, not bare prose; select '
         'their text child when permitted for a prose-only edit. Preserve required keys.')
+    contract['preserve_array_items'] = copy.deepcopy(preserved)
+    contract['preserve_array_instruction'] = ('Retain these exact existing records in their '
+        'original relative order when replacing an array; remove only unprotected items.')
     for attempt in range(3):
         patch_directory = Path(directory) if attempt == 0 else Path(directory)/f'patch-repair-{attempt}'
         result = invoke('article_patch', patch_inputs, patch_schema, patch_directory)
@@ -1121,6 +1142,13 @@ def apply_article_patch(role, inputs, schema, directory, invoke):
                 citation_key = (parts[-2] if isinstance(parts[-1], int) and len(parts) > 1
                                 else parts[-1])
                 node[parts[-1]] = restore_citations(value, aliases, str(citation_key))
+            for path, (parts, original, records) in preserved_arrays.items():
+                node = patched
+                for part in parts[:-1]: node = node[part]
+                value = node[parts[-1]]
+                if not isinstance(value, list) or not contains_in_order(value, records):
+                    node[parts[-1]] = copy.deepcopy(original)
+                    raise ValueError(f'Patch removed or changed protected array records: {path}')
             for edge in patched.get('relationships', []):
                 if (edge.get('predicate') in derived_predicates
                         and edge != derived_edges.get(edge.get('id'))):

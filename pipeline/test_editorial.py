@@ -437,6 +437,29 @@ class EditorialTests(unittest.TestCase):
         self.assertEqual(result['summary']['evidence_ids'][0], 'source:2')
         self.assertEqual(article, ARTICLE_V2)
 
+    def test_array_removal_preserves_other_supported_records(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
+        article = copy.deepcopy(ARTICLE_V2)
+        kept = [{'text': 'A tree form.', 'evidence_ids': [DOSSIER['evidence'][0]['id']]}]
+        removed = {'text': 'An unused image file.', 'evidence_ids': ['E1']}
+        article['history'] = [removed, *kept]
+        dossier = {**DOSSIER, 'glyph_research': {'historical_glyphs': article['historical_glyphs']}}
+        calls = []
+        def invoke(role, inputs, schema, directory):
+            calls.append(inputs)
+            self.assertEqual(inputs['article_contract']['preserve_array_items']['history'], kept)
+            if len(calls) == 1:
+                return {'edits': [{'path': 'history', 'value_json': '[]'}]}
+            self.assertIn('protected array records', inputs['validation_findings'][0])
+            self.assertEqual(inputs['article']['history'], article['history'])
+            return {'edits': [{'path': 'history', 'value_json': json.dumps(kept)}]}
+        result = apply_article_patch('revision', {'article': article, 'dossier': dossier,
+            'allowed_edit_paths': ['history'], 'preserve_array_items': {'history': kept}},
+            WRITER_SCHEMA, Path('/unused'), invoke)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(result['history'], kept)
+        self.assertEqual(article['history'][0], removed)
+
     def test_targeted_patch_repairs_semantic_validation_before_review(self):
         from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
         article = copy.deepcopy(ARTICLE_V2)
