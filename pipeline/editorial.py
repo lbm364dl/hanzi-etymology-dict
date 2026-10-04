@@ -202,7 +202,12 @@ def agent_schema(schema):
     if isinstance(schema, list):
         return [agent_schema(value) for value in schema]
     if isinstance(schema, dict):
-        return {key: agent_schema(value) for key, value in schema.items() if key != "uniqueItems"}
+        transport = {key: agent_schema(value) for key, value in schema.items() if key != "uniqueItems"}
+        if schema == REVISION_PLAN_SCHEMA:
+            # Strict output schemas require every property. Keep older retained
+            # planner records valid internally; fresh model plans name the route.
+            transport["required"] = list(transport["properties"])
+        return transport
     return schema
 
 
@@ -223,7 +228,8 @@ REVISION_PLAN_SCHEMA = {"type": "object", "additionalProperties": False,
         "glyph_action": {"enum": ["retain", "research"]},
         "reason": {"type": "string", "minLength": 1}}}
 REVISION_PLAN_POLICY = """Choose how to resolve the verified review findings for this exact entry.
-Return action, reason and optionally glyph_action. For research, set glyph_action to retain
+Return action, reason and glyph_action. Set glyph_action to retain for edit or hold.
+For research, set glyph_action to retain
 when missing facts concern current components, language use or prose and the existing curated
 historical images need no correction. Set research only when historical image selection,
 identity, dating, rights or provenance actually needs new investigation. A mention of images
@@ -310,6 +316,10 @@ check the passage's end and any continuation before paraphrasing it. Check unusu
 characters, sound components and historical glyph references against the scan; an OCR typo can
 change the analysis even when the surrounding prose looks fluent. Record exact book edition,
 PDF page, verified printed page if known, and which words/forms were checked against the scan.
+If a hit is a different headword, record that negative identification and use verified
+indexes, radical/stroke order or catalogue page leads before searching an image-only book.
+Do not let an unlocated supplemental reference prevent returning the evidence already
+inspected and its exact remaining access gap. Further investigation remains available.
 On a page with several entries or columns, bind each paraphrase to its visible headword and
 paragraph. Follow the column order: a passage can continue at the top of the next column on
 the same page. Do not infer a next-page continuation from the bottom of the first column.
@@ -325,6 +335,12 @@ If the scan proves an OCR error, report its PDF page and exact erroneous span wi
 reading in the search audit or gaps so the coordinator can correct the book corpus's source-bound
 OCR layer and rebuild its consumer index. For uncertain printed identities, report the occurrence
 and uncertainty rather than a guessed Unicode replacement. Do not change the raw OCR response.
+An intentional source-bound historical-glyph placeholder is not an OCR error merely because
+its Unicode identity is unknown. Distinguish an incorrect transcription, missing crop or
+geometry provenance, and an unresolved name for a correctly preserved drawing. A visual
+description can be supported by inspected strokes without assigning the drawing a scalar.
+For a reading-order error, identify the exact current span and the proposed reordered span;
+for any literal replacement, provide its before/after text and raw offsets when obtainable.
 In gaps, prefix unresolved source-pixel or printed-identity checks with exactly
 `[SCAN VERIFICATION REQUIRED]`, and suspected or confirmed unrepaired OCR errors with
 `[OCR CORRECTION REQUIRED]`. Include the page, occurrence anchor and raw span when available.

@@ -13,6 +13,20 @@ from pipeline.editorial import (Runner, ARTICLE_SCHEMA, REVIEW_SCHEMA, digest, m
 from pipeline.editorial import summarize_web_activity, parse_codex_events, validate_new_reader_style, reuse_glyphs_for_text_followup
 
 
+class RevisionPlanTransportTests(unittest.TestCase):
+    def test_strict_planner_transport_requires_glyph_route_without_invalidating_legacy(self):
+        from pipeline.editorial import agent_schema, REVISION_PLAN_SCHEMA
+        from jsonschema import Draft202012Validator, ValidationError
+        wire = agent_schema(REVISION_PLAN_SCHEMA)
+        self.assertEqual(set(wire['required']), set(wire['properties']))
+        old = {'action': 'edit', 'reason': 'Existing evidence supports the correction.'}
+        Draft202012Validator(REVISION_PLAN_SCHEMA).validate(old)
+        with self.assertRaises(ValidationError):
+            Draft202012Validator(wire).validate(old)
+        Draft202012Validator(wire).validate({**old, 'glyph_action': 'retain'})
+        self.assertNotIn('glyph_action', REVISION_PLAN_SCHEMA['required'])
+
+
 class ReviewComponentIndexPacketTests(unittest.TestCase):
     def test_current_records_keep_complete_array_indices_in_review_packet(self):
         with tempfile.TemporaryDirectory() as temporary:

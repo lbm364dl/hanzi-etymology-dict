@@ -1,0 +1,53 @@
+{
+  "status": "complete",
+  "fingerprint": "b464f215194dc766be911303031f423cd06910538387d721c93a1122ea7cc8f8",
+  "role": "research",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "started_at": 1791106827.9240882,
+  "driver_runtime": {
+    "executable": "/tmp/hanzi-etymology-venv/bin/python",
+    "version": "3.12.3",
+    "prefix": "/tmp/hanzi-etymology-venv",
+    "base_prefix": "/usr"
+  },
+  "queued_at": 1791106827.9225326,
+  "agent_capacity": 2,
+  "slot_wait_seconds": 0.0015583038330078125,
+  "image_argument_manifest": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/source.png",
+      "sha256": "321255e55637cba58f3d3f37b0d170aca62f88bebb260f4a8268003d0198fa06"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0424/source.png",
+      "sha256": "d7d2fe7bd45d7d8d1dc947eec9edaeef25a0c900923d6217f637a28b1c0db179"
+    }
+  ],
+  "agent_pid": 808168,
+  "agent_thread_ids": [
+    "01a10649-46fb-7b81-ba02-45e8b7cb744a"
+  ],
+  "web_tool_events": 7,
+  "web_action_counts": {
+    "search": 3,
+    "other": 2,
+    "open_page": 2
+  },
+  "web_search_calls": 3,
+  "web_search_queries": [
+    "工 甲骨文 金文 本义 曲尺 工具 字源 学者",
+    "site:humanum.arts.cuhk.edu.hk/Lexis/lexi-mf/oraclePiece.php 工 甲骨 工 曲尺",
+    "工 Shuowen 巧飾 规矩 甲骨文 字源 research",
+    "工 character Chinese etymology oracle bone tool ruler phonetic series 功 攻",
+    "\"字源\" \"工\" \"本义应该是矩\" 曲尺 李学勤 2012 工部",
+    "\"工\" \"本义是一种有刃的工具\" 季旭昇 工 字形",
+    "漢語大字典 工 甲骨 曲尺 字源 工本义",
+    "Baxter Sagart 工 *kˤoŋ 功 貢 Old Chinese readings",
+    "Unicode Unihan 工 U+5DE5 kMandarin gōng",
+    "site:unicode.org/charts/unihan 5DE5 工 gōng",
+    "UAX 38 kMandarin customary pinyin definition"
+  ],
+  "result_hash": "ed1cea920d48f8c96ccfb8922c92c57fc837f56a181565a69e3bd1a3471bdb7a",
+  "finished_at": 1791107010.7667773
+}

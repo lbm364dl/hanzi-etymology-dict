@@ -1,0 +1,23 @@
+{
+  "status": "failed",
+  "fingerprint": "503a4fd43e37b253362278033075524b0e626e80cb06737394880dc135b7f1c9",
+  "role": "research",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "started_at": 1791106827.3042963,
+  "driver_runtime": {
+    "executable": "/tmp/hanzi-etymology-venv/bin/python",
+    "version": "3.12.3",
+    "prefix": "/tmp/hanzi-etymology-venv",
+    "base_prefix": "/usr"
+  },
+  "queued_at": 1791106827.302401,
+  "agent_capacity": 2,
+  "slot_wait_seconds": 0.0018970966339111328,
+  "agent_pid": 807988,
+  "error": "Command '['codex', '--search', 'exec', '--json', '--ephemeral', '-s', 'danger-full-access', '-c', 'approval_policy=\"never\"', '-m', 'gpt-6-luna', '-c', 'model_reasoning_effort=\"low\"', '--output-schema', '/home/catalin/hanzi-etymology-dict/runs/full-source-smoke-20261004/ziyuan-2012/5988/initial-followup/research/agent-schema.json', '-o', '/home/catalin/hanzi-etymology-dict/runs/full-source-smoke-20261004/ziyuan-2012/5988/initial-followup/research/result.json', '-']' timed out after 599.9448426319286 seconds",
+  "failure_kind": "agent_timeout",
+  "transport_diagnostics": [],
+  "stderr_artifact": "runs/full-source-smoke-20261004/ziyuan-2012/5988/initial-followup/research/stderr.log",
+  "finished_at": 1791107427.3582919
+}

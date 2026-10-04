@@ -1,0 +1,25 @@
+{
+  "id": "hsk1-full-source-smoke-20261004",
+  "title": "Bounded full-source smoke: 工 妈 听",
+  "standard": "GF0025-2021",
+  "level": 1,
+  "count": 3,
+  "selection_rule": "Characters whose set contains hsk31 in AnimCJK dictionaryZhHans.txt. This is a character cohort, not a vocabulary-word list.",
+  "source": {
+    "path": "sources/animcjk/dictionaryZhHans.txt",
+    "sha256": "7ee307a34280d6df18657787f47f993f07e6ae5e433bee5137c2198cb4ee1f6e",
+    "tag": "hsk31"
+  },
+  "cross_check": {
+    "path": "/home/catalin/hsk-graded-readers/data/chinese/characters/hsk1_chars.csv",
+    "sha256": "426431abb65cd81fe6b0071a09b741ce5e6439737def922e6ec394a248ee8e57",
+    "same_character_set": true,
+    "note": "Order follows this matching list. The separate writing_level column is not used to filter the cohort."
+  },
+  "characters": [
+    "工",
+    "妈",
+    "听"
+  ],
+  "language": "zh"
+}
