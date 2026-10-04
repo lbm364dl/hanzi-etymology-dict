@@ -1,6 +1,7 @@
 """Independent, occurrence-bound scan checks; never edits OCR or certifies a page."""
 from pathlib import Path
 import copy
+import re
 
 from pipeline import editorial
 
@@ -37,6 +38,10 @@ def packet(text, proposals):
         before = proposal["before"]
         if text[start:end] != before:
             raise ValueError("OCR proposal does not match its exact raw span")
+        if 'anchor' in proposal and (
+                not isinstance(proposal['anchor'], str) or not proposal['anchor']
+                or proposal['anchor'] not in text[max(0, start - 40):start]):
+            raise ValueError('OCR anchor must be literal text in the preceding raw context; put inspection instructions in a separate field')
         result.append({**proposal, "context_before": text[max(0, start - 40):start],
                        "context_after": text[end:end + 40]})
     if not result:
@@ -63,6 +68,14 @@ def validate_result(result, occurrences):
             raise ValueError("Confirmed correction must establish the proposed literal replacement")
         if verdict == "unresolved_identity" and printed is not None:
             raise ValueError("Unresolved printed identity must not guess Unicode text")
+        if verdict == "unresolved_identity" and re.search(
+                r'\bmismatch means (?:the )?pixels do not support (?:the )?raw\b',
+                item['reason'], re.I):
+            raise ValueError(
+                'Unresolved match verdict contradicts an explicit raw-form mismatch in its reason. '
+                'Reinspect the pixels and reconcile the reason and verdict: uncertainty about whether '
+                'raw matches is unresolved_identity; an established mismatch with unknown Unicode '
+                'identity is unsupported_raw_identity. Neither is an instruction to guess a scalar.')
         if verdict == "unsupported_raw_identity" and printed is not None:
             raise ValueError("Unsupported raw identity must not guess Unicode text")
     return result

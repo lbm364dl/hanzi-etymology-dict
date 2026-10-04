@@ -54,7 +54,7 @@ setting, rather than a hardcoded three-character cap.
 python3 -m pipeline.source_enrichment run \
   --registry research/digitised-sources.json --source ziyuan-2012 \
   --cohort content/cohorts/hsk3-2021-level-1.json \
-  --output runs/source-enrichment-scale-20261003 --limit 300 --workers 24 --agents 24 --publish-now
+  --output runs/source-enrichment-scale-20261003 --limit 3 --workers 3 --agents 3 --publish-now
 ```
 
 The durable manifest is `OUTPUT/SOURCE/queue.json`. It records every character, attempt,
@@ -105,7 +105,7 @@ receipts and diagnostic findings, verifies the unchanged canonical baseline and
 current source locator, and runs new Luna low authorship and independent reviews.
 
 ```bash
-/path/to/project-venv/bin/python -m pipeline.attention_repair --registry research/digitised-sources.json --source ziyuan-2012 --output runs/attention-repair-next --workers 6 --agents 24 runs/old-source-job/ziyuan-2012/5531
+/path/to/project-venv/bin/python -m pipeline.attention_repair --registry research/digitised-sources.json --source ziyuan-2012 --output runs/attention-repair-next --workers 3 --agents 3 runs/old-source-job/ziyuan-2012/5531
 ```
 
 Run the coordinator with the same Python environment that has the pipeline's
@@ -123,6 +123,64 @@ source/publication gate remains held. Optional `--edit-scopes` supplies a JSON o
 article paths; paths must not overlap. This command retains candidates and findings;
 normal source resolution, issue synchronization and publication gates still apply.
 Select `--source` explicitly when the registry contains more than one book.
+
+#### Completing recovery without coordinator scripts
+
+Add `--complete-gates` to run citation integration, exact source resolution and GitHub
+tracking after successful recovery reviews. `--publish-now` also enables completion,
+then publishes only when every normal source and publication gate passes. This does
+not turn `needs_source_evidence` into book adoption or waive unresolved OCR.
+
+For an already reviewed recovery, finish the gates in place:
+
+```bash
+/path/to/project-venv/bin/python -m pipeline.attention_repair \
+  --registry research/digitised-sources.json --source ziyuan-2012 \
+  --complete-existing --publish-now --workers 3 --agents 3 runs/recovered-job/ziyuan-2012/5531
+```
+
+A newly discovered defect in a published source entry can use a fresh attention-repair
+output plus `--review-context findings.json`. Published repair requires the prior exact
+candidate to match the current canonical entry and all current source gates. The new
+job freezes the current baseline, retains original research, runs fresh authorship and
+independent reviews, and completes the normal source gates. It does not rewrite old
+snapshots or receipts. Findings are hypotheses to independently recheck.
+
+If the citation author returns an identical article, retain its exact genuine reviews
+and source hold instead of reviewing unchanged prose again. The unchanged completion
+receipt records the exact article/dossier pair; it is not source-adoption approval.
+
+When every consulted book record is independently found irrelevant to the current
+claims, explicitly publish a separately reviewed dictionary improvement:
+
+```bash
+/path/to/project-venv/bin/python -m pipeline.dictionary_recovery \
+  --parent runs/recovered-job/ziyuan-2012/5531 \
+  --output runs/dictionary-only-recovery/5531 --agents 3
+```
+
+For a new finding in an already published dictionary-only entry, use the same helper
+with `--repair-published --review-context findings.json`. It requires the prior approved
+pair to equal the current canonical entry, freezes a new exact baseline and obtains
+fresh authorship and independent reviews. The original book hold is preserved.
+
+Issue triage receives the current exact review binding. Editorial proposals about an
+approved pair get a separate Luna-low `finding_validation` check before GitHub sync.
+Every topic needs an exact-pair decision; malformed decisions or changed candidate
+files fail closed. Rejected proposals retain their genuine receipts. Confirmed factual
+or readability defects hold source publication for fresh repair rather than publishing
+while merely filing another issue. This check creates no article or review approvals.
+
+This narrow command requires a genuine completed Luna-low citation-author receipt,
+exact current inputs, an unchanged citation-integration completion and no pending
+source findings. It takes fresh factual/readability reviews through ordinary publication,
+leaves the parent book job held, and records `source_adoption: false`. Changed canonical
+baselines block model work. A completed exact publication retry reuses its actual receipt.
+Use a fresh output after a failed attempt. It never forces irrelevant book citations.
+
+The current operational limit is three active model slots because higher concurrency
+previously disrupted the workstation's internet. Examples above use that limit; available
+RAM alone does not establish a useful network concurrency setting.
 
 When resuming a queue, reuse the exact cohort file recorded at its creation. A saved
 tail queue may contain fewer characters than the overall300-character completion

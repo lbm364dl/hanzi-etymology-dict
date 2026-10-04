@@ -321,7 +321,11 @@ def _validated_occurrence(verified_path, occurrence_id, *, expected_verdict="con
     if "INPUTS:\n" not in prompt_text:
         raise ValueError("OCR review prompt is missing its frozen inputs")
     try:
-        prompt_inputs = json.loads(prompt_text.rsplit("INPUTS:\n", 1)[1].strip())
+        encoded = prompt_text.split("\nINPUTS:\n", 1)[1].lstrip()
+        prompt_inputs, end = json.JSONDecoder().raw_decode(encoded)
+        trailing = encoded[end:].strip()
+        if trailing and not trailing.startswith('COMMON SENSE-STATUS CONTRACT:'):
+            raise ValueError('Unexpected content after frozen OCR input packet')
     except json.JSONDecodeError as exc:
         raise ValueError("OCR review prompt inputs are malformed") from exc
     if (prompt_inputs.get("occurrences") != occurrences_record.get("occurrences")

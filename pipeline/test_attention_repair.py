@@ -1,4 +1,6 @@
 import json
+from contextlib import ExitStack
+from types import SimpleNamespace
 import importlib
 from pathlib import Path
 import sys
@@ -10,6 +12,130 @@ from pipeline import attention_repair, editorial
 
 
 class AttentionRepairTests(unittest.TestCase):
+    def _completion_fixture(self, root, status='needs_source_evidence'):
+        from pipeline.test_editorial import ARTICLE_V2, DOSSIER
+        job = root / 'job'
+        source = {'id': 'fixture'}
+        saved = {'character': ARTICLE_V2['character'], 'source_id': source['id'],
+                 'registry_source': source, 'article_hash': editorial.digest(ARTICLE_V2),
+                 'dossier_hash': editorial.digest(DOSSIER)}
+        for name, value in [('source.json', saved), ('article.json', ARTICLE_V2),
+                            ('source_dossier.json', DOSSIER), ('dossier.json', DOSSIER),
+                            ('reviews.json', []), ('status.json', {'status': status}),
+                            ('source_checkpoint.json', {'locator': {}})]:
+            editorial.write(job / name, value)
+        runner = SimpleNamespace(model='gpt-6-luna', reasoning='low')
+        return job, source, runner, ARTICLE_V2, DOSSIER
+
+    def _completion_mocks(self, stack, article, dossier, verified=False, pending=False):
+        se = attention_repair.source_enrichment
+        stack.enter_context(patch.object(se, 'prepare_job'))
+        stack.enter_context(patch.object(se, '_canonical', return_value=(article, dossier)))
+        stack.enter_context(patch.object(attention_repair, '_check_locator'))
+        stack.enter_context(patch.object(editorial, 'validate_reviews'))
+        stack.enter_context(patch.object(se, '_capture_source_audit', return_value={'verified': verified}))
+        integration = stack.enter_context(patch.object(se, '_integrate_uncited_book_records',
+            side_effect=lambda job, source, runner, state, audit, context, revisions: (state, audit)))
+        stack.enter_context(patch.object(se, '_source_findings_pending', return_value=pending))
+        stack.enter_context(patch.object(se, '_triage_and_sync_issues', return_value={'status':'not_configured'}))
+        publisher = stack.enter_context(patch.object(se, '_publish_job_locked', return_value={'status':'published'}))
+        return integration, publisher
+
+    def test_completion_retains_uncited_book_hold(self):
+        with tempfile.TemporaryDirectory() as tmp, ExitStack() as stack:
+            root = Path(tmp)
+            job, source, runner, article, dossier = self._completion_fixture(root)
+            before = (job / 'reviews.json').read_bytes()
+            integration, publisher = self._completion_mocks(stack, article, dossier)
+            result = attention_repair.complete_gates(job, source, runner, root, publish_now=True)
+            self.assertEqual(result['status'], 'needs_source_evidence')
+            self.assertFalse(result['source_adoption_verified'])
+            self.assertFalse(result['publication_performed'])
+            self.assertEqual((job / 'reviews.json').read_bytes(), before)
+            publisher.assert_not_called()
+
+    def test_completion_rejects_baseline_drift_before_model_work(self):
+        with tempfile.TemporaryDirectory() as tmp, ExitStack() as stack:
+            root = Path(tmp)
+            job, source, runner, article, dossier = self._completion_fixture(root)
+            integration, publisher = self._completion_mocks(stack, {**article, 'changed': True}, dossier)
+            with self.assertRaisesRegex(ValueError, 'Canonical baseline changed'):
+                attention_repair.complete_gates(job, source, runner, root, publish_now=True)
+            integration.assert_not_called()
+            publisher.assert_not_called()
+
+    def test_completion_preserves_failed_new_reviews(self):
+        with tempfile.TemporaryDirectory() as tmp, ExitStack() as stack:
+            root = Path(tmp)
+            job, source, runner, article, dossier = self._completion_fixture(root)
+            integration, publisher = self._completion_mocks(stack, article, dossier, verified=True)
+            integration.side_effect = lambda *args: ({'status':'needs_revision'}, {'verified':True})
+            result = attention_repair.complete_gates(job, source, runner, root, publish_now=True)
+            self.assertEqual(result['status'], 'needs_revision')
+            publisher.assert_not_called()
+
+    def test_completion_does_not_publish_pending_source_findings(self):
+        with tempfile.TemporaryDirectory() as tmp, ExitStack() as stack:
+            root = Path(tmp)
+            job, source, runner, article, dossier = self._completion_fixture(root)
+            integration, publisher = self._completion_mocks(stack, article, dossier, verified=True, pending=True)
+            resolver = stack.enter_context(patch.object(attention_repair.source_enrichment, 'auto_resolve_source_findings'))
+            result = attention_repair.complete_gates(job, source, runner, root, publish_now=True)
+            self.assertEqual(result['status'], 'needs_source_verification')
+            resolver.assert_called_once()
+            publisher.assert_not_called()
+
+    def test_completion_keeps_new_confirmed_issue_hold_after_sync(self):
+        with tempfile.TemporaryDirectory() as tmp, ExitStack() as stack:
+            root = Path(tmp)
+            job, source, runner, article, dossier = self._completion_fixture(root)
+            integration, publisher = self._completion_mocks(stack, article, dossier, verified=True)
+            def sync(*args):
+                state = editorial.read(job / 'status.json')
+                editorial.write(job / 'status.json', {**state, 'status':'needs_revision'})
+                return {'status':'synced', 'editorial_hold':True}
+            stack.enter_context(patch.object(attention_repair.source_enrichment, '_triage_and_sync_issues', side_effect=sync))
+            result = attention_repair.complete_gates(job, source, runner, root, publish_now=True)
+            self.assertEqual(result['status'], 'needs_revision')
+            publisher.assert_not_called()
+
+    def test_completion_uses_normal_publisher_after_all_gates(self):
+        with tempfile.TemporaryDirectory() as tmp, ExitStack() as stack:
+            root = Path(tmp)
+            job, source, runner, article, dossier = self._completion_fixture(root)
+            integration, publisher = self._completion_mocks(stack, article, dossier, verified=True)
+            result = attention_repair.complete_gates(job, source, runner, root, publish_now=True)
+            self.assertEqual(result['status'], 'published')
+            self.assertTrue(result['publication_performed'])
+            publisher.assert_called_once_with(job, source, root)
+
+    def test_published_repair_requires_explicit_findings_and_current_source_gates(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            job = Path(tmp)
+            with self.assertRaisesRegex(ValueError, 'explicit review context'):
+                attention_repair._check_published_prior(job, {}, job, None)
+            with patch.object(attention_repair.source_enrichment, '_published_matches', return_value=False):
+                with self.assertRaisesRegex(ValueError, 'current exact source-approved'):
+                    attention_repair._check_published_prior(job, {}, job, {'issue': 'new finding'})
+
+    def test_published_repair_freezes_current_pair_without_relabeling_old_snapshot(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            job = Path(tmp)
+            old_saved = {'article_hash':'older', 'dossier_hash':'older-dossier'}
+            article, dossier = {'character':'木', 'new':True}, {'character':'木', 'evidence':[]}
+            for name, value in [('source.json', old_saved), ('status.json', {'status':'published'}),
+                                ('article.json', article), ('dossier.json', dossier), ('reviews.json', []),
+                                ('source_findings.json', {'findings':[]})]:
+                editorial.write(job / name, value)
+            before = (job / 'source.json').read_bytes()
+            with patch.object(attention_repair.source_enrichment, '_published_matches', return_value=True), \
+                 patch.object(editorial, 'validate_reviews'):
+                saved, state, error, findings, baseline = attention_repair._check_published_prior(
+                    job, {}, job, {'issue':'new independently checked finding'})
+            self.assertEqual(saved, old_saved)
+            self.assertEqual(baseline['article_hash'], editorial.digest(article))
+            self.assertEqual((job / 'source.json').read_bytes(), before)
+
     def test_renderer_dependencies_are_checked_before_any_job_or_model_work(self):
         with patch.object(attention_repair, '_renderer_runtime',
                           side_effect=RuntimeError('Missing CairoSVG in this interpreter')), \

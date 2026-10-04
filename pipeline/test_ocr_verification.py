@@ -12,6 +12,11 @@ class OCRVerificationTests(unittest.TestCase):
     def test_wrong_anchor_rejected(self):
         with self.assertRaises(ValueError):
             packet('甲的乙', [dict(id='x', start=1, end=2, before='昧', after='旳')])
+        with self.assertRaisesRegex(ValueError, 'anchor must be literal'):
+            packet('甲的乙', [dict(id='x', start=1, end=2, before='的',
+                                 anchor='Look at the first graph after 甲')])
+        self.assertEqual(packet('甲的乙', [dict(id='x', start=1, end=2, before='的',
+                    anchor='甲', inspection_instruction='Inspect complete strokes')])[0]['anchor'], '甲')
 
     def test_agent_schema_binds_raw_tokens_and_occurrence_ids(self):
         class Runner:
@@ -55,6 +60,14 @@ class OCRVerificationTests(unittest.TestCase):
     def test_unresolved_identity_cannot_guess(self):
         with self.assertRaises(ValueError):
             validate_result({'occurrences': [dict(id='p614:1', raw_text='的', printed_text='旳', verdict='unresolved_identity', reason='Unclear')]}, self.occurrences)
+
+    def test_explicit_mismatch_reason_requires_a_consistent_genuine_verdict(self):
+        result = {'occurrences': [dict(id='p614:1', raw_text='的', printed_text=None,
+            verdict='unresolved_identity', reason='The mismatch means the pixels do not support raw 的; exact identity unknown.')]}
+        with self.assertRaisesRegex(ValueError, 'contradicts an explicit raw-form mismatch'):
+            validate_result(result, self.occurrences)
+        result['occurrences'][0]['reason'] = 'The pixels do not establish whether raw 的 matches.'
+        self.assertEqual(validate_result(result, self.occurrences), result)
 
     def test_unsupported_raw_identity_is_distinct_from_unresolved_match_and_has_no_guess(self):
         unsupported = {'occurrences': [dict(id='p614:1', raw_text='的', printed_text=None,

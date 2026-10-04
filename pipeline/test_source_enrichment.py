@@ -563,6 +563,14 @@ class SourceEnrichmentTests(unittest.TestCase):
                 ('independent_support', False)]:
             bad = {**observation, field: value}
             self.assertFalse(source_enrichment._identity_support_valid(article, dossier, finding, bad), field)
+        alternate = {**observation, 'support_reason': (
+            'Review of the complete article and dossier found no claim that depends on or uses '
+            'that unresolved identity; the separate discussion cites independent evidence.')}
+        self.assertTrue(source_enrichment._identity_support_valid(article, dossier, finding, alternate))
+        for reason in ('The article and dossier might contain no claim that depends on it.',
+                       'Review of the article found no claim that depends on it.'):
+            self.assertFalse(source_enrichment._identity_support_valid(
+                article, dossier, finding, {**observation, 'support_reason': reason}))
         contradictory = {**finding, 'affected_paths': ['article.formation']}
         self.assertFalse(source_enrichment._identity_support_valid(article, dossier, contradictory, observation))
         for invalid in ('article.summary.trailing!', 'article.summary[bad]', 'article..summary'):
@@ -657,6 +665,9 @@ class SourceEnrichmentTests(unittest.TestCase):
                 editorial.write(job / name, value)
             check = {'key': 'accurate-mention', 'pdf_page': 951, 'text_offset': 6,
                      'current': '爸妈', 'source_pixel_sha256': pixels}
+            normalized = source_enrichment._verify_transcription_checks(job, [check])[0]
+            self.assertNotIn('occurrences', normalized)
+            self.assertEqual(normalized['current'], check['current'])
             result = {'findings': [{'key': 'accurate-mention',
                                    'disposition': 'verified_transcription_matches_corpus'}],
                       'transcription_observations': [{'key': 'accurate-mention',
@@ -673,7 +684,7 @@ class SourceEnrichmentTests(unittest.TestCase):
                     'review_path': 'source-resolution/result.json', 'transcription_checks': checks})
             save_result([])
             self.assertTrue(source_enrichment._source_findings_pending(job))
-            save_result([check])
+            save_result([normalized])
             self.assertFalse(source_enrichment._source_findings_pending(job))
             for bad in (None, '父母', '爸媽'):
                 result['transcription_observations'][0]['observed_literal'] = bad
@@ -1475,11 +1486,43 @@ class SourceEnrichmentTests(unittest.TestCase):
         self.assertFalse(source_enrichment._has_page_provenance({'source': 'Book (2012)', 'field': 'headword'}))
         self.assertFalse(source_enrichment._book_identity_matches('香港教育局 字源考釋', SOURCE))
 
+    def test_sync_publication_does_not_overwrite_confirmed_issue_hold(self):
+        from types import SimpleNamespace
+        job = self.root / 'sync-confirmed-issue'
+        editorial.write(job / 'status.json', {'character':'木', 'status':'approved'})
+        def sync(*args):
+            editorial.write(job / 'status.json', {'character':'木', 'status':'needs_revision'})
+            return {'status':'synced', 'editorial_hold':True}
+        with patch.object(source_enrichment, '_triage_and_sync_issues', side_effect=sync), \
+                patch.object(source_enrichment, '_publish_job_locked') as publisher:
+            result = source_enrichment.sync_and_publish_job(job, {}, SimpleNamespace(), self.root)
+        self.assertEqual(result['status'], 'needs_revision')
+        self.assertEqual(editorial.read(job / 'status.json')['status'], 'needs_revision')
+        publisher.assert_not_called()
+
+    def test_confirmed_editorial_issue_holds_publication_without_changing_reviews(self):
+        from pipeline import issues
+        job = self.root / 'confirmed-issue-job'
+        editorial.write(job / 'status.json', {'status':'approved'})
+        editorial.write(job / 'reviews.json', [{'receipt':'preserve exact bytes'}])
+        before = (job / 'reviews.json').read_bytes()
+        finding = {'kind':'factual', 'key':'fixture:defect'}
+        with patch.object(issues, 'triage_job', return_value=[finding]), \
+                patch.object(issues, 'sync', return_value=[]):
+            result = source_enrichment._triage_and_sync_issues(job, {'github_repo':'owner/repo'}, object())
+        self.assertTrue(result['editorial_hold'])
+        state = editorial.read(job / 'status.json')
+        self.assertEqual(state['status'], 'needs_revision')
+        self.assertEqual(state['stop_reason'], 'confirmed_issue_findings')
+        self.assertEqual((job / 'reviews.json').read_bytes(), before)
+
     def test_uncited_book_integration_uses_current_research_and_fresh_reviews(self):
         job = self.root / 'citation-job'
         for name, value in [('article.json', ARTICLE_V2), ('dossier.json', DOSSIER),
                             ('reviews.json', []), ('status.json', {'status': 'needs_source_evidence'})]:
             editorial.write(job / name, value)
+        changed = copy.deepcopy(ARTICLE_V2)
+        changed['summary']['text'] += ' changed'
         audit = {'verified': False, 'consulted_citations': [{'evidence_ids': ['fixture-book']}]}
         def fixture_refine(article, dossier, stage, runner, revisions, feedback, research_first, edit_first,
                            approved_base):
@@ -1491,13 +1534,31 @@ class SourceEnrichmentTests(unittest.TestCase):
                 editorial.write(stage / name, value)
             return {'status': 'needs_revision'}
         with patch.object(editorial, 'refine', side_effect=fixture_refine) as refine, \
-                patch.object(editorial, 'author_book_citations', return_value=ARTICLE_V2), \
+                patch.object(editorial, 'author_book_citations', return_value=changed), \
                 patch.object(editorial, 'validate_reviews') as validate, \
                 patch.object(source_enrichment, '_capture_source_audit', return_value=audit):
             state, result = source_enrichment._integrate_uncited_book_records(
                 job, SOURCE, object(), {'status': 'needs_source_evidence'}, audit, {}, 2)
             self.assertEqual(state['status'], 'needs_revision')
             self.assertEqual(refine.call_count, 1)
+
+    def test_unchanged_citation_integration_keeps_source_hold(self):
+        job = self.root / 'unchanged-citation-job'
+        for name, value in [('article.json', ARTICLE_V2), ('dossier.json', DOSSIER), ('reviews.json', [])]:
+            editorial.write(job / name, value)
+        before = (job / 'reviews.json').read_bytes()
+        state = {'status': 'needs_source_evidence'}
+        audit = {'verified': False, 'consulted_citations': [{'evidence_ids': ['fixture-book']}]}
+        with patch.object(editorial, 'refine') as refine, \
+                patch.object(editorial, 'author_book_citations', return_value=ARTICLE_V2), \
+                patch.object(editorial, 'validate_reviews'):
+            result, result_audit = source_enrichment._integrate_uncited_book_records(
+                job, SOURCE, object(), state, audit, {}, 2)
+        refine.assert_not_called()
+        self.assertEqual(result, state)
+        self.assertEqual(result_audit, audit)
+        self.assertEqual((job / 'reviews.json').read_bytes(), before)
+        self.assertFalse(editorial.read(job / 'citation-integration/completion.json')['source_adoption_verified'])
 
     def test_book_citation_author_can_only_change_known_citation_arrays(self):
         evidence_id = DOSSIER['evidence'][0]['id']

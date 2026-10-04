@@ -6,6 +6,17 @@ Unstructured prose that cannot be parsed still goes to the planning agent with h
 import re
 
 SENSE_STATUS_POLICY = """COMMON SENSE-STATUS CONTRACT:
+Sense prose explains meanings and their evidence-supported historical limits. Keep source
+titles and narration of what the pipeline did or did not verify in citation details or
+research metadata. Say a first attestation or semantic connection is unresolved without
+narrating our research process.
+A dictionary report of an obsolete or isolated gloss is lexicographic evidence; it is
+not by itself a dated historical occurrence. Explain the reported status precisely and
+keep unverified occurrence claims in limitations rather than asserting an attestation.
+A sense representing an ordinary present meaning should remain current when its paragraph
+also describes an earlier attestation of that same meaning. Cite current evidence on the
+sense record itself and qualify older examples separately; split records only for a
+substantive difference of meaning or graphic use, not merely an earlier date.
 current requires evidence of present use in the target language; historical describes a
 supported earlier use and does not mean obsolete. earliest_attested describes a supported
 use in the earliest documented corpus/period, or explicitly identified as earliest attested.
@@ -15,6 +26,13 @@ evidence must connect the use to that earliest corpus/period. Several senses may
 Uncertain original-meaning proposals and unknown precise inscription dates do not negate a
 supported early attestation. Keep original-priority and sense-occurrence claims separate.
 Apply this same definition to writing, review, adjudication and revision planning.
+An inspected contemporary dictionary definition can support current use when it lists
+that sense without marking it obsolete or restricted to historical quotation; a dated
+modern example is not mandatory. Inspect every cited active evidence record before
+demanding a status change. A historical quotation or unresolved development date does
+not negate separately supported present use. Reading metadata alone does not attest a sense.
+When revising status, update the sense explanation to match its supported use; do not
+substitute source-verification workflow narration for an explanation of the meaning.
 """
 
 

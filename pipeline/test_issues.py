@@ -54,6 +54,32 @@ class IssueTests(unittest.TestCase):
             triage_job(job, {'id': 'fixture'}, runner)
             self.assertNotEqual(packets[1], packets[2])
 
+    def test_triage_current_approval_is_bound_to_pair_not_saved_status(self):
+        import copy
+        from pipeline.test_editorial import ARTICLE_V2, DOSSIER
+        with tempfile.TemporaryDirectory() as temp:
+            job = Path(temp)
+            article, dossier = copy.deepcopy(ARTICLE_V2), copy.deepcopy(DOSSIER)
+            dossier['glyph_research'] = {'historical_glyphs': copy.deepcopy(article['historical_glyphs'])}
+            reviews = [editorial.make_review(role, 'pass', [], article, dossier, f'test-thread-{role}')
+                       for role in ('factual', 'readability')]
+            for name, value in [('status.json', {'character':article['character'], 'status':'approved'}),
+                                ('article.json', article), ('dossier.json', dossier), ('reviews.json', reviews)]:
+                editorial.write(job / name, value)
+            class Runner:
+                model, reasoning = 'gpt-6-luna', 'low'
+                def run(self, role, inputs, schema, directory):
+                    self.binding = inputs['current_review_binding']
+                    return {'findings':[]}
+            runner = Runner()
+            triage_job(job, {'id':'fixture'}, runner)
+            self.assertTrue(runner.binding['exact_pair_approved'])
+            self.assertEqual(runner.binding['article_hash'], editorial.digest(article))
+            article['summary']['text'] += ' Changed after review.'
+            editorial.write(job / 'article.json', article)
+            triage_job(job, {'id':'fixture'}, runner)
+            self.assertFalse(runner.binding['exact_pair_approved'])
+
     def test_triage_sees_current_page_label_instead_of_stale_locator_null(self):
         with tempfile.TemporaryDirectory() as temp:
             job = Path(temp)

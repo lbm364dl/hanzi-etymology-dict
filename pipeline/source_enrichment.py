@@ -453,6 +453,13 @@ def _integrate_uncited_book_records(job, source, runner, state, audit, feedback,
     stage = job / 'citation-integration'
     article = editorial.author_book_citations(article, dossier, audit['consulted_citations'],
                                              stage / 'citation-author', runner, context)
+    if editorial.digest(article) == editorial.digest(approved_base['article']):
+        # Retain genuine approvals and the source hold when no authored text changed.
+        editorial.write(stage / 'completion.json', {
+            'status': 'unchanged', 'article_hash': editorial.digest(article),
+            'dossier_hash': editorial.digest(dossier),
+            'reviews_reused': True, 'source_adoption_verified': False})
+        return state, audit
     repaired = editorial.refine(article, dossier, stage, runner, max_revisions,
                                 context, research_first=False, edit_first=False,
                                 approved_base=approved_base)
@@ -561,8 +568,10 @@ def _verify_transcription_checks(job, checks):
             spans.append((start, end))
         editorial.source_scan_attachments([{'path': page['source_scan'],
             'pdf_page': check['pdf_page'], 'source_pixel_sha256': check['source_pixel_sha256']}])
-        normalized.append({**check, 'occurrences': source_occurrences,
-                           'source_scan': page['source_scan']})
+        # Preserve the caller's observation shape. Adding a synthetic occurrence
+        # array to a single-span receipt made the publication gate demand grouped
+        # observations although the reviewer had received a flat schema.
+        normalized.append({**check, 'source_scan': page['source_scan']})
     return normalized
 
 
@@ -837,7 +846,7 @@ def _identity_support_valid(article, dossier, finding_result, observation):
             and observation.get('whole_candidate_reviewed') is True
             and observation.get('reviewed_article_hash') == editorial.digest(article)
             and observation.get('reviewed_dossier_hash') == editorial.digest(dossier)
-            and re.search(r'no (?:(?:article or dossier)|(?:article and dossier)|candidate) claim.{0,120}(?:depend|rely|use)',
+            and re.search(r'(?:no (?:(?:article or dossier)|(?:article and dossier)|candidate) claim|(?:article (?:and|or) dossier|entire candidate).{0,80}found no claim).{0,120}(?:depend|rely|use)',
                           str(observation.get('support_reason', '')), re.I)
             and re.search(r'(?:article (?:and|or) dossier|both (?:the )?article and dossier|entire candidate)',
                           str(observation.get('support_reason', '')), re.I)
@@ -1523,6 +1532,10 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
     transcription_grouped = any(isinstance(check, dict) and 'occurrences' in check
                                 for check in (transcription_checks or []))
     transcriptions = _verify_transcription_checks(job, list(transcription_checks or [])) if transcription_checks else []
+    if transcription_grouped:
+        transcriptions = [{**check, 'occurrences': check.get('occurrences', [
+            {'id': 'single', 'text_offset': check.get('text_offset'), 'current': check.get('current')}])}
+            for check in transcriptions]
     if transcriptions:
         inputs['transcription_checks'] = transcriptions
         inputs['transcription_check_instruction'] = (
@@ -1878,7 +1891,18 @@ def _triage_and_sync_issues(job, source, runner):
                           milestone=source.get("issue_milestone"),
                           labels=source.get("issue_labels", []),
                           parent_by_kind=source.get("issue_parent_by_kind", {}), active_findings=True)
+    editorial_hold = any(finding.get('kind') in ('factual', 'readability') for finding in findings)
+    state_path = Path(job) / 'status.json'
+    if editorial_hold and state_path.is_file():
+        state = editorial.read(state_path)
+        if state.get('status') in ('approved', 'needs_source_evidence', 'needs_source_verification', 'published'):
+            state.update(status='needs_revision', review_status='approved',
+                         stop_reason='confirmed_issue_findings',
+                         confirmed_issue_findings=[f['key'] for f in findings
+                             if f.get('kind') in ('factual', 'readability')])
+            editorial.write(state_path, state)
     record = {"status": "synced", "repository": repository, "issues": receipts,
+              'editorial_hold': editorial_hold,
               "findings_hash": editorial.digest(findings)}
     editorial.write(Path(job) / "issue_sync.json", record)
     return record
@@ -2066,6 +2090,7 @@ def _run_queue(cohort, source, output, runner, limit, workers, root, max_revisio
                 if getattr(exc, 'stderr', None):
                     issue_sync['command_stderr'] = exc.stderr
                 editorial.write(job / "issue_sync.json", issue_sync)
+            state = editorial.read(job / "status.json")
             if issue_sync["status"] == "pending":
                 state["issue_sync_status"] = "pending"
                 editorial.write(job / "status.json", state)
@@ -2080,6 +2105,9 @@ def _run_queue(cohort, source, output, runner, limit, workers, root, max_revisio
             if issue_sync["status"] == "pending":
                 return {"character": char, "status": "pending_issue_sync", "job": str(job),
                         "error": issue_sync.get("error")}
+            current = editorial.read(job / 'status.json')
+            if current.get('status') != 'approved':
+                return {'character': char, 'status': current.get('status'), 'job': str(job)}
             if publish_now:
                 return _publish_job_locked(job, source, root)
             return {"character": char, "status": "approved", "job": str(job)}
@@ -2350,12 +2378,15 @@ def sync_and_publish_job(job, source, runner, root=ROOT):
                 issue_sync = {'status': 'pending', 'repository': source.get('github_repo'),
                               'error': str(exc)}
                 editorial.write(job / 'issue_sync.json', issue_sync)
+            state = editorial.read(job / 'status.json')
             state['issue_sync_status'] = issue_sync['status']
             state['issue_receipts_hash'] = editorial.digest(issue_sync.get('issues', []))
             editorial.write(job / 'status.json', state)
             if issue_sync['status'] == 'pending':
                 return {'character': state['character'], 'status': 'pending_issue_sync',
                         'job': str(job), 'error': issue_sync.get('error')}
+            if state.get('status') != 'approved':
+                return {'character': state['character'], 'status': state.get('status'), 'job': str(job)}
             return _publish_job_locked(job, source, root)
         finally:
             fcntl.flock(lock, fcntl.LOCK_UN)

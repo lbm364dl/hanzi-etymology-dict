@@ -109,9 +109,21 @@ def triage_job(job, source, runner):
         'dossier_hash': editorial.digest(current_dossier),
         'evidence': [e for e in current_dossier.get('evidence', [])
                      if re.search(r'(?<![\w-])' + re.escape(e['id']) + r'(?![\w-])', packet_text)]}
+    current_reviews = None
+    if current_article is not None and current_dossier is not None and reviews_path.is_file():
+        exact_reviews = editorial.read(reviews_path)
+        try:
+            editorial.validate_reviews(current_article, current_dossier, exact_reviews)
+            current_reviews = {'exact_pair_approved': True,
+                'article_hash': editorial.digest(current_article),
+                'dossier_hash': editorial.digest(current_dossier),
+                'reviews_hash': editorial.digest(exact_reviews)}
+        except (ValueError, editorial.ValidationError):
+            current_reviews = {'exact_pair_approved': False}
     inputs = {'character': character, 'source': source, 'job_state': triage_state(state),
               'actual_findings': records, 'existing_findings': known,
               'current_article': current_article, 'current_dossier_evidence': evidence_packet,
+              'current_review_binding': current_reviews,
               'task': 'Track material findings with evidence. Rejected proposals are not factual errors. '
                       'An OCR suspicion needs source verification; never guess a replacement. '
                       'Return no finding for correctly supported current prose, a resolved '
@@ -124,6 +136,14 @@ def triage_job(job, source, runner):
                       'Do not repeat an archived finding when that citation is already present. '
                       'Identify a concrete current defect or unapplied repair. '
                       'Existing issue records establish identities, not current defects. '
+                      'Organize observed defects from actual findings; this is not an additional '
+                      'editorial review or an invitation to invent new rewrite requirements. '
+                      'For an exact approved pair, do not revive an older editorial request or '
+                      'replace its scope with a new stylistic criticism. A new material issue '
+                      'needs a concrete unresolved source finding, failed check or new evidence '
+                      'in the supplied records. Merely preferring different prose is insufficient. '
+                      'If an existing defect is repaired, return no finding for that defect; '
+                      'do not turn its existing_key into a different task. '
                       'An archived failed attempt alone does not establish a current pipeline '
                       'failure: name a current failing stage or a failure reproduced against '
                       'the current contract. Check current_source_page_metadata before '
@@ -164,6 +184,16 @@ def triage_job(job, source, runner):
                 raise
             inputs = {**inputs, 'validation_error': str(exc),
                       'repair_task': 'Repair only the invalid issue-record contract. Topic must be a lowercase English slug without source prefixes, colons or Han characters. Keep the actual evidence and scope.'}
+    if current_reviews and current_reviews.get('exact_pair_approved'):
+        editorial_proposals = [item for item in result['findings']
+                               if item.get('kind') in ('factual', 'readability')]
+        if editorial_proposals:
+            from pipeline.finding_validation import validate_proposals
+            confirmed = validate_proposals(job, editorial_proposals, current_article,
+                                           current_dossier, runner)
+            kept_topics = {item['topic'] for item in confirmed}
+            result = {**result, 'findings': [item for item in result['findings']
+                if item.get('kind') not in ('factual', 'readability') or item['topic'] in kept_topics]}
     findings = []
     known_by_key = {f['key']: f for f in known}
     for item in result['findings']:

@@ -108,6 +108,17 @@ class SourceRepairReceiptTests(unittest.TestCase):
             accepted = source_repairs._validated_occurrence(stage / "verified-occurrences.json", "p1",
                                                               expected_verdict="unresolved_identity")
             self.assertIsNone(accepted["observation"]["printed_text"])
+            prompt_path = review / 'prompt.txt'
+            original_prompt = prompt_path.read_text()
+            from pipeline.review_loop import SENSE_STATUS_POLICY
+            prompt_path.write_text(original_prompt + '\n' + SENSE_STATUS_POLICY + '\nIMAGE SCOPE CONTRACT: test instructions')
+            source_repairs._validated_occurrence(stage / 'verified-occurrences.json', 'p1',
+                                                expected_verdict='unresolved_identity')
+            prompt_path.write_text(original_prompt + '\n{}')
+            with self.assertRaisesRegex(ValueError, 'Unexpected content'):
+                source_repairs._validated_occurrence(stage / 'verified-occurrences.json', 'p1',
+                                                    expected_verdict='unresolved_identity')
+            prompt_path.write_text(original_prompt)
             with self.assertRaisesRegex(ValueError, "OCR receipt must resolve as unsupported_raw_identity"):
                 source_repairs._validated_occurrence(stage / "verified-occurrences.json", "p1",
                                                       expected_verdict="unsupported_raw_identity")

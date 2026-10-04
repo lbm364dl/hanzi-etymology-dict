@@ -1,7 +1,8 @@
 """Safe fresh continuation for failed source-enrichment editorial stages.
 
 This helper reuses an exact retained research dossier while creating a new job,
-new authorship and new independent reviews. It never publishes or syncs issues.
+new authorship and new independent reviews. Optional completion follows normal
+source, issue and publication gates after the editorial stage.
 """
 from __future__ import annotations
 
@@ -61,6 +62,20 @@ def _check_prior(prior_job, source, root):
         raise ValueError('Canonical baseline changed since the failed source job')
     findings = _load_source_findings(prior_job)
     return saved, state, error, findings
+
+
+def _check_published_prior(prior_job, source, root, review_context):
+    if not isinstance(review_context, dict) or not review_context:
+        raise ValueError('Published-entry repair requires explicit review context')
+    if not source_enrichment._published_matches(prior_job, source, root):
+        raise ValueError('Published repair requires the current exact source-approved canonical pair')
+    saved = editorial.read(Path(prior_job) / 'source.json')
+    state = editorial.read(Path(prior_job) / 'status.json')
+    article = editorial.read(Path(prior_job) / 'article.json')
+    dossier = editorial.read(Path(prior_job) / 'dossier.json')
+    editorial.validate_reviews(article, dossier, editorial.read(Path(prior_job) / 'reviews.json'))
+    return saved, state, '', _load_source_findings(prior_job), {
+        'article_hash': editorial.digest(article), 'dossier_hash': editorial.digest(dossier)}
 
 
 def _load_source_findings(job, seen=None):
@@ -258,7 +273,7 @@ def _retain_research(prior_job, new_job):
 
 def run_one(prior_job, output_job, source, runner, root=source_enrichment.ROOT,
             max_revisions=2, allowed_edit_paths=None, runtime_provenance=None,
-            verified_raw_occurrence_proofs=None):
+            verified_raw_occurrence_proofs=None, review_context=None):
     prior_job, output_job = Path(prior_job), Path(output_job)
     source_hash = source_enrichment._research_source_hash(source)
     character = editorial.read(prior_job / 'source.json')['character']
@@ -270,7 +285,12 @@ def run_one(prior_job, output_job, source, runner, root=source_enrichment.ROOT,
     try:
         old_lock = _lock(prior_job / 'coordinator.lock')
         new_lock = _lock(output_job / 'coordinator.lock')
-        saved, prior_state, error, findings = _check_prior(prior_job, source, root)
+        if editorial.read(prior_job / 'status.json').get('status') == 'published':
+            saved, prior_state, error, findings, expected_baseline = _check_published_prior(
+                prior_job, source, root, review_context)
+        else:
+            saved, prior_state, error, findings = _check_prior(prior_job, source, root)
+            expected_baseline = saved
         if output_job.joinpath('attention_repair.json').exists():
             raise ValueError('Output already contains an attention-repair attempt; use a new directory')
         prior_dossier = editorial.read(prior_job / 'dossier.json') if \
@@ -291,7 +311,7 @@ def run_one(prior_job, output_job, source, runner, root=source_enrichment.ROOT,
         locator, locator_hash = _check_locator(prior_job, character, source, dossier)
 
         snapshot = source_enrichment.prepare_job(character, output_job, source, root)
-        if snapshot.get('article_hash') != saved.get('article_hash') or snapshot.get('dossier_hash') != saved.get('dossier_hash'):
+        if snapshot.get('article_hash') != expected_baseline.get('article_hash') or snapshot.get('dossier_hash') != expected_baseline.get('dossier_hash'):
             raise ValueError('Fresh job canonical baseline differs from the failed job baseline')
         editorial.write(output_job / 'source_checkpoint.json', {
             'character': character, 'source_id': source['id'],
@@ -301,6 +321,11 @@ def run_one(prior_job, output_job, source, runner, root=source_enrichment.ROOT,
             'updated_at': datetime.now(timezone.utc).isoformat(),
         })
         feedback = _review_context(prior_job, error, findings)
+        if review_context is not None:
+            if not isinstance(review_context, dict):
+                raise ValueError('Review context must be an object')
+            feedback['additional_research_context'] = review_context
+            editorial.write(output_job / 'review_context.json', review_context)
         feedback.update({
             'attention_repair': True,
             'prior_job': str(prior_job),
@@ -399,9 +424,88 @@ def run_one(prior_job, output_job, source, runner, root=source_enrichment.ROOT,
                 handle.close()
 
 
+def complete_gates(job, source, runner, root=source_enrichment.ROOT,
+                   max_revisions=2, publish_now=False):
+    """Complete a reviewed recovery through the same source and publication gates.
+
+    The original attempt is retained. No source evidence is fabricated and no
+    unchanged candidate receives invented approvals. Holds remain explicit.
+    """
+    job = Path(job)
+    if runner.model != 'gpt-6-luna' or runner.reasoning != 'low':
+        raise ValueError('Recovery completion requires gpt-6-luna with low reasoning')
+    saved = editorial.read(job / 'source.json')
+    claim_path = Path(root) / 'runs/.locks' / f"source-{source_enrichment._research_source_hash(source)[:16]}-{ord(saved['character']):04X}.lock"
+    claim = _lock(claim_path)
+    lock = None
+    try:
+        lock = _lock(job / 'coordinator.lock')
+        runner = copy.copy(runner)
+        runner.inherited_lock_fds = (claim.fileno(), lock.fileno())
+        runner.profile_policy = source_enrichment.SOURCE_POLICY
+        state = editorial.read(job / 'status.json')
+        if state.get('status') not in ('approved', 'needs_source_evidence', 'needs_source_verification'):
+            return {'status': state.get('status'), 'job': str(job), 'completion': 'held'}
+        # Reject stale source/canonical inputs before starting any model work.
+        source_enrichment.prepare_job(saved['character'], job, source, root)
+        canonical_article, canonical_dossier = source_enrichment._canonical(root, saved['character'])
+        if (editorial.digest(canonical_article) != saved.get('article_hash')
+                or editorial.digest(canonical_dossier) != saved.get('dossier_hash')):
+            raise ValueError('Canonical baseline changed before recovery completion')
+        if not source_enrichment._same_research_source(saved.get('registry_source', {}), source):
+            raise ValueError('Recovery source identity differs from its frozen registry')
+        _check_locator(job, saved['character'], source, editorial.read(job / 'source_dossier.json'))
+        article, dossier = editorial.read(job / 'article.json'), editorial.read(job / 'dossier.json')
+        editorial.validate_reviews(article, dossier, editorial.read(job / 'reviews.json'))
+        audit = source_enrichment._capture_source_audit(job, source, dossier)
+        context = source_enrichment.feedback(source, editorial.read(job / 'source_checkpoint.json')['locator'])
+        state, audit = source_enrichment._integrate_uncited_book_records(
+            job, source, runner, state, audit, context, max_revisions)
+        article, dossier = editorial.read(job / 'article.json'), editorial.read(job / 'dossier.json')
+        # Integration can fail its new independent reviews; never promote that hold.
+        if state.get('status') in ('approved', 'needs_source_evidence', 'needs_source_verification'):
+            editorial.validate_reviews(article, dossier, editorial.read(job / 'reviews.json'))
+            state.update(status='approved', article_hash=editorial.digest(article),
+                         dossier_hash=editorial.digest(dossier), source_audit_hash=editorial.digest(audit))
+            if not audit.get('verified'):
+                state.update(status='needs_source_evidence', review_status='approved')
+            elif source_enrichment._source_findings_pending(job):
+                state.update(status='needs_source_verification', review_status='approved')
+        editorial.write(job / 'status.json', state)
+        if state.get('status') == 'needs_source_verification' and audit.get('verified'):
+            source_enrichment.auto_resolve_source_findings(job, runner)
+            state = editorial.read(job / 'status.json')
+        try:
+            issue_sync = source_enrichment._triage_and_sync_issues(job, source, runner)
+        except Exception as exc:
+            issue_sync = {'status': 'pending', 'error': str(exc)}
+            editorial.write(job / 'issue_sync.json', issue_sync)
+        state = editorial.read(job / 'status.json')
+        state.update(issue_sync_status=issue_sync['status'],
+                     issue_receipts_hash=editorial.digest(issue_sync.get('issues', [])))
+        editorial.write(job / 'status.json', state)
+        result = {'status': state.get('status'), 'job': str(job),
+                  'source_adoption_verified': audit.get('verified') is True,
+                  'issue_sync_status': issue_sync['status'], 'publication_performed': False}
+        if state.get('status') == 'approved' and publish_now:
+            if issue_sync['status'] == 'pending':
+                result.update(status='pending_issue_sync')
+            else:
+                result.update(source_enrichment._publish_job_locked(job, source, root))
+                result['publication_performed'] = True
+        editorial.write(job / 'recovery_completion.json', result)
+        return result
+    finally:
+        for handle in (lock, claim):
+            if handle is not None:
+                fcntl.flock(handle, fcntl.LOCK_UN)
+                handle.close()
+
+
 def run_many(jobs, output_root, registry_path, root=source_enrichment.ROOT,
              workers=2, agents=2, timeout=1200, max_revisions=2, edit_scopes=None,
-             source_id=None, verified_raw_occurrence_proofs=None):
+             source_id=None, verified_raw_occurrence_proofs=None, complete=False, publish_now=False,
+             review_context=None):
     # Validate renderer dependencies before scheduling any source/model work.
     runtime_provenance = _renderer_runtime()
     registry = source_enrichment._source_registry(Path(registry_path))
@@ -439,10 +543,14 @@ def run_many(jobs, output_root, registry_path, root=source_enrichment.ROOT,
         runner = editorial.Runner(copy.deepcopy(editorial.DEFAULT_COMMAND), 'gpt-6-luna', timeout, 'low')
         runner.agent_slots = slots
         scopes = edit_scopes or {}
-        return run_one(prior, output, source, runner, root=root, max_revisions=max_revisions,
+        state = run_one(prior, output, source, runner, root=root, max_revisions=max_revisions,
                        allowed_edit_paths=scopes.get(character),
                        runtime_provenance=runtime_provenance,
-                       verified_raw_occurrence_proofs=proof_map[prior.resolve()])
+                       verified_raw_occurrence_proofs=proof_map[prior.resolve()],
+                       review_context=review_context)
+        if complete or publish_now:
+            return complete_gates(output, source, runner, root, max_revisions, publish_now)
+        return state
     results = []
     with ThreadPoolExecutor(max_workers=workers) as pool:
         futures = [pool.submit(submit, job) for job in jobs]
@@ -458,25 +566,50 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--registry', type=Path, default=source_enrichment.ROOT / 'research/digitised-sources.json')
     parser.add_argument('--source', help='Registered source ID; required for multi-source registries')
-    parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--output', type=Path)
+    parser.add_argument('--complete-existing', action='store_true', help='Complete existing reviewed jobs without restarting authorship')
     parser.add_argument('--root', type=Path, default=source_enrichment.ROOT)
     parser.add_argument('--workers', type=int, default=2)
     parser.add_argument('--agents', type=int, default=2)
     parser.add_argument('--timeout', type=int, default=1200)
     parser.add_argument('--max-revisions', type=int, default=2)
+    parser.add_argument('--complete-gates', action='store_true', help='Complete citation, source and issue gates after reviews')
+    parser.add_argument('--publish-now', action='store_true', help='Complete gates and publish only fully approved source entries')
+    parser.add_argument('--review-context', type=Path, help='New findings to independently recheck; required for repair of a published source entry')
     parser.add_argument('--edit-scopes', type=Path,
                         help='Optional JSON object mapping characters to precise allowed article paths')
     parser.add_argument('--verified-raw-occurrence-proofs', type=Path,
                         help='JSON array of exact finding/receipt/occurrence IDs for validated correct_raw releases')
     parser.add_argument('jobs', nargs='+', type=Path)
     args = parser.parse_args()
+    if args.complete_existing:
+        registry = source_enrichment._source_registry(args.registry)
+        slots = AgentSlots(args.root / 'runs/.locks/agent-slots', args.agents)
+        def finish(job):
+            source_id = args.source or editorial.read(job / 'source.json')['source_id']
+            source = source_enrichment._source(registry, source_id)
+            runner = editorial.Runner(copy.deepcopy(editorial.DEFAULT_COMMAND), 'gpt-6-luna', args.timeout, 'low')
+            runner.agent_slots = slots
+            return complete_gates(job, source, runner, args.root, args.max_revisions, args.publish_now)
+        with ThreadPoolExecutor(max_workers=args.workers) as pool:
+            results = []
+            for future in as_completed([pool.submit(finish, job) for job in args.jobs]):
+                try:
+                    results.append(future.result())
+                except Exception as exc:
+                    results.append({'status': 'failed', 'error': str(exc)})
+        print(json.dumps(results, ensure_ascii=False, indent=2))
+        return
+    if args.output is None:
+        parser.error('--output is required for a new attention-repair attempt')
     scopes = editorial.read(args.edit_scopes) if args.edit_scopes else None
     proof_record = editorial.read(args.verified_raw_occurrence_proofs) if args.verified_raw_occurrence_proofs else []
     if isinstance(proof_record, dict):
         proof_record = proof_record.get('proofs')
     result = run_many(args.jobs, args.output, args.registry, args.root,
                       args.workers, args.agents, args.timeout, args.max_revisions, scopes, args.source,
-                      proof_record)
+                      proof_record, args.complete_gates, args.publish_now,
+                      editorial.read(args.review_context) if args.review_context else None)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
