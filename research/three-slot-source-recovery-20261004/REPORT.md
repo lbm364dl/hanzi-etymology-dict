@@ -39,3 +39,9 @@ A confirmed mismatch at 字源 PDF423, raw offset1855, replaced the guessed scal
 ## Remaining work
 
 The unidentified printed quotation, producer printed-page metadata and disputed isolated mare gloss remain research/metadata followups. The full 300-character goal stays paused. No broad batch was restarted; active model capacity stayed at three. Recovery commands are explicit and reusable, rather than an unattended planner for every scholarly gap.
+
+## GitHub tracking and shutdown
+
+Closed verified-complete tasks #335, #336, #337, #340 and #342. Closed #343 as not planned after the independent exact-pair finding check rejected the rewrite request. Unresolved quotation identity (#338), producer page metadata (#339) and historical evidence for the reported mare gloss (#341) remain open, with their current scope documented. They are not fabricated completions.
+
+`worker-audit-final.json` records zero live project Luna exec workers after verification. The temporary verification server was stopped. The older 300-character goal remains paused. Other entries retain their earlier approvals; they were not regenerated or certified against these new prompt instructions.
