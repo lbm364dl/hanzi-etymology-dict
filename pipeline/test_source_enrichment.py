@@ -1,5 +1,7 @@
 import copy
 import fcntl
+import hashlib
+import json
 from pathlib import Path
 import tempfile
 import sys
@@ -65,6 +67,92 @@ class SourceEnrichmentTests(unittest.TestCase):
         self.assertEqual(source_enrichment._source_finding_class({'kind': 'ocr',
             'details': '[SCAN VERIFICATION REQUIRED] raw OCR reads 升; do not use this scalar as confirmed source text'}),
             'transcription_correction')
+
+    def test_explicit_no_replacement_entry_boundary_is_not_a_literal_proposal(self):
+        finding = {'kind': 'ocr', 'title': '[OCR CORRECTION REQUIRED] Verify header use',
+            'details': ('PDF p. 1106 running-header occurrence 媽 is accurately printed as a header, '
+                        'not a headword; the entry text belongs to 姨. No replacement Unicode '
+                        'transcription is proposed; issue is entry-boundary classification.')}
+        self.assertEqual(source_enrichment._source_finding_class(finding), 'primary_access_gap')
+        # Keep the original finding inventory; classification only picks the
+        # proper exact-pair resolver lane and does not discard the action marker.
+        self.assertIn('[OCR CORRECTION REQUIRED]', finding['title'])
+
+    def test_actual_literal_proposal_wins_over_no_replacement_scope_wording(self):
+        finding = {'kind': 'ocr', 'title': '[OCR CORRECTION REQUIRED] Check headword boundary',
+            'details': ('The page has a running header, but the proposed source-bound OCR correction '
+                        'replaces current 語 with 話 in the quoted phrase. No replacement is proposed '
+                        'for the header occurrence itself.')}
+        self.assertEqual(source_enrichment._source_finding_class(finding), 'transcription_correction')
+        self.assertEqual(source_enrichment._source_finding_class({
+            'kind': 'ocr', 'proposed_literal': '話', 'details': 'No replacement transcription is proposed.'}),
+            'transcription_correction')
+
+    def test_correct_raw_receipt_is_exactly_bound_and_only_releases_preflight(self):
+        from PIL import Image
+        from pipeline import ocr_verification
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            job = root / 'job'
+            job.mkdir()
+            scan = root / 'page.png'
+            Image.new('RGB', (12, 16), 'white').save(scan)
+            with Image.open(scan) as image:
+                pixel_hash = hashlib.sha256(image.convert('RGB').tobytes()).hexdigest()
+            scan_file_hash = hashlib.sha256(scan.read_bytes()).hexdigest()
+            text = 'prefix 木 suffix'
+            source = {'id': 'test-book', 'book_id': 'sha256:test', 'corpus_path': str(root / 'corpus.jsonl')}
+            article = {'character': '木', 'summary': {'text': '木.'}}
+            dossier = {'evidence': []}
+            editorial.write(job / 'source.json', {'source_id': source['id'], 'registry_source': source,
+                'article_hash': editorial.digest(article), 'dossier_hash': editorial.digest(dossier)})
+            editorial.write(job / 'source_article.json', article)
+            editorial.write(job / 'source_dossier.json', dossier)
+            finding = {'key': 'literal', 'kind': 'ocr',
+                       'details': '[OCR CORRECTION REQUIRED] raw OCR span 木 may be a different graph.'}
+            editorial.write(job / 'source_findings.json', {'findings': [finding]})
+            page = {'book_id': source['book_id'], 'pdf_page_1based': 1, 'source_scan': str(scan),
+                    'source_sha256': pixel_hash, 'text': text}
+            (root / 'corpus.jsonl').write_text(json.dumps(page, ensure_ascii=False) + '\n', encoding='utf-8')
+
+            proposal = {'id': 'occ-1', 'start': text.index('木'), 'end': text.index('木') + 1,
+                        'before': '木', 'after': '本'}
+            occurrences = ocr_verification.packet(text, [proposal])
+            result = {'occurrences': [{'id': 'occ-1', 'raw_text': '木', 'printed_text': '木',
+                                       'verdict': 'correct_raw', 'reason': 'Exact glyph in attached page.'}]}
+            output = root / 'receipt'
+            review = output / 'review'
+            review.mkdir(parents=True)
+            provenance = {'source_id': source['id'], 'book_id': source['book_id'], 'pdf_page': 1,
+                          'source_scan_path': str(scan), 'source_pixel_sha256': scan_file_hash,
+                          'raw_text_sha256': hashlib.sha256(text.encode()).hexdigest()}
+            editorial.write(output / 'occurrences.json', {'provenance': provenance, 'occurrences': occurrences})
+            result_hash = editorial.digest(result)
+            editorial.write(review / 'meta.json', {'role': 'ocr_verification', 'status': 'complete',
+                'model': 'gpt-6-luna', 'reasoning': 'low', 'result_hash': result_hash,
+                'image_argument_manifest': [{'path': str(scan), 'sha256': scan_file_hash}]})
+            receipt = {'provenance': provenance, 'occurrences_hash': editorial.digest(occurrences),
+                       'result': result, 'result_hash': result_hash, 'review_directory': str(review),
+                       'model': 'gpt-6-luna', 'reasoning': 'low'}
+            receipt_path = output / 'verified-occurrences.json'
+            editorial.write(receipt_path, receipt)
+            valid = source_enrichment.validate_correct_raw_occurrence_receipt(
+                job, 'literal', receipt_path, ['occ-1'])
+            self.assertEqual(valid['disposition'], 'correct_raw_preflight_only')
+            self.assertTrue(valid['final_source_resolution_still_required'])
+            self.assertEqual(valid['article_hash'], editorial.digest(article))
+
+            changed_result = copy.deepcopy(result)
+            changed_result['occurrences'][0]['verdict'] = 'confirmed_correction'
+            receipt['result'] = changed_result
+            receipt['result_hash'] = editorial.digest(changed_result)
+            editorial.write(receipt_path, receipt)
+            editorial.write(review / 'meta.json', {**editorial.read(review / 'meta.json'),
+                'result_hash': receipt['result_hash']})
+            with self.assertRaises(ValueError):
+                source_enrichment.validate_correct_raw_occurrence_receipt(
+                    job, 'literal', receipt_path, ['occ-1'])
 
     def test_verified_source_claim_requires_hash_bound_luna_research_and_pixels(self):
         from PIL import Image
@@ -609,6 +697,108 @@ class SourceEnrichmentTests(unittest.TestCase):
             image.putpixel((0, 0), (0, 0, 0))
             image.save(scan)
             self.assertTrue(source_enrichment._source_findings_pending(job))
+
+    def test_grouped_verified_transcription_requires_every_occurrence_to_match(self):
+        import hashlib
+        import json
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as temp:
+            job = Path(temp)
+            scan = job / 'scan.png'
+            Image.new('RGB', (8, 8), 'white').save(scan)
+            with Image.open(scan) as image:
+                pixels = hashlib.sha256(image.convert('RGB').tobytes()).hexdigest()
+            text = 'prefix爸妈suffix'
+            corpus = job / 'corpus.jsonl'
+            page = {'book_id': 'book', 'pdf_page_1based': 951, 'source_sha256': pixels,
+                    'source_scan': str(scan), 'text': text}
+            corpus.write_text(json.dumps(page, ensure_ascii=False) + '\n', encoding='utf-8')
+            finding = {'key': 'grouped', 'kind': 'ocr', 'details': '爸妈 exact text.'}
+            findings = {'requires_coordinator_verification': True, 'findings': [finding]}
+            article, dossier = {'character': '爸'}, {'evidence': []}
+            for name, value in [('source_findings.json', findings), ('article.json', article),
+                                ('dossier.json', dossier), ('source.json', {
+                                    'registry_source': {'corpus_path': str(corpus)}})]:
+                editorial.write(job / name, value)
+            checks = [{'key': 'grouped', 'pdf_page': 951, 'source_pixel_sha256': pixels,
+                       'occurrences': [
+                           {'id': 'span-1', 'text_offset': 6, 'current': '爸'},
+                           {'id': 'span-2', 'text_offset': 7, 'current': '妈'}]}]
+            observations = [{'key': 'grouped', 'pixel_reason': 'Both occurrences checked.',
+                'occurrence_observations': [
+                    {'id': 'span-1', 'observed_literal': '爸', 'pixel_reason': 'Visible.'},
+                    {'id': 'span-2', 'observed_literal': '妈', 'pixel_reason': 'Visible.'}]}]
+            result = {'findings': [{'key': 'grouped',
+                                    'disposition': 'verified_transcription_matches_corpus'}],
+                      'transcription_observations': observations}
+            def save_resolution():
+                editorial.write(job / 'source-resolution/result.json', result)
+                editorial.write(job / 'source-resolution/meta.json', {
+                    'role': 'source_resolution', 'status': 'complete', 'model': 'gpt-6-luna',
+                    'reasoning': 'low', 'result_hash': editorial.digest(result)})
+                editorial.write(job / 'source_resolution.json', {
+                    'findings_hash': editorial.digest(findings), 'article_hash': editorial.digest(article),
+                    'dossier_hash': editorial.digest(dossier), 'result_hash': editorial.digest(result),
+                    'model': 'gpt-6-luna', 'reasoning': 'low', 'review_path': 'source-resolution/result.json',
+                    'transcription_checks': checks})
+            save_resolution()
+            self.assertFalse(source_enrichment._source_findings_pending(job))
+            result['transcription_observations'][0]['occurrence_observations'][1]['observed_literal'] = '媽'
+            save_resolution()
+            self.assertTrue(source_enrichment._source_findings_pending(job))
+
+    def test_source_resolver_requests_each_grouped_raw_occurrence(self):
+        import hashlib
+        import json
+        from PIL import Image
+        with tempfile.TemporaryDirectory() as temp:
+            job = Path(temp)
+            scan = job / 'scan.png'
+            Image.new('RGB', (8, 8), 'white').save(scan)
+            with Image.open(scan) as image:
+                pixels = hashlib.sha256(image.convert('RGB').tobytes()).hexdigest()
+            text = 'prefix木本suffix'
+            corpus = job / 'corpus.jsonl'
+            corpus.write_text(json.dumps({'book_id': 'book', 'pdf_page_1based': 951,
+                'source_sha256': pixels, 'source_scan': str(scan), 'text': text}, ensure_ascii=False) + '\n',
+                encoding='utf-8')
+            finding = {'key': 'grouped', 'kind': 'ocr',
+                       'details': '[OCR CORRECTION REQUIRED] Exact raw span 木本 is under visual review.'}
+            article, dossier = copy.deepcopy(ARTICLE_V2), copy.deepcopy(DOSSIER)
+            dossier['glyph_research'] = {'historical_glyphs': copy.deepcopy(GLYPHS)}
+            dossier['glyph_assets'] = []
+            editorial.write(job / 'article.json', article)
+            editorial.write(job / 'dossier.json', dossier)
+            editorial.write(job / 'reviews.json', [editorial.make_review(role, 'pass', [], article, dossier,
+                'fixture-' + role) for role in ('factual', 'readability')])
+            editorial.write(job / 'source.json', {'registry_source': {'corpus_path': str(corpus)}})
+            editorial.write(job / 'source_findings.json', {'findings': [finding]})
+            editorial.write(job / 'status.json', {'status': 'needs_source_verification'})
+            editorial.write(job / 'source_checkpoint.json', {'locator': {'source_scan_images': [
+                {'path': str(scan), 'pdf_page': 951, 'source_pixel_sha256': pixels}]}})
+            check = {'key': 'grouped', 'pdf_page': 951, 'source_pixel_sha256': pixels,
+                     'occurrences': [{'id': 'span-1', 'text_offset': 6, 'current': '木'},
+                                     {'id': 'span-2', 'text_offset': 7, 'current': '本'}]}
+            observed = {'findings': [{'key': 'grouped',
+                                      'disposition': 'verified_transcription_matches_corpus'}],
+                'transcription_observations': [{'key': 'grouped', 'pixel_reason': 'Both exact spans inspected.',
+                    'occurrence_observations': [
+                        {'id': 'span-1', 'observed_literal': '木', 'pixel_reason': 'Printed form.'},
+                        {'id': 'span-2', 'observed_literal': '本', 'pixel_reason': 'Printed form.'}]}]}
+            class FakeRunner:
+                model = 'gpt-6-luna'
+                reasoning = 'low'
+                def run(self, role, inputs, schema, directory):
+                    self_outer.assertEqual(role, 'source_resolution')
+                    self_outer.assertIn('occurrence_observations', str(schema))
+                    self_outer.assertEqual(inputs['transcription_checks'][0]['occurrences'], check['occurrences'])
+                    editorial.write(Path(directory) / 'result.json', observed)
+                    return observed
+            self_outer = self
+            record = source_enrichment.resolve_source_findings(job, FakeRunner(),
+                transcription_checks=[check])
+            self.assertEqual(record['transcription_checks'][0]['key'], 'grouped')
+            self.assertFalse(source_enrichment._source_findings_pending(job))
 
     def test_resolution_transport_limits_repair_observations_to_requested_keys(self):
         job = source_enrichment.job_path(self.output, SOURCE['id'], '木')

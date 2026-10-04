@@ -105,8 +105,16 @@ receipts and diagnostic findings, verifies the unchanged canonical baseline and
 current source locator, and runs new Luna low authorship and independent reviews.
 
 ```bash
-python3 -m pipeline.attention_repair --registry research/digitised-sources.json --source ziyuan-2012 --output runs/attention-repair-next --workers 6 --agents 24 runs/old-source-job/ziyuan-2012/5531
+/path/to/project-venv/bin/python -m pipeline.attention_repair --registry research/digitised-sources.json --source ziyuan-2012 --output runs/attention-repair-next --workers 6 --agents 24 runs/old-source-job/ziyuan-2012/5531
 ```
+
+Run the coordinator with the same Python environment that has the pipeline's
+renderer dependencies. Install them into that interpreter with
+`/path/to/project-venv/bin/python -m pip install -r pipeline/requirements.txt`.
+The attention-repair command checks Pillow and CairoSVG before scheduling any
+model work and records the interpreter/version in each attempt. Agent shell
+commands also search the coordinator's virtual-environment `bin` directory first,
+while retaining the rest of the inherited PATH.
 
 Use a new output folder for each attempt. Proposed literal OCR replacements require
 scan verification first. Unresolved specimen identities can remain in the research
@@ -746,15 +754,32 @@ The expanded smoke run adds 我 and 清 to 木 and 來. These contrast reuse of 
 
 Learner length targets are 40 words for the overview, 25 per component, and 35 for the optional takeaway. Mechanical limits allow five extra words; reviewers judge clarity and focus rather than rejecting an otherwise concise explanation for a one-word overrun.
 
-### Verifying proposed review corrections
+### Reviewing corrections without repeated loops
 
-A reviewer verdict of `revise` triggers a separate invocation of that review role before any
-revision or follow-up research. The verification agent checks the alleged problem against the
-exact article fields and cited evidence, retaining real required corrections and discarding
-false or duplicate requests. It may itself return either `pass` or `revise`; the harness never
-converts a failed review to approval. Both responses are archived under the role and
-`<role>-verification` directories, and the final receipt names the actual deciding invocation.
-This check applies to full-entry and learner-only review, preserving the latter's scope.
+Each full-entry round runs one independent factual review and one independent readability
+review on the exact candidate. Ordinary `revise` findings proceed directly to one consolidated
+revision plan; a second review call is no longer mandatory for every correction. A detected
+explicit sense-status reversal triggers a fresh adjudicating invocation, preserving both
+results and binding the final receipt to its actual deciding invocation. Earlier correction
+receipts accompany later rounds as diagnostic history, never inherited approval. Other
+contradictions must be evaluated by the planning agent; unresolvable disagreements choose
+`hold`, retain `needs_revision`, and record a specific diagnostic reason. Detection of explicit
+status reversals is deliberately conservative and is not a general factual conflict parser.
+
+The common `earliest_attested` contract describes a supported sense in the earliest documented
+corpus/period; it does not establish priority over every other sense or the original spoken
+meaning. Speculative original meanings do not negate attested early uses.
+
+Before reviews, `pipeline.pre_review.check_pair` saves hash-bound schema, citation-ID,
+learner-card coverage and generated sense-edge checks in `round-N/pre-review.json`.
+It cannot determine whether all visible strokes have been explained or identify ancient glyphs;
+those still require independent research and review. Full-entry repairs stop after at most two
+revision cycles, preserving the candidate, actual reviews, consolidated corrections and stop
+reason for GitHub diagnosis. No exhausted or held run is approved or published automatically.
+
+New source/attention CLI invocations default to two model slots. Use a small measured smoke
+run before increasing capacity: available RAM alone is insufficient. The large HSK1 batch
+remains paused pending review-loop and network measurements.
 
 ## Authored component-form relations
 

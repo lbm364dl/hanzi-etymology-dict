@@ -1549,7 +1549,7 @@ class EditorialTests(unittest.TestCase):
             article = json.loads((job / "article.json").read_text())
             self.assertEqual({k: v for k, v in article.items() if k != "learner"}, base)
             self.assertEqual(json.loads((job / "dossier.json").read_text()), dossier)
-            self.assertEqual(runner.calls, ["learner", "factual", "readability", "readability", "learner", "factual", "readability"])
+            self.assertEqual(runner.calls, ["learner", "factual", "readability", "learner", "factual", "readability"])
             reviews = json.loads((job / "reviews.json").read_text())
             self.assertTrue(all(r["article_hash"] == digest(article) for r in reviews))
             self.assertNotEqual(reviews, entry["review"]["reviews"])
@@ -1578,7 +1578,7 @@ class EditorialTests(unittest.TestCase):
                 return {"verdict": "pass", "findings": []}
         with tempfile.TemporaryDirectory() as root:
             runner = ContractRunner()
-            result = independent_review("factual", ARTICLE_V2, DOSSIER, Path(root), runner)
+            result = independent_review("factual", ARTICLE_V2, DOSSIER, Path(root), runner, verify_findings=True)
             self.assertEqual(result["verdict"], "pass")
             self.assertEqual(runner.calls, ["factual", "factual-verification", "factual-contract-repair"])
             self.assertIn("factual-contract-repair", result["reviewer"])
@@ -1587,7 +1587,7 @@ class EditorialTests(unittest.TestCase):
             runner.calls = []
             runner.keep_invalid = True
             with self.assertRaisesRegex(ValueError, "must contain required changes"):
-                independent_review("factual", ARTICLE_V2, DOSSIER, Path(root), runner)
+                independent_review("factual", ARTICLE_V2, DOSSIER, Path(root), runner, verify_findings=True)
             self.assertEqual(len(runner.calls), 3)
 
     def test_no_reading_correction_required_receives_fresh_contract_review(self):
@@ -1606,7 +1606,7 @@ class EditorialTests(unittest.TestCase):
                         "No change to this sense or its generated has_sense edge is required."):
             with self.subTest(finding=finding), tempfile.TemporaryDirectory() as root:
                 runner = ContractRunner(finding)
-                result = independent_review("readability", ARTICLE_V2, DOSSIER, Path(root), runner)
+                result = independent_review("readability", ARTICLE_V2, DOSSIER, Path(root), runner, verify_findings=True)
                 self.assertEqual(result["verdict"], "pass")
                 self.assertEqual(runner.calls, ["readability", "readability-verification", "readability-contract-repair"])
                 self.assertIn("contract-repair", result["reviewer"])
@@ -1630,7 +1630,7 @@ class EditorialTests(unittest.TestCase):
                 runner.calls = []
                 runner.verified = {"verdict": verdict, "findings": [] if verdict == "pass" else ["Supported concrete correction"]}
                 receipt = independent_review("factual", ARTICLE, DOSSIER, root, runner,
-                    {"review_scope": "added_learner", "base_approval": {"status": "approved"}})
+                    {"review_scope": "added_learner", "base_approval": {"status": "approved"}}, verify_findings=True)
                 self.assertEqual(len(runner.calls), 2)
                 self.assertEqual(receipt["verdict"], verdict)
                 self.assertIn("actual-verifier-thread", receipt["reviewer"])
@@ -1651,7 +1651,7 @@ class EditorialTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as root:
             verifier = Verifier()
-            independent_review("factual", ARTICLE_V2, DOSSIER, Path(root), verifier)
+            independent_review("factual", ARTICLE_V2, DOSSIER, Path(root), verifier, verify_findings=True)
             instruction = verifier.calls[1]["verification_task"]
             self.assertIn("positive claim of priority", instruction)
             self.assertIn("unknown precise date alone does not disqualify", instruction)
@@ -1722,7 +1722,7 @@ class EditorialTests(unittest.TestCase):
                     state = refine(ARTICLE_V2, dossier, root, runner, 1)
                     self.assertEqual(research.call_count, 1 if action == "research" else 0)
                 self.assertEqual(state["status"], "approved")
-                self.assertEqual(runner.calls, ["editor", "factual", "factual", "readability", "revision_plan", "revision", "factual", "readability"])
+                self.assertEqual(runner.calls, ["editor", "factual", "readability", "revision_plan", "revision", "factual", "readability"])
                 self.assertEqual(json.loads((Path(root) / "round-0/revision_plan/decision.json").read_text())["action"], action)
                 article = json.loads((Path(root) / "article.json").read_text())
                 receipts = json.loads((Path(root) / "reviews.json").read_text())
@@ -2218,6 +2218,26 @@ class EditorialTests(unittest.TestCase):
             result = runner.run("writer", {**DOSSIER, "new": True}, {**ARTICLE_SCHEMA, "title": "changed"}, job)
             self.assertEqual(result, ARTICLE)
             self.assertEqual(counter.read_text(), "5")
+
+    def test_virtualenv_driver_is_first_on_nested_agent_path_and_recorded(self):
+        import os
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            script = root / "agent.py"
+            script.write_text(
+                "import json,pathlib,subprocess,sys\n"
+                "nested=subprocess.check_output(['python3','-c','import sys;print(sys.executable)'],text=True).strip()\n"
+                "pathlib.Path(sys.argv[1]).write_text(json.dumps({'nested':nested}))\n")
+            runner = Runner([sys.executable, str(script), "{output}"], "fake")
+            with patch.object(sys, 'prefix', str(root / 'venv')), \
+                 patch.object(sys, 'base_prefix', str(root / 'base')):
+                result = runner.run("analysis", {}, {"type":"object", "properties":{
+                    "nested":{"type":"string"}}, "required":["nested"], "additionalProperties":False}, root / "job")
+            self.assertEqual(Path(result['nested']).resolve(), Path(sys.executable).resolve())
+            meta = json.loads((root / 'job' / 'meta.json').read_text())
+            self.assertEqual(meta['driver_runtime']['executable'], sys.executable)
+            self.assertEqual(meta['driver_runtime']['version'], sys.version.split()[0])
+            self.assertEqual(meta['driver_runtime']['prefix'], str(root / 'venv'))
 
     def test_failed_output_not_reused_and_timeout_recorded(self):
         with tempfile.TemporaryDirectory() as temp:

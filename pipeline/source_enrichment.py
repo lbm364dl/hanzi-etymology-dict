@@ -48,6 +48,125 @@ def _locator_hash(located):
                 candidate.pop('applied_ocr_corrections', None)
     return editorial.digest(value)
 
+
+def validate_correct_raw_occurrence_receipt(job, finding_key, receipt_path, occurrence_ids):
+    """Validate a completed Luna scan receipt for exact existing raw occurrences.
+
+    This proof can release only an already-disproved replacement hypothesis from
+    the editorial-continuation preflight. It does not mutate OCR, remove the
+    retained source finding, or satisfy the final exact-pair source-resolution
+    gate. The normal source resolver must still assess every retained finding.
+    """
+    from pipeline import ocr_verification
+
+    job = Path(job)
+    receipt_path = Path(receipt_path)
+    receipt = editorial.read(receipt_path)
+    occurrence_packet_path = receipt_path.parent / 'occurrences.json'
+    packet_record = editorial.read(occurrence_packet_path)
+    source_snapshot = editorial.read(job / 'source.json')
+    source = source_snapshot.get('registry_source', {})
+    findings = editorial.read(job / 'source_findings.json').get('findings', [])
+    finding = next((item for item in findings if item.get('key') == finding_key), None)
+    if not finding or _source_finding_class(finding) != 'transcription_correction':
+        raise ValueError('Raw-occurrence proof must bind a retained transcription finding')
+    if not isinstance(occurrence_ids, list) or not occurrence_ids or len(occurrence_ids) != len(set(occurrence_ids)):
+        raise ValueError('Raw-occurrence proof requires unique exact occurrence IDs')
+    if (receipt.get('model') != 'gpt-6-luna' or receipt.get('reasoning') != 'low'
+            or receipt.get('result_hash') != editorial.digest(receipt.get('result'))):
+        raise ValueError('Raw-occurrence receipt is not bound to a Luna-low result')
+    review_dir = Path(receipt.get('review_directory', ''))
+    meta_path = review_dir / 'meta.json'
+    if not meta_path.is_file():
+        raise ValueError('Raw-occurrence receipt has no completed review metadata')
+    meta = editorial.read(meta_path)
+    if (meta.get('role') != 'ocr_verification' or meta.get('status') != 'complete'
+            or meta.get('model') != 'gpt-6-luna' or meta.get('reasoning') != 'low'
+            or meta.get('result_hash') != receipt.get('result_hash')):
+        raise ValueError('Raw-occurrence receipt metadata is not a completed Luna-low scan review')
+    provenance = packet_record.get('provenance', {})
+    if (receipt.get('provenance') != provenance
+            or receipt.get('occurrences_hash') != editorial.digest(packet_record.get('occurrences', []))
+            or provenance.get('source_id') != source_snapshot.get('source_id')
+            or provenance.get('book_id') != source.get('book_id')):
+        raise ValueError('Raw-occurrence receipt does not match the frozen registered source identity')
+    if (editorial.digest(editorial.read(job / 'source_article.json')) != source_snapshot.get('article_hash')
+            or editorial.digest(editorial.read(job / 'source_dossier.json')) != source_snapshot.get('dossier_hash')):
+        raise ValueError('Raw-occurrence proof job has altered frozen article or dossier inputs')
+    page_number = provenance.get('pdf_page')
+    matched_pages = []
+    with Path(source.get('corpus_path', '')).open(encoding='utf-8') as corpus:
+        for line in corpus:
+            page = json.loads(line)
+            if (page.get('pdf_page_1based') == page_number
+                    and page.get('book_id') == source.get('book_id')):
+                matched_pages.append(page)
+    if len(matched_pages) != 1:
+        raise ValueError('Raw-occurrence receipt source page is absent or ambiguous in the registered corpus')
+    page = matched_pages[0]
+    raw_text = page.get('text', '')
+    if (page.get('source_scan') != provenance.get('source_scan_path')
+            or (provenance.get('source_sha256') is not None
+                and page.get('source_sha256') != provenance.get('source_sha256'))
+            or hashlib.sha256(raw_text.encode('utf-8')).hexdigest() != provenance.get('raw_text_sha256')):
+        raise ValueError('Raw-occurrence receipt does not bind the current registered page text and scan')
+    scan_manifest = {str(Path(item.get('path', '')).resolve()): item
+                     for item in meta.get('image_argument_manifest', [])}
+    scan_path = Path(page['source_scan']).resolve()
+    scan_manifest_entry = scan_manifest.get(str(scan_path))
+    scan_file_hash = hashlib.sha256(scan_path.read_bytes()).hexdigest()
+    if (not scan_manifest_entry or scan_manifest_entry.get('sha256') != scan_file_hash
+            or provenance.get('source_pixel_sha256') != scan_file_hash):
+        raise ValueError('Luna review metadata does not bind the registered original page scan')
+    # The legacy OCR verifier receipt field named source_pixel_sha256 contains
+    # encoded-file SHA-256 (as recorded in its run metadata), not decoded RGB
+    # bytes. Independently validate the actual decoded pixels against the
+    # consumer corpus's source hash before using the receipt.
+    from PIL import Image
+    with Image.open(scan_path) as image:
+        actual_pixel_hash = hashlib.sha256(image.convert('RGB').tobytes()).hexdigest()
+    if page.get('source_sha256') != actual_pixel_hash:
+        raise ValueError('Original scan pixels differ from the registered consumer corpus source hash')
+    occurrences = packet_record.get('occurrences', [])
+    if {item.get('id') for item in occurrences} != set(occurrence_ids):
+        raise ValueError('Raw-occurrence proof must name every and only packet occurrence')
+    for item in occurrences:
+        start, end = item.get('start'), item.get('end')
+        if (type(start) is not int or type(end) is not int or not 0 <= start < end <= len(raw_text)
+                or raw_text[start:end] != item.get('before')):
+            raise ValueError('Raw-occurrence packet span differs from the registered current corpus')
+    ocr_verification.validate_result(receipt.get('result', {}), occurrences)
+    result_by_id = {item['id']: item for item in receipt['result']['occurrences']}
+    if any(result_by_id[identity].get('verdict') != 'correct_raw' for identity in occurrence_ids):
+        raise ValueError('Only unanimous correct_raw occurrence receipts release this editorial preflight')
+    finding_text = ' '.join(str(finding.get(field, '')) for field in ('title', 'details', 'verification'))
+    if any(item['before'] not in finding_text for item in occurrences):
+        raise ValueError('Proof occurrences are not textually bound to the retained finding')
+    transcription_check = {
+        'key': finding_key,
+        'pdf_page': page_number,
+        'source_pixel_sha256': actual_pixel_hash,
+        'occurrences': [{'id': item['id'], 'text_offset': item['start'],
+                         'current': item['before']} for item in occurrences],
+    }
+    return {
+        'finding_key': finding_key,
+        'receipt_path': str(receipt_path.resolve()),
+        'receipt_hash': editorial.digest(receipt),
+        'result_hash': receipt['result_hash'],
+        'occurrence_ids': list(occurrence_ids),
+        'pdf_page': page_number,
+        'source_sha256': page['source_sha256'],
+        'source_scan_file_sha256': scan_file_hash,
+        'source_pixel_sha256': actual_pixel_hash,
+        'raw_text_sha256': provenance['raw_text_sha256'],
+        'article_hash': source_snapshot['article_hash'],
+        'dossier_hash': source_snapshot['dossier_hash'],
+        'transcription_check': transcription_check,
+        'disposition': 'correct_raw_preflight_only',
+        'final_source_resolution_still_required': True,
+    }
+
 SOURCE_POLICY = """
 SOURCE-SPECIFIC CHINESE ENRICHMENT:
 An account that reports borrowing does not by itself identify the earlier word's
@@ -421,16 +540,29 @@ def _verify_transcription_checks(job, checks):
     normalized = []
     for check in checks:
         page = pages.get(check['pdf_page'], {})
-        start, current = check.get('text_offset'), check.get('current')
-        if (check['key'] not in keys or type(start) is not int or start < 0
-                or not isinstance(current, str) or not current
-                or page.get('text', '')[start:start + len(current)] != current
+        source_occurrences = check.get('occurrences')
+        if source_occurrences is None:
+            source_occurrences = [{'id': 'single', 'text_offset': check.get('text_offset'),
+                                   'current': check.get('current')}]
+        ids = [item.get('id') for item in source_occurrences if isinstance(item, dict)]
+        if (check['key'] not in keys or not source_occurrences
+                or len(ids) != len(source_occurrences) or len(ids) != len(set(ids))
                 or page.get('source_sha256') != check.get('source_pixel_sha256')
                 or ('source_scan' in check and check['source_scan'] != page.get('source_scan'))):
             raise ValueError('Transcription check requires exact current text and source pixels')
+        spans = []
+        for occurrence in source_occurrences:
+            start, current = occurrence.get('text_offset'), occurrence.get('current')
+            end = start + len(current) if type(start) is int and isinstance(current, str) else -1
+            if (type(start) is not int or start < 0 or not isinstance(current, str) or not current
+                    or page.get('text', '')[start:end] != current
+                    or any(start < previous_end and previous_start < end for previous_start, previous_end in spans)):
+                raise ValueError('Transcription check requires exact nonoverlapping current text spans')
+            spans.append((start, end))
         editorial.source_scan_attachments([{'path': page['source_scan'],
             'pdf_page': check['pdf_page'], 'source_pixel_sha256': check['source_pixel_sha256']}])
-        normalized.append({**check, 'source_scan': page['source_scan']})
+        normalized.append({**check, 'occurrences': source_occurrences,
+                           'source_scan': page['source_scan']})
     return normalized
 
 
@@ -503,6 +635,12 @@ def _source_finding_class(finding):
     # depends on the missing entry.  The original finding remains in the
     # inventory; a real before→after proposal still takes the transcription
     # lane below.
+    explicit_literal_proposal = (
+        finding.get('proposed_literal') is not None
+        or finding.get('proposed') is not None
+        or re.search(r'\b(?:propos(?:e|es|ed|al))\b.{0,120}'
+                     r'(?:rather than|instead of|replace|correction|current(?:ly)? reads)', text, re.I)
+    )
     no_literal_proposal = re.search(
         r'\bno\s+(?:replacement\s+)?(?:unicode\s+)?(?:transcription|ocr|literal|character)'
         r'(?:\s+(?:span|text|value))?\s+(?:is\s+)?(?:proposed|requested|identified|specified)',
@@ -510,9 +648,9 @@ def _source_finding_class(finding):
     entry_boundary_issue = re.search(
         r'entry[- ]boundary|running[- ]header|header.{0,80}(?:not|rather than).{0,80}headword|'
         r'not a substantive entry|body.{0,80}belongs to|entry text belongs to', text, re.I)
-    if no_literal_proposal and entry_boundary_issue:
+    if no_literal_proposal and entry_boundary_issue and not explicit_literal_proposal:
         return 'primary_access_gap'
-    if ('[OCR CORRECTION REQUIRED]' in text or 'raw provisional OCR span' in text
+    if (explicit_literal_proposal or '[OCR CORRECTION REQUIRED]' in text or 'raw provisional OCR span' in text
             or 'proposed source-bound OCR correction' in text
             or ('raw OCR' in text and re.search(r'not use .{0,80}confirmed source text', text, re.I))):
         return 'transcription_correction'
@@ -787,10 +925,21 @@ def _source_findings_pending(job):
             observations = result.get('transcription_observations', [])
             observed = {o['key']: o for o in observations}
             if (transcription_keys != {c['key'] for c in transcriptions}
-                    or set(observed) != transcription_keys or len(observed) != len(observations)
-                    or any(observed[c['key']].get('observed_literal') != c['current']
-                           for c in transcriptions)):
+                    or set(observed) != transcription_keys or len(observed) != len(observations)):
                 return True
+            for check in transcriptions:
+                item = observed[check['key']]
+                if check.get('occurrences'):
+                    occurrence_checks = check['occurrences']
+                    occurrence_observations = item.get('occurrence_observations', [])
+                    by_id = {observation.get('id'): observation for observation in occurrence_observations}
+                    if (len(by_id) != len(occurrence_observations)
+                            or set(by_id) != {occurrence.get('id') for occurrence in occurrence_checks}
+                            or any(by_id[occurrence['id']].get('observed_literal') != occurrence['current']
+                                   for occurrence in occurrence_checks)):
+                        return True
+                elif item.get('observed_literal') != check.get('current'):
+                    return True
         except (OSError, ValueError, KeyError, ImportError):
             return True
     source_claim_keys = {f['key'] for f in result['findings']
@@ -943,7 +1092,7 @@ def refresh_source_resolution_status(job):
     return pending
 
 
-def auto_resolve_source_findings(job, runner, source_context=None):
+def auto_resolve_source_findings(job, runner, source_context=None, transcription_checks=None):
     """Run one separate source-resolution stage for a newly reviewed exact pair."""
     job = Path(job)
     article, dossier = editorial.read(job / 'article.json'), editorial.read(job / 'dossier.json')
@@ -979,7 +1128,19 @@ def auto_resolve_source_findings(job, runner, source_context=None):
     if attempt_path.is_file():
         return {**editorial.read(attempt_path), 'status': 'already_attempted'}
     try:
-        receipt = resolve_source_findings(job, runner, source_context=source_context)
+        if transcription_checks is None:
+            proof_path = job / 'verified_raw_occurrence_proofs.json'
+            transcription_checks = []
+            if proof_path.is_file():
+                for proof in editorial.read(proof_path).get('proofs', []):
+                    verified = validate_correct_raw_occurrence_receipt(
+                        job, proof['finding_key'], proof['receipt_path'], proof['occurrence_ids'])
+                    transcription_checks.append(verified['transcription_check'])
+        if transcription_checks:
+            receipt = resolve_source_findings(job, runner, source_context=source_context,
+                                              transcription_checks=transcription_checks)
+        else:
+            receipt = resolve_source_findings(job, runner, source_context=source_context)
         state = editorial.read(state_path)
         final_article, final_dossier = editorial.read(job / 'article.json'), editorial.read(job / 'dossier.json')
         final_reviews = editorial.read(job / 'reviews.json')
@@ -1359,6 +1520,8 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
             'disposition for OCR/transcription, printed-identity, literal or applied-repair findings. This does not verify or '
             'reject an unread source; it only records whether this exact candidate depends on it.')
     checks = list(literal_checks or [])
+    transcription_grouped = any(isinstance(check, dict) and 'occurrences' in check
+                                for check in (transcription_checks or []))
     transcriptions = _verify_transcription_checks(job, list(transcription_checks or [])) if transcription_checks else []
     if transcriptions:
         inputs['transcription_checks'] = transcriptions
@@ -1371,13 +1534,37 @@ def resolve_source_findings(job, runner, source_context=None, literal_checks=Non
             'transcription check. It does not certify a whole page, missing metadata, an '
             'unseen index hit, or the interpretation of a book passage. No OCR repair is claimed.')
         schema['required'].append('transcription_observations')
-        schema['properties']['transcription_observations'] = {'type': 'array',
-            'minItems': len(transcriptions), 'maxItems': len(transcriptions), 'items': {
-            'type': 'object', 'additionalProperties': False,
-            'required': ['key', 'observed_literal', 'pixel_reason'],
-            'properties': {'key': {'type': 'string', 'enum': [c['key'] for c in transcriptions]},
-                'observed_literal': {'type': ['string', 'null']},
-                'pixel_reason': {'type': 'string', 'minLength': 1}}}}
+        if transcription_grouped:
+            occurrence_ids = sorted({occurrence['id'] for check in transcriptions
+                                     for occurrence in check['occurrences']})
+            schema['properties']['transcription_observations'] = {'type': 'array',
+                'minItems': len(transcriptions), 'maxItems': len(transcriptions), 'items': {
+                'type': 'object', 'additionalProperties': False,
+                'required': ['key', 'occurrence_observations', 'pixel_reason'],
+                'properties': {'key': {'type': 'string', 'enum': [c['key'] for c in transcriptions]},
+                    'occurrence_observations': {'type': 'array', 'minItems': 1,
+                        'maxItems': len(occurrence_ids), 'items': {
+                        'type': 'object', 'additionalProperties': False,
+                        'required': ['id', 'observed_literal', 'pixel_reason'],
+                        'properties': {'id': {'type': 'string', 'enum': occurrence_ids},
+                            'observed_literal': {'type': ['string', 'null']},
+                            'pixel_reason': {'type': 'string', 'minLength': 1}}}},
+                    'pixel_reason': {'type': 'string', 'minLength': 1}}}}
+            inputs['transcription_check_instruction'] = (
+                'A finding may cover several exact current OCR spans. Inspect every listed occurrence '
+                'on the attached original scan and report exactly one occurrence_observation for each '
+                'listed id, preserving its exact printed literal. Do not infer that one clear span '
+                'settles another. Use null when unreadable. verified_transcription_matches_corpus is '
+                'valid only when every observed literal equals its matching current literal; this '
+                'does not change OCR or certify interpretations elsewhere on the page.')
+        else:
+            schema['properties']['transcription_observations'] = {'type': 'array',
+                'minItems': len(transcriptions), 'maxItems': len(transcriptions), 'items': {
+                'type': 'object', 'additionalProperties': False,
+                'required': ['key', 'observed_literal', 'pixel_reason'],
+                'properties': {'key': {'type': 'string', 'enum': [c['key'] for c in transcriptions]},
+                    'observed_literal': {'type': ['string', 'null']},
+                    'pixel_reason': {'type': 'string', 'minLength': 1}}}}
     metadata = _verify_missing_page_metadata(job, list(metadata_checks or [])) if metadata_checks else []
     if metadata or transcriptions:
         observations_to_attach = metadata + transcriptions
@@ -2184,8 +2371,8 @@ def main():
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--limit", type=int, default=3)
     parser.add_argument("--workers", type=int, default=1, help="Maximum concurrent character jobs (start small, then raise after a smoke run)")
-    parser.add_argument("--agents", type=int, help="Maximum active model processes, shared across character workers")
-    parser.add_argument("--max-revisions", type=int, default=3)
+    parser.add_argument("--agents", type=int, default=2, help="Maximum active model processes, shared across character workers")
+    parser.add_argument("--max-revisions", type=int, default=2)
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--command", default=json.dumps(editorial.DEFAULT_COMMAND), help="Custom command; stages remain gpt-6-luna/low")
     parser.add_argument("--publish-now", action="store_true")

@@ -12,6 +12,7 @@ from pathlib import Path
 import re
 import signal
 import subprocess
+import sys
 import tempfile
 import time
 from urllib.parse import urlparse
@@ -20,6 +21,7 @@ from jsonschema import Draft202012Validator, ValidationError
 
 from pipeline.glyph_assets import snapshot_glyph_assets, validate_glyph_assets
 from pipeline.xiaoxuetang import query_dossier as query_xiaoxuetang
+from pipeline.review_loop import status_conflicts, consolidated_findings, SENSE_STATUS_POLICY
 from pipeline.structured import (LEARNER, LEARNER_POLICY, MEANING_HISTORY, HISTORICAL_GLYPHS, RELATIONSHIP,
                                  GLYPH_POLICY, GLYPH_VISUAL_POLICY, GLYPH_VISUAL_SCHEMA, V2_POLICY, REVIEW_V2_POLICY, validate_v2, validate_reader_prose,
                                  COMPONENT_SCOPE, SOUND_LIMITATION, component_scope, component_is_current_form,
@@ -217,10 +219,20 @@ def extract_article(entry):
 
 REVISION_PLAN_SCHEMA = {"type": "object", "additionalProperties": False,
     "required": ["action", "reason"], "properties": {
-        "action": {"enum": ["edit", "research"]},
+        "action": {"enum": ["edit", "research", "hold"]},
+        "glyph_action": {"enum": ["retain", "research"]},
         "reason": {"type": "string", "minLength": 1}}}
 REVISION_PLAN_POLICY = """Choose how to resolve the verified review findings for this exact entry.
-Return only action and reason. Choose edit when every required correction can be made using
+Return action, reason and optionally glyph_action. For research, set glyph_action to retain
+when missing facts concern current components, language use or prose and the existing curated
+historical images need no correction. Set research only when historical image selection,
+identity, dating, rights or provenance actually needs new investigation. A mention of images
+in a current-form finding does not require rebuilding the historical glyph dossier.
+Choose hold when conflicting correction instructions cannot
+be resolved from the supplied evidence; explain the exact disagreement for GitHub diagnosis.
+Review the supplied earlier correction history before choosing a new edit. Do not alternate
+between incompatible labels without explaining the evidence and this project's definitions.
+Choose edit when every required correction can be made using
 existing supplied evidence, including supported wording, organization, citation correction or
 removing an unsupported optional claim. Choose research when resolving required findings needs
 new historical/source/image facts: missing support that cannot simply be omitted, unresolved
@@ -500,7 +512,9 @@ Pictorial and semantic are not interchangeable. Do not assign both just because 
 meaning. A composite formation typed semantic may have pictorial components. Explain the original
 meaning and how an altered visible component differs from its original form when evidence supports it.
 A dated example establishes an attested use, not automatically the earliest attestation or
-original meaning. Use earliest_attested only when the cited evidence establishes that priority;
+original meaning. Use earliest_attested for a sourced sense in the earliest documented corpus
+or period, or explicitly identified as the earliest attested use. This does not claim priority
+over every other sense; a proposed original meaning does not disqualify an attested early use.
 otherwise qualify the period and retain the appropriate historical or current status. Current
 senses require current-use evidence even when the same meaning also has an ancient example.
 The first attestation of a graph does not establish the first attestation of a particular
@@ -1492,10 +1506,15 @@ class Runner:
         if role in ("glyph_visual", "factual", "readability") and inputs.get("dossier", {}).get("glyph_assets"):
             from pipeline.glyph_assets import render_glyph_images
             rendered = render_glyph_images(inputs["dossier"])
+            selected = {item['id']: item for item in inputs['dossier'].get('glyph_research', {})
+                        .get('historical_glyphs', {}).get('items', [])}
             image_paths = [rendered[asset["glyph_id"]] for asset in inputs["dossier"]["glyph_assets"]]
             inputs = {**inputs, "attached_images": [
                 {"attachment_index": index + 1, "glyph_id": asset["glyph_id"],
                  "source_url": asset["source_url"], "path": str(path),
+                 "attachment_scope": "selected_historical_glyph",
+                 "period": selected.get(asset['glyph_id'], {}).get('period'),
+                 "tradition": selected.get(asset['glyph_id'], {}).get('tradition'),
                  "sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest()}
                 for index, (asset, path) in enumerate(zip(inputs["dossier"]["glyph_assets"], image_paths))]}
         if role == "factual" and inputs.get("source_scan_images"):
@@ -1522,9 +1541,24 @@ class Runner:
                        "Previous agents' searches and repository excerpts do not count as your external verification. "
                        "Report only actual tool activity in search_audit. If access fails, record the real attempt and gap; "
                        "do not invent a search or silently skip it. The harness verifies recorded web tool activity.\n")
+        prompt += "\n" + SENSE_STATUS_POLICY
+        prompt += ("\nIMAGE SCOPE CONTRACT: attached_images marked selected_historical_glyph are"
+                   " historical forms, even when their file is a modern vector redraw. 'Modern"
+                   " redraw' describes image production, not the script period. Read each"
+                   " attachment's period and tradition. Never use its component placement as"
+                   " evidence for today's printed character layout, or call it a modern glyph."
+                   " A current-layout correction requires current-form evidence distinct from"
+                   " these historical attachments. Do not demand adding positional descriptions"
+                   " merely because an image displays an arrangement.\n")
         wire_schema = agent_schema(schema)
+        driver_runtime = {"executable": sys.executable, "version": sys.version.split()[0],
+                          "prefix": sys.prefix, "base_prefix": sys.base_prefix}
+        child_path_prefix = (str(Path(sys.executable).absolute().parent)
+                             if sys.prefix != sys.base_prefix else None)
         cache_inputs = {"prompt": prompt, "schema": schema, "model": self.model,
-                        "command": self.command, "reasoning": self.reasoning}
+                        "command": self.command, "reasoning": self.reasoning,
+                        "driver_runtime": driver_runtime,
+                        "child_path_prefix": child_path_prefix}
         if citation_aliases:
             cache_inputs["citation_aliases"] = citation_aliases
         if wire_schema != schema:
@@ -1552,7 +1586,8 @@ class Runner:
         (directory / "prompt.txt").write_text(prompt)
         output.unlink(missing_ok=True)
         meta = {"status": "running", "fingerprint": fingerprint, "role": role,
-                "model": self.model, "reasoning": self.reasoning, "started_at": time.time()}
+                "model": self.model, "reasoning": self.reasoning, "started_at": time.time(),
+                "driver_runtime": driver_runtime}
         write(meta_path, meta)
         process = None
         lease = None
@@ -1580,11 +1615,19 @@ class Runner:
                         for path in image_paths]
                     write(meta_path, meta)
 
+            child_env = os.environ.copy()
+            if child_path_prefix:
+                # Preserve normal system tools while making this driver's venv first
+                # for nested shell commands launched by the agent.
+                child_env["PATH"] = child_path_prefix + os.pathsep + child_env.get("PATH", "")
             with (directory / "stdout.log").open("w") as stdout, (directory / "stderr.log").open("w") as stderr:
                 process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=stdout, stderr=stderr,
                                            text=True, start_new_session=True,
+                                           env=child_env,
                                            pass_fds=tuple(getattr(self, 'inherited_lock_fds', ())) +
                                                     ((lease_fd,) if lease_fd is not None else ()))
+                meta['agent_pid'] = process.pid
+                write(meta_path, meta)
                 process.communicate(prompt, timeout=self.timeout)
                 if process.returncode:
                     raise RuntimeError(f"Agent exited with status {process.returncode}; see {directory / 'stderr.log'}")
@@ -1859,8 +1902,9 @@ def curate_glyphs(dossier, directory, runner, context=None):
                 "repair_task": "Correct these visual-selection validation failures. Use only the exact allowed candidate IDs and the same supplied image snapshots; never rename or invent a candidate. Return the complete corrected selection. Preserve source identity and provenance; support captions with existing evidence."}
 
 
-def independent_review(role, article, dossier, directory, runner, context=None):
-    """Recheck proposed corrections in a separate invocation before requesting revisions."""
+def independent_review(role, article, dossier, directory, runner, context=None,
+                       verify_findings=False):
+    """Review once; use a fresh adjudicating invocation for disputed instructions."""
     directory = Path(directory)
     inputs = {**(context or {}), "article": article, "dossier": dossier}
     review_dir = directory / role
@@ -1868,10 +1912,18 @@ def independent_review(role, article, dossier, directory, runner, context=None):
     # Validate the actual verdict contract before deciding whether verification is needed.
     make_review(role, result["verdict"], result["findings"], article, dossier, "initial-review")
     write(review_dir / "proposed-review.json", result)
-    if result["verdict"] == "revise":
+    conflicts = status_conflicts(result, inputs.get('earlier_correction_history', []))
+    if result["verdict"] == "revise" and (verify_findings or conflicts):
         review_dir = directory / (role + "-verification")
         verification_inputs = {**inputs, "proposed_review": result,
-            "verification_task": "Independently verify the proposed review findings against the exact current article fields and cited evidence. A proposed finding is a hypothesis, not a fact. Check quoted readings, labels, directions and alleged contradictions directly. Discard demonstrably false or duplicate requests, but retain every actual required correction. Return pass with no findings only when no actual required corrections remain; otherwise return revise with supported concrete findings identifying the exact field and evidence. Findings must contain only changes still REQUIRED to the current article, never explanations of why a proposed correction was rejected or unnecessary. If all proposed findings are rejected and you identify no other required correction, verdict MUST be pass and findings MUST be empty. Do not assume that verification should pass. Preserve the supplied review scope. Treat earliest_attested as a positive claim of priority: evidence must establish that priority, though an unknown precise date alone does not disqualify it. Do not reject a supported finding merely because it appropriately hedges a date. A displayed glyph redraw must not inherit the identity or date of a cited specimen unless the image-to-specimen link is verified."}
+            "disputed_fields": conflicts,
+            "verification_task": "Independently verify the proposed review findings against the exact current article fields and cited evidence. A proposed finding is a hypothesis, not a fact. Check quoted readings, labels, directions and alleged contradictions directly. Discard demonstrably false or duplicate requests, but retain every actual required correction. Return pass with no findings only when no actual required corrections remain; otherwise return revise with supported concrete findings identifying the exact field and evidence. Findings must contain only changes still REQUIRED to the current article, never explanations of why a proposed correction was rejected or unnecessary. If all proposed findings are rejected and you identify no other required correction, verdict MUST be pass and findings MUST be empty. Do not assume that verification should pass. Preserve the supplied review scope. Treat earliest_attested as an attested sense in the earliest documented corpus/period, not a positive claim of priority over all other senses; an unknown precise date alone does not disqualify a supported early attestation. Do not reject a supported finding merely because it appropriately hedges a date. A displayed glyph redraw must not inherit the identity or date of a cited specimen unless the image-to-specimen link is verified."}
+        verification_inputs['verification_task'] += (
+            " For disputed fields, adjudicate the conflicting earlier and current requests using"
+            " the actual evidence and the common sense-status contract. Identify any changed"
+            " record identity; array indices alone do not establish the same sense. A speculative"
+            " original meaning does not negate an attested sense in the earliest documented corpus."
+            " Do not repeat either direction without resolving its evidential basis.")
         result = runner.run(role, verification_inputs, REVIEW_SCHEMA, review_dir)
         make_review(role, result["verdict"], result["findings"], article, dossier, "verification-review")
         write(review_dir / "verified-review.json", result)
@@ -2059,7 +2111,9 @@ def reuse_glyphs_for_text_followup(feedback, reviews):
     """Keep curated images when follow-up findings concern only text or sources."""
     if not isinstance(feedback, dict) or feedback.get("reuse_existing_glyph_candidates") is not True:
         return False
-    return not any(re.search(r"historical_glyphs|glyph|caption|image|visual|rights|asset", finding, re.I)
+    return not any(re.search(r"historical_glyphs|\bcaption\b|\brights\b|"
+                            r"\b(?:glyph|image|asset)\s+(?:identity|provenance|period|selection)\b|"
+                            r"\b(?:replace|remove|select|curate)\b.{0,60}\b(?:glyph|image|asset)\b", finding, re.I)
                    for review in reviews for finding in review["findings"])
 
 
@@ -2097,7 +2151,10 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
     edit_scope = ({"allowed_edit_paths": feedback["allowed_edit_paths"]}
                   if isinstance(feedback, dict) and feedback.get("allowed_edit_paths") else {})
     previous_reviews = []
-    for revision in range(max_revisions + 1):
+    correction_history = list((feedback or {}).get('previous_review_receipts', [])) if isinstance(feedback, dict) else []
+    revision_limit = min(max_revisions, 2)
+    state['revision_limit'] = revision_limit
+    for revision in range(revision_limit + 1):
         editor_inputs = {"dossier": dossier, "article": article}
         if revision == 0 and feedback:
             editor_inputs["feedback"] = feedback
@@ -2119,6 +2176,12 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
             article = repair_learner_length(article, dossier,
                 directory / f"round-{revision}", runner,
                 {"feedback": feedback, "verified_reviews": previous_reviews})
+            from pipeline.pre_review import check_pair
+            preflight = check_pair(article, dossier)
+            write(directory / f"round-{revision}" / 'pre-review.json', preflight)
+            if preflight['status'] != 'pass':
+                raise ValueError('; '.join(f"{f['path']}: {f['message']}"
+                                          for f in preflight['findings']))
             validate_article(article, dossier)
             validate_new_reader_style(article, dossier)
         except (ValueError, ValidationError) as exc:
@@ -2128,8 +2191,9 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
             write(directory / f"round-{revision}" / "validation.json", findings[0])
             write(directory / f"round-{revision}" / "invalid-article.json", article)
             state["revision"] = revision
-            if revision == max_revisions:
+            if revision == revision_limit:
                 state["status"] = "needs_revision"
+                state['stop_reason'] = 'revision_budget_exhausted'
                 break
             glyphs = dossier["glyph_research"]["historical_glyphs"]
             glyph_sections = [*glyphs["limitations"], *[
@@ -2165,27 +2229,45 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
                     "validated_base_article": approved_base["article"],
                     "base_approval": approved_base["reviews"],
                     "changed_paths": changed_article_paths(approved_base["article"], article)}
+            source_context = {**(source_context or {}),
+                              'earlier_correction_history': correction_history}
             reviews.append(independent_review(role, article, dossier,
                 directory / f"round-{revision}", runner, source_context))
         write(directory / "article.json", article)
         write(directory / "reviews.json", reviews)
         previous_reviews = reviews
+        write(directory / f"round-{revision}" / 'correction-plan-input.json', {
+            'article_hash': digest(article), 'dossier_hash': digest(dossier),
+            'reviews': reviews, 'corrections': consolidated_findings(reviews),
+            'earlier_correction_history': correction_history})
         state["revision"] = revision
         if all(r["verdict"] == "pass" for r in reviews):
             state["status"] = "approved"
             break
-        if revision == max_revisions:
+        if revision == revision_limit:
             state["status"] = "needs_revision"
+            state['stop_reason'] = 'revision_budget_exhausted'
             break
         plan_dir = directory / f"round-{revision}" / "revision_plan"
         plan = runner.run("revision_plan", {"article": article, "dossier": dossier,
-                          "verified_reviews": reviews}, REVISION_PLAN_SCHEMA, plan_dir)
+                          "verified_reviews": reviews,
+                          'consolidated_corrections': consolidated_findings(reviews),
+                          'earlier_correction_history': correction_history}, REVISION_PLAN_SCHEMA, plan_dir)
         Draft202012Validator(REVISION_PLAN_SCHEMA).validate(plan)
         if not plan["reason"].strip():
             raise ValueError("Revision plan requires a concrete reason")
         write(plan_dir / "decision.json", plan)
+        correction_history.extend(reviews)
+        if plan['action'] == 'hold':
+            state.update(status='needs_revision', stop_reason='conflicting_review_instructions',
+                         diagnostic_reason=plan['reason'])
+            break
         if plan["action"] == "research":
             text_only_followup = reuse_glyphs_for_text_followup(feedback, reviews)
+            if plan.get('glyph_action') == 'retain' and isinstance(feedback, dict):
+                text_only_followup = feedback.get('reuse_existing_glyph_candidates') is True
+            elif plan.get('glyph_action') == 'research':
+                text_only_followup = False
             dossier = research_dossier(dossier, directory / f"round-{revision}" / "followup",
                                        runner, {"article": article, "reviews": reviews,
                                                 "reuse_existing_glyph_candidates": text_only_followup,
@@ -2200,7 +2282,9 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
                          "task": "Resolve the verified historical_glyphs findings. Preserve supported image identity and provenance; an empty selection still requires a cited reader-facing limitation."})
             write(directory / "dossier.json", dossier)
             state["dossier_hash"] = digest(dossier)
-        article = assemble_article(runner.run("revision", {"dossier": dossier, "article": article, "reviews": reviews, **edit_scope},
+        article = assemble_article(runner.run("revision", {"dossier": dossier, "article": article,
+                             "reviews": reviews, 'consolidated_corrections': consolidated_findings(reviews),
+                             'revision_plan': plan, 'earlier_correction_history': correction_history, **edit_scope},
                              WRITER_SCHEMA, directory / f"round-{revision}" / "revision"), dossier)
     return state
 
@@ -2458,7 +2542,7 @@ def main():
         agent_command.add_argument("--reasoning", default="low")
         agent_command.add_argument("--command", default=json.dumps(DEFAULT_COMMAND), help="JSON argv array; supports {output}, {schema}, {model}, {reasoning}, {role}")
         agent_command.add_argument("--timeout", type=int, default=600)
-        agent_command.add_argument("--max-revisions", type=int, default=3)
+        agent_command.add_argument("--max-revisions", type=int, default=2)
     pub = commands.add_parser("publish")
     pub.add_argument("job", type=Path)
     pub.add_argument("--output", type=Path, default=ROOT / "content" / "entries")
