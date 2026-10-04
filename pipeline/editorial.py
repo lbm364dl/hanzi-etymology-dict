@@ -21,7 +21,7 @@ from jsonschema import Draft202012Validator, ValidationError
 
 from pipeline.glyph_assets import snapshot_glyph_assets, validate_glyph_assets
 from pipeline.xiaoxuetang import query_dossier as query_xiaoxuetang
-from pipeline.review_loop import status_conflicts, consolidated_findings, SENSE_STATUS_POLICY
+from pipeline.review_loop import status_conflicts, consolidated_findings, repeated_fields, SENSE_STATUS_POLICY
 from pipeline.structured import (LEARNER, LEARNER_POLICY, MEANING_HISTORY, HISTORICAL_GLYPHS, RELATIONSHIP,
                                  GLYPH_POLICY, GLYPH_VISUAL_POLICY, GLYPH_VISUAL_SCHEMA, V2_POLICY, REVIEW_V2_POLICY, validate_v2, validate_reader_prose,
                                  COMPONENT_SCOPE, SOUND_LIMITATION, component_scope, component_is_current_form,
@@ -1952,6 +1952,29 @@ def independent_review(role, article, dossier, directory, runner, context=None,
     return make_review(role, result["verdict"], result["findings"], article, dossier, reviewer)
 
 
+def adjudicate_review(review, article, dossier, directory, runner, context=None):
+    """A genuine final review of a repeated required correction, never a vote."""
+    if review['article_hash'] != digest(article) or review['dossier_hash'] != digest(dossier):
+        raise ValueError('Adjudication review does not bind the current pair')
+    role = review['role']
+    review_dir = Path(directory) / (role + '-adjudication')
+    result = runner.run(role, {**(context or {}), 'article': article, 'dossier': dossier,
+        'proposed_review': review,
+        'verification_task': 'Adjudicate this repeated correction against the exact current fields and cited evidence. '
+            'Earlier requests are hypotheses, not authority. Check whether the requested qualification or correction '
+            'is already present in the current text. Reject a repeated demand only when the actual current claim '
+            'is already accurate and clear; retain genuine defects. Do not require synonymous caveat placement '
+            'without identifying a materially misleading claim. Distinguish supported current structure from '
+            'uncertain ancient motivation. Return pass only if no actual required corrections remain.'}, REVIEW_SCHEMA, review_dir)
+    metadata = read(review_dir/'meta.json') if (review_dir/'meta.json').exists() else {}
+    ids = metadata.get('agent_thread_ids', [])
+    invocation = ids[-1] if ids else str(review_dir)
+    receipt = make_review(role, result['verdict'], result['findings'], article, dossier,
+                          f'{runner.model}:{runner.reasoning}:{role}:{invocation}')
+    write(review_dir/'adjudicated-review.json', receipt)
+    return receipt
+
+
 def repair_reader_prose(article, dossier, directory, runner):
     """Let an agent edit flagged text leaves, keeping evidence and metadata frozen."""
     targets = {}
@@ -2233,6 +2256,14 @@ def review_article(article, dossier, directory, runner, state, max_revisions, fe
                               'earlier_correction_history': correction_history}
             reviews.append(independent_review(role, article, dossier,
                 directory / f"round-{revision}", runner, source_context))
+        if revision == revision_limit:
+            write(directory / f'round-{revision}' / 'reviews-before-adjudication.json', reviews)
+            reviews = [adjudicate_review(review, article, dossier,
+                        directory / f'round-{revision}', runner,
+                        {'earlier_correction_history': correction_history,
+                         'repeated_fields': repeated_fields(review, correction_history)})
+                       if review['verdict'] == 'revise' and repeated_fields(review, correction_history)
+                       else review for review in reviews]
         write(directory / "article.json", article)
         write(directory / "reviews.json", reviews)
         previous_reviews = reviews

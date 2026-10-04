@@ -7,7 +7,7 @@ import sys
 from unittest.mock import patch
 
 from pipeline import editorial
-from pipeline.review_loop import status_conflicts, consolidated_findings
+from pipeline.review_loop import status_conflicts, consolidated_findings, repeated_fields
 from pipeline.test_editorial import ARTICLE_V2, DOSSIER, GLYPHS
 
 
@@ -114,6 +114,26 @@ class ReviewLoopTests(unittest.TestCase):
         self.assertEqual(consolidated_findings([
             {'verdict': 'revise', 'findings': ['A', 'B']},
             {'verdict': 'revise', 'findings': ['A', 'C']}]), ['A', 'B', 'C'])
+
+    def test_repeated_caveat_gets_review_not_automatic_approval(self):
+        review = editorial.make_review('readability', 'revise',
+            ['Qualify `learner.overview` clearly.'], ARTICLE_V2, DOSSIER, 'fixture-original')
+        self.assertEqual(repeated_fields(review, [review, review]), ['learner.overview'])
+        class Reviewer:
+            model = 'fixture'; reasoning = 'low'
+            def run(self, role, inputs, schema, directory):
+                self.inputs = inputs
+                editorial.write(Path(directory)/'meta.json', {'agent_thread_ids': ['real-fixture-invocation']})
+                return {'verdict':'revise', 'findings':['A real remaining unsupported claim.']}
+        with tempfile.TemporaryDirectory() as root:
+            runner = Reviewer()
+            deciding = editorial.adjudicate_review(review, ARTICLE_V2, DOSSIER, root, runner)
+            self.assertEqual(deciding['verdict'], 'revise')
+            self.assertIn('real-fixture-invocation', deciding['reviewer'])
+            self.assertEqual(runner.inputs['proposed_review'], review)
+            bad = {**review, 'article_hash':'wrong'}
+            with self.assertRaisesRegex(ValueError, 'current pair'):
+                editorial.adjudicate_review(bad, ARTICLE_V2, DOSSIER, root, runner)
 
 
 if __name__ == '__main__':

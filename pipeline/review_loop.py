@@ -55,3 +55,16 @@ def consolidated_findings(reviews):
             if finding not in result:
                 result.append(finding)
     return result
+
+
+def repeated_fields(review, previous_reviews):
+    """Flag explicit paths repeatedly rejected; a signal for a final adjudication."""
+    def paths(record):
+        return set(re.findall(r"(?:learner|summary|formation|meaning_history|components|relationships)"
+                              r"(?:\[\d+\]|[./][A-Za-z_]+|/\d+)+",
+                              ' '.join(record.get('findings', []))))
+    counts = {}
+    for record in previous_reviews:
+        for path in paths(record.get('review', record)):
+            counts[path] = counts.get(path, 0) + 1
+    return sorted(path for path in paths(review) if counts.get(path, 0) >= 2)

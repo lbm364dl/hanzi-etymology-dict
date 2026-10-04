@@ -764,7 +764,12 @@ results and binding the final receipt to its actual deciding invocation. Earlier
 receipts accompany later rounds as diagnostic history, never inherited approval. Other
 contradictions must be evaluated by the planning agent; unresolvable disagreements choose
 `hold`, retain `needs_revision`, and record a specific diagnostic reason. Detection of explicit
-status reversals is deliberately conservative and is not a general factual conflict parser.
+status reversals is deliberately conservative and is not a general factual conflict parser. At
+the final allowed round, repeatedly rejected explicit fields receive one genuine adjudicating
+role invocation before the pair is held; it checks whether a correction is already present and
+never assumes approval. Its actual receipt replaces that role’s deciding receipt only for the
+exact current pair. Historical image packets include period, tradition and explicit historical
+scope; a modern redraw is not evidence for modern printed component placement.
 
 The common `earliest_attested` contract describes a supported sense in the earliest documented
 corpus/period; it does not establish priority over every other sense or the original spoken
@@ -905,3 +910,15 @@ another author rewrite. Do not restart completed research unless a concrete evid
 requires it. Current-source and OCR gates still run on the final exact pair.
 
 For already-approved entries, `source_adoption.adopt(..., source_context=[scan_record, ...])` can attach additional discovered original scans when locator leads are text mentions. These records are validated and saved separately from the locator; never inject review attachments into the frozen locator to make a source gate pass.
+
+### Measuring network overhead in bounded smoke runs
+
+Use `python -m pipeline.network_sampling --output runs/network-smoke.jsonl --duration 120 --interval 2`.
+The sampler reads namespace interface counters and visible live TCP byte counters through `ss`,
+retaining safe process identities with PID/starttime, cwd and stage output path. It does not log
+full command arguments or environment variables. Persistent-socket deltas miss short-lived or
+closed transfers and include local TCP; interface counters cover the whole host namespace.
+These measurements must not be reported as exact per-character internet or billing usage.
+Use a fresh output path for each sampler session. Glyph research can remain frozen for current-form
+or current-use source follow-ups; the planner’s `glyph_action` records whether historical image
+research actually needs to change. Agents retain unrestricted tools for their assigned investigation.
