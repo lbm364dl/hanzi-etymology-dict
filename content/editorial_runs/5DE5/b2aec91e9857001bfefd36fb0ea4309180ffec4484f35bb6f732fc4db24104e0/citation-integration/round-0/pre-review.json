@@ -1,0 +1,29 @@
+{
+  "status": "blocked",
+  "article_hash": "463613fa52de3151057a9d8099e288cd17c0e152d2ce36242176af3af727cafb",
+  "dossier_hash": "f6fb813ab2d39cc3159553f3b305cfc0509603184f1e62479f4ffb60eed52a6c",
+  "checks": {
+    "article_schema": "pass",
+    "dossier": "pass",
+    "external_evidence": "pass",
+    "citation_integrity": "pass",
+    "learner_component_coverage": "pass",
+    "sense_relationship_consistency": "fail"
+  },
+  "findings": [
+    {
+      "code": "sense_relationship_consistency",
+      "path": "relationships",
+      "message": "Generated meaning relationships do not exactly match meaning_history senses/developments: meaning:工:achievement_loan, meaning:工:craft_worker, meaning:工:official_status, meaning:工:tool_graph, meaning:工:work"
+    }
+  ],
+  "learner_component_coverage": {
+    "required_indices": [
+      0
+    ],
+    "card_indices": [
+      0
+    ],
+    "errors": []
+  }
+}

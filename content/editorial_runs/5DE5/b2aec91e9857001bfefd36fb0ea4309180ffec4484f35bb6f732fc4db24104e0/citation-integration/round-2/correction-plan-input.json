@@ -1,0 +1,43 @@
+{
+  "article_hash": "b2aec91e9857001bfefd36fb0ea4309180ffec4484f35bb6f732fc4db24104e0",
+  "dossier_hash": "f6fb813ab2d39cc3159553f3b305cfc0509603184f1e62479f4ffb60eed52a6c",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "b2aec91e9857001bfefd36fb0ea4309180ffec4484f35bb6f732fc4db24104e0",
+      "dossier_hash": "f6fb813ab2d39cc3159553f3b305cfc0509603184f1e62479f4ffb60eed52a6c",
+      "reviewer": "gpt-6-luna:low:factual:01a1067a-1101-7912-be23-0772ed486b4c"
+    },
+    {
+      "role": "readability",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "b2aec91e9857001bfefd36fb0ea4309180ffec4484f35bb6f732fc4db24104e0",
+      "dossier_hash": "f6fb813ab2d39cc3159553f3b305cfc0509603184f1e62479f4ffb60eed52a6c",
+      "reviewer": "gpt-6-luna:low:readability:01a1067a-4073-7503-87e5-138d28bb62e8"
+    }
+  ],
+  "corrections": [],
+  "earlier_correction_history": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "2948246f0e8ade19e1481cca4269f5aee706c926d174eb7b8c8dabaa1ba20145",
+      "dossier_hash": "f6fb813ab2d39cc3159553f3b305cfc0509603184f1e62479f4ffb60eed52a6c",
+      "reviewer": "gpt-6-luna:low:factual:01a10679-6bef-75b2-adee-825386301446"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses[工:craft_worker]` and its generated `meaning:工:craft_worker` edge, the revised text cites X-c15573126f44312f2129 for contemporary worker examples but changes the sense to `current` while also describing early and received-text uses. Keep the established current worker use, but separate it from the historical craft-worker/skilled-maker attestations—either narrow the current sense text to present worker usage or retain those earlier attestations in a separate historical sense and edge. The current record should not make the early examples appear to be present-day evidence."
+      ],
+      "article_hash": "2948246f0e8ade19e1481cca4269f5aee706c926d174eb7b8c8dabaa1ba20145",
+      "dossier_hash": "f6fb813ab2d39cc3159553f3b305cfc0509603184f1e62479f4ffb60eed52a6c",
+      "reviewer": "gpt-6-luna:low:readability:01a10679-9f93-7203-8bc5-d31b449025d9"
+    }
+  ]
+}

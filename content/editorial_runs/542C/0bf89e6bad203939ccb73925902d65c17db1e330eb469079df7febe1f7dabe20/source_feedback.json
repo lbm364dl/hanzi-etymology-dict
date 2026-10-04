@@ -1,0 +1,403 @@
+{
+  "terminal_validation_error": "",
+  "previous_review_receipts": [
+    {
+      "receipt": "reviews.json",
+      "review": {
+        "role": "factual",
+        "verdict": "pass",
+        "findings": [],
+        "article_hash": "02ac21a56ef46066b9235b3302884bc0cb122bb15480bec0ed01445a37ee35e6",
+        "dossier_hash": "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc",
+        "reviewer": "gpt-6-luna:low:factual:01a1066a-5596-7631-ae7b-d99077925db7"
+      }
+    },
+    {
+      "receipt": "reviews.json",
+      "review": {
+        "role": "readability",
+        "verdict": "pass",
+        "findings": [],
+        "article_hash": "02ac21a56ef46066b9235b3302884bc0cb122bb15480bec0ed01445a37ee35e6",
+        "dossier_hash": "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc",
+        "reviewer": "gpt-6-luna:low:readability:01a1066a-baa3-7f90-935d-28e61874b9a6"
+      }
+    },
+    {
+      "receipt": "round-0/factual/result.json",
+      "review": {
+        "verdict": "revise",
+        "findings": [
+          "`relationships[2]` (`斤-phonetic_component_of-听`) cites Han-period use evidence (`X-99f534c8d3cb62721820`, `X-92915ab19141aa64e13e`, `X-a678e6b244573cc49a65`, `X-05190d0005a8a61bf1f5`) rather than the received phonetic analysis. Cite evidence that supports the 斤 sound role, such as `X-8a66b8e09b7f93c72ba5` and `X-696fcf11a36db8eb74e7`, and keep the edge text tied to the older smiling-word analysis."
+        ]
+      },
+      "result_hash": "254a3de447dfbbe500f448e7a34cc26b4da537ae8c562836c1a3c6ae675e0e08"
+    },
+    {
+      "receipt": "round-1/factual/result.json",
+      "review": {
+        "verdict": "revise",
+        "findings": [
+          "`meaning_history.senses[0].status` is `historical`, but its cited evidence includes the Han-period Shanglin fu example (X-99f534c8d3cb62721820, X-92915ab19141aa64e13e, X-a678e6b244573cc49a65, X-05190d0005a8a61bf1f5). The article’s uncertainty is only about when the sense first arose, not whether it is attested in the earliest documented period here. Set the status to `earliest_attested` and update the sense text and generated `has_sense` relationship to describe the Han-period attestation without claiming it was the original meaning."
+        ]
+      },
+      "result_hash": "38db228ed3bb9f920fbc1d03461d24594858ad18db67f30c5e121b16c498af47"
+    },
+    {
+      "receipt": "round-2/factual/result.json",
+      "review": {
+        "verdict": "revise",
+        "findings": [
+          "`meaning_history.senses[0].status` is `earliest_attested`, but its evidence only reports Han- and Tang-period examples; it does not identify the Han example as the earliest documented attestation. Change the status to `historical` and describe the cited Han-period use without claiming earliest status. Update the generated `has_sense` edge to match. Evidence: `X-aeb1f93eca6866147137`, `X-a27fe6130cc453cf90cc`, `X-05190d0005a8a61bf1f5`."
+        ]
+      },
+      "result_hash": "bef7d67fc5c21d1a5994937ae930ddf74e3c2f8166ede19e990a828a1a5000b4"
+    },
+    {
+      "receipt": "round-0/readability/result.json",
+      "review": {
+        "verdict": "revise",
+        "findings": [
+          "`learner.overview` says the current parts of 听 are 口 and 斤 and calls this “the same split” as the older smiling-word analysis. `summary` and both learner component cards likewise identify 口 and 斤 as the current split. The image attachment is a historical small-seal redraw and cannot establish modern structure. The current-form source X-a22c9263b43c090a184a does establish the left–right 口/斤 split, so retain that account but cite this evidence on each affected claim: add X-a22c9263b43c090a184a to the overview and summary arrays and to the relevant component and learner-card arrays."
+        ]
+      },
+      "result_hash": "a7742b658794dde839c4b13e08ce82e7677479baa95e1b5567bca5725cbb7726"
+    },
+    {
+      "receipt": "round-1/readability/result.json",
+      "review": {
+        "verdict": "revise",
+        "findings": [
+          "`historical_glyphs.items[0].caption` says the depicted small-seal form is analyzed as 口 plus phonetic 斤. Its citations identify the redraw and its Shuowen tradition, but do not verify that this image’s strokes match that analysis. Remove the component-analysis clause from the caption or add evidence that specifically supports the depicted form’s identification. The received analysis is adequately supported elsewhere in the entry."
+        ]
+      },
+      "result_hash": "c122a563d002040431e9459a6d4f16a1ce28effc803efe6ad74ace153f95f6bf"
+    },
+    {
+      "receipt": "round-2/readability/result.json",
+      "review": {
+        "verdict": "revise",
+        "findings": [
+          "`meaning_history.senses[0].status` is `earliest_attested`, but its citations report a Han-period example without identifying it as the earliest documented occurrence. The dossier explicitly says the first occurrence remains unresolved. Change the status to `historical` and describe it as attested in a Han-period literary example, without claiming earliest status; update its generated `has_sense` edge to match. Evidence: `X-99f534c8d3cb62721820`, `X-a678e6b244573cc49a65`, `X-aeb1f93eca6866147137`."
+        ]
+      },
+      "result_hash": "1b519af5d5102974c415fcde7be29d3dec6e98448b696fdc5936fbdedbead606"
+    }
+  ],
+  "previous_failed_author_receipts": [
+    {
+      "receipt": "round-0/editor/result.json",
+      "result_hash": "a7ebd156857b197250d164c0a866b2bcc091c4726085c079432d8884accee390",
+      "result": {
+        "edits": [
+          {
+            "path": "summary/text",
+            "value_json": "听 is the standardized simplified form of 聽, meaning “hear” or “listen.” Its current left–right structure is 口 and 斤. The same split appears in the received analysis of an older use meaning “smiling appearance,” but does not establish how 听 came to represent 聽."
+          },
+          {
+            "path": "summary/evidence_ids",
+            "value_json": "[\"ref027\",\"ref040\",\"ref026\",\"ref041\",\"ref075\",\"ref082\"]"
+          },
+          {
+            "path": "components/0/text",
+            "value_json": "口 is the left-hand component in the current form. In the received analysis of the older smiling-word use, it depicts a mouth contributing to the expression."
+          },
+          {
+            "path": "components/0/evidence_ids",
+            "value_json": "[\"ref026\",\"ref040\",\"ref075\",\"ref082\"]"
+          },
+          {
+            "path": "components/1/text",
+            "value_json": "斤 is the right-hand component in the current form. The received analysis assigns it a sound role for the older smiling-word use; this does not establish why 听 came to represent 聽."
+          },
+          {
+            "path": "components/1/evidence_ids",
+            "value_json": "[\"ref040\",\"ref042\",\"ref082\"]"
+          },
+          {
+            "path": "history/0/text",
+            "value_json": "The received Shuowen entry analyzes 听 in its older “smiling appearance” use as 口 with 斤 as phonetic. The curated image is identified as a modern redraw of a 聽 form in Shuowen small-seal style; it does not depict the older 听 graph or establish a sequence of graphic changes."
+          },
+          {
+            "path": "history/0/evidence_ids",
+            "value_json": "[\"ref040\",\"ref026\",\"ref068\",\"ref064\",\"ref073\",\"ref075\",\"ref087\"]"
+          },
+          {
+            "path": "history/2/text",
+            "value_json": "听 is the standardized simplified counterpart of 聽 and is attested for 聽 in Song–Yuan vernacular writing. The separate older smiling-word use does not show that its meaning developed into “hear” or “listen.”"
+          },
+          {
+            "path": "history/2/evidence_ids",
+            "value_json": "[\"ref027\",\"ref041\",\"ref054\",\"ref074\",\"ref026\",\"ref075\",\"ref078\",\"ref084\"]"
+          },
+          {
+            "path": "learner/overview/text",
+            "value_json": "听 is the simplified form of 聽, meaning “hear” or “listen.” Its current parts are 口 on the left and 斤 on the right. The same split appears in the received analysis of an older word meaning “smiling appearance.”"
+          },
+          {
+            "path": "learner/overview/evidence_ids",
+            "value_json": "[\"ref027\",\"ref040\",\"ref026\",\"ref041\",\"ref075\",\"ref082\"]"
+          },
+          {
+            "path": "learner/components/0/text",
+            "value_json": "口 is the left-hand part of the current form. The older smiling-word analysis treats it as the mouth-related part."
+          },
+          {
+            "path": "learner/components/0/evidence_ids",
+            "value_json": "[\"ref026\",\"ref040\",\"ref082\"]"
+          },
+          {
+            "path": "learner/components/1/text",
+            "value_json": "斤 is the right-hand part of the current form. The older analysis assigns it a sound role, but that does not explain why 听 came to represent 聽."
+          },
+          {
+            "path": "learner/components/1/evidence_ids",
+            "value_json": "[\"ref040\",\"ref042\",\"ref082\"]"
+          },
+          {
+            "path": "history",
+            "value_json": "[]"
+          }
+        ]
+      }
+    },
+    {
+      "receipt": "round-0/editor/patch-repair-1/result.json",
+      "result_hash": "539dca9c32726d3bb3b7ea1630a558c5a85478af75a8bed9d798eaed521df1a2",
+      "result": {
+        "edits": [
+          {
+            "path": "summary/text",
+            "value_json": "听 is the standardized simplified form of 聽, meaning “hear” or “listen.” Its current left–right structure is 口 and 斤. The same split appears in the received analysis of an older use meaning “smiling appearance,” but does not establish how 听 came to represent 聽."
+          },
+          {
+            "path": "summary/evidence_ids",
+            "value_json": "[\"ref027\",\"ref040\",\"ref026\",\"ref041\",\"ref075\",\"ref082\"]"
+          },
+          {
+            "path": "components/0/text",
+            "value_json": "口 is the left-hand component in the current form. In the received analysis of the older smiling-word use, it depicts a mouth contributing to the expression."
+          },
+          {
+            "path": "components/0/evidence_ids",
+            "value_json": "[\"ref026\",\"ref040\",\"ref075\",\"ref082\"]"
+          },
+          {
+            "path": "components/1/text",
+            "value_json": "斤 is the right-hand component in the current form. The received analysis assigns it a sound role for the older smiling-word use; this does not establish why 听 came to represent 聽."
+          },
+          {
+            "path": "components/1/evidence_ids",
+            "value_json": "[\"ref040\",\"ref042\",\"ref082\"]"
+          },
+          {
+            "path": "history/0/text",
+            "value_json": "The received Shuowen entry analyzes 听 in its older “smiling appearance” use as 口 with 斤 as phonetic. The curated image is identified as a modern redraw of a 聽 form in Shuowen small-seal style; it does not depict the older 听 graph or establish a sequence of graphic changes."
+          },
+          {
+            "path": "history/0/evidence_ids",
+            "value_json": "[\"ref040\",\"ref026\",\"ref068\",\"ref064\",\"ref073\",\"ref075\",\"ref087\"]"
+          },
+          {
+            "path": "history/2/text",
+            "value_json": "听 is the standardized simplified counterpart of 聽 and is attested for 聽 in Song–Yuan vernacular writing. The separate older smiling-word use does not show that its meaning developed into “hear” or “listen.”"
+          },
+          {
+            "path": "history/2/evidence_ids",
+            "value_json": "[\"ref027\",\"ref041\",\"ref054\",\"ref074\",\"ref026\",\"ref075\",\"ref078\",\"ref084\"]"
+          },
+          {
+            "path": "learner/overview/text",
+            "value_json": "听 is the simplified form of 聽, meaning “hear” or “listen.” Its current parts are 口 on the left and 斤 on the right. The same split appears in the received analysis of an older word meaning “smiling appearance.”"
+          },
+          {
+            "path": "learner/overview/evidence_ids",
+            "value_json": "[\"ref027\",\"ref040\",\"ref026\",\"ref041\",\"ref075\",\"ref082\"]"
+          },
+          {
+            "path": "learner/components/0/text",
+            "value_json": "口 is the left-hand part of the current form. The older smiling-word analysis treats it as the mouth-related part."
+          },
+          {
+            "path": "learner/components/0/evidence_ids",
+            "value_json": "[\"ref026\",\"ref040\",\"ref082\"]"
+          },
+          {
+            "path": "learner/components/1/text",
+            "value_json": "斤 is the right-hand part of the current form. The older analysis assigns it a sound role, but that does not explain why 听 came to represent 聽."
+          },
+          {
+            "path": "learner/components/1/evidence_ids",
+            "value_json": "[\"ref040\",\"ref042\",\"ref082\"]"
+          }
+        ]
+      }
+    },
+    {
+      "receipt": "round-0/revision/result.json",
+      "result_hash": "e46d00489231a1310bbfac78631d24fe01c5b740fac91c2f80067caf1cead7bb",
+      "result": {
+        "edits": [
+          {
+            "path": "relationships/2/text",
+            "value_json": "In the received analysis of the older smiling-word use, 斤 is assigned the phonetic role; this does not explain why 听 came to represent 聽."
+          },
+          {
+            "path": "relationships/2/evidence_ids",
+            "value_json": "[\"ref040\",\"ref057\"]"
+          },
+          {
+            "path": "summary/evidence_ids",
+            "value_json": "[\"ref027\",\"ref040\",\"ref026\",\"ref041\",\"ref075\",\"ref082\"]"
+          },
+          {
+            "path": "components/0/evidence_ids",
+            "value_json": "[\"ref026\",\"ref040\",\"ref075\",\"ref082\"]"
+          },
+          {
+            "path": "components/1/evidence_ids",
+            "value_json": "[\"ref040\",\"ref042\",\"ref082\"]"
+          },
+          {
+            "path": "learner/overview/evidence_ids",
+            "value_json": "[\"ref027\",\"ref040\",\"ref026\",\"ref041\",\"ref075\",\"ref082\"]"
+          },
+          {
+            "path": "learner/components/0/evidence_ids",
+            "value_json": "[\"ref026\",\"ref040\",\"ref082\"]"
+          },
+          {
+            "path": "learner/components/1/evidence_ids",
+            "value_json": "[\"ref040\",\"ref042\",\"ref082\"]"
+          }
+        ]
+      }
+    },
+    {
+      "receipt": "round-1/revision/result.json",
+      "result_hash": "d9f8a87209577d122f101d129d0500473811eb3415b9f32546533ce610326603",
+      "result": {
+        "edits": [
+          {
+            "path": "meaning_history/senses/0/status",
+            "value_json": "\"earliest_attested\""
+          },
+          {
+            "path": "meaning_history/senses/0/text",
+            "value_json": "A cited Han-period literary example uses 听 for a smiling appearance. This establishes the use by that period, but not that it was the word’s original meaning or its first occurrence."
+          },
+          {
+            "path": "history/0/text",
+            "value_json": "The received Shuowen entry analyzes 听 in its older “smiling appearance” use as 口 with 斤 as phonetic. The curated image is identified as a modern redraw of 听 in Shuowen small-seal style; it does not establish a sequence of graphic changes."
+          },
+          {
+            "path": "history/0/evidence_ids",
+            "value_json": "[\"ref040\",\"ref026\",\"ref068\",\"ref075\",\"ref087\"]"
+          },
+          {
+            "path": "meaning_history/senses/0/evidence_ids",
+            "value_json": "[\"ref039\",\"ref046\",\"ref055\",\"ref075\"]"
+          }
+        ]
+      }
+    }
+  ],
+  "source_findings": [],
+  "repair_instructions": "Treat retained reviews and failed author outputs as diagnostic evidence only. Resolve the concrete validation/review findings with the smallest evidence-supported changes. Preserve supported claims, IDs and unrelated records. Do not treat this context as an approval. Any source finding remains unresolved until the normal source-resolution gate handles it; do not claim an OCR correction from prose.",
+  "additional_research_context": {
+    "issue": "https://github.com/lbm364dl/hanzi-etymology-dict/issues/342",
+    "finding": "The approved entry describes hear/listen as the current Chinese meaning, while sense 听:hear_listen has status historical and its text only discusses Song–Yuan use. Independently recheck the active modern evidence and the current standardized simplified correspondence. If the same ordinary hearing/listening sense remains present, cite current evidence on its record, mark current, and keep the Song–Yuan attestation separately qualified. Preserve the historic smiling-appearance sense and the uncertain mechanism of reuse; do not force a sound relationship or add an unsupported causal bridge. Update derived sense relationships through normal assembly and obtain fresh reviews.",
+    "policy": "This finding is a hypothesis to recheck against the current exact pair; it is not an approval or an instruction to fabricate current support. Retain the approved glyph assets and unrelated prose."
+  },
+  "attention_repair": true,
+  "prior_job": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C",
+  "prior_status": {
+    "character": "听",
+    "status": "published",
+    "mode": "refine",
+    "dossier_hash": "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc",
+    "source_article_hash": "37ac4d8d8abcacf73d5f6c290a37671c1bd0db61b093c5e69795cdcd570e2e61",
+    "initial_research": true,
+    "revision_limit": 2,
+    "revision": 2,
+    "source_id": "ziyuan-2012",
+    "registry_source_hash": "5d04edff24c3919be47596b6a79a61a85ce0a9637edc6fe35cfa1f612918a0fc",
+    "locator_hash": "d90c00af0919621c82222d2799662ccf8d1387ff67d82b038b717e3855eaa3f3",
+    "source_snapshot_hash": "682183875356954c82fbcb7a53caf23ebefa7d097db5ac5c506aa28ad3fb6ac4",
+    "source_audit_hash": "b9a32f1b0ce4c191dbc585310f9e836f62d9b332e48e4b1a17ca2876121f23a2",
+    "tracking_issue_url": "https://github.com/lbm364dl/hanzi-etymology-dict/issues/1",
+    "issue_sync_status": "synced",
+    "issue_receipts_hash": "77642892db79d015cbc07d19f99f88f81f36d5991b7b182e65e486343f989d44",
+    "article_hash": "02ac21a56ef46066b9235b3302884bc0cb122bb15480bec0ed01445a37ee35e6",
+    "published_at": "2026-10-04T10:17:25.319138+00:00",
+    "canonical_entry": "/home/catalin/hanzi-etymology-dict/content/entries/542C.json"
+  },
+  "prior_article_path": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/article.json",
+  "prior_article_hash": "02ac21a56ef46066b9235b3302884bc0cb122bb15480bec0ed01445a37ee35e6",
+  "retained_dossier_hash": "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc",
+  "registered_source": {
+    "id": "ziyuan-2012",
+    "title": "字源",
+    "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+    "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+    "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+    "producer_root": "/home/catalin/hanzi-etymology-books",
+    "availability": "provisional_ocr",
+    "github_repo": "lbm364dl/hanzi-etymology-dict",
+    "tracking_issue_url": "https://github.com/lbm364dl/hanzi-etymology-dict/issues/1",
+    "issue_parent_number": 152,
+    "issue_parent_by_kind": {
+      "ocr": 5,
+      "pipeline": 2
+    },
+    "issue_milestone": "Source-enrichment smoke",
+    "issue_labels": [
+      "scope:hsk1",
+      "source:ziyuan"
+    ],
+    "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+  },
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1062/source.png",
+      "pdf_page": 1062,
+      "source_pixel_sha256": "fe34de73317b7c55cc85ba8a55d314cfe2317557f969e16244dd46481d12b683"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0096/source.png",
+      "pdf_page": 96,
+      "source_pixel_sha256": "69168e4fc33daaa019d2fcb5a92db744d480dc4be542c17c75f20e325b9e9b2c"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1063/source.png",
+      "pdf_page": 1063,
+      "source_pixel_sha256": "ddcb3221267a8835c75a41d8895db067cea12b2eb86c34adffe4c298f6dbecbb"
+    }
+  ],
+  "target_language": "zh",
+  "verified_uncited_book_records": [
+    {
+      "research_output": "initial-followup/research/result.json",
+      "research_receipt_hash": "53049903521421584940f9aa1bbc88bd5ccd4130a4b31243bf8d7acd6f9ff4bc",
+      "research_result_hash": "e3824e6d74b0a83dd92b5d2f4678e00707bd6eae9036eb1beefb8227cf2c7fe3",
+      "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692; direct scan inspection",
+      "field": "PDF p. 96, printed p. 84; right-column 听 entry. Scan path /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0096/source.png; decoded-RGB pixel SHA-256 69168e4fc33daaa019d2fcb5a92db744d480dc4be542c17c75f20e325b9e9b2c. Inspected crop bounds (1500, 300, 2950, 2300).",
+      "text": "The printed page gives yǐn on the 听 headword line and tīng beneath it. The paragraph assigns ‘smiling appearance’ and 口-plus-斤 phonosemantic analysis to the yǐn entry, then says 听 has been a simplified form of 聽 since the Yuan. The scan agrees with the corpus text and confirms printed page 84. It does not state that the historical sound analysis explains the simplified form’s adoption.",
+      "evidence_ids": [
+        "X-7b01fdeb8c36b2d31bf0"
+      ]
+    },
+    {
+      "research_output": "initial-followup/research/result.json",
+      "research_receipt_hash": "53049903521421584940f9aa1bbc88bd5ccd4130a4b31243bf8d7acd6f9ff4bc",
+      "research_result_hash": "e3824e6d74b0a83dd92b5d2f4678e00707bd6eae9036eb1beefb8227cf2c7fe3",
+      "source": "李學勤主編《字源》, 天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692; direct scan inspection",
+      "field": "PDF p. 1062, printed p. 1047, 聽 entry; its paragraph continues in the left column of PDF p. 1063, printed p. 1048. Scan paths /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1062/source.png and page-1063/source.png; pixel SHA-256 values fe34de73317b7c55cc85ba8a55d314cfe2317557f969e16244dd46481d12b683 and ddcb3221267a8835c75a41d8895db067cea12b2eb86c34adffe4c298f6dbecbb. Inspected crops p.1062 bounds (1450, 2500, 2950, 4050), p.1063 bounds (80, 100, 1650, 1050).",
+      "text": "The 聽 entry’s historical sequence is labeled 商, 西周, 戰國, 說文小篆, 漢, then clerical forms. The author analyzes the oracle-bone and bronze forms as associative, with ear and mouth representing speech received by the ear, and describes the received Shuowen account as adding 悳 as a sound element. The continuation discusses extensions from hearing to accepting/obeying, inquiry/governance, and waiting. It then says 聽 is now simplified to 听, separately identified with the Shuowen 口-plus-斤 analysis and smiling sense. These are the author’s analyses; the scan does not establish every proposed historical relationship.",
+      "evidence_ids": [
+        "X-2891155d964233455479"
+      ]
+    }
+  ],
+  "previous_source_audit_failed": "Retained source audit and exact consulted page records are included. Recheck which current claims those records support, cite only supported claims through evidence_ids, and keep source-workflow information out of reader prose."
+}

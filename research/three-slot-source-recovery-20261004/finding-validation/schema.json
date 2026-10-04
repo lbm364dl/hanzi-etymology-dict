@@ -1,0 +1,52 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "article_hash",
+    "dossier_hash",
+    "findings"
+  ],
+  "properties": {
+    "article_hash": {
+      "type": "string",
+      "enum": [
+        "0bf89e6bad203939ccb73925902d65c17db1e330eb469079df7febe1f7dabe20"
+      ]
+    },
+    "dossier_hash": {
+      "type": "string",
+      "enum": [
+        "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc"
+      ]
+    },
+    "findings": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "topic",
+          "confirmed",
+          "reason"
+        ],
+        "properties": {
+          "topic": {
+            "type": "string",
+            "enum": [
+              "hear-listen-current-sense-status"
+            ]
+          },
+          "confirmed": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

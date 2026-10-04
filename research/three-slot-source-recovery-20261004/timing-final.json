@@ -1,0 +1,1246 @@
+{
+  "unique_calls": 148,
+  "wall_seconds": 3774.069368124008,
+  "agent_seconds": 2757.9408152103424,
+  "by_role": {
+    "research": {
+      "calls": 6,
+      "seconds": 972.37
+    },
+    "article_patch": {
+      "calls": 33,
+      "seconds": 415.12
+    },
+    "factual": {
+      "calls": 32,
+      "seconds": 425.07
+    },
+    "readability": {
+      "calls": 32,
+      "seconds": 279.89
+    },
+    "revision_plan": {
+      "calls": 16,
+      "seconds": 136.23
+    },
+    "source_resolution": {
+      "calls": 5,
+      "seconds": 109.86
+    },
+    "finding_triage": {
+      "calls": 10,
+      "seconds": 144.18
+    },
+    "learner": {
+      "calls": 1,
+      "seconds": 8.89
+    },
+    "book_citation": {
+      "calls": 3,
+      "seconds": 125.18
+    },
+    "glyph_visual": {
+      "calls": 2,
+      "seconds": 22.5
+    },
+    "ocr_verification": {
+      "calls": 6,
+      "seconds": 94.1
+    },
+    "prose_repair": {
+      "calls": 1,
+      "seconds": 14.3
+    },
+    "finding_validation": {
+      "calls": 1,
+      "seconds": 10.24
+    }
+  },
+  "calls": [
+    {
+      "role": "research",
+      "status": "complete",
+      "started_at": 1791107897.7964199,
+      "finished_at": 1791108034.9511507,
+      "duration_seconds": 137.15473079681396,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/retained-research/initial-followup/research/meta.json"
+    },
+    {
+      "role": "research",
+      "status": "complete",
+      "started_at": 1791107898.5448933,
+      "finished_at": 1791108043.910248,
+      "duration_seconds": 145.36535477638245,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5DE5/initial-followup/research/meta.json"
+    },
+    {
+      "role": "research",
+      "status": "complete",
+      "started_at": 1791107898.8908422,
+      "finished_at": 1791108258.3574405,
+      "duration_seconds": 359.4665982723236,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/initial-followup/research/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108034.9799008,
+      "finished_at": 1791108042.8754408,
+      "duration_seconds": 7.895539999008179,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5988/round-0/editor/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108042.918488,
+      "finished_at": 1791108050.3649826,
+      "duration_seconds": 7.4464945793151855,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5988/round-0/factual/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108043.9547253,
+      "finished_at": 1791108062.5514026,
+      "duration_seconds": 18.59667730331421,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5DE5/round-0/editor/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108050.3817637,
+      "finished_at": 1791108057.7207196,
+      "duration_seconds": 7.338955879211426,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5988/round-0/readability/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791108057.739026,
+      "finished_at": 1791108067.563409,
+      "duration_seconds": 9.824383020401001,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5988/round-0/revision_plan/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108063.3070917,
+      "finished_at": 1791108078.1596115,
+      "duration_seconds": 14.852519750595093,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5DE5/round-0/factual/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108067.588632,
+      "finished_at": 1791108079.481926,
+      "duration_seconds": 11.893293857574463,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5988/round-0/revision/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108078.174203,
+      "finished_at": 1791108096.0912778,
+      "duration_seconds": 17.91707491874695,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5DE5/round-0/readability/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108079.5239916,
+      "finished_at": 1791108091.310054,
+      "duration_seconds": 11.786062479019165,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5988/round-1/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108091.3225915,
+      "finished_at": 1791108101.422253,
+      "duration_seconds": 10.099661350250244,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5988/round-1/readability/meta.json"
+    },
+    {
+      "role": "source_resolution",
+      "status": "complete",
+      "started_at": 1791108098.3159995,
+      "finished_at": 1791108123.4562767,
+      "duration_seconds": 25.14027714729309,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5DE5/source-resolution/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791108101.4388695,
+      "finished_at": 1791108114.4435384,
+      "duration_seconds": 13.004668951034546,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5988/round-1/revision_plan/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108114.462051,
+      "finished_at": 1791108121.1468658,
+      "duration_seconds": 6.684814929962158,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5988/round-1/revision/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108121.1856177,
+      "finished_at": 1791108127.204608,
+      "duration_seconds": 6.0189902782440186,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5988/round-2/factual/meta.json"
+    },
+    {
+      "role": "finding_triage",
+      "status": "complete",
+      "started_at": 1791108124.2082834,
+      "finished_at": 1791108141.272925,
+      "duration_seconds": 17.06464147567749,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5DE5/finding-triage/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108127.2184987,
+      "finished_at": 1791108136.5541587,
+      "duration_seconds": 9.335659980773926,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5988/round-2/readability/meta.json"
+    },
+    {
+      "role": "finding_triage",
+      "status": "complete",
+      "started_at": 1791108137.220286,
+      "finished_at": 1791108150.3203876,
+      "duration_seconds": 13.100101709365845,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5988/finding-triage/meta.json"
+    },
+    {
+      "role": "source_resolution",
+      "status": "complete",
+      "started_at": 1791108233.8219619,
+      "finished_at": 1791108250.5348449,
+      "duration_seconds": 16.71288299560547,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5DE5/source-resolution-1/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108258.403969,
+      "finished_at": 1791108275.5135155,
+      "duration_seconds": 17.109546422958374,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/round-0/editor/meta.json"
+    },
+    {
+      "role": "learner",
+      "status": "complete",
+      "started_at": 1791108275.5550854,
+      "finished_at": 1791108284.4466655,
+      "duration_seconds": 8.89158010482788,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/round-0/learner-length-0/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108285.348387,
+      "finished_at": 1791108300.9518526,
+      "duration_seconds": 15.603465557098389,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/round-0/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108300.9664984,
+      "finished_at": 1791108309.5590072,
+      "duration_seconds": 8.592508792877197,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/round-0/readability/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791108309.5776057,
+      "finished_at": 1791108316.5568416,
+      "duration_seconds": 6.979235887527466,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/round-0/revision_plan/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108316.5844688,
+      "finished_at": 1791108323.1778085,
+      "duration_seconds": 6.593339681625366,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/round-0/revision/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108324.0601206,
+      "finished_at": 1791108338.7594447,
+      "duration_seconds": 14.699324131011963,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/round-1/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108338.778752,
+      "finished_at": 1791108346.0569777,
+      "duration_seconds": 7.278225660324097,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/round-1/readability/meta.json"
+    },
+    {
+      "role": "book_citation",
+      "status": "complete",
+      "started_at": 1791108346.0967999,
+      "finished_at": 1791108384.14588,
+      "duration_seconds": 38.04908013343811,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/citation-integration/citation-author/meta.json"
+    },
+    {
+      "role": "source_resolution",
+      "status": "complete",
+      "started_at": 1791108361.888041,
+      "finished_at": 1791108384.9128346,
+      "duration_seconds": 23.02479362487793,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/5DE5/source-resolution-2/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108384.9900537,
+      "finished_at": 1791108404.8613942,
+      "duration_seconds": 19.87134051322937,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/citation-integration/round-0/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108404.8796232,
+      "finished_at": 1791108412.962707,
+      "duration_seconds": 8.083083868026733,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/citation-integration/round-0/readability/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108411.596489,
+      "finished_at": 1791108427.352337,
+      "duration_seconds": 15.755847930908203,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/round-0/editor/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791108412.983812,
+      "finished_at": 1791108421.7861905,
+      "duration_seconds": 8.802378416061401,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/citation-integration/round-0/revision_plan/meta.json"
+    },
+    {
+      "role": "glyph_visual",
+      "status": "complete",
+      "started_at": 1791108421.8061152,
+      "finished_at": 1791108432.210816,
+      "duration_seconds": 10.404700756072998,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/citation-integration/round-0/glyph-review-repair/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108427.3659487,
+      "finished_at": 1791108444.9263926,
+      "duration_seconds": 17.560443878173828,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/round-0/editor/patch-repair-1/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108432.244297,
+      "finished_at": 1791108439.9817626,
+      "duration_seconds": 7.7374656200408936,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/citation-integration/round-0/revision/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108440.7744925,
+      "finished_at": 1791108461.7961786,
+      "duration_seconds": 21.02168607711792,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/citation-integration/round-1/factual/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108444.9694042,
+      "finished_at": 1791108456.6033635,
+      "duration_seconds": 11.633959293365479,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/round-0/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108456.6165,
+      "finished_at": 1791108466.7578514,
+      "duration_seconds": 10.141351461410522,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/round-0/readability/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108461.810312,
+      "finished_at": 1791108470.24244,
+      "duration_seconds": 8.432127952575684,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/citation-integration/round-1/readability/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791108466.774813,
+      "finished_at": 1791108474.4152634,
+      "duration_seconds": 7.640450477600098,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/round-0/revision_plan/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108470.2560625,
+      "finished_at": 1791108478.5369568,
+      "duration_seconds": 8.28089427947998,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/citation-integration/round-1/readability-verification/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108474.437062,
+      "finished_at": 1791108485.978973,
+      "duration_seconds": 11.541910886764526,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/round-0/revision/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791108478.5555527,
+      "finished_at": 1791108487.7358541,
+      "duration_seconds": 9.180301427841187,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/citation-integration/round-1/revision_plan/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108486.0166345,
+      "finished_at": 1791108495.95654,
+      "duration_seconds": 9.939905643463135,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/round-1/factual/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108487.7708457,
+      "finished_at": 1791108499.5189373,
+      "duration_seconds": 11.748091697692871,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/citation-integration/round-1/revision/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108495.971827,
+      "finished_at": 1791108509.1157923,
+      "duration_seconds": 13.143965244293213,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/round-1/readability/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108500.2858331,
+      "finished_at": 1791108521.312331,
+      "duration_seconds": 21.026497840881348,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/citation-integration/round-2/factual/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791108509.1356974,
+      "finished_at": 1791108519.0160236,
+      "duration_seconds": 9.880326271057129,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/round-1/revision_plan/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108519.0359993,
+      "finished_at": 1791108534.149958,
+      "duration_seconds": 15.113958597183228,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/round-1/revision/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108521.3275778,
+      "finished_at": 1791108529.2620275,
+      "duration_seconds": 7.934449672698975,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/citation-integration/round-2/readability/meta.json"
+    },
+    {
+      "role": "finding_triage",
+      "status": "complete",
+      "started_at": 1791108530.1436062,
+      "finished_at": 1791108550.2681603,
+      "duration_seconds": 20.12455415725708,
+      "receipt": "runs/three-slot-source-recovery-20261004/ziyuan-2012/542C/finding-triage/meta.json"
+    },
+    {
+      "role": "ocr_verification",
+      "status": "complete",
+      "started_at": 1791108532.4342003,
+      "finished_at": 1791108550.7051458,
+      "duration_seconds": 18.27094554901123,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-quote/occurrence-check/review/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108534.1899235,
+      "finished_at": 1791108547.0309713,
+      "duration_seconds": 12.841047763824463,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/round-2/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108547.0439827,
+      "finished_at": 1791108556.1276555,
+      "duration_seconds": 9.083672761917114,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/round-2/readability/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108556.1457632,
+      "finished_at": 1791108565.63054,
+      "duration_seconds": 9.484776735305786,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-sense-repair/ziyuan-2012/5988/round-2/factual-adjudication/meta.json"
+    },
+    {
+      "role": "research",
+      "status": "complete",
+      "started_at": 1791108729.6551394,
+      "finished_at": 1791108780.6915553,
+      "duration_seconds": 51.036415815353394,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-dictionary-publication/5988/retained-research/retained-research/initial-followup/research/meta.json"
+    },
+    {
+      "role": "research",
+      "status": "complete",
+      "started_at": 1791108731.9183016,
+      "finished_at": 1791108831.274362,
+      "duration_seconds": 99.35606050491333,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/initial-followup/research/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108780.719594,
+      "finished_at": 1791108798.2324445,
+      "duration_seconds": 17.512850522994995,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-current-form/ziyuan-2012/5988/round-0/editor/meta.json"
+    },
+    {
+      "role": "ocr_verification",
+      "status": "complete",
+      "started_at": 1791108791.8976784,
+      "finished_at": 1791108818.2310958,
+      "duration_seconds": 26.333417415618896,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-quote/occurrence-native-control/review/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108798.2484446,
+      "finished_at": 1791108812.3539972,
+      "duration_seconds": 14.105552673339844,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-current-form/ziyuan-2012/5988/round-0/editor/patch-repair-1/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108812.372724,
+      "finished_at": 1791108825.8923254,
+      "duration_seconds": 13.519601345062256,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-current-form/ziyuan-2012/5988/round-0/editor/patch-repair-2/meta.json"
+    },
+    {
+      "role": "finding_triage",
+      "status": "complete",
+      "started_at": 1791108826.8756783,
+      "finished_at": 1791108844.254274,
+      "duration_seconds": 17.37859559059143,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-current-form/ziyuan-2012/5988/finding-triage/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108831.3383682,
+      "finished_at": 1791108849.853574,
+      "duration_seconds": 18.51520586013794,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-0/editor/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108849.876237,
+      "finished_at": 1791108868.8892972,
+      "duration_seconds": 19.013060331344604,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-0/editor/patch-repair-1/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108869.9295087,
+      "finished_at": 1791108888.5504398,
+      "duration_seconds": 18.620931148529053,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-0/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108888.5668046,
+      "finished_at": 1791108899.365813,
+      "duration_seconds": 10.7990083694458,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-0/readability/meta.json"
+    },
+    {
+      "role": "ocr_verification",
+      "status": "complete",
+      "started_at": 1791108892.1165404,
+      "finished_at": 1791108904.015571,
+      "duration_seconds": 11.899030685424805,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-quote/occurrence-native-control/review-repair-1/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791108899.3857472,
+      "finished_at": 1791108906.9671123,
+      "duration_seconds": 7.58136510848999,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-0/revision_plan/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108907.0021544,
+      "finished_at": 1791108918.7853937,
+      "duration_seconds": 11.783239364624023,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-0/revision/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108919.6890082,
+      "finished_at": 1791108937.8283072,
+      "duration_seconds": 18.139298915863037,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-1/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791108937.8432536,
+      "finished_at": 1791108945.426817,
+      "duration_seconds": 7.583563327789307,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-1/readability/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791108945.4459238,
+      "finished_at": 1791108952.6246862,
+      "duration_seconds": 7.178762435913086,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-1/revision_plan/meta.json"
+    },
+    {
+      "role": "glyph_visual",
+      "status": "complete",
+      "started_at": 1791108952.6487114,
+      "finished_at": 1791108964.7436812,
+      "duration_seconds": 12.094969749450684,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-1/glyph-review-repair/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791108964.778857,
+      "finished_at": 1791108975.9271,
+      "duration_seconds": 11.148242950439453,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-1/revision/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108976.7745416,
+      "finished_at": 1791108993.586137,
+      "duration_seconds": 16.81159543991089,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-2/factual/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791108994.3739257,
+      "finished_at": 1791109010.3353539,
+      "duration_seconds": 15.961428165435791,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-2/factual-verification/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791109010.3504665,
+      "finished_at": 1791109020.2416263,
+      "duration_seconds": 9.891159772872925,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-2/readability/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791109020.25491,
+      "finished_at": 1791109027.9837735,
+      "duration_seconds": 7.728863477706909,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/round-2/readability-verification/meta.json"
+    },
+    {
+      "role": "finding_triage",
+      "status": "complete",
+      "started_at": 1791109028.6561728,
+      "finished_at": 1791109039.5462472,
+      "duration_seconds": 10.890074491500854,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-current-form/ziyuan-2012/542C/finding-triage/meta.json"
+    },
+    {
+      "role": "ocr_verification",
+      "status": "complete",
+      "started_at": 1791109057.4385726,
+      "finished_at": 1791109070.04671,
+      "duration_seconds": 12.608137369155884,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-quote/occurrence-bound-control/review/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791109058.0969903,
+      "finished_at": 1791109071.5984352,
+      "duration_seconds": 13.501444816589355,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-evidence-repair/ziyuan-2012/5988/round-0/editor/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791109071.6446364,
+      "finished_at": 1791109079.0290775,
+      "duration_seconds": 7.384441137313843,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-evidence-repair/ziyuan-2012/5988/round-0/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791109079.04137,
+      "finished_at": 1791109085.8730762,
+      "duration_seconds": 6.831706285476685,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-evidence-repair/ziyuan-2012/5988/round-0/readability/meta.json"
+    },
+    {
+      "role": "book_citation",
+      "status": "complete",
+      "started_at": 1791109217.0552778,
+      "finished_at": 1791109248.3501964,
+      "duration_seconds": 31.294918537139893,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-evidence-repair/ziyuan-2012/5988/citation-integration/citation-author/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791109248.4098823,
+      "finished_at": 1791109254.742075,
+      "duration_seconds": 6.332192659378052,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-evidence-repair/ziyuan-2012/5988/citation-integration/round-0/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791109254.7576287,
+      "finished_at": 1791109261.239893,
+      "duration_seconds": 6.482264280319214,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-evidence-repair/ziyuan-2012/5988/citation-integration/round-0/readability/meta.json"
+    },
+    {
+      "role": "ocr_verification",
+      "status": "complete",
+      "started_at": 1791109266.0478964,
+      "finished_at": 1791109279.218208,
+      "duration_seconds": 13.170311689376831,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-source-repair/ocr-repair-20261004T102412Z-5be4332aa3db/proof/review/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791109452.3775208,
+      "finished_at": 1791109458.3100622,
+      "duration_seconds": 5.932541370391846,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-dictionary-publication/5988/round-0/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791109458.3242378,
+      "finished_at": 1791109465.4526262,
+      "duration_seconds": 7.128388404846191,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-dictionary-publication/5988/round-0/readability/meta.json"
+    },
+    {
+      "role": "ocr_verification",
+      "status": "complete",
+      "started_at": 1791109524.7181208,
+      "finished_at": 1791109536.5375767,
+      "duration_seconds": 11.819455862045288,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-source-repair/ocr-repair-20261004T102612Z-acf3c94e0229/proof/review/meta.json"
+    },
+    {
+      "role": "research",
+      "status": "complete",
+      "started_at": 1791109630.648272,
+      "finished_at": 1791109810.6424522,
+      "duration_seconds": 179.99418020248413,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/initial-followup/research/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791109810.679704,
+      "finished_at": 1791109818.871948,
+      "duration_seconds": 8.192244052886963,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/round-0/editor/meta.json"
+    },
+    {
+      "role": "prose_repair",
+      "status": "complete",
+      "started_at": 1791109818.9044714,
+      "finished_at": 1791109833.2083929,
+      "duration_seconds": 14.303921461105347,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/round-0/prose-repair/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791109833.8844073,
+      "finished_at": 1791109855.0670605,
+      "duration_seconds": 21.182653188705444,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/round-0/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791109855.0836062,
+      "finished_at": 1791109864.4272785,
+      "duration_seconds": 9.343672275543213,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/round-0/readability/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791109864.4459524,
+      "finished_at": 1791109871.4267633,
+      "duration_seconds": 6.980810880661011,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/round-0/revision_plan/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791109871.45591,
+      "finished_at": 1791109878.6429594,
+      "duration_seconds": 7.187049388885498,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/round-0/revision/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791109879.200597,
+      "finished_at": 1791109891.7002137,
+      "duration_seconds": 12.499616622924805,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/round-1/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791109891.716228,
+      "finished_at": 1791109899.3023164,
+      "duration_seconds": 7.586088418960571,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/round-1/readability/meta.json"
+    },
+    {
+      "role": "book_citation",
+      "status": "complete",
+      "started_at": 1791109899.3423831,
+      "finished_at": 1791109955.1737893,
+      "duration_seconds": 55.831406116485596,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/citation-integration/citation-author/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791109955.2585797,
+      "finished_at": 1791109982.5549338,
+      "duration_seconds": 27.296354055404663,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/citation-integration/round-0/revision/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791109983.1354291,
+      "finished_at": 1791109996.3430784,
+      "duration_seconds": 13.207649230957031,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/citation-integration/round-1/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791109996.3578944,
+      "finished_at": 1791110006.204429,
+      "duration_seconds": 9.846534490585327,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/citation-integration/round-1/readability/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791110006.224287,
+      "finished_at": 1791110012.806245,
+      "duration_seconds": 6.581958055496216,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/citation-integration/round-1/revision_plan/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791110012.8303823,
+      "finished_at": 1791110024.8430684,
+      "duration_seconds": 12.012686014175415,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/citation-integration/round-1/revision/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791110025.3985353,
+      "finished_at": 1791110037.455172,
+      "duration_seconds": 12.056636810302734,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/citation-integration/round-2/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791110037.5123801,
+      "finished_at": 1791110043.626059,
+      "duration_seconds": 6.113678932189941,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/citation-integration/round-2/readability/meta.json"
+    },
+    {
+      "role": "source_resolution",
+      "status": "complete",
+      "started_at": 1791110045.7869294,
+      "finished_at": 1791110068.3331342,
+      "duration_seconds": 22.546204805374146,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/source-resolution/meta.json"
+    },
+    {
+      "role": "finding_triage",
+      "status": "complete",
+      "started_at": 1791110068.9367807,
+      "finished_at": 1791110090.0650525,
+      "duration_seconds": 21.12827181816101,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/finding-triage/attempts/1791110196461833798/meta.json"
+    },
+    {
+      "role": "source_resolution",
+      "status": "complete",
+      "started_at": 1791110173.3526533,
+      "finished_at": 1791110195.7918577,
+      "duration_seconds": 22.439204454421997,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/source-resolution-1/meta.json"
+    },
+    {
+      "role": "finding_triage",
+      "status": "complete",
+      "started_at": 1791110196.4684982,
+      "finished_at": 1791110210.7227225,
+      "duration_seconds": 14.254224300384521,
+      "receipt": "runs/three-slot-source-recovery-20261004/gong-after-source-repair/ziyuan-2012/5DE5/finding-triage/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791110724.0494735,
+      "finished_at": 1791110734.2849429,
+      "duration_seconds": 10.235469341278076,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/round-0/editor/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791110735.1908047,
+      "finished_at": 1791110750.727103,
+      "duration_seconds": 15.536298274993896,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/round-0/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791110750.7434206,
+      "finished_at": 1791110759.7383249,
+      "duration_seconds": 8.994904279708862,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/round-0/readability/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791110759.758386,
+      "finished_at": 1791110767.591316,
+      "duration_seconds": 7.832930088043213,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/round-0/revision_plan/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791110767.6232276,
+      "finished_at": 1791110782.9514477,
+      "duration_seconds": 15.328220129013062,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/round-0/revision/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791110783.8253863,
+      "finished_at": 1791110803.7022078,
+      "duration_seconds": 19.876821517944336,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/round-1/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791110803.7204332,
+      "finished_at": 1791110809.811038,
+      "duration_seconds": 6.090604782104492,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/round-1/readability/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791110809.8306906,
+      "finished_at": 1791110819.8770192,
+      "duration_seconds": 10.0463285446167,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/round-1/revision_plan/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791110819.9484668,
+      "finished_at": 1791110828.3359656,
+      "duration_seconds": 8.38749885559082,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/round-1/revision/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791110829.2423441,
+      "finished_at": 1791110845.081915,
+      "duration_seconds": 15.839570760726929,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/round-2/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791110845.1,
+      "finished_at": 1791110850.8389292,
+      "duration_seconds": 5.738929271697998,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/round-2/readability/meta.json"
+    },
+    {
+      "role": "finding_triage",
+      "status": "complete",
+      "started_at": 1791110851.6079028,
+      "finished_at": 1791110863.351939,
+      "duration_seconds": 11.744036197662354,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/finding-triage/attempts/1791111161805165529/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791111130.012324,
+      "finished_at": 1791111138.8622608,
+      "duration_seconds": 8.849936723709106,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-published-repair/5988/round-0/editor/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791111138.8824124,
+      "finished_at": 1791111149.929972,
+      "duration_seconds": 11.0475594997406,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-published-repair/5988/round-0/editor/patch-repair-1/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791111149.9751043,
+      "finished_at": 1791111159.967092,
+      "duration_seconds": 9.991987705230713,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-published-repair/5988/round-0/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791111159.981222,
+      "finished_at": 1791111173.084664,
+      "duration_seconds": 13.103442192077637,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-published-repair/5988/round-0/readability/meta.json"
+    },
+    {
+      "role": "finding_triage",
+      "status": "complete",
+      "started_at": 1791111161.8148625,
+      "finished_at": 1791111175.0326912,
+      "duration_seconds": 13.217828750610352,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/finding-triage/attempts/1791111571158427692/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791111173.1012964,
+      "finished_at": 1791111182.7965004,
+      "duration_seconds": 9.695204019546509,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-published-repair/5988/round-0/revision_plan/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791111182.815368,
+      "finished_at": 1791111191.2127662,
+      "duration_seconds": 8.397398233413696,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-published-repair/5988/round-0/revision/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791111191.2579627,
+      "finished_at": 1791111197.3924901,
+      "duration_seconds": 6.1345274448394775,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-published-repair/5988/round-1/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791111197.405704,
+      "finished_at": 1791111203.795278,
+      "duration_seconds": 6.38957405090332,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-published-repair/5988/round-1/readability/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791111313.0295875,
+      "finished_at": 1791111320.8225255,
+      "duration_seconds": 7.792937994003296,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-prose-repair/5988/round-0/editor/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791111320.9920776,
+      "finished_at": 1791111337.4584594,
+      "duration_seconds": 16.466381788253784,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-prose-repair/5988/round-0/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791111337.4726195,
+      "finished_at": 1791111347.2188523,
+      "duration_seconds": 9.746232748031616,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-prose-repair/5988/round-0/readability/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791111347.2363749,
+      "finished_at": 1791111355.125269,
+      "duration_seconds": 7.888894081115723,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-prose-repair/5988/round-0/revision_plan/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791111355.1448689,
+      "finished_at": 1791111368.1523392,
+      "duration_seconds": 13.00747036933899,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-prose-repair/5988/round-0/revision/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791111368.1981714,
+      "finished_at": 1791111379.0947986,
+      "duration_seconds": 10.896627187728882,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-prose-repair/5988/round-1/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791111379.108267,
+      "finished_at": 1791111387.6518126,
+      "duration_seconds": 8.543545484542847,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-prose-repair/5988/round-1/readability/meta.json"
+    },
+    {
+      "role": "revision_plan",
+      "status": "complete",
+      "started_at": 1791111387.668475,
+      "finished_at": 1791111394.7989497,
+      "duration_seconds": 7.130474805831909,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-prose-repair/5988/round-1/revision_plan/meta.json"
+    },
+    {
+      "role": "article_patch",
+      "status": "complete",
+      "started_at": 1791111394.8218424,
+      "finished_at": 1791111404.8723643,
+      "duration_seconds": 10.050521850585938,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-prose-repair/5988/round-1/revision/meta.json"
+    },
+    {
+      "role": "factual",
+      "status": "complete",
+      "started_at": 1791111404.9151654,
+      "finished_at": 1791111410.8927052,
+      "duration_seconds": 5.977539777755737,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-prose-repair/5988/round-2/factual/meta.json"
+    },
+    {
+      "role": "readability",
+      "status": "complete",
+      "started_at": 1791111410.9086149,
+      "finished_at": 1791111417.1971023,
+      "duration_seconds": 6.288487434387207,
+      "receipt": "runs/three-slot-source-recovery-20261004/ma-prose-repair/5988/round-2/readability/meta.json"
+    },
+    {
+      "role": "finding_triage",
+      "status": "complete",
+      "started_at": 1791111571.16501,
+      "finished_at": 1791111576.4436555,
+      "duration_seconds": 5.2786455154418945,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/finding-triage/meta.json"
+    },
+    {
+      "role": "finding_validation",
+      "status": "complete",
+      "started_at": 1791111661.6255631,
+      "finished_at": 1791111671.865788,
+      "duration_seconds": 10.240224838256836,
+      "receipt": "runs/three-slot-source-recovery-20261004/ting-sense-repair/ziyuan-2012/542C/finding-validation/meta.json"
+    }
+  ],
+  "scope": "Three-character recovery, including failed/repeated attempts; retained copies deduplicated by actual thread IDs. Includes coordinator pauses/engineering in wall duration; no bandwidth-byte or billing measurement. Collaboration code agents are not counted by this pipeline metadata scan."
+}

@@ -1,0 +1,267 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "工"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000423",
+          "pdf_page_1based": 423,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/source.png",
+          "source_sha256": "5612d68e138d947d28c0a103b43738ef8d1f3e96f8af91b39dabadbbe2ba0b48",
+          "evidence_sha256": "26c0a03024458c2fbf7b746fdde79642760e4b4606e5cbcf5f4890d3237f32e9",
+          "ocr_review_status": "unreviewed",
+          "applied_ocr_corrections": {
+            "original_evidence_sha256": "40fe43b04430dddc96313fd7f3ebc63ca611ea2db4e65f14d78f99a815261fe3",
+            "corrections_sha256": "f3cc416c88b796e17d01c6cc7756e1dd7e8fa8974c2b1be9a34d86151a3ec42e",
+            "text_patches": [
+              {
+                "start": 1855,
+                "end": 1856,
+                "before": "毚",
+                "after": "[glyph:p001]"
+              }
+            ],
+            "scope": "Applied producer overlay, not whole-page approval. Compare current corrected corpus text with original pixels before proposing another correction."
+          },
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "工 gōng 见组、东部；见组、东韵、古红切。"
+          ],
+          "excerpt": "都读chà，如现代说“差远了”、“说差了”。由差别、区别又引申还有选择义，因此又引申为派遣、被派遣者、受派的职事，这些意义都读chāi，如“差使”“官差”等词语。由差别、区别义还引申为次第、等级和分别等级、依次排列，读cī。“差”在古籍中还表示病愈义，读chài，今字作“瘥”。(金国泰)\n\n工部\n\n工 gōng 见组、东部；见组、东韵、古红切。\n\n[glyph:g027] 商\n[glyph:g028] 商\n[glyph:g029] 商\n[glyph:g030] 西周\n[glyph:g031] 西周\n[glyph:g032] 西周\n[glyph:g033] 春秋\n[glyph:g034] 战国\n[glyph:g035] 《说文》古文\n[glyph:g036] 《说文》小篆\n[glyph:g037] 秦\n[glyph:g038] 汉\n[glyph:g039] 楷书\n[glyph:g040] 汉\n\n1、2、3《甲文编》207页。4、5、6、9《金文编》311~312页。7、13《甲金篆》298、299页。8、10《说文》100页。11《睡甲》69页。12《银雀山》166页。\n\n象形字。像古代画直角或方形的工具曲尺。象形的“工”字在殷商晚期已经简化，把原来一端的方框形收缩为一横，同现代写法已没有什么区别。但在西周中期以前的金文中，还能见到早期象形字形的遗迹，即下底肥厚，经过了[glyph:g041]——[glyph:g042]的变化过程，最终也把下底简化为瘦笔单横。战国古文有在中竖右侧加“彡”形饰笔的形式，汉隶有故意把中竖写成“𠃋”形曲笔的形式，后代都有效仿。《说文》：“工，象人有规矩也。”本义应该是矩，即曲尺，但这一意义早已失落，后代用的都是引申义。较早、较直接的引申义是工匠。西周伊簋：“王呼令尹册命[glyph:p001]官司(司)康宫王臣妾、百工。”(周王召令尹封策命伊掌管康宫中王的男女仆役及各种工匠。封、伊都是人名)《论语·卫灵公》：“工欲善其事，必先利其器。”词义扩大，泛指各种劳动者，古代又特指乐官。由工匠义还引申为擅长、精巧和技巧。由本义直接引申出另一个较早的意义是工程义，西周金文有“[glyph:g043](司)工”这一职官，主掌水利土木营造工程，这在典籍写作“司空”。由工程义引申出功业、功绩义，后来写作“功”。“工”较早还有官吏、职事义，是由工匠义或工程义引申出的。(金国泰)\n\n411"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000273",
+          "pdf_page_1based": 273,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0273/source.png",
+          "source_sha256": "d0db7b16affe878934cf6a183f327074fec2636d76f2be495693f5ce30cfaa9f",
+          "evidence_sha256": "04d956da360351cb300aef3e9dce32200680a5e74af53335e37e343493a42fae",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "lyph:g018]¹⁴\n        战国    战国    战国\n\n1、2、4、9《金文编》219~220页。3、8、12《战文编》202页。5、13、14《楚系简帛》272~273页。6、10、11《类编》73页。7、16、17、18《篆隶表》218页。15《说文》69页。\n\n形声字。从攴，工声。形旁攴为手持械具以击状，表示攻的本义与击打有关。声旁工盖为矩形，于攻表音，工与攻并见纽东部。源头、声音与初文是工，商周甲骨文、金文已见。古初以工为攻，后乃为造专字。《石鼓文》“逷车既工”，《诗》作攻即其证。攻字最先见于春秋，时形旁或作又，又与攴属于形义皆近偏旁的通用。战国时主流结构是沿袭前代的从攴工声，但形旁与声旁所处上下左右的位置尚不固定。非主流变化主要是形旁攴或作戈、殳，亦属形义皆近偏旁之更易，不影响本义的表达；支加饰笔作[glyph:g019]、[glyph:g020]、[glyph:g021]等；声旁工加饰笔作[glyph:g022]、[glyph:g023]、[glyph:g024]等。隶变时形旁犹有作戈者，声旁或美化作工，楷书最后作攻，主要是小篆的笔势变化。《说文》本义是进攻，攻击。霆鼎：“攻籀(籀)无啻(敌)。”郭店楚简《尊德义》：“正(征)钦(陷)，所以戋□(也)。”引申指专力于。郭店楚简《成之闻之》：“不求者(诸)其杏(本)而戋(攻)者其末。”又引申指事。叔夷钟：“女肇敏于戎攻。”此义不婴簋作“工”，《诗·大雅·江汉》作“公”，毛传训事。通“工”，劳作。云梦秦简《秦律十八种·仓律》：“城旦春、舂司寇、白粲(皆刑徒)操土攻。”官名。楚有“工尹”之官，曾侯乙墓竹简作“攻尹”、“大攻尹”、“少攻尹”等。通“功”，成功。郭店楚简《老子》甲本：“攻(功)述(遂)身退。”通“工”、“句”，发声词。春秋时吴王夫差金文中作“攻敔(吴)王”、“工敔(吴)王”，《史记》作“句吴”。(张标)\n\n攷 kǎo 溪纽、幽部；溪纽、皓韵、苦浩切。\n\n[glyph:g025]¹ 战国\n[glyph:g026]² 战国\n[glyph:g027]³ 《说文》小篆\n攷 楷书\n\n1、2《战文编》201页。3《说文》69页。\n\n形声字。从攴，丂(kǎo)声。形旁攴为手执器械以击之状，表示攷字本义与击打有关。声旁丂《说文》解作“气欲舒出而上有所阻”的指事字(未知确否)，于攷表音，丂与攷同为溪纽幽部。丂是攷的源头、声音，见于商周春秋战国古文字，构形不明。古初盖以丂为攷，后乃为造专字。攷字最先见于战国古文字材料中，有繁简二体，区别都在声旁上。简体声旁作了，繁体加饰笔横与圆点作[glyph:g028]。《说文》从简体，隶变后楷书笔势化作攷。《说文》本义为敏(kǒu)，即扣击，然文献中罕见用例。此义古借“考”(本义是老)表示。《诗·唐风·山有枢》：“子有钟鼓，弗鼓弗考。”毛传：“考，击也。”攷击引申有考课、成事等义，亦假“考”为之。通“考”，亡父。唐陈子昂《唐故朝议大夫梓州长史杨府君碑》：“攷坟其次，叔茔其旁。”通“巧”，机巧，灵巧。郭店楚简《老子》甲本：“侩(绝)攷弃利，䀹(盗)恻(贼)亡(无)又(有)。”又《老子》乙本：“大攷若拙(拙)。”又《性自命出》：“人之攷言利訇(词)者，不又(有)夫讪讪之心暴(则)澕(流)。”扣击义开始借“考”表示，后来此义用“拷”而不用“攷”、“考”。《现代汉语通用字表》收有“拷”而无“攷”。(张标)\n\n攻 gōng 见纽、东部；见纽、东韵、古红切。"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000424",
+          "pdf_page_1based": 424,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0424/source.png",
+          "source_sha256": "7d2afa94d1276792cc51b09e5d34f372dba7e46afd05e422bbc676cf593f49bf",
+          "evidence_sha256": "40effc23da85f149711276c1f4e184eed578cff7fd5efa98059008258f44a34b",
+          "ocr_review_status": "unreviewed",
+          "match_type": "possible_continuation",
+          "headword_lines": [],
+          "excerpt": "工部  琵部  巫部\n\n式  shì  书纽、职部; 书纽、职韵、赏职切。\n[glyph:g001]¹  [glyph:g002]²  [glyph:g003]³  [glyph:g004]⁴  [glyph:g005]\n《说文》小篆  秦  汉  汉  楷书\n1《说文》100页。2《战文编》301页。3《银雀山》166页。4《甲金篆》299页。\n形声字。《说文》:“式,法也。从工,弋(yì)声。”目前所见最早的“式”字出现于秦统一天下前后,商周古文字中未见。本义是法式、准则。《诗·大雅·下武》:“成王之孚,下土之式。”(周成王建树的信誉,是天下的准则)引申为楷模、法度、规矩、规格、格式等意义,由此又引申为仪式、典礼。用作动词,引申为用、施行。“式”又是“轼”、“栻”、“杙”的古字。“轼”是古代车厢前用以作扶手的横木,“栻”是古代占卜用具。(金国泰)\n\n巧  qiǎo  溪纽、幽部; 溪纽、巧韵、苦教切。\n[glyph:g006]³\n汉\n[glyph:g007]¹  [glyph:g008]²  [glyph:g009]⁴  [glyph:g010]⁵  巧\n秦  《说文》小篆  汉  汉  楷书\n1《睡甲》69页。2《说文》100页。3《马王堆》191页。4《汉印徵》卷5,4页。5《隶辨》416页。\n形声字。《说文》:“巧,技也。从工,丂声。”“巧”字声符“丂”的横画下来本是垂竖,逐渐向左拐了弧度很小的一个弯,小篆改为先向右侧硬拐,然后再向下、向左慢拐,东汉隶书又把这一笔末端向上提成钩形(参见“丂”字条)。本义是技巧、技艺。《孟子·离娄上》:“离娄之明,公输子之巧,不以规矩,不能成方圆。”引申为灵巧、工巧、精致、美妙和擅长,由灵巧又引申为巧诈、虚伪,由美妙又引申为恰巧。(金国泰)\n\n巨  jù  群纽、鱼部; 群纽、语韵、其吕切。\n[glyph:g011]¹\n西周\n[glyph:g012]²  [glyph:g013]³  [glyph:g014]⁴  [glyph:g015]⁵  [glyph:g016]⁶\n战国\n[glyph:g017]⁷  [glyph:g018]¹⁰  [glyph:g019]⁹\n《说文》或体\n——  榘\n楷书\n——  矩\n楷书\n[glyph:g020]¹²  [glyph:g021]¹³  巨\n西周  西周  西周  西周  战国  《说文》小篆  汉  汉  楷书\n[glyph:g022]⁸  [glyph:g023]¹¹  [glyph:g024]\n战国  秦  楷书\n1-4《金文编》312页。5《金文编》356页“[glyph:g025]”字异体“[glyph:g026]”偏旁。6、8《战文编》302页。7《类编》364页。9、10《说文》100页。11《睡甲》69页。12《马王堆》191页。13《汉印徵》卷5,4页。\n初文是合体象形字。《说文》:“巨,规巨(矩)也。从工,象手持之。”西周早期像一人分腿站立,一手握着工形器具。工形器具是矩,画直角用的曲尺(参见“工”字条)。“巨”的早期合体象形字在西周已开始渐变,先是在像人的“大”形顶部添一饰横而成“夫”形,之后,“夫”形与像矩的“工”形分离,而人的手指形却脱离臂端,附着到“工”形竖笔的旁侧,呈半弧形。西周中期,已经有了截去“夫”形而只保留原字主要特征的简化形式“[glyph:g027]”。东周及秦汉以下都继承了这一简化形式。在汉代玺印及碑铭中已经有把“巨”字中的“工”形写作“匚”的,但长期未被列入正体。近代楷书维持“工”形框架(3笔),现代规范字形以从“匚”(2笔)为标准。另外,东周以后,已经讹变却没有简化的形式几乎都把“夫”(或“大”)形放到左侧,“[glyph:g028]”形移到右侧,表示手指的“[glyph:g029]”形彻底与人臂远离。以后,“夫”形又讹作“矢”形,这就演变出了“矩”字。并由此产生了一个加“木”旁表义的异体字“榘”(参见“榘”字条)。战国年间,“巨”字还出现过“[glyph:g030]”或“[glyph:g031]”的形式,“[glyph:g032]”或“[glyph:g033]”形是“[glyph:g034]”形的变化。“巨”和“工”可能有语源关系。“巨”本义是矩,这在文献中偶见遗迹。《管子·宙合》:“成功之术,必有巨获。”"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/source.png",
+      "pdf_page": 423,
+      "source_pixel_sha256": "5612d68e138d947d28c0a103b43738ef8d1f3e96f8af91b39dabadbbe2ba0b48"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0424/source.png",
+      "pdf_page": 424,
+      "source_pixel_sha256": "7d2afa94d1276792cc51b09e5d34f372dba7e46afd05e422bbc676cf593f49bf"
+    }
+  ],
+  "target_language": "zh",
+  "additional_research_context": {
+    "task": "Verify the actual applied source-bound OCR repair against the current corpus and original pixels, then finish the retained candidate. The formerly raw 毚 at PDF423 offset1855 has been replaced by the source-bound unidentified printed glyph marker [glyph:p001]; its Unicode identity remains unknown. Preserve that uncertainty, do not guess a scalar, and do not mark the already-corrected occurrence as an unapplied replacement. The quoted name is not needed to establish other independently supported current/early 工 claims; verify the exact article dependencies. Historical drawings g041/g042/g043 are preserved as historical glyphs, not OCR scalar errors. Keep supported authored text and assets, and obtain fresh independent reviews. Do not redo unrelated references; inspect and record current page-specific source evidence.",
+    "applied_source_repair": {
+      "transaction_id": "ocr-repair-20261004T102612Z-acf3c94e0229",
+      "archive_path": "/home/catalin/hanzi-etymology-dict/runs/three-slot-source-recovery-20261004/gong-source-repair/ocr-repair-20261004T102612Z-acf3c94e0229",
+      "repair": {
+        "key": "gong-quote-raw-1855",
+        "pdf_page": 423,
+        "producer_page_dir": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423",
+        "raw_start": 1855,
+        "raw_end": 1856,
+        "before": "毚",
+        "after": "[glyph:p001]",
+        "current_offset": 1855,
+        "source_pixel_sha256": "5612d68e138d947d28c0a103b43738ef8d1f3e96f8af91b39dabadbbe2ba0b48",
+        "raw_evidence_sha256": "40fe43b04430dddc96313fd7f3ebc63ca611ea2db4e65f14d78f99a815261fe3",
+        "overlay_hash": "dc69701df530dcb58aa362fba12b1dfaad04edbb6158a8dd9b2e2625bba9c9d4",
+        "effective_evidence_sha256": "26c0a03024458c2fbf7b746fdde79642760e4b4606e5cbcf5f4890d3237f32e9",
+        "glyph_reference": {
+          "id": "p001",
+          "kind": "unidentified_printed_character",
+          "consumer_asset": {
+            "id": "p001",
+            "description": "Unidentified printed graph after 册命 and before 官 in the 伊簋 quotation, 字源 printed p.411 (PDF423). Independent source-raster/control adjudication rejects OCR scalar 毚.",
+            "kind": "unidentified_printed_character",
+            "path": null,
+            "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/source.png",
+            "source_bbox_xyxy": null
+          }
+        }
+      },
+      "after": {
+        "source_sha256": "5612d68e138d947d28c0a103b43738ef8d1f3e96f8af91b39dabadbbe2ba0b48",
+        "evidence_sha256": "26c0a03024458c2fbf7b746fdde79642760e4b4606e5cbcf5f4890d3237f32e9",
+        "text_sha256": "f9fbfced530e9ed08e24487e5796bdac77fab2f32f814a772e5a08c562f1dff1"
+      },
+      "consumer_build": {
+        "stdout": "warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.\n{\"pages\": 1435, \"output\": \"/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl\"}\n",
+        "stderr": "",
+        "pages_root": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full",
+        "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl"
+      },
+      "unchanged_other_page_count": 1434
+    },
+    "prior_source_reviews": [
+      {
+        "findings": [
+          {
+            "key": "ziyuan-2012:5DE5:1ff44679e702",
+            "disposition": "pending",
+            "reason": "The scan verifies the printed occurrence “毚官,” and the nearby note identifies 封 and 伊 as personal names, but neither establishes the intended reading of the quotation. No independent transcription or corpus check is supplied. The unresolved identity affects the article’s 工:official_status sense, which cites X-c3bbdea1c16eeb16571d for an official-title example. That evidence also includes independent reports of other official and status uses, but this dossier does not show whether those independently support the article’s full claim. Verify the inscription reading and trace the title claim before closing the finding; do not infer a correction from the adjacent gloss.",
+            "affected_paths": [
+              "meaning_history.senses[工:official_status]",
+              "relationships[meaning:工:official_status]"
+            ]
+          }
+        ]
+      },
+      {
+        "findings": [
+          {
+            "key": "ziyuan-2012:5DE5:1ff44679e702",
+            "disposition": "pending",
+            "reason": "The marked occurrence visibly reads 毚官 in the scan, matching the dossier’s report of the printed text. The scan therefore confirms the literal, but it does not resolve whether the transcription of the inscription is correct; no replacement can be verified from these pixels.",
+            "affected_paths": [
+              "字源 2012, PDF p. 423 / printed p. 411, 工 entry quotation: “王呼令尹册命毚官司(司)康宫王臣妾、百工”"
+            ]
+          }
+        ],
+        "transcription_observations": [
+          {
+            "key": "ziyuan-2012:5DE5:1ff44679e702",
+            "observed_literal": "毚官",
+            "pixel_reason": "The original scan pixels at the marked quotation visibly show 毚 followed by 官. The adjacent gloss does not establish a different reading of those printed characters."
+          }
+        ]
+      }
+    ]
+  },
+  "additional_context_policy": "These source leads and prior findings are research tasks, not preverified dossier evidence. Consult the referenced sources directly, check exact graph identity and scope, and add cited evidence for useful claims before authorship. Recheck reviewer hypotheses; modern structure does not establish historical roles. Record inaccessible sources as gaps.",
+  "unfinished_draft_provenance": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/three-slot-source-recovery-20261004/ziyuan-2012/5DE5",
+    "article_hash": "70d2d220ecc313a79b4ab64eb34772139834b0346e4914ce5ff7e22063ab73f0",
+    "dossier_hash": "97bd2b1120bdeab3eded33d1c3a82a815ebb015ead0b468ab8b12b02f771cd43",
+    "previous_state_hash": "b5e0e96399f58a7c368aca1cdb8d57701ae9f7593fe1581a5c4f5f0ddb3eaa33",
+    "canonical_article_hash": "ba9db4f11c94762572b8e06ab39ad8311196c5e02a7b10b9a20576b25aae2de6",
+    "canonical_dossier_hash": "a08315ca2360304b4f509cf9f2c42c35570bf2f40c8008982803eb23163f40a3",
+    "requires_fresh_research_and_reviews": true,
+    "prior_review_proposals_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "prior_review_proposals": [],
+  "prior_consulted_book_records": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/three-slot-source-recovery-20261004/ziyuan-2012/5DE5",
+    "previous_audit_hash": "ad3fab8cec6e178e1940a1af321e331e6e8c341c8f468cb4a6244c5e1e7d1cad",
+    "records": [
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "20760492dae57179babbd79dbbba2aa2da2360f53fb2c90387b95f3a5afbed40",
+        "research_result_hash": "d5c539e6b82f56bee9b941554c2ccd3f8de5f3be4da22c9028dc678689884a9a",
+        "source": "李學勤主編《字源》",
+        "field": "工部 entry, PDF p. 423, printed p. 411; source scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/source.png; source pixel SHA-256 5612d68e138d947d28c0a103b43738ef8d1f3e96f8af91b39dabadbbe2ba0b48. Directly inspected original scan pixels, including 工 headword and full paragraph. Edition: 2012, 天津古籍出版社／遼寧人民出版社, ISBN 9787552800692.",
+        "text": "The 工 headword calls the graph pictographic and identifies its referent as a carpenter’s square (曲尺), a tool for drawing right angles or squares. It says the early form’s one-ended box was reduced to a horizontal stroke by late Shang, while earlier Western Zhou bronze forms retained a thick lower stroke that changed through two pictured forms before becoming a thin horizontal. It reports later meanings including artisan, skilled or skillful, engineering, achievement (later written 功), and official or service roles. These are the author’s proposed graphic and semantic account; the graph’s object identification and the proposed sequence are not independently settled by this source.",
+        "evidence_ids": [
+          "X-c3bbdea1c16eeb16571d"
+        ]
+      },
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "20760492dae57179babbd79dbbba2aa2da2360f53fb2c90387b95f3a5afbed40",
+        "research_result_hash": "d5c539e6b82f56bee9b941554c2ccd3f8de5f3be4da22c9028dc678689884a9a",
+        "source": "李學勤主編《字源》",
+        "field": "工 headword quotation, PDF p. 423, printed p. 411; exact occurrence directly inspected in original scan: “王呼令尹册命毚官司(司)康宫王臣妾、百工” and adjacent parenthetical “封、伊都是人名”.",
+        "text": "The page visibly prints 毚官 in the cited inscription quotation; the accompanying author gloss identifies 封 and 伊 as names. The printed reading 毚官 is suspect but cannot safely be normalized from the surrounding gloss alone. The quotation’s printed form therefore remains unresolved pending independent source or corpus verification.",
+        "evidence_ids": [
+          "X-0c3f49c89f5ed61eb727"
+        ]
+      },
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "20760492dae57179babbd79dbbba2aa2da2360f53fb2c90387b95f3a5afbed40",
+        "research_result_hash": "d5c539e6b82f56bee9b941554c2ccd3f8de5f3be4da22c9028dc678689884a9a",
+        "source": "李學勤主編《字源》",
+        "field": "工 headword illustration and paragraph, PDF p. 423, printed p. 411; source scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/source.png; scanned diagram crop bounds x=200–1480, y=250–1450; prose crop x=1450–2890, y=1650–3850.",
+        "text": "Direct inspection confirms the spans [glyph:g041] and [glyph:g042] refer to two historical drawings in the timeline; both show lower strokes in distinct shapes, including the early thick-bottom form discussed in the adjacent paragraph. The drawing following the paragraph’s phrase “[glyph:g043](司)工” is visibly a separate historical graph before 工. These are preserved source-bound glyph references, not apparent wrong scalar characters. The diagram and prose identify the referenced form as a graphic specimen; its exact Unicode identity is not needed for describing its visible stroke changes.",
+        "evidence_ids": [
+          "X-d336463a262002afd3cd"
+        ]
+      }
+    ],
+    "requires_current_source_research": true
+  },
+  "continuation_policy": "This is an unapproved draft, not reusable approval. Recheck source-dependent claims against current source scans/corpus. Prior revise findings are hypotheses to recheck, including possible source identity errors; do not obey them merely because a previous verifier repeated them. Prior consulted book records identify exact retained evidence IDs and claims to recheck. After current-source verification, cite relevant supported claims through evidence_ids metadata; dossier-only records do not count as article source use. Preserve prior supported work and obtain fresh factual/readability reviews.",
+  "require_source_specific_page_evidence": true,
+  "current_uncited_book_records": [
+    {
+      "research_output": "initial-followup/research/result.json",
+      "research_receipt_hash": "89387daf86d13f0f93a58391470645d10d23bc0eeefb180dcc2cd6ede04f56d8",
+      "research_result_hash": "be89cf822762fadb638c94dc9c60cf7668479108bdc294768a3270bf32f850f2",
+      "source": "李學勤主編《字源》, 2012, 天津古籍出版社／遼寧人民出版社, ISBN 9787552800692; original scan pixels inspected directly at /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/source.png (PDF p. 423; printed p. 411; decoded RGB pixel SHA-256 5612d68e138d947d28c0a103b43738ef8d1f3e96f8af91b39dabadbbe2ba0b48)",
+      "field": "工 headword paragraph and glyph timeline; page 423, printed page 411. Inspected original scan pixels, including the 工 heading, full paragraph and historical glyph timeline. The current corpus record uses the corrected [glyph:p001] marker for the printed graph before 官; g041 and g042 are source-bound timeline drawings, and g043 is a separate graph in the 司工 example. Printed page number 411 is visible in the scan. Corpus printed_page metadata remains null.",
+      "text": "The 工 headword calls the graph pictographic and proposes a carpenter’s square, a tool for drawing right angles or squares, as its referent. It describes a late-Shang reduction of an early one-ended box to a horizontal stroke and reports thicker lower strokes in earlier Western Zhou bronze forms before a thinner horizontal became standard. It proposes semantic uses including craft worker, skilled or skillful, engineering, achievement later written 功, and official or service roles. This is the author’s account, not a settled identification or chronology.",
+      "evidence_ids": [
+        "X-cd4b65f584bfff92cb2b"
+      ]
+    },
+    {
+      "research_output": "initial-followup/research/result.json",
+      "research_receipt_hash": "89387daf86d13f0f93a58391470645d10d23bc0eeefb180dcc2cd6ede04f56d8",
+      "research_result_hash": "be89cf822762fadb638c94dc9c60cf7668479108bdc294768a3270bf32f850f2",
+      "source": "李學勤主編《字源》, 2012, 天津古籍出版社／遼寧人民出版社, ISBN 9787552800692; original scan pixels inspected directly at /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/source.png (PDF p. 423; printed p. 411; decoded RGB pixel SHA-256 5612d68e138d947d28c0a103b43738ef8d1f3e96f8af91b39dabadbbe2ba0b48)",
+      "field": "工 quotation occurrence after 册命 and before 官; current corpus uses source-bound unidentified glyph marker [glyph:p001].",
+      "text": "The scan shows a printed graph before 官. The current corrected corpus preserves it as [glyph:p001], an unidentified printed character; no Unicode identity is asserted. Since the graph's identity remains unresolved, this quotation is not used here to support the official-title claim. The page separately identifies 封 and 伊 as personal names.",
+      "evidence_ids": [
+        "X-d7a24caf0feecb9f269c"
+      ]
+    },
+    {
+      "research_output": "initial-followup/research/result.json",
+      "research_receipt_hash": "89387daf86d13f0f93a58391470645d10d23bc0eeefb180dcc2cd6ede04f56d8",
+      "research_result_hash": "be89cf822762fadb638c94dc9c60cf7668479108bdc294768a3270bf32f850f2",
+      "source": "李學勤主編《字源》, 2012, 天津古籍出版社／遼寧人民出版社, ISBN 9787552800692; original scan pixels inspected directly at /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/source.png (PDF p. 423; printed p. 411; decoded RGB pixel SHA-256 5612d68e138d947d28c0a103b43738ef8d1f3e96f8af91b39dabadbbe2ba0b48)",
+      "field": "工 entry glyph timeline references g041, g042, g043",
+      "text": "The scan confirms g041 and g042 are two pictured historical forms in the 工 timeline, showing different lower-stroke shapes. It also confirms g043 is a separate historical graph appearing before (司)工 in the paragraph. These are preserved historical glyph drawings rather than scalar OCR substitutions; their source-bounded visual descriptions do not require assigning them modern Unicode identities.",
+      "evidence_ids": [
+        "X-b872ab6bef5adef14cca"
+      ]
+    }
+  ],
+  "citation_integration_policy": "Research has already returned the supplied exact page-specific book records. Use the current retained evidence IDs on article claims that these records support. Unchanged supported prose plus a citation is sufficient. Do not invent support, put IDs in prose, or cite unrelated claims. If no record supports an article claim, retain a precise research gap. Obtain fresh independent factual and readability reviews."
+}

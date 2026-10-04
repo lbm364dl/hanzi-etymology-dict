@@ -1,0 +1,68 @@
+{
+  "article_hash": "596e309386111c2c452ae06bd33e5460911a3de2c14345c167332e45e580d216",
+  "dossier_hash": "0bc88f8f84678999eacd0fa1e288250f8d0696e7a1feb407e1bb7ae8f119906a",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "596e309386111c2c452ae06bd33e5460911a3de2c14345c167332e45e580d216",
+      "dossier_hash": "0bc88f8f84678999eacd0fa1e288250f8d0696e7a1feb407e1bb7ae8f119906a",
+      "reviewer": "gpt-6-luna:low:factual:01a1068f-1db3-79b2-bf02-141068c203bb"
+    },
+    {
+      "role": "readability",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "596e309386111c2c452ae06bd33e5460911a3de2c14345c167332e45e580d216",
+      "dossier_hash": "0bc88f8f84678999eacd0fa1e288250f8d0696e7a1feb407e1bb7ae8f119906a",
+      "reviewer": "gpt-6-luna:low:readability:01a1068f-3520-7fd1-803d-790ed39181ee"
+    }
+  ],
+  "corrections": [],
+  "earlier_correction_history": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "In meaning_history.senses[0].text and the generated meaning:妈:mother edge, remove the workflow narration “The same meaning is recorded in a cited dictionary gloss” and “its earliest attestation remains unresolved,” and the parenthetical “The cited gloss is for traditional 媽.” State the current meaning directly and, if useful, say the earliest attestation is unresolved. Current use is supported by X-d635a858ba28d66d5dc2; X-fddc0ef1568d06a349a4 and X-6b99ed81ac3be92d23e9 support a dictionary-reported mother gloss for 媽, while X-509e1186fea8edf1033a says the primary passage was not independently checked. Keep certainty established, status current, and the generated edge about the attested present use.",
+        "In meaning_history.senses[1].text and the generated meaning:妈:female_address edge, replace the source/research narration (“Dictionaries record … but do not date them or establish…”) with direct prose naming the supported address uses and stating that their dates and relationship to the mother sense are unresolved. The cited records X-8f936b997d61917db87b, X-510ba1d766f765fafa7e, X-6b99ed81ac3be92d23e9, and X-33795c58d4c2bbe21020 support those lexicographic senses, not a sequence of development.",
+        "In meaning_history.senses[2].text, replace “A dictionary labels ‘mare; female horse’ as an obsolete gloss. Its occurrence and relationship to the mother sense remain unresolved.” with a precise account that the dictionary reports an obsolete ‘mare; female horse’ gloss, without asserting a historical occurrence; keep its occurrence and relation to the mother sense unresolved in limitations. X-5b17a4b3cbfe81e016b7 describes the gloss as obsolete and hapax but does not provide a verified dated occurrence. Retain disputed certainty, historical status, and the generated edge only as representing the reported gloss/use claim."
+      ],
+      "article_hash": "c05d93477297831417b03971d70a92e8c594a1466af0a8f5d0aaa3a05a0e1a60",
+      "dossier_hash": "0bc88f8f84678999eacd0fa1e288250f8d0696e7a1feb407e1bb7ae8f119906a",
+      "reviewer": "gpt-6-luna:low:factual:01a1068d-d5f2-7943-a5f2-3bf0ac9aa74b"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses[0].text` and its generated `has_sense` edge, remove the workflow/source narration (“The same meaning is recorded in a cited dictionary gloss”) and the parenthetical about the gloss being for 媽. State the supported current meaning directly; put the older dictionary gloss and unresolved earliest attestation in reader-facing historical wording or the cited metadata. Cite the active current-use evidence already on the sense, including `X-d635a858ba28d66d5dc2`.",
+        "In `meaning_history.senses[2].text` and its generated `has_sense` edge, replace “A dictionary labels” and “Its occurrence … remain unresolved” with a precise account that the gloss is reported as obsolete and hapax, while a dated occurrence and its relation to the mother sense are not established. Keep the sense disputed and the limitation; cite `X-5b17a4b3cbfe81e016b7`."
+      ],
+      "article_hash": "c05d93477297831417b03971d70a92e8c594a1466af0a8f5d0aaa3a05a0e1a60",
+      "dossier_hash": "0bc88f8f84678999eacd0fa1e288250f8d0696e7a1feb407e1bb7ae8f119906a",
+      "reviewer": "gpt-6-luna:low:readability:01a1068e-1654-7ab2-adb8-f039ea64d2af"
+    },
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses[0].text` and the generated `meaning:妈:mother` edge text, remove the source/workflow narration (“A dictionary cites this meaning for traditional 媽”) and state the current meaning directly. The cited current-use support remains on the sense; if retaining an attestation caveat, say its earliest attestation is unresolved without narrating the research process."
+      ],
+      "article_hash": "6bdac2eebc79eca927ec353f698d5118c02e18577c5c906963c036a713de747b",
+      "dossier_hash": "0bc88f8f84678999eacd0fa1e288250f8d0696e7a1feb407e1bb7ae8f119906a",
+      "reviewer": "gpt-6-luna:low:factual:01a1068e-8e51-7040-b183-e0ed4f39a393"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses[0].text` and its generated `has_sense` edge, remove the source/workflow narration (“A dictionary cites this meaning for traditional 媽”) and state the unresolved earliest attestation directly, if needed. The current use is established by `X-d635a858ba28d66d5dc2`; keep the sense current and established. Cite the active evidence already on the sense."
+      ],
+      "article_hash": "6bdac2eebc79eca927ec353f698d5118c02e18577c5c906963c036a713de747b",
+      "dossier_hash": "0bc88f8f84678999eacd0fa1e288250f8d0696e7a1feb407e1bb7ae8f119906a",
+      "reviewer": "gpt-6-luna:low:readability:01a1068e-b8e6-7c01-968b-afc68fc68ff8"
+    }
+  ]
+}
