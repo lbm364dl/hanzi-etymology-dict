@@ -1,0 +1,745 @@
+{
+  "measurement": {
+    "started_at": 1791115594.1918633,
+    "ended_at": 1791116364.1677892,
+    "duration_seconds": 769.9759259223938,
+    "supervisor_pid": 1196082,
+    "sampler_pid": 1196081,
+    "workers": 3,
+    "agents": 3,
+    "model": "gpt-6-luna",
+    "reasoning": "low",
+    "exit_code": 2,
+    "status": "complete"
+  },
+  "characters": {
+    "车": {
+      "status": "failed",
+      "wall_seconds": 769.0487098693848,
+      "calls": 3,
+      "model_seconds": 749.2283806800842,
+      "slot_wait_seconds": 0.0413665771484375,
+      "stages": [
+        {
+          "character": "车",
+          "role": "finding_triage",
+          "status": "complete",
+          "seconds": 60.52799868583679,
+          "slot_wait_seconds": 0.005125284194946289,
+          "meta_path": "ziyuan-2012/8F66/finding-triage/meta.json",
+          "agent_thread_ids": [
+            "01a106d9-9640-78f0-895a-bfc8b3ce0764"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        },
+        {
+          "character": "车",
+          "role": "research",
+          "status": "complete",
+          "seconds": 88.67366671562195,
+          "slot_wait_seconds": 0.034789085388183594,
+          "meta_path": "ziyuan-2012/8F66/initial-followup/research/meta.json",
+          "agent_thread_ids": [
+            "01a106cf-1164-7270-b981-a4d323fd07a3"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        },
+        {
+          "character": "车",
+          "role": "article_patch",
+          "status": "failed",
+          "seconds": 600.0267152786255,
+          "slot_wait_seconds": 0.0014522075653076172,
+          "meta_path": "ziyuan-2012/8F66/round-0/editor/meta.json",
+          "agent_thread_ids": [],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        }
+      ]
+    },
+    "花": {
+      "status": "failed",
+      "wall_seconds": 641.3119261264801,
+      "calls": 2,
+      "model_seconds": 631.1102194786072,
+      "slot_wait_seconds": 0.004874467849731445,
+      "stages": [
+        {
+          "character": "花",
+          "role": "finding_triage",
+          "status": "complete",
+          "seconds": 31.06274104118347,
+          "slot_wait_seconds": 0.0014035701751708984,
+          "meta_path": "ziyuan-2012/82B1/finding-triage/meta.json",
+          "agent_thread_ids": [
+            "01a106d8-3a0e-7fb0-90aa-2dc54049e358"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        },
+        {
+          "character": "花",
+          "role": "research",
+          "status": "failed",
+          "seconds": 600.0474784374237,
+          "slot_wait_seconds": 0.003470897674560547,
+          "meta_path": "ziyuan-2012/82B1/initial-followup/research/meta.json",
+          "agent_thread_ids": [],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        }
+      ]
+    },
+    "问": {
+      "status": "needs_revision",
+      "wall_seconds": 311.1288409233093,
+      "calls": 11,
+      "model_seconds": 307.368878364563,
+      "slot_wait_seconds": 0.019213438034057617,
+      "stages": [
+        {
+          "character": "问",
+          "role": "finding_triage",
+          "status": "complete",
+          "seconds": 5.6382155418396,
+          "slot_wait_seconds": 0.0017130374908447266,
+          "meta_path": "ziyuan-2012/95EE/finding-triage/meta.json",
+          "agent_thread_ids": [
+            "01a106d3-b6cd-7031-9708-e8eb905a598c"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        },
+        {
+          "character": "问",
+          "role": "research",
+          "status": "complete",
+          "seconds": 191.2648003101349,
+          "slot_wait_seconds": 0.001913309097290039,
+          "meta_path": "ziyuan-2012/95EE/initial-followup/research/meta.json",
+          "agent_thread_ids": [
+            "01a106cf-128f-7972-b134-28876476d5a2"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        },
+        {
+          "character": "问",
+          "role": "article_patch",
+          "status": "complete",
+          "seconds": 23.78153920173645,
+          "slot_wait_seconds": 0.0016586780548095703,
+          "meta_path": "ziyuan-2012/95EE/round-0/editor/meta.json",
+          "agent_thread_ids": [
+            "01a106d1-fdcd-7cd3-859d-af23064cb3d4"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        },
+        {
+          "character": "问",
+          "role": "prose_repair",
+          "status": "complete",
+          "seconds": 12.054754972457886,
+          "slot_wait_seconds": 0.0018460750579833984,
+          "meta_path": "ziyuan-2012/95EE/round-0/prose-repair/meta.json",
+          "agent_thread_ids": [
+            "01a106d2-5ae4-7d93-9d89-bcf3cfac888c"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        },
+        {
+          "character": "问",
+          "role": "article_patch",
+          "status": "complete",
+          "seconds": 9.549282312393188,
+          "slot_wait_seconds": 0.001695871353149414,
+          "meta_path": "ziyuan-2012/95EE/round-0/revision/meta.json",
+          "agent_thread_ids": [
+            "01a106d2-8a22-72d3-9a08-68c52c682167"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        },
+        {
+          "character": "问",
+          "role": "factual",
+          "status": "complete",
+          "seconds": 13.310500621795654,
+          "slot_wait_seconds": 0.0017611980438232422,
+          "meta_path": "ziyuan-2012/95EE/round-1/factual/meta.json",
+          "agent_thread_ids": [
+            "01a106d2-b2a5-7530-84f9-7d9515e8ae2a"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        },
+        {
+          "character": "问",
+          "role": "readability",
+          "status": "complete",
+          "seconds": 9.196971416473389,
+          "slot_wait_seconds": 0.0016744136810302734,
+          "meta_path": "ziyuan-2012/95EE/round-1/readability/meta.json",
+          "agent_thread_ids": [
+            "01a106d2-e6ab-7db2-ae4a-77bc7b7321ac"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        },
+        {
+          "character": "问",
+          "role": "article_patch",
+          "status": "complete",
+          "seconds": 11.509683847427368,
+          "slot_wait_seconds": 0.0016829967498779297,
+          "meta_path": "ziyuan-2012/95EE/round-1/revision/meta.json",
+          "agent_thread_ids": [
+            "01a106d3-2877-7791-b932-3bc9dd0d8c78"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        },
+        {
+          "character": "问",
+          "role": "revision_plan",
+          "status": "complete",
+          "seconds": 7.596469879150391,
+          "slot_wait_seconds": 0.0016856193542480469,
+          "meta_path": "ziyuan-2012/95EE/round-1/revision_plan/meta.json",
+          "agent_thread_ids": [
+            "01a106d3-0aad-7f51-9b06-2865ac004d23"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        },
+        {
+          "character": "问",
+          "role": "factual",
+          "status": "complete",
+          "seconds": 17.225722551345825,
+          "slot_wait_seconds": 0.0018727779388427734,
+          "meta_path": "ziyuan-2012/95EE/round-2/factual/meta.json",
+          "agent_thread_ids": [
+            "01a106d3-57f0-72a1-8544-7903ed7894fd"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        },
+        {
+          "character": "问",
+          "role": "readability",
+          "status": "complete",
+          "seconds": 6.24093770980835,
+          "slot_wait_seconds": 0.0017094612121582031,
+          "meta_path": "ziyuan-2012/95EE/round-2/readability/meta.json",
+          "agent_thread_ids": [
+            "01a106d3-9b3e-7082-b9f1-64065c9b5b61"
+          ],
+          "model": "gpt-6-luna",
+          "reasoning": "low"
+        }
+      ]
+    }
+  },
+  "unique_calls": 16,
+  "by_role": {
+    "finding_triage": {
+      "calls": 3,
+      "seconds": 97.22895526885986,
+      "slot_wait_seconds": 0.008241891860961914
+    },
+    "research": {
+      "calls": 3,
+      "seconds": 879.9859454631805,
+      "slot_wait_seconds": 0.04017329216003418
+    },
+    "article_patch": {
+      "calls": 4,
+      "seconds": 644.8672206401825,
+      "slot_wait_seconds": 0.006489753723144531
+    },
+    "prose_repair": {
+      "calls": 1,
+      "seconds": 12.054754972457886,
+      "slot_wait_seconds": 0.0018460750579833984
+    },
+    "factual": {
+      "calls": 2,
+      "seconds": 30.53622317314148,
+      "slot_wait_seconds": 0.0036339759826660156
+    },
+    "readability": {
+      "calls": 2,
+      "seconds": 15.437909126281738,
+      "slot_wait_seconds": 0.0033838748931884766
+    },
+    "revision_plan": {
+      "calls": 1,
+      "seconds": 7.596469879150391,
+      "slot_wait_seconds": 0.0016856193542480469
+    }
+  },
+  "calls": [
+    {
+      "character": "车",
+      "role": "finding_triage",
+      "status": "complete",
+      "seconds": 60.52799868583679,
+      "slot_wait_seconds": 0.005125284194946289,
+      "meta_path": "ziyuan-2012/8F66/finding-triage/meta.json",
+      "agent_thread_ids": [
+        "01a106d9-9640-78f0-895a-bfc8b3ce0764"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "车",
+      "role": "research",
+      "status": "complete",
+      "seconds": 88.67366671562195,
+      "slot_wait_seconds": 0.034789085388183594,
+      "meta_path": "ziyuan-2012/8F66/initial-followup/research/meta.json",
+      "agent_thread_ids": [
+        "01a106cf-1164-7270-b981-a4d323fd07a3"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "车",
+      "role": "article_patch",
+      "status": "failed",
+      "seconds": 600.0267152786255,
+      "slot_wait_seconds": 0.0014522075653076172,
+      "meta_path": "ziyuan-2012/8F66/round-0/editor/meta.json",
+      "agent_thread_ids": [],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "花",
+      "role": "finding_triage",
+      "status": "complete",
+      "seconds": 31.06274104118347,
+      "slot_wait_seconds": 0.0014035701751708984,
+      "meta_path": "ziyuan-2012/82B1/finding-triage/meta.json",
+      "agent_thread_ids": [
+        "01a106d8-3a0e-7fb0-90aa-2dc54049e358"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "花",
+      "role": "research",
+      "status": "failed",
+      "seconds": 600.0474784374237,
+      "slot_wait_seconds": 0.003470897674560547,
+      "meta_path": "ziyuan-2012/82B1/initial-followup/research/meta.json",
+      "agent_thread_ids": [],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "问",
+      "role": "finding_triage",
+      "status": "complete",
+      "seconds": 5.6382155418396,
+      "slot_wait_seconds": 0.0017130374908447266,
+      "meta_path": "ziyuan-2012/95EE/finding-triage/meta.json",
+      "agent_thread_ids": [
+        "01a106d3-b6cd-7031-9708-e8eb905a598c"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "问",
+      "role": "research",
+      "status": "complete",
+      "seconds": 191.2648003101349,
+      "slot_wait_seconds": 0.001913309097290039,
+      "meta_path": "ziyuan-2012/95EE/initial-followup/research/meta.json",
+      "agent_thread_ids": [
+        "01a106cf-128f-7972-b134-28876476d5a2"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "问",
+      "role": "article_patch",
+      "status": "complete",
+      "seconds": 23.78153920173645,
+      "slot_wait_seconds": 0.0016586780548095703,
+      "meta_path": "ziyuan-2012/95EE/round-0/editor/meta.json",
+      "agent_thread_ids": [
+        "01a106d1-fdcd-7cd3-859d-af23064cb3d4"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "问",
+      "role": "prose_repair",
+      "status": "complete",
+      "seconds": 12.054754972457886,
+      "slot_wait_seconds": 0.0018460750579833984,
+      "meta_path": "ziyuan-2012/95EE/round-0/prose-repair/meta.json",
+      "agent_thread_ids": [
+        "01a106d2-5ae4-7d93-9d89-bcf3cfac888c"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "问",
+      "role": "article_patch",
+      "status": "complete",
+      "seconds": 9.549282312393188,
+      "slot_wait_seconds": 0.001695871353149414,
+      "meta_path": "ziyuan-2012/95EE/round-0/revision/meta.json",
+      "agent_thread_ids": [
+        "01a106d2-8a22-72d3-9a08-68c52c682167"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "问",
+      "role": "factual",
+      "status": "complete",
+      "seconds": 13.310500621795654,
+      "slot_wait_seconds": 0.0017611980438232422,
+      "meta_path": "ziyuan-2012/95EE/round-1/factual/meta.json",
+      "agent_thread_ids": [
+        "01a106d2-b2a5-7530-84f9-7d9515e8ae2a"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "问",
+      "role": "readability",
+      "status": "complete",
+      "seconds": 9.196971416473389,
+      "slot_wait_seconds": 0.0016744136810302734,
+      "meta_path": "ziyuan-2012/95EE/round-1/readability/meta.json",
+      "agent_thread_ids": [
+        "01a106d2-e6ab-7db2-ae4a-77bc7b7321ac"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "问",
+      "role": "article_patch",
+      "status": "complete",
+      "seconds": 11.509683847427368,
+      "slot_wait_seconds": 0.0016829967498779297,
+      "meta_path": "ziyuan-2012/95EE/round-1/revision/meta.json",
+      "agent_thread_ids": [
+        "01a106d3-2877-7791-b932-3bc9dd0d8c78"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "问",
+      "role": "revision_plan",
+      "status": "complete",
+      "seconds": 7.596469879150391,
+      "slot_wait_seconds": 0.0016856193542480469,
+      "meta_path": "ziyuan-2012/95EE/round-1/revision_plan/meta.json",
+      "agent_thread_ids": [
+        "01a106d3-0aad-7f51-9b06-2865ac004d23"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "问",
+      "role": "factual",
+      "status": "complete",
+      "seconds": 17.225722551345825,
+      "slot_wait_seconds": 0.0018727779388427734,
+      "meta_path": "ziyuan-2012/95EE/round-2/factual/meta.json",
+      "agent_thread_ids": [
+        "01a106d3-57f0-72a1-8544-7903ed7894fd"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    },
+    {
+      "character": "问",
+      "role": "readability",
+      "status": "complete",
+      "seconds": 6.24093770980835,
+      "slot_wait_seconds": 0.0017094612121582031,
+      "meta_path": "ziyuan-2012/95EE/round-2/readability/meta.json",
+      "agent_thread_ids": [
+        "01a106d3-9b3e-7082-b9f1-64065c9b5b61"
+      ],
+      "model": "gpt-6-luna",
+      "reasoning": "low"
+    }
+  ],
+  "network": {
+    "samples": 152,
+    "observed_worker_tcp_delta_bytes": {
+      "bytes_sent": 20735793,
+      "bytes_received": 183326749,
+      "bytes_acked": 20817625
+    },
+    "worker_process_identities": {
+      "1196143": {
+        "pid": 1196143,
+        "starttime_ticks": 293179388,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/82B1/initial-followup/research/result.json",
+        "first_seen_at": "2026-10-04T12:06:39.473940+00:00",
+        "last_seen_at": "2026-10-04T12:16:31.107464+00:00",
+        "currently_visible": false
+      },
+      "1196285": {
+        "pid": 1196285,
+        "starttime_ticks": 293179428,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/initial-followup/research/result.json",
+        "first_seen_at": "2026-10-04T12:06:39.473940+00:00",
+        "last_seen_at": "2026-10-04T12:08:01.293015+00:00",
+        "currently_visible": false
+      },
+      "1196373": {
+        "pid": 1196373,
+        "starttime_ticks": 293179459,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/95EE/initial-followup/research/result.json",
+        "first_seen_at": "2026-10-04T12:06:39.473940+00:00",
+        "last_seen_at": "2026-10-04T12:09:43.348479+00:00",
+        "currently_visible": false
+      },
+      "1201365": {
+        "pid": 1201365,
+        "starttime_ticks": 293188299,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/round-0/editor/result.json",
+        "first_seen_at": "2026-10-04T12:08:06.427536+00:00",
+        "last_seen_at": "2026-10-04T12:18:02.626965+00:00",
+        "currently_visible": false
+      },
+      "1205449": {
+        "pid": 1205449,
+        "starttime_ticks": 293198589,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/95EE/round-0/editor/result.json",
+        "first_seen_at": "2026-10-04T12:09:48.467790+00:00",
+        "last_seen_at": "2026-10-04T12:10:08.877144+00:00",
+        "currently_visible": false
+      },
+      "1206716": {
+        "pid": 1206716,
+        "starttime_ticks": 293200970,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/95EE/round-0/prose-repair/result.json",
+        "first_seen_at": "2026-10-04T12:10:13.980062+00:00",
+        "last_seen_at": "2026-10-04T12:10:19.079652+00:00",
+        "currently_visible": false
+      },
+      "1207465": {
+        "pid": 1207465,
+        "starttime_ticks": 293202180,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/95EE/round-0/revision/result.json",
+        "first_seen_at": "2026-10-04T12:10:24.203553+00:00",
+        "last_seen_at": "2026-10-04T12:10:29.308572+00:00",
+        "currently_visible": false
+      },
+      "1208242": {
+        "pid": 1208242,
+        "starttime_ticks": 293203217,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/95EE/round-1/factual/result.json",
+        "first_seen_at": "2026-10-04T12:10:34.405789+00:00",
+        "last_seen_at": "2026-10-04T12:10:44.613119+00:00",
+        "currently_visible": false
+      },
+      "1209057": {
+        "pid": 1209057,
+        "starttime_ticks": 293204550,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/95EE/round-1/readability/result.json",
+        "first_seen_at": "2026-10-04T12:10:49.718317+00:00",
+        "last_seen_at": "2026-10-04T12:10:54.827876+00:00",
+        "currently_visible": false
+      },
+      "1209738": {
+        "pid": 1209738,
+        "starttime_ticks": 293205471,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/95EE/round-1/revision_plan/result.json",
+        "first_seen_at": "2026-10-04T12:10:59.933108+00:00",
+        "last_seen_at": "2026-10-04T12:10:59.933108+00:00",
+        "currently_visible": false
+      },
+      "1210462": {
+        "pid": 1210462,
+        "starttime_ticks": 293206233,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/95EE/round-1/revision/result.json",
+        "first_seen_at": "2026-10-04T12:11:05.060039+00:00",
+        "last_seen_at": "2026-10-04T12:11:15.269114+00:00",
+        "currently_visible": false
+      },
+      "1211250": {
+        "pid": 1211250,
+        "starttime_ticks": 293207449,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/95EE/round-2/factual/result.json",
+        "first_seen_at": "2026-10-04T12:11:20.374609+00:00",
+        "last_seen_at": "2026-10-04T12:11:30.581702+00:00",
+        "currently_visible": false
+      },
+      "1212242": {
+        "pid": 1212242,
+        "starttime_ticks": 293209172,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/95EE/round-2/readability/result.json",
+        "first_seen_at": "2026-10-04T12:11:35.687110+00:00",
+        "last_seen_at": "2026-10-04T12:11:35.687110+00:00",
+        "currently_visible": false
+      },
+      "1212882": {
+        "pid": 1212882,
+        "starttime_ticks": 293209877,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/95EE/finding-triage/result.json",
+        "first_seen_at": "2026-10-04T12:11:40.809881+00:00",
+        "last_seen_at": "2026-10-04T12:11:45.916866+00:00",
+        "currently_visible": false
+      },
+      "1223474": {
+        "pid": 1223474,
+        "starttime_ticks": 293239453,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/82B1/finding-triage/result.json",
+        "first_seen_at": "2026-10-04T12:16:41.279915+00:00",
+        "last_seen_at": "2026-10-04T12:17:06.713945+00:00",
+        "currently_visible": false
+      },
+      "1226811": {
+        "pid": 1226811,
+        "starttime_ticks": 293248366,
+        "comm": "codex",
+        "executable_basename": "codex",
+        "cwd": "/home/catalin/hanzi-etymology-dict",
+        "stage_output_path": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/finding-triage/result.json",
+        "first_seen_at": "2026-10-04T12:18:07.741135+00:00",
+        "last_seen_at": "2026-10-04T12:19:03.663201+00:00",
+        "currently_visible": false
+      }
+    },
+    "limitations": [
+      "Interface totals include other programs.",
+      "TCP deltas include only observed live sockets and may miss short-lived connections.",
+      "TCP counters are not exact internet usage."
+    ],
+    "interface_delta_bytes": {
+      "lo": {
+        "rx_bytes": 402722,
+        "tx_bytes": 402722
+      },
+      "docker0": {
+        "rx_bytes": 0,
+        "tx_bytes": 0
+      },
+      "br-b59fff42f535": {
+        "rx_bytes": 2768,
+        "tx_bytes": 21364
+      },
+      "veth88c3411": {
+        "rx_bytes": 0,
+        "tx_bytes": 12168
+      },
+      "vethabf14bd": {
+        "rx_bytes": 0,
+        "tx_bytes": 12098
+      },
+      "veth2a07a10": {
+        "rx_bytes": 1828,
+        "tx_bytes": 17609
+      },
+      "veth4989f1a": {
+        "rx_bytes": 0,
+        "tx_bytes": 12098
+      },
+      "veth4a95201": {
+        "rx_bytes": 2730049,
+        "tx_bytes": 2769565
+      },
+      "veth89a9e35": {
+        "rx_bytes": 5026,
+        "tx_bytes": 16552
+      },
+      "veth58e25e6": {
+        "rx_bytes": 408294,
+        "tx_bytes": 269154
+      },
+      "vetheb04ea5": {
+        "rx_bytes": 2936043,
+        "tx_bytes": 3098137
+      },
+      "veth89506a9": {
+        "rx_bytes": 0,
+        "tx_bytes": 12168
+      },
+      "veth5446ab3": {
+        "rx_bytes": 78976,
+        "tx_bytes": 68082
+      },
+      "vethffe0259": {
+        "rx_bytes": 0,
+        "tx_bytes": 12168
+      },
+      "wlp1s0": {
+        "rx_bytes": 510204593,
+        "tx_bytes": 80538958
+      }
+    }
+  }
+}

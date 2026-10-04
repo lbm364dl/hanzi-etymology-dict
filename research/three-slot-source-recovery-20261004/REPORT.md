@@ -6,7 +6,7 @@
 |---|---|---|
 | 工 | Fresh research/reviews and source verification; producer OCR repair applied | Yes |
 | 听 | Current-form evidence added; current hearing-sense record repaired through the new completion command | Yes |
-| 妈 | Current semantic/phonetic decomposition and direct meaning explanation; fresh dictionary reviews | No: retained book passage supports no article claim |
+| 妈 | Current semantic/phonetic decomposition and direct meaning explanation; fresh dictionary reviews | Pending: later scan check found 妈〔媽〕 in the simplification appendix; citation integration and fresh reviews remain required |
 
 Exact final article/dossier hashes, real reviewer identities and job paths are in `publications.json` and canonical `content/provenance/`.
 
@@ -45,3 +45,7 @@ The unidentified printed quotation, producer printed-page metadata and disputed 
 Closed verified-complete tasks #335, #336, #337, #340 and #342. Closed #343 as not planned after the independent exact-pair finding check rejected the rewrite request. Unresolved quotation identity (#338), producer page metadata (#339) and historical evidence for the reported mare gloss (#341) remain open, with their current scope documented. They are not fabricated completions.
 
 `worker-audit-final.json` records zero live project Luna exec workers after verification. The temporary verification server was stopped. The older 300-character goal remains paused. Other entries retain their earlier approvals; they were not regenerated or certified against these new prompt instructions.
+
+## Later source check
+
+The user suggested traditional-form coverage as a reason for the missing 妈 entry. Both forms were already searched; the locator supplied PDF1326. The verified appendix occurrence 妈〔媽〕 under 马 (printed1311) supports the existing simplification claim. The earlier statement that no book passage supports any article claim was too broad. Research instructions now assess non-headword material claim by claim; see `research/non-headword-source-evidence-20261004.md`. The article remains dictionary-reviewed and published; book adoption is not yet completed. Exact OCR verification followups are documented separately in `research/ma-traditional-source-check-20261004.md`.

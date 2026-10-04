@@ -1,0 +1,18 @@
+{
+  "findings": [
+    {
+      "kind": "factual",
+      "title": "The current flower sense is not represented as current",
+      "details": "The authored entry has no approved current article (`current_article` is null), but the retained draft marks 花:flower as `earliest_attested` and describes Tang citations while the learner presents “花 means ‘flower’” as the present meaning. Current-use evidence is available in the dossier: X-2c7a32c4f26e62961c0d records modern Mandarin huā and the ordinary flower sense, and X-896fd367b5d19232b1e3 also lists Mandarin huā. A newly authored entry should represent the ordinary flower meaning as current, cite current-use evidence on that sense, and qualify the Tang examples separately. The current job failed during research, so this is a draft issue rather than a defect in an approved article.",
+      "verification": "Author a fresh entry from the current dossier; confirm the flower sense is `current`, cites current-use evidence, and the generated has_sense edge matches. Obtain fresh independent factual and readability approvals before publication.",
+      "evidence": [
+        "content/drafts/82B1.json: meaning_history.senses 花:flower has status earliest_attested and cites X-2c7a32c4f26e62961c0d, X-b5c1a15f8cb875df45d7, X-2312126b9c05bd5f612b",
+        "content/dossiers/82B1.json: X-2c7a32c4f26e62961c0d states modern Mandarin huā and Tang noun citations",
+        "content/dossiers/82B1.json: X-896fd367b5d19232b1e3 lists Mandarin huā",
+        "job_state.status=failed; error reports a 599.94-second initial-followup research timeout",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/344"
+      ],
+      "key": "ziyuan-2012:花:hua-current-entry-sense-status"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "action",
+    "reason"
+  ],
+  "properties": {
+    "action": {
+      "enum": [
+        "edit",
+        "research",
+        "hold"
+      ]
+    },
+    "glyph_action": {
+      "enum": [
+        "retain",
+        "research"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

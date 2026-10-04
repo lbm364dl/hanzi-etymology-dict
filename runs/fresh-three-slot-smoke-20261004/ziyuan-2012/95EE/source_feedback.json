@@ -1,0 +1,91 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "问",
+        "問"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000095",
+          "pdf_page_1based": 95,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0095/source.png",
+          "source_sha256": "6a503d540e575979551067d0fb9815720e3fd55edd7b3a99645f59fa5753d682",
+          "evidence_sha256": "bb9419d015d775a4fc98d4ebd57bd49abf10f377af8311e90b03abc40958f85b",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "問(问) wèn 明纽、文部;微纽、问韵、亡运切。"
+          ],
+          "excerpt": "来就是不同的两个字。西周金文中二字偶尔混用,当是音同通假。甲骨文中,霝多作地名,商王经常“宓”于此地;召多作方国名(“召方”)。甲文中有图,亦作署,大多作为乐器名称,是的繁体。战国以后,召逐渐取代圖。召公之召旧读为shào,本是召公爽的采邑,文献中或作“邵”,地名字加邑旁,后以地为氏。(陈英杰)\n\n問(问) wèn 明纽、文部;微纽、问韵、亡运切。\n[glyph:g001]¹ [glyph:g002]² [glyph:g003]³ [glyph:g004]⁴ [glyph:g005]⁵ [glyph:g006]⁶ [glyph:g007]⁷ 问⁸\n商 西周 战国《说文》小篆 秦 汉 楷书 楷书\n1《甲文编》41页。2、5《甲金篆》79页。3《古玺》26页。4《说文》32页。6《银雀山》42页。\n形声字。从口,門声。本义是问讯、询问。《论语·泰伯》:“以能问于不能,以多问于寡。”问字甲骨文中就已出现,但意义不明。金文及战国印文中用为人名。由询问义引申出问难、过问、审问、责问、访问、慰问、打听等义。问是有疑而问,因而亦引申出疑问义。或与“闻”通用。陈侯因咨敦:“朝闻诸侯。”借闻为问。《墨子·非命下》:“必使饥者得食,寒者得衣,劳者得息,乱者得治,遂得光誉令问于天下。”借问为闻。(陈英杰)\n\n唯 wěi 喻纽、微部;以纽、脂韵、以追切。\nwéi 喻纽、微部;以纽、旨韵、以水切。\n[glyph:g008]¹\n商\n[glyph:g009]² [glyph:g010]³ [glyph:g011]⁴ [glyph:g012]⁵ [glyph:g013]⁶ [glyph:g014]⁷ [glyph:g015]⁸ [glyph:g016]⁹ 唯\n西周 春秋 战国《说文》小篆秦 汉 汉 楷书\n商\n1、2《甲文编》41页。3、4《金文编》62页。5《包山》17页。6《说文》32页。7、9《甲金篆》79页。8《马王堆》51页。\n形声字。从口,隹声。其本义表示应答声,是一象声词,用于对尊长,表恭敬。《说文》:“唯,诺也。”《论语·里仁》:“子曰:‘参乎!吾道一以贯之。’曾子曰:‘唯。’”用为此义读wěi。此义不见用于古文字资料,甲骨文、金文中经常作语气词用,作强调话题的标志。《前》5.39.8:“其唯太史寮令。”金文中多用于铭文开首引出时间。段簋:“唯王十又四祀十又一月丁卯。”传世文献中亦多用为虚词。(陈英杰)\n\n唱 chàng 昌纽、阳部;昌纽、漾韵、尺亮切。\n[glyph:g017]¹ 唱\n《说文》小篆 楷书\n1《说文》32页。\n形声字。从口,昌声。昌甲骨文作[glyph:g018],本从日从口,会意字,“唱”之初文,唱是在昌上叠加口旁而成的緟益字。其本义指日方出时呼唤大家起身干事的叫声,这种叫声大概多数有一定得调子,是歌唱的一个源头。由本义引申出领唱义。《说文》:“唱,导也。”桂馥义证:“或借倡字。《周礼·乐师》:‘遂倡之。’郑司农云:‘乐师主倡也。’”《荀子·乐论》:“唱和有应。”由领唱引申出倡导、歌唱等义。歌唱之“唱”经传多作“倡”,后两字分化,“倡”表倡导,“唱”表歌唱。(陈英杰)\n\n和 hè 匣纽、歌部;匣纽、过韵、胡卧切。\nhé 匣纽、歌部;匣纽、戈韵、户戈切。\nhuò\nhuó\nhú\n[glyph:g019]¹ [glyph:g020]² [glyph:g021]³ [glyph:g022]⁴ [glyph:g023]⁵ [glyph:g024]⁶ 和\n战国《说文》小篆秦 汉 汉 汉 楷书\n1《金文编》64页。2《说文》32页。3《睡甲》14页。4《银雀山》43页。5、6《甲金篆》80页。\n形声字。从口,禾声。《说文》:“和,相应也。”本义指声音相应和、和谐地跟着唱或伴奏。《易·中孚》:“鸣鹤在阴,其子和之。”《后汉书·黄琼传》:“阳春之曲,和者必寡。”由声相应义引申出附和、响应义,由附和引申出答应、允许义,亦引申指和诗,即以诗歌酬答或依照别人诗词的题材和体裁作诗词。以上诸义读为hè。和还有和谐、平和、温和、和睦、调和、汇合等义,读hé。战国铜器穿盗壶“驭右和同”,义指和谐交融。作掺和、混杂讲读huò。表示在粉状物中加水搅拌或揉弄使粘在一起,读作huó。用为麻将用语,牌已符合规定的要求而赢了叫“和”,读为hú。“和”常与“稣”通用,二字本义各有所指,“和”指声音相应和,“穌”指音乐和谐,后二者在词义引申脉络上有交叉,至于无别。今则稣并入和(人名除外,如董同稣)。其结构或左口右禾,或左禾右口,秦汉以后结构逐渐统一,作左禾右口之“和”。(陈英杰)\n\n83"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000278",
+          "pdf_page_1based": 278,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0278/source.png",
+          "source_sha256": "091aa2d809186dd662e72291108d46277293b559282398e1abb4b64c3e6d1c59",
+          "evidence_sha256": "aa8d473d8e10f1eeffc166d74655c251f96f3944c7625099997d3f913c9c6e5d",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "盖以灼龟现兆表达对吉凶祸福之占卜、预测。其时写法多歧，兆干可竖可横，可左可右，兆枝可平向，亦得斜向。至西周，异体锐减，基本上固定为兆干位左、兆枝位右。战国是歧形复出，主要表现为兆枝不作横向平形而作曲形。小篆整理作横平竖直的卜，汉隶横笔多作“燕尾”。隶变后楷书作卜，“兆枝”作简洁的顿点。本义是占卜、卜问。《合集》39521:“壬午卜，争贞:寮三猳(去势豕)，卯一牛?”《周原甲骨》19:“八月辛卯卜问:其瘦(速)取(禋，祭名)?”引申指卜人、卜官，即殷时所谓“贞人”之属。卜盃簋:“卜盃乍宝尊(尊)彝。”《周礼·春官·序官》:“大卜，下大夫二人；卜师，上士四人；卜人，中士八人。”方国名。《殷契粹编》1262:“丁丑贞:卜又条(祟，灾祸)。”以上读bǔ。象声词，如卜燥、卜通，读pū。萝卜，读bo。(张标)\n\n卦\nguà 见纽、支部；见纽、卦韵、古卖切。\n\n[glyph:g012]1 战国\n[glyph:g013]2 《说文》小篆\n[glyph:g014]6 汉\n[glyph:g015]3 汉\n[glyph:g016]7 汉\n[glyph:g017] 汉\n[glyph:g018]4 汉\n[glyph:g019]5 汉\n[glyph:g020] 楷书\n\n1《四声韵》57页。2《说文》69页。3、5、6《篆隶表》220页。4《马王堆》131页。7《隶辨》545页。\n\n形声字。战国古文字作从卜，圭声。卜像骨兆纵横，示其本义与卜兆有关。卦字的产生或者由构件圭与卜整合而成。最早出现于战国时代。楷书作卦，是小篆笔势变化的结果。隶变时有两个卦字值得注意:一个构件圭作[glyph:g021]，破坏了重土结构；一个构件圭的笔顺作先三横，后一竖，再一横，汉代圭字这种通行笔顺(见《广韵》)实际上也破坏了重土结构，故二者皆未进入主流。《说文》本义是筮，即以蓍草占卜休咎。《鶡冠子·学问》:“圣人以此六，卦世得失逆顺之经。”陆佃注:“卦犹卜也。”引申指表示占筮所得、象征吉凶祸福的一整套符号，即卦爻。《易·系辞上》:“圣人设卦观象，系辞焉而明吉凶。”韩敕碑:“承天画卦。”(张标)\n\n卟\njī 见纽、脂部；见纽、齐韵、古奚切。\nbǔ\n\n[glyph:g022]1 西周\n[glyph:g023]2 《说文》小篆\n[glyph:g024] 楷书\n\n1《金文编》225页。2《说文》69页。\n\n会意字。西周金文作[glyph:g022]，从巳，为卜骨之象，从卜，为卜兆纵横象，两个构件相会卜问之意。《说文》整理作从卜口，以口取代卜骨，同样可会卜问意，也可以说是理据重构。隶变后楷书笔势化作卟。《说文》本义是“卜以问疑”。明公尊:“鲁侯又卟工(功)。”亦作乩(jī)。《通雅》:“乩与卟同。《通典》:‘酉国用羊卜，卜师谓之厮乩。’后世称扶乩，今犹盛行。”《红楼梦》第四回:“老爷只说善能扶鸾(即扶乩)请仙，堂上设了乩坛。”文献亦假“稽”表示。《书·洪范》:“稽疑，择建立卜筮人。”《说文》作“卟疑”。引申指考查，询问，亦假“稽”表示。姓氏，古有乩虞氏。以上读jī，亦读qǐ，遣礼切。今读bǔ，化学名词“卟吩”，一种有机化合物。《说文》有“占”字，“视兆问也，从卜从口”，与卟义近，构件全同。或以为占之或体，然古音不同(彼为章纽、侵韵，此为见纽、脂韵)。且甲骨文占字通作固或[glyph:g025]，与此形不近，疑非一字(参“占”字条)。卜辞\n\n266"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000096",
+          "pdf_page_1based": 96,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0096/source.png",
+          "source_sha256": "69168e4fc33daaa019d2fcb5a92db744d480dc4be542c17c75f20e325b9e9b2c",
+          "evidence_sha256": "ce12071f828a3a6f5d375f02551f1d3e9660a8c86a8999379c3917d461d33eb0",
+          "ocr_review_status": "unreviewed",
+          "match_type": "possible_continuation",
+          "headword_lines": [],
+          "excerpt": "口部\n\n咥 xì 透组、质部；彻组、质韵、丑栗切。\ndié 定组、质部；定组、屑韵、徒结切。\n\n[glyph:g001]¹——咥\n《说文》小篆 楷书\n\n1《说文》32页。\n形声字。从口，至声。本义指大笑的样子，含有讥笑义。《诗·卫风·氓》：“兄弟不知，咥其笑矣。”即用其义，读xì。《易·履》：“履虎尾，不咥人。”此处“咥”乃咬义，读dié。（陈英杰）\n\n哑（啞） è 影组、铎部；影组、陌韵、乌格切。\nyā 影组、鱼部；影组、祃韵、衣嫁切。\nyǎ 影组、鱼部；影组、马韵、乌下切。\n\n[glyph:g002]¹——啞——哑\n《说文》小篆 楷书 楷书\n1《说文》32页。\n形声字。从口，亚声。本义指笑声。《说文》：“哑，笑也。”《玉篇·口部》：“哑，笑声。”《易·震》：“笑言哑哑。”陆德明释文引马融曰：“哑哑，笑声。”今天仍说哑然失笑，即用其义，旧读为è，今口语中读为yǎ。“哑哑”还可指鸟的叫声，引申指婴儿学话的声音，今天则作“呀呀学语”，读yā。哑读yǎ，表由于生理缺陷或疾病而失去语言功能，引申指发不出声音或声音干涩。“哑”是由“亞”之草写楷化字“亚”类推简化而成的。（陈英杰）\n\n噱 jué 群组、铎部；群组、药韵、其虐切。\nxué\n\n[glyph:g003]¹——噱\n《说文》小篆 楷书\n\n1《说文》32页。\n形声字。从口，噱声。本义指大笑。《汉书·叙传上》：“谈笑大噱。”颜师古注：“噱噱，笑声也。”音读jué。噱在方言中或读为xué，如噱头，指引人发笑的话或举动，引申指滑稽、好笑义。（陈英杰）\n\n唏 xī 晓组、微部；晓组、尾韵、虚喜切。\n\n[glyph:g004]¹——唏\n《说文》小篆 楷书\n\n1《说文》32页。\n形声字。从口，希声。本义指笑声。《说文》：“唏，笑也。”《广雅·释训》：“唏唏，笑也。”《说文》曰“一日哀痛不泣曰唏”，字乃借作“您”。您，痛声也，唏、您叠韵，故得相假。（陈英杰）\n\n听 yǐn 疑组、文部；疑组、轸韵、宜引切。\ntīng\n\n[glyph:g005]¹——听\n《说文》小篆 楷书\n\n1《说文》32页。\n形声字。从口，斤声。《说文》：“听，笑貌。”即笑的样子。《说文·心部》有“忻”，训“阊也”，“阊”训“开也”，忻义即心开，“心开”乃秦汉间恒言，今日“开心”，开心则喜。《说文·言部》有“诉”，训“喜”，《欠部》之“欣”训“笑喜”。听、忻、䜣、欣皆同源词也。笑者口必开，口开则大，因而听引申出口大义。《广韵·轸韵》：“听，口大貌。”以上诸义读yǐn。“听”字从元代以来就是“聽”的简化字，与读yǐn之“听”乃异代同形字。读yǐn之“听”在古籍中极罕用，所以读tīng之“听”不会与之混淆。（陈英杰）\n\n咄 duō 端组、物部；端组、没韵、当没切。\n\n[glyph:g006]¹——[glyph:g007]²——咄\n《说文》小篆 汉 楷书\n1《说文》32页。2《甲金篆》80页。\n形声字。从口，出声。《说文》：“咄，相谓也。”段玉裁注：“谓欲相语而先惊之之词。”本义即表示引人惊诧或注意的叹词。今日所说的“咄咄怪事”即用其义。引申指咄咤、呵责。亦用来表嗟叹。《汉书·李陵传》：“咄！少卿良苦！”（陈英杰）\n\n唉 āi 影组、之部；影组、哈韵、乌开切。\nài\n\n[glyph:g008]¹——唉\n《说文》小篆 楷书\n\n84"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0095/source.png",
+      "pdf_page": 95,
+      "source_pixel_sha256": "6a503d540e575979551067d0fb9815720e3fd55edd7b3a99645f59fa5753d682"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0096/source.png",
+      "pdf_page": 96,
+      "source_pixel_sha256": "69168e4fc33daaa019d2fcb5a92db744d480dc4be542c17c75f20e325b9e9b2c"
+    }
+  ],
+  "target_language": "zh",
+  "additional_research_context": {
+    "task": "Fresh bounded smoke under updated source pipeline. Research these characters independently from canonical approved entries. Preserve current historical glyph selection. Check exact printed headword identity, relevant passage and page continuation. Evaluate non-headword evidence claim by claim, especially simplified/traditional form tables; such tables support only their scoped correspondence claims. Keep current form component functions separate from historical derivation, and current meanings separate from disputed original meanings. Use available tools freely. Prior job failures are not facts or instructions; do not reuse them as approvals."
+  },
+  "additional_context_policy": "These source leads and prior findings are research tasks, not preverified dossier evidence. Consult the referenced sources directly, check exact graph identity and scope, and add cited evidence for useful claims before authorship. Recheck reviewer hypotheses; modern structure does not establish historical roles. Record inaccessible sources as gaps.",
+  "require_source_specific_page_evidence": true
+}

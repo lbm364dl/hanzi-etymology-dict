@@ -1,0 +1,74 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "车",
+        "車"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:001260",
+          "pdf_page_1based": 1260,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1260/source.png",
+          "source_sha256": "7c02c6ce3bc7b71a85178af5e2a1e2fac1b3a09012a730f0777ad09f792c2c09",
+          "evidence_sha256": "4110973cee425056c099b5f76281a069c23a96f404857a1035a8eff4e55c76ce",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "車(车) chē 昌组、鱼韵;昌组、麻韵、尺遮切。"
+          ],
+          "excerpt": "《释名·释兵》：“矛，冒也，刃下冒矜也。”《方言》九：“矛，其柄谓之矜”皆与许书合。后世专用矜为矜恤，矜夸字，因别造欚字为棘矜之矜。……汉碑多从令作矜，乃隶书之增笔，自不可据隶以正篆。”汉初马王堆汉墓帛书矜字从令，如此可知，从令，非隶书之增笔，当为二字声近，故从今声从令声皆可。（周宝宏）\n\n車部\n\n車(车) chē 昌组、鱼韵;昌组、麻韵、尺遮切。\n[glyph:g014] [glyph:g015] [glyph:g016] [glyph:g017] [glyph:g018] [glyph:g019] [glyph:g020] [glyph:g021] [glyph:g022] [glyph:g023] [glyph:g024] [glyph:g025] [glyph:g026] [glyph:g027] [glyph:g028] [glyph:g029] [glyph:g030] 車 車 车\n商 商 商 商 商 商 商 商 商 商 商 西周 西周 西周 西周 西周 西周 《说文》小篆 楷书 楷书\n1-8、12-17《金文编》929~931页。9、10、11《甲文编》531~532页。18《说文》301页。\n形声字。《说文》：“車，舆轮之总名。夏后时奚仲所造，象形。凡车之属皆从车。”郭沫若《卜辞通纂》：“二车字一作[glyph:g031]，一作[glyph:g032]。前者象双轮一辕，辕端有衡。亦有作[glyph:g033]者，于衡之两端更有二轭，所以叉马颈者也。观此可证殷人一车只驾二马。后者象两轮之间有箱，均为车之繁文。金文中车字及从车之肇字，多如是作。”甲骨文和殷末周初金文中的全体象形的车字，有车箱、两轮、两键、一辕、一衡、两轭，但在殷末周初金文中已有省略车箱的车字，在甲骨文中更有省略车箱的车字，省略车辕和双轭一横的车字，只剩两轮一箱，更有只剩两轮一轴的车字。西周早期至中期车字仍继承繁体全形车字形体，但多省车箱，更有省一轮一箱而剩一轮作[glyph:g034]者，如果此形省掉一辕一衡双轭，则作車，正与西周中晚期及春秋战国以后的车字同形了。在西周中晚期的师同鼎铭文中有全形的车和省形“車”字。省形的“車”字形体从西周金文[glyph:g035]省为[glyph:g036]看，“車”当为一轴一轮两键（或两毂）形。（周宝宏）\n\n軒(轩) xuān 晓组、元部;晓组、元韵、虚言切。\n[glyph:g037] [glyph:g038] [glyph:g039] [glyph:g040] [glyph:g041] [glyph:g042] 軒 轩\n战国 战国 战国 《说文》小篆 汉 汉 楷体 楷体\n1、2、3《战文编》931页。4《说文》301页。\n1245"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:001261",
+          "pdf_page_1based": 1261,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1261/source.png",
+          "source_sha256": "96647dcec2ab5f1bad41b0a3796a456e2f78ffa8a36d184b70e801e64e0fc857",
+          "evidence_sha256": "4de06f238af9999978cff97fe72aa23c387807193eae59af6ffa872202e6bbd2",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "車部\n\n5、6《篆隶表》1021页。\n形声字。《说文》：“轩，曲輈藩车。从車，干声。”段玉裁注：“谓曲輈而有藩蔽之车也。曲輈者，戴先生曰：小车谓之輈，大车谓之辕。”徐灏段注笺：“藩，蔽也。盖车之左右有窗，后有梦蔽而虚其前面，故乐县三面谓之轩县。刘逵注《蜀都赋》曰：高轩，堂左右长廊之有窗者。亦以其似轩车而名之也。因之窗牖阑槛皆谓之轩。轩车前高，故云曲輈。”张舜徽约注：“古乐县（悬）四面而去其一面者谓之‘轩县’，犹古诸侯之城缺其一面谓之‘轩城’，皆取象于藩车。藩车三面有蔽，独虚其一以出入人，自两旁视之，其形如厂。轩从干声，古读盖，与呼旱切之厂近。山石之厓岩人可居者为厂，与藩车之形相似，厂即轩之语根也。轩之制前高，故引申为凡高之称。语所云轩昂、轩翥者皆是。”（周宝宏）\n\n輅（轺） yáo 禅纽、宵部；禅纽、宵韵、市昭切。\n[glyph:g001]¹—[glyph:g002]²—[glyph:g003]³—[glyph:g004]⁴—輅—轺\n秦 《说文》小篆 汉 汉 楷书 楷书\n1《战文编》931页。2《说文》301页。3、4《篆隶表》1022页。\n形声字。《说文》：“轺，小车也。从車，召声。”徐灏段注笺：“《释名》曰轺车，轺，遥也，四向望远之车也。”张舜徽约注：“车小则轻，故《急就篇》颜注又以轻车释轺；车轻则易致远，故《释名·释车篇》又以遥训轺。轺之声义通于遥矣。”（周宝宏）\n\n輜（辎） zī 精纽、之部；庄纽、之韵、侧持切。\n[glyph:g005]¹—[glyph:g006]²—[glyph:g007]³—輜—辎\n《说文》小篆 汉 汉 楷书 楷书\n1《说文》301页。2、3《篆隶表》1021页。\n形声字。《说文》：“辎，輧车前，衣车后也。从車，甾声。”王筠释例：“辎輧两车相似而有不同，故曰其如輧车，其后如衣车，则谓之辎也。”孙诒让：“汉时有辎车，輧车、衣车三者，制盖略相类，惟以前后衣蔽及开户为别异。盖辎车后面开户，輧车则四面有衣蔽，若衣车则后有衣蔽而前开户，可以启闭，与辎车正相反。辎车前有衣蔽，有似輧车，而后有开户，又似衣车，故许云‘輧车前，衣车后也’。”《说文》所解辎车之义为本义，辎字古书多用为载重之义，当为另一义。（周宝宏）\n\n輕（轻） qīng 溪纽、耕部；溪纽、清韵、去盈切。\n[glyph:g008]¹—[glyph:g009]²—[glyph:g010]³—[glyph:g011]⁴—[glyph:g012]⁵—[glyph:g013]⁶—輕—轻\n秦 《说文》小篆 秦 秦 汉 汉 楷书 楷书\n1《战文编》931页。2《说文》301页。3、4《睡甲》210页。5、6《篆隶表》1022页。\n形声字。《说文》：“轻，轻车也。从車，𢀖声。”段玉裁注：“轻本车名，故字从车，引申为凡轻重之轻。”徐灏段注笺：“车载衣物谓之辎重，其无所载者谓之轻车。”（周宝宏）\n\n輱（𫐄） yóu 喻纽、幽部；以纽、尤韵、以周切。\n[glyph:g014]¹—輱—𫐄\n《说文》小篆 楷书 楷书\n1《说文》301页。\n形声字。《说文》：“輱，轻车也。从車，酋声。《诗》曰：輱车銮镳。”桂馥义证：“《释言》：輱，轻也。《诗·烝民》：德輶如毛。笺云：輶，轻也。”段玉裁注：“輱车即轻车也，本是车名，引申为凡轻之称。”（周宝宏）\n\n輼（韫） wēn 影纽、文部；影纽、魂韵、乌浑切。\n[glyph:g015]¹—輼—韫\n《说文》小篆 楷书 楷书\n1《说文》301页。\n形声字。《说文》：“輼，卧车也。从車，𥁕声。”段玉裁注：“《史记》：始皇崩于沙丘，不发丧，棺载輼凉车中，百官奏事，宦者辄从輼凉车中可其奏。汉《霍光传》：载光尸柩以輼輬车。孟康曰：如衣车有窗牖，闭之则温，开之则凉，故名之輼輬车也。师古曰：輼輬本安车，可以卧息，后因载丧，饰以柳婴，故遂为丧车耳。”（周宝宏）\n\n輣（𫐌） péng 并纽、蒸部；并纽、耕韵、薄萌切。\n[glyph:g016]¹—輣—𫐌\n《说文》小篆 楷书 楷书\n1《说文》301页。\n形声字。《说文》：“輣，兵车也。从車，朋声。”桂馥义\n\n1246"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1260/source.png",
+      "pdf_page": 1260,
+      "source_pixel_sha256": "7c02c6ce3bc7b71a85178af5e2a1e2fac1b3a09012a730f0777ad09f792c2c09"
+    }
+  ],
+  "target_language": "zh",
+  "additional_research_context": {
+    "task": "Fresh bounded smoke under updated source pipeline. Research these characters independently from canonical approved entries. Preserve current historical glyph selection. Check exact printed headword identity, relevant passage and page continuation. Evaluate non-headword evidence claim by claim, especially simplified/traditional form tables; such tables support only their scoped correspondence claims. Keep current form component functions separate from historical derivation, and current meanings separate from disputed original meanings. Use available tools freely. Prior job failures are not facts or instructions; do not reuse them as approvals."
+  },
+  "additional_context_policy": "These source leads and prior findings are research tasks, not preverified dossier evidence. Consult the referenced sources directly, check exact graph identity and scope, and add cited evidence for useful claims before authorship. Recheck reviewer hypotheses; modern structure does not establish historical roles. Record inaccessible sources as gaps.",
+  "require_source_specific_page_evidence": true
+}

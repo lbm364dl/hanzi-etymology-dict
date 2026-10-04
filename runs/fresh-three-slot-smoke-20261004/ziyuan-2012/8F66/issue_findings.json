@@ -1,0 +1,43 @@
+{
+  "findings": [
+    {
+      "kind": "factual",
+      "title": "Reverify the Sui dating claim for cursive 车",
+      "details": "The current article’s history says cursive 车 is attested by the Sui dynasty at the latest and cites X-7ef1e98e72d456939698. The new research reports that this evidence’s BNU URL resolves to an unrelated essay and that no Sui-or-earlier date was independently verified. Keep the cursive-origin account where supported, but qualify or remove the date unless a relevant source is verified.",
+      "verification": "Inspect the cited page or another authoritative source for the Sui dating claim. Then check the article history and its evidence IDs against that source; if none supports the date, remove the date claim and preserve the broader supported relationship between 车 and cursive 車.",
+      "evidence": [
+        "runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/source_article.json: history item citing X-f19b5bd85c060e5423c3, X-7ef1e98e72d456939698, X-7f9f75f8cde670dfc8e7",
+        "runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/initial-followup/research/result.json: gaps",
+        "runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/dossier.json: evidence X-7ef1e98e72d456939698",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/344"
+      ],
+      "key": "ziyuan-2012:车:ziyuan-2012-car-cursive-date-source-mismatch"
+    },
+    {
+      "kind": "ocr",
+      "title": "Resolve rare glyph identities in the 字源 車 quotation",
+      "details": "The scan finding remains unresolved: PDF p.1260 / printed p.1245 contains rare glyph drawings in the quotation beginning 郭沫若《卜辞通纂》：“二车字一作…”. Their exact identities are not established by the OCR or typography. The surrounding discussion and the headword were inspected, but that does not resolve these glyphs.",
+      "verification": "Inspect the exact printed occurrence against the original scan and record the visible distinguishing strokes. Apply a source-bound OCR correction only if the printed identity is verified; otherwise retain occurrence-specific unresolved glyph references.",
+      "evidence": [
+        "runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/source_findings.json",
+        "runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/initial-followup/research/result.json: gaps",
+        "runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/dossier.json: evidence X-5eed7aacb173bf712b8d",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/344"
+      ],
+      "key": "ziyuan-2012:车:ziyuan-2012-p1260-rare-glyph-identities"
+    },
+    {
+      "kind": "pipeline",
+      "title": "Resume the failed 车 source-enrichment editor stage",
+      "details": "The current source-enrichment job is marked failed because the round-0 editor command timed out after 599.9 seconds. Research produced new inspected evidence X-5eed7aacb173bf712b8d, but the job has no completed editor result or review. The authored article therefore has not incorporated or been reviewed against that evidence.",
+      "verification": "Resume or rerun the editor stage against the current dossier, then complete the required independent factual and readability reviews and verify the resulting article and dossier hashes.",
+      "evidence": [
+        "runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/status.json",
+        "runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/source-enrichment-failure.json",
+        "runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/dossier.json: evidence X-5eed7aacb173bf712b8d",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/344"
+      ],
+      "key": "ziyuan-2012:车:ziyuan-2012-car-editor-timeout"
+    }
+  ]
+}

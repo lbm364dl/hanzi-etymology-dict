@@ -1,0 +1,9 @@
+# Claim-specific evidence outside headword entries
+
+The user suggested that traditional-form coverage could explain the pending 妈 book adoption. The locator already searches 妈 and 媽 from current counterpart metadata and already supplies PDF 1326 among its text-mention leads. The original scan on that page (printed 1311) contains 妈〔媽〕 in the simplification appendix under 马. The third-table heading occurs on PDF 1323. This is relevant to the existing standardized simplified-form claim even without a standalone character account.
+
+Failure class: research conflated lack of a verified main entry with lack of usable evidence for any article claim. SOURCE_POLICY now requires claim-by-claim assessment of appendices, tables, variant lists and pronunciation examples, inspection of their context, and strict separation of graphic correspondence from ancient phonetic or semantic claims. Both counterpart forms must still be searched. No locator behavior or approved article has been changed.
+
+Contrasting cases: the simplification table can support its graphic correspondence; an index occurrence alone cannot support etymology; a pronunciation example can support only the demonstrated reading; unrelated mentions under another headword require independent relevance checks. Existing locator and source-enrichment contract tests: 58 passed. This prompt change does not certify existing articles.
+
+Independent Luna-low research is retained at runs/ma-traditional-source-check-20261004/research/research/. Its appendix conclusion agrees with the directly viewed scan, but its separate p1102/p1106 occurrence identifications require correction or further verification. Do not treat that entire research result as approved evidence or use it to repair OCR. 妈 still requires exact source integration and fresh factual/readability reviews before book adoption can be recorded.

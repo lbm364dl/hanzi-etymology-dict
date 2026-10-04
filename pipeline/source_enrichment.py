@@ -197,6 +197,14 @@ The supplied source bibliography and corpus are research leads for this characte
 pre-verified evidence. Search the supplied corpus and inspect all relevant records. Confirm
 the actual headword, passage, page continuation, component identity and any cited rare glyph
 against the source scan where available. Distinguish provisional OCR from verified transcription.
+Evaluate source relevance claim by claim, not only by whether a standalone headword
+entry exists. A verified simplification table, appendix, variant list or pronunciation
+example can support its specific form or reading claim. Inspect its heading and surrounding
+context as well as the exact occurrence. A form-correspondence table does not by itself
+establish ancient component functions, phonetic relationships or meaning development.
+Search both simplified and traditional counterparts when applicable. Distinguish an
+incidental mention from relevant evidence for an existing claim; lack of a main entry
+does not justify discarding all non-entry passages or declaring the source unusable.
 Before citing a crop as verification, confirm that the suspect printed occurrence and
 its adjacent anchor are actually inside the crop. A correct pixel hash verifies the
 image bytes, not coverage of the occurrence. A missing or clipped target remains unresolved

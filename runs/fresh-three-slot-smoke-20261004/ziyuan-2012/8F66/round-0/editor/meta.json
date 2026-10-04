@@ -1,0 +1,23 @@
+{
+  "status": "failed",
+  "fingerprint": "5a5d4131e4e22a98dafcdd75b8f3bfe7b12517b505adb8aa3680b9d9f89a1133",
+  "role": "article_patch",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "started_at": 1791115684.7510333,
+  "driver_runtime": {
+    "executable": "/tmp/hanzi-etymology-venv/bin/python",
+    "version": "3.12.3",
+    "prefix": "/tmp/hanzi-etymology-venv",
+    "base_prefix": "/usr"
+  },
+  "queued_at": 1791115684.749583,
+  "agent_capacity": 3,
+  "slot_wait_seconds": 0.0014522075653076172,
+  "agent_pid": 1201365,
+  "error": "Command '['codex', '--search', 'exec', '--json', '--ephemeral', '-s', 'danger-full-access', '-c', 'approval_policy=\"never\"', '-m', 'gpt-6-luna', '-c', 'model_reasoning_effort=\"low\"', '--output-schema', '/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/round-0/editor/agent-schema.json', '-o', '/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/round-0/editor/result.json', '-']' timed out after 599.9449561419897 seconds",
+  "failure_kind": "agent_timeout",
+  "transport_diagnostics": [],
+  "stderr_artifact": "/home/catalin/hanzi-etymology-dict/runs/fresh-three-slot-smoke-20261004/ziyuan-2012/8F66/round-0/editor/stderr.log",
+  "finished_at": 1791116284.7777486
+}

@@ -1,0 +1,31 @@
+{
+  "status": "blocked",
+  "article_hash": "aa383744582c329f53a2bbaed4377e159e755283653c7892358f35ed5e868246",
+  "dossier_hash": "a33da1bb2a180dad17455b37342ed332d64e1aa50b8c08592f752fd5668aca7f",
+  "checks": {
+    "article_schema": "pass",
+    "dossier": "pass",
+    "external_evidence": "pass",
+    "citation_integrity": "pass",
+    "learner_component_coverage": "pass",
+    "sense_relationship_consistency": "fail"
+  },
+  "findings": [
+    {
+      "code": "sense_relationship_consistency",
+      "path": "relationships",
+      "message": "Generated meaning relationships do not exactly match meaning_history senses/developments: meaning:问:ask"
+    }
+  ],
+  "learner_component_coverage": {
+    "required_indices": [
+      2
+    ],
+    "card_indices": [
+      0,
+      1,
+      2
+    ],
+    "errors": []
+  }
+}
