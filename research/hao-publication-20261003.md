@@ -1,0 +1,11 @@
+# 好 publication and verified issue repairs
+
+Published exact article `9252ad7af88a64b429736b53cc68a1171c3c16cb6578521ddd708f24408a913b` and dossier `a72ad5ed50153e781d98ccd3e2a574d2fb290e70095f83a0da09b6ac4941cbc4`, with fresh distinct Luna-low factual/readability approvals. Reviews hash `b07a8fc7518da9ade6a8888c6f11b30a52a2f6496acf68c89b0f663f6a965e58`.
+
+The current sense and derived edge cite consulted modern Chinese dictionary evidence, including X-7d4b6af9acbc8a9f48b1. The authored account supports good and specified degree-adverb uses; it does not assert a general standalone well sense. Historical inscriptional support stays in historical records. Negative-only development records are removed; no unsupported directional semantic edges remain. This addresses existing issues #148 and #156.
+
+Genuine fresh book record X-0473491e7b72cbaad6be correctly records 虘钟 on printed1094/PDF1109, superseding the old misreported 虘鐘 lead. Applied producer repair changes only raw span [1438,1439) 虐→虘; the neighboring 钟 is unchanged. Raw OCR is preserved. Fresh exact-pair source-resolution-8 confirms the applied repair and the unused p1110 identity gap. Result hash `da37306f37cbdac534ad004b7090cd74ea029aa22694c9eb9570c05ffdd2e702`; source audit hash `8f6b6d61f673c913ff5c6c7202b7fe2e5422f48a03236eb05d4d425285c6730b`.
+
+Root directly viewed both glyph previews and checked the useful vertical vs side-by-side layouts. Incorrect earlier review proposals and passes remain archived; the corrected final pair has fresh reviews. A source snapshot collision blocked the first publication attempt. The existing recovery function verified the unchanged canonical baseline and archived the overwritten inputs before restoring their original hashes; no source snapshot hash or approval was rewritten. The retry passed the actual source publication predicate.
+
+With upstream output JSONL absent, used the documented build_site.py --refresh-articles route. The compiled 好 overlay exactly matches the approved canonical rendering. Full cohort audit now verifies 18/300 entries with zero scan errors. Site retains 312 approved overlays among67417 records; graph rebuilt303entries/1945nodes/2024citedrelationships. 学 remains held for complete retirement of related mis-bound book paraphrases and fresh research/authorship/reviews. The full300-character goal is not complete.

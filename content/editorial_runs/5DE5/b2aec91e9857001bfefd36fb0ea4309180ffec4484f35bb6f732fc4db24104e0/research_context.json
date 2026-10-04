@@ -1,0 +1,79 @@
+{
+  "task": "Verify the actual applied source-bound OCR repair against the current corpus and original pixels, then finish the retained candidate. The formerly raw 毚 at PDF423 offset1855 has been replaced by the source-bound unidentified printed glyph marker [glyph:p001]; its Unicode identity remains unknown. Preserve that uncertainty, do not guess a scalar, and do not mark the already-corrected occurrence as an unapplied replacement. The quoted name is not needed to establish other independently supported current/early 工 claims; verify the exact article dependencies. Historical drawings g041/g042/g043 are preserved as historical glyphs, not OCR scalar errors. Keep supported authored text and assets, and obtain fresh independent reviews. Do not redo unrelated references; inspect and record current page-specific source evidence.",
+  "applied_source_repair": {
+    "transaction_id": "ocr-repair-20261004T102612Z-acf3c94e0229",
+    "archive_path": "/home/catalin/hanzi-etymology-dict/runs/three-slot-source-recovery-20261004/gong-source-repair/ocr-repair-20261004T102612Z-acf3c94e0229",
+    "repair": {
+      "key": "gong-quote-raw-1855",
+      "pdf_page": 423,
+      "producer_page_dir": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423",
+      "raw_start": 1855,
+      "raw_end": 1856,
+      "before": "毚",
+      "after": "[glyph:p001]",
+      "current_offset": 1855,
+      "source_pixel_sha256": "5612d68e138d947d28c0a103b43738ef8d1f3e96f8af91b39dabadbbe2ba0b48",
+      "raw_evidence_sha256": "40fe43b04430dddc96313fd7f3ebc63ca611ea2db4e65f14d78f99a815261fe3",
+      "overlay_hash": "dc69701df530dcb58aa362fba12b1dfaad04edbb6158a8dd9b2e2625bba9c9d4",
+      "effective_evidence_sha256": "26c0a03024458c2fbf7b746fdde79642760e4b4606e5cbcf5f4890d3237f32e9",
+      "glyph_reference": {
+        "id": "p001",
+        "kind": "unidentified_printed_character",
+        "consumer_asset": {
+          "id": "p001",
+          "description": "Unidentified printed graph after 册命 and before 官 in the 伊簋 quotation, 字源 printed p.411 (PDF423). Independent source-raster/control adjudication rejects OCR scalar 毚.",
+          "kind": "unidentified_printed_character",
+          "path": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/source.png",
+          "source_bbox_xyxy": null
+        }
+      }
+    },
+    "after": {
+      "source_sha256": "5612d68e138d947d28c0a103b43738ef8d1f3e96f8af91b39dabadbbe2ba0b48",
+      "evidence_sha256": "26c0a03024458c2fbf7b746fdde79642760e4b4606e5cbcf5f4890d3237f32e9",
+      "text_sha256": "f9fbfced530e9ed08e24487e5796bdac77fab2f32f814a772e5a08c562f1dff1"
+    },
+    "consumer_build": {
+      "stdout": "warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.\n{\"pages\": 1435, \"output\": \"/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl\"}\n",
+      "stderr": "",
+      "pages_root": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl"
+    },
+    "unchanged_other_page_count": 1434
+  },
+  "prior_source_reviews": [
+    {
+      "findings": [
+        {
+          "key": "ziyuan-2012:5DE5:1ff44679e702",
+          "disposition": "pending",
+          "reason": "The scan verifies the printed occurrence “毚官,” and the nearby note identifies 封 and 伊 as personal names, but neither establishes the intended reading of the quotation. No independent transcription or corpus check is supplied. The unresolved identity affects the article’s 工:official_status sense, which cites X-c3bbdea1c16eeb16571d for an official-title example. That evidence also includes independent reports of other official and status uses, but this dossier does not show whether those independently support the article’s full claim. Verify the inscription reading and trace the title claim before closing the finding; do not infer a correction from the adjacent gloss.",
+          "affected_paths": [
+            "meaning_history.senses[工:official_status]",
+            "relationships[meaning:工:official_status]"
+          ]
+        }
+      ]
+    },
+    {
+      "findings": [
+        {
+          "key": "ziyuan-2012:5DE5:1ff44679e702",
+          "disposition": "pending",
+          "reason": "The marked occurrence visibly reads 毚官 in the scan, matching the dossier’s report of the printed text. The scan therefore confirms the literal, but it does not resolve whether the transcription of the inscription is correct; no replacement can be verified from these pixels.",
+          "affected_paths": [
+            "字源 2012, PDF p. 423 / printed p. 411, 工 entry quotation: “王呼令尹册命毚官司(司)康宫王臣妾、百工”"
+          ]
+        }
+      ],
+      "transcription_observations": [
+        {
+          "key": "ziyuan-2012:5DE5:1ff44679e702",
+          "observed_literal": "毚官",
+          "pixel_reason": "The original scan pixels at the marked quotation visibly show 毚 followed by 官. The adjacent gloss does not establish a different reading of those printed characters."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "source_id": "ziyuan-2012",
+  "tracking_issue_url": null,
+  "requires_coordinator_verification": true,
+  "findings": [
+    {
+      "key": "ziyuan-2012:4E0D:0ad1bf28b259",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 4E0D",
+      "details": "[OCR CORRECTION REQUIRED] 《字源》 2012, PDF page 1050 / printed page 1035, OCR raw opening span `靡靠孔斢乞孔乳不` is running-header text, not an 不 headword line; the page scan shows the 不 entry beginning in the lower right column under `不部`. Propose removing this raw locator span as headword evidence rather than substituting a guessed correction. PDF page 1050 continues into the 不 entry at its lower edge; PDF page 1051 begins with its continuation and then a new 至部 entry. Scan pixels directly inspected for both pages. The corpus record’s `printed_page` is null although the page image reads 1035; source metadata needs that verified printed page recorded separately.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: /home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/next-bu-cai-cha-20261003/ziyuan-2012/4E0D",
+        "Research output: initial-followup/research/result.json"
+      ]
+    }
+  ]
+}

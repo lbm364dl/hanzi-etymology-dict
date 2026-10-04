@@ -1,0 +1,7 @@
+# Verify a directional claim before requesting its reversal
+
+The 好 continuation supplied both exact PNG attachments to readability review. Root inspected the actual files and the saved round-0 prompt: the history sentence said only that the forms were vertically arranged. The reviewer nevertheless claimed it reversed their order. Round 1 then correctly said the complex form was above, but a later reviewer demanded the opposite. The author followed that false finding, and a later readability pass approved the wrong direction. These genuine outputs are retained; none certifies the corrected final candidate.
+
+This was not a missing-image transport problem: the manifest bound attachment 1 to the oracle-style PNG and attachment 2 to the bronze-style PNG. Root directly viewed both. The oracle-style attachment has a complex upper assembly with two enclosed spaces above a smaller angular form; the bronze-style attachment has side-by-side forms.
+
+Independent review instructions now require the actual directional text, attachment identity and visible landmarks before reporting a reversal. A vertical-arrangement statement must not acquire an invented above/below assertion through review. The existing instruction to prefer useful layout contrasts over unnecessary geometry remains applicable. The repair must proceed through genuine authorship and fresh independent reviews, with no root prose substitution or approval reuse. This is a general false-finding failure class, not a 好-specific rule or new issue.

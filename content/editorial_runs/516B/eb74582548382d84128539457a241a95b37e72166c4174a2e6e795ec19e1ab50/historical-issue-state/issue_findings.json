@@ -1,0 +1,40 @@
+{
+  "findings": [
+    {
+      "kind": "factual",
+      "title": "Preserve 字源’s distinct proposal linking 八 with 分",
+      "details": "The authored article mentions competing analyses but omits 字源’s specific proposal that 八 was an early graph for 分, with 刀 later added to distinguish 分 while 八 continued as the numeral. Record it as a qualified proposal in expert prose; do not present it as settled chronology or collapse it into the separation account.",
+      "verification": "Add the qualified proposal with citation X-9f27a7179f7b7fabcf79, then obtain fresh independent factual and readability reviews of the revised article.",
+      "evidence": [
+        "current_article.formation.evidence_ids includes X-9f27a7179f7b7fabcf79 but its text omits the specific 分 proposal",
+        "actual_findings: source-coverage/verified-review.json identifies the omission and cites X-9f27a7179f7b7fabcf79",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:八:ziyuan-2012-b064-separate-early-fen-graph-proposal"
+    },
+    {
+      "kind": "ocr",
+      "title": "Add verified printed-page metadata for 八",
+      "details": "The inspected 八 entry is on PDF page 76, printed page 64, but the corpus record still lacks the printed-page value. This is an unapplied metadata repair; no 八-headword transcription error was identified.",
+      "verification": "Apply a source-bound printed-page metadata correction for PDF p.76 / printed p.64, validate it against the scan, and confirm the rebuilt consumer record preserves raw OCR.",
+      "evidence": [
+        "current dossier evidence X-9f27a7179f7b7fabcf79 identifies PDF p.76 and printed p.64",
+        "existing finding records the corpus printed-page value as null",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:八:ziyuan-2012-b064-print-page-metadata"
+    },
+    {
+      "kind": "pipeline",
+      "title": "Resolve 八 source-enrichment result parsing failure",
+      "details": "The 八 enrichment job failed with `Extra data: line 1 column 1202 (char 1201)`. The supplied artifacts show no verified cause or repair, leaving enrichment and review incomplete.",
+      "verification": "Reproduce the parsing failure from the recorded artifacts, fix result handling, and resume through valid article output with fresh independent factual and readability reviews.",
+      "evidence": [
+        "job_state.error: Extra data: line 1 column 1202 (char 1201)",
+        "existing finding records source-enrichment-failure.json with the same error",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:八:pipeline-source-enrichment-json-trailing-data"
+    }
+  ]
+}

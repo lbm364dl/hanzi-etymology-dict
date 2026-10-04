@@ -1,0 +1,22 @@
+[
+  {
+    "role": "factual",
+    "verdict": "revise",
+    "findings": [
+      "Remove `meaning_history.senses[4]` and its generated `relationships[4]` (`has_sense` for `日:japan`), or cite evidence that establishes the Japan abbreviation as current Chinese usage. X-e7518144c9191621be5c says the dictionary records Japan as an abbreviation but does not establish present-day usage; the separate Japan sense is outside the supported sun/day account."
+    ],
+    "article_hash": "66e15c270971112c2ab8dfc2172e06cdfe46cf809ef292844cc7eaf9a09a8e91",
+    "dossier_hash": "6a1cd870cfe18ee233a278c679a78619b60e68fd7acd6e9d0dd65b09f8abb943",
+    "reviewer": "gpt-6-luna:low:factual:01a0fef7-6a10-7243-a61a-92c5be1b2273"
+  },
+  {
+    "role": "readability",
+    "verdict": "revise",
+    "findings": [
+      "In `meaning_history.senses` for `日:japan` and its matching `has_sense` relationship, change `status` from `current` to `historical` or remove the sense and edge. The cited MOE dictionary entry supports a Chinese abbreviation sense, but this dossier does not establish that the abbreviation is in present-day use; its statement that the dictionary lists the abbreviation is insufficient to support the article’s current-use claim."
+    ],
+    "article_hash": "66e15c270971112c2ab8dfc2172e06cdfe46cf809ef292844cc7eaf9a09a8e91",
+    "dossier_hash": "6a1cd870cfe18ee233a278c679a78619b60e68fd7acd6e9d0dd65b09f8abb943",
+    "reviewer": "gpt-6-luna:low:readability:01a0fef8-9eaf-7b00-91ef-43cfbf666ce0"
+  }
+]

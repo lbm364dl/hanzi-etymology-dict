@@ -1,0 +1,50 @@
+{
+  "provenance": {
+    "raw_ocr_path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/ocr.json",
+    "source_scan_path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/source.png",
+    "pdf_page": 423,
+    "raw_text_sha256": "11cb0f4d8f481cd7743ffd87756582a8d76558dccd6bab72b2743386ce71b85d",
+    "ocr_evidence_sha256": "40fe43b04430dddc96313fd7f3ebc63ca611ea2db4e65f14d78f99a815261fe3",
+    "source_pixel_sha256": "5612d68e138d947d28c0a103b43738ef8d1f3e96f8af91b39dabadbbe2ba0b48",
+    "overlay_sha256": null,
+    "crop_geometry": {
+      "original_size": [
+        3000,
+        4095
+      ],
+      "bounds_xyxy": [
+        2545,
+        3044,
+        2695,
+        3144
+      ],
+      "target_anchor": "Quotation after 西周伊簋 and 王呼令尹册命, before 官",
+      "crop_path": "/home/catalin/hanzi-etymology-dict/runs/three-slot-source-recovery-20261004/gong-quote/target-native-4x.png",
+      "target_bounds_on_crop_xyxy": [
+        120,
+        100,
+        368,
+        340
+      ],
+      "render_scale": 4,
+      "scaling": "nearest-neighbour, no added strokes",
+      "target_complete": true,
+      "comparison_control": {
+        "path": "/home/catalin/hanzi-etymology-dict/runs/three-slot-source-recovery-20261004/gong-quote/unicode-6BDA-control.png",
+        "label": "Rendered Unicode U+6BDA 毚 in NotoSansCJK-Regular.ttc; comparison font control, not a book scan"
+      }
+    }
+  },
+  "occurrences": [
+    {
+      "id": "gong-quote-raw-1855",
+      "start": 1855,
+      "end": 1856,
+      "before": "毚",
+      "anchor": "王呼令尹册命",
+      "inspection_instruction": "First graph after 册命, preceding 官. Attachment 2 contains the complete target with margins; see provenance geometry. Attachment 3 is an explicitly labeled rendered U+6BDA 毚 comparison control, not a book scan. Compare actual top/lower structures and internal strokes with that control. If inadequate, use available tools to open/crop the original scan and investigate Unicode/reference evidence yourself. No replacement scalar is proposed; do not infer 伊 from the gloss. Earlier native-control review established a raw mismatch with unknown identity, while another reviewer remained unsure of the match. Independently resolve that disagreement from the larger source-raster crop and Unicode font control; prior conclusions are hypotheses, not approvals. If controls are inadequate, freely investigate additional authoritative glyph references. Do not guess a scalar.",
+      "context_before": "已失落，后代用的都是引申义。较早、较直接的引申义是工匠。西周伊簋：“王呼令尹册命",
+      "context_after": "官司(司)康宫王臣妾、百工。”(周王召令尹封策命伊掌管康宫中王的男女仆役及各种工"
+    }
+  ]
+}

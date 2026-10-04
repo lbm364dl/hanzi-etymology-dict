@@ -1,0 +1,56 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "occurrences"
+  ],
+  "properties": {
+    "occurrences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "raw_text",
+          "printed_text",
+          "verdict",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "bian-p145-main-clause-comma"
+            ]
+          },
+          "raw_text": {
+            "type": "string",
+            "enum": [
+              "从辵,昪声"
+            ]
+          },
+          "printed_text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "verdict": {
+            "enum": [
+              "correct_raw",
+              "confirmed_correction",
+              "unresolved_identity"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "minItems": 1,
+      "maxItems": 1
+    }
+  }
+}

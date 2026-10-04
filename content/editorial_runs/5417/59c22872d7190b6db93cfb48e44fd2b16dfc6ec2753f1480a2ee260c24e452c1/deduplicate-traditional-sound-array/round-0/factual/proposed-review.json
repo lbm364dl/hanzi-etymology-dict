@@ -1,0 +1,6 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "`components[1].sound[0]` correctly retains the sourced traditional comparison 馬/嗎. The current `components[3].sound[0]` already uses simplified 马/吗 and cites `X-b57fc8149fd9ad000253`, whose inspected Pinyin appendix directly lists those readings. No sound-record correction is needed. However, `components[3].sound_limitation.evidence_ids` also cites that appendix while describing the comparison as current Mandarin evidence that does not establish the question particle’s historical relation. The appendix supports the readings, but explicitly provides no historical evidence. Remove `X-b57fc8149fd9ad000253` from that limitation’s citations; retain the separately cited records that support the limitation."
+  ]
+}

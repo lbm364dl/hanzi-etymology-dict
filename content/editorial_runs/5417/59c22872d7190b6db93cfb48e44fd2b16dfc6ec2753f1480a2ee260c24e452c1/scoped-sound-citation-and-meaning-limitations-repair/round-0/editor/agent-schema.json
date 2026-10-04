@@ -1,0 +1,36 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "edits"
+  ],
+  "properties": {
+    "edits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "value_json"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "components/1/sound",
+              "components/1/sound_limitation",
+              "components/2/evidence_ids",
+              "components/3/sound_limitation",
+              "meaning_history/developments",
+              "meaning_history/limitations"
+            ]
+          },
+          "value_json": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "parent_evidence_sha256": "17a3646d53c84618144b67e66862ad4cfb32a630b855febd70baefb43b964059",
+  "source_sha256": "dae2a85e30b830e9f1a86f5e1c7a082463646451e5fdf3924a5e0b388d1a2e92",
+  "patches": [
+    {
+      "start": 796,
+      "end": 797,
+      "before": "爱",
+      "after": "爰",
+      "source_checked": true,
+      "reason": "Directly inspected original PDF p.355 left-column headword at full and enlarged scale. The printed graph has the 爰 form (upper 爫-like strokes, two transverse strokes, lower 又-like form); OCR used 爱. This is the entry headword followed by yuán.",
+      "source_crop_bounds": [
+        215,
+        990,
+        410,
+        1175
+      ],
+      "source_crop_pixel_sha256": "0ade55d4e55eeaeed0a751f5c9f27154f3d4cd846c6af87d9754f5826021b297",
+      "reviewers": [
+        "de_ocr_verification; original scan inspected 2026-10-02"
+      ]
+    }
+  ],
+  "remove_glyph_ids": [],
+  "add_glyphs": [],
+  "added_uncertainties": [],
+  "verification": "source_checked_correction_not_edition_approval"
+}

@@ -1,0 +1,19 @@
+{
+  "source_id": "ziyuan-2012",
+  "tracking_issue_url": "https://github.com/lbm364dl/hanzi-etymology-dict/issues/1",
+  "requires_coordinator_verification": true,
+  "findings": [
+    {
+      "kind": "ocr",
+      "title": "Add the verified printed page number for 北 to source metadata",
+      "details": "The scan inspected for 北 is PDF p. 739 and visibly bears printed p. 726, but the current source-page metadata still has printed_page null. This is a verified metadata gap; no OCR text correction is indicated.",
+      "verification": "Update the PDF p. 739 page record with printed page 726 and provenance tied to the inspected scan; confirm the page ID, source hash, and consumer metadata agree.",
+      "evidence": [
+        "X-189596b183ddf523b753",
+        "current_source_page_metadata: page sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000739 has printed_page null; source_sha256 93340790449e8a235bdf892960bde34eb3ae2a3bc5855f79994ceaa599e0b736",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:北:ziyuan-2012-bei-printed-page-metadata"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "role": "factual",
+    "verdict": "revise",
+    "findings": [
+      "In `meaning_history.senses`, `杯:vessel` is marked `historical` and cites only `X-f4345f7d2863b6c42321`, which documents the Mencius textual use but not present-day usage. Change its status to `current` and cite present-day dictionary evidence such as `X-99c0b087bcccbce09605`, which lists 杯 as a current cup/container; keep the Mencius example identified as historical. Update the generated `meaning:杯:vessel` `has_sense` edge to match the revised status and support."
+    ],
+    "article_hash": "dd94765e1b775ce114570d1faadde95f30828a4d7b1a7b8ef8bd2c13a1c4ccc9",
+    "dossier_hash": "c18ac97cc4fde53c322426265a909672145c0003e06dd5e36406d39d63539de3",
+    "reviewer": "gpt-6-luna:low:factual:01a10097-5e45-7b80-911b-6a0089d52963"
+  },
+  {
+    "role": "readability",
+    "verdict": "revise",
+    "findings": [
+      "`meaning_history.senses[1]` labels 杯’s cupful-classifier use `historical`, but X-99c0b087bcccbce09605 directly documents present-day examples 一杯水 and 兩杯麵粉. Change its status to `current` and align the generated `meaning:杯:classifier` has_sense edge’s text and evidence IDs with that current-use evidence."
+    ],
+    "article_hash": "dd94765e1b775ce114570d1faadde95f30828a4d7b1a7b8ef8bd2c13a1c4ccc9",
+    "dossier_hash": "c18ac97cc4fde53c322426265a909672145c0003e06dd5e36406d39d63539de3",
+    "reviewer": "gpt-6-luna:low:readability:01a10098-6f77-7180-a422-f650345ad988"
+  }
+]

@@ -1,0 +1,61 @@
+{
+  "provenance": {
+    "independent_blind_geometry": {
+      "horizontal_bars_below_roof": 2,
+      "observations": [
+        "Below the two sloping roof-like strokes, two separate horizontal bars intersect the central vertical.",
+        "The upper bar is short and close to the roof, with endpoints near the central vertical.",
+        "The lower bar is longer and extends to both sides of the central vertical."
+      ],
+      "uncertain": false
+    },
+    "blind_geometry_receipt": {
+      "status": "complete",
+      "fingerprint": "08dab695255d1ba9cac41422e683b59a4c215f4a842561651838fd40162fbded",
+      "role": "ocr_verification",
+      "model": "gpt-6-luna",
+      "reasoning": "low",
+      "started_at": 1791019352.4321785,
+      "image_argument_manifest": [
+        {
+          "path": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/next-bu-cai-cha-20261003/ziyuan-2012/8336/p71-blind-geometry-20261003/target.png",
+          "sha256": "0ffd0cfa293910e36b6966851f0809305ffca3252bfb24555ced9f82f1eb6804"
+        }
+      ],
+      "agent_thread_ids": [
+        "01a10112-8216-71d3-99af-6d10f374f3f0"
+      ],
+      "web_tool_events": 0,
+      "web_action_counts": {},
+      "web_search_calls": 0,
+      "web_search_queries": [],
+      "result_hash": "fe485c47ffb1ff59f62d509943b2b8876c4ef784a6b2510439d93ca1e549c3eb",
+      "finished_at": 1791019366.4618757
+    },
+    "geometry_conflict": "Prior named-candidate verification claimed only one bar below the roof. A separate blind original-pixel check counted two distinct bars, upper short and lower long, both intersecting the central vertical. Reconcile by inspecting actual pixels and the distinguishing 茶/荼 geometry. Do not treat the earlier named verdict as authoritative. Use tools freely to make better crops or inspect authoritative character forms; no scan/page cap.",
+    "source_id": "ziyuan-2012",
+    "pdf_page": 71,
+    "printed_page": 59,
+    "source_pixel_sha256": "2601b9510d9efb6b7f811cfbe06dbedc0b22444defe6fced879a89bdd37bfa85",
+    "raw_evidence_sha256": "46e3100af094e5d9a0b64c8d9cc7ed25a5d75fd1e0dba150419b2342ced4868f",
+    "target": "single lower-left large headword immediately before tú; compare exact headword only, not running header or source quotations",
+    "source_bounds_xyxy": [
+      220,
+      3060,
+      700,
+      3370
+    ],
+    "comparison_request": "Distinguish 茶 from 荼 by the lower portion and horizontal stroke count under the roof-shaped strokes. Identify each visible horizontal and its relation to the central vertical. Neither prior research nor lexical expectation decides the literal printing. The full passage and full page are attached as context. If this print/font does not permit confident identity, return unresolved_identity with null. Do not invent a historical spelling or infer identity from the reading tú."
+  },
+  "occurrences": [
+    {
+      "id": "ziyuan-p0071-lower-left-headword",
+      "start": 722,
+      "end": 723,
+      "before": "荼",
+      "after": "茶",
+      "context_before": "生,茎如劳豆而细,叶似蒺藜而青,其茎叶绿色,可生食,如小豆藿也。”(白于蓝)\n\n",
+      "context_after": " tú 定纽、鱼部; 定纽、模韵、同都切。\n[glyph:g008] 《说文》小"
+    }
+  ]
+}

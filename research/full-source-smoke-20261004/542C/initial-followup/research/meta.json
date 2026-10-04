@@ -1,0 +1,56 @@
+{
+  "status": "complete",
+  "fingerprint": "adc95fbb15d88113a5718b0c07f14fb4b0ee72697e0b27f14f4ad88e904b2b5c",
+  "role": "research",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "started_at": 1791107115.5374606,
+  "driver_runtime": {
+    "executable": "/tmp/hanzi-etymology-venv/bin/python",
+    "version": "3.12.3",
+    "prefix": "/tmp/hanzi-etymology-venv",
+    "base_prefix": "/usr"
+  },
+  "queued_at": 1791107115.5359323,
+  "agent_capacity": 2,
+  "slot_wait_seconds": 0.0015299320220947266,
+  "image_argument_manifest": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1062/source.png",
+      "sha256": "59bc4ebeeede2b564e442f460c080f8a06787c05034880bce314015da14a4ccb"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0096/source.png",
+      "sha256": "9382ef1f64da3bcb4cd034e8467095f425c69e5c0b2a219662c985e8286b59a7"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1063/source.png",
+      "sha256": "5121ea3258e125533f7d27eea5dd3748a97455056e0f651c6b0929a404c21679"
+    }
+  ],
+  "agent_pid": 822684,
+  "agent_thread_ids": [
+    "01a1064d-aa67-7782-b015-8ce562614366"
+  ],
+  "web_tool_events": 9,
+  "web_action_counts": {
+    "search": 4,
+    "other": 4,
+    "open_page": 1
+  },
+  "web_search_calls": 4,
+  "web_search_queries": [
+    "site:dict.variants.moe.edu.tw 听 聽 笑貌 口 斤 宋元 俗字 聽作听",
+    "site:humanum.arts.cuhk.edu.hk/Lexis/lexi-mf 听 笑貌 聽 甲骨文 听",
+    "site:shuowen.org/view/850 听 笑皃 从口斤聲",
+    "听 聽 𠯸 厅 讹变 字源 考证 听字",
+    "site:unicode.org/cgi-bin/GetUnihanData.pl?codepoint=542C Unihan U+542C kMandarin tīng",
+    "site:unicode.org/cgi-bin/GetUnihanData.pl?codepoint=807D Unihan U+807D kMandarin tīng",
+    "site:dict.variants.moe.edu.tw/dictView.jsp?ID=55062 听 yǐn 笑貌 亡是公听然而笑",
+    "\"听，笑貌也\" \"口开则大\" 字源 陈英杰",
+    "\"听、忻、䜣、欣皆同源词\"",
+    "\"从元代以来就是‘聽’的简化字\" 听 字源"
+  ],
+  "result_hash": "da4dd9d9f5eaef457216fea3f86b861fbebe48eba37496e912914659e402ba5a",
+  "finished_at": 1791107298.2016964
+}

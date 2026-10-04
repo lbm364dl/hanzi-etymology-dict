@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "parent_evidence_sha256": "2fe94497171991e9ca7779e89148e2e83c4e3af1e23a600fd9ae1616174265c1",
+  "source_sha256": "e5c3740499352373582e7a99de9e1114ed3590dd728207f268e6ffe5cd3cbf88",
+  "patches": [
+    {
+      "start": 177,
+      "end": 178,
+      "before": "駒",
+      "after": "[glyph:p001]",
+      "source_checked": true,
+      "reason": "Original PDF614 / printed601 prose after 此字也通作 inspected by coordinator and independent Luna low source recheck. Printed horse graph does not match 駒; exact Unicode identity is unresolved. Preserve this occurrence without guessing a replacement.",
+      "reviewers": [
+        "root; original scan and paragraph crop inspected 2026-10-02",
+        "/root/de_ocr_verification; source-only recheck recorded research/ziyuan-hsk1-de-ocr.md"
+      ]
+    }
+  ],
+  "remove_glyph_ids": [],
+  "add_glyphs": [
+    {
+      "id": "p001",
+      "kind": "unidentified_printed_character",
+      "description": "Unresolved printed horse graph after 此字也通作 on PDF614 / printed601; raw OCR guessed 駒. Inspect exact original source occurrence."
+    }
+  ],
+  "added_uncertainties": [
+    "The printed horse graph after 此字也通作 remains unidentified; occurrence-specific p001 retains scan provenance. All eleven suspected 的 occurrences match raw OCR and are unchanged."
+  ],
+  "verification": "source_checked_correction_not_edition_approval"
+}

@@ -1,0 +1,24 @@
+[
+  {
+    "role": "factual",
+    "verdict": "revise",
+    "findings": [
+      "In `meaning_history.senses[0]` and its generated `has_sense` relationship, change `status` from `historical` to `current`: the text says 木 is currently used for “tree,” and present-day dictionary evidence supports that usage (E6, E9, X-7e38f1d40f1d9ce9d3cc). Retain the oracle-bone example as qualified historical evidence; it does not establish earliest attestation.",
+      "In `meaning_history.senses[1]` and its generated `has_sense` relationship, change `status` from `historical` to `current`: the text says 木 is currently used for “wood” or “lumber,” supported by present-day dictionary evidence (E6, X-7e38f1d40f1d9ce9d3cc). Retain 木枋 as a qualified historical use without implying a chronology."
+    ],
+    "article_hash": "33448fe7d1537662349f9b729776a6f0f96a6974be5a73cafed17743691388c3",
+    "dossier_hash": "bba02a10a84010606d703d792231ef5988efc37d111466d547339eb7aef6b111",
+    "reviewer": "gpt-6-luna:low:factual:01a0fec0-b6d9-7d63-a74f-c211b4094895"
+  },
+  {
+    "role": "readability",
+    "verdict": "revise",
+    "findings": [
+      "In `meaning_history.senses[0]`, change `status` from `historical` to `current`: the entry says 木 is currently used for “tree” and cites current dictionary evidence (E6, E9, X-7e38f1d40f1d9ce9d3cc). Keep the generated `has_sense` edge consistent with that status.",
+      "In `meaning_history.senses[1]`, change `status` from `historical` to `current`: the entry says 木 is currently used for “wood” or “lumber” and cites current dictionary evidence (E6, X-7e38f1d40f1d9ce9d3cc). Keep the generated `has_sense` edge consistent with that status."
+    ],
+    "article_hash": "33448fe7d1537662349f9b729776a6f0f96a6974be5a73cafed17743691388c3",
+    "dossier_hash": "bba02a10a84010606d703d792231ef5988efc37d111466d547339eb7aef6b111",
+    "reviewer": "gpt-6-luna:low:readability:01a0fec1-e8b4-7ec2-ba33-f853d3ae7a06"
+  }
+]

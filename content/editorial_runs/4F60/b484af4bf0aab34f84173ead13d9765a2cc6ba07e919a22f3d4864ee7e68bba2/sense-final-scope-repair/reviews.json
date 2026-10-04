@@ -1,0 +1,22 @@
+[
+  {
+    "role": "factual",
+    "verdict": "revise",
+    "findings": [
+      "Update `meaning_history.senses[0]`: its evidence list currently includes X-b12f9c040d986933641e and X-8163a642d74341bf5876, which support historical bare-你 plural examples and the ordinary modern 你们 construction, not the current singular sense. Remove both IDs from sense[0], retain them on sense[1], and update the generated `has_sense` edge accordingly."
+    ],
+    "article_hash": "b484af4bf0aab34f84173ead13d9765a2cc6ba07e919a22f3d4864ee7e68bba2",
+    "dossier_hash": "fdf46757b49478949cc6e830a397d08db6c9cf35cd30f220d464346ceb00ae21",
+    "reviewer": "gpt-6-luna:low:factual:01a0ff20-351a-7ba3-8ff7-1c21e1b2a774"
+  },
+  {
+    "role": "readability",
+    "verdict": "revise",
+    "findings": [
+      "In meaning_history.senses[0], remove X-b12f9c040d986933641e and X-8163a642d74341bf5876 from evidence_ids. Although its gloss and text are already singular and its period is Current, these citations support historical bare-你 plural examples and distinguish them from modern 你们, not the current singular sense. Keep both IDs on sense[1], and update the generated has_sense edge for sense[0] to match its remaining evidence."
+    ],
+    "article_hash": "b484af4bf0aab34f84173ead13d9765a2cc6ba07e919a22f3d4864ee7e68bba2",
+    "dossier_hash": "fdf46757b49478949cc6e830a397d08db6c9cf35cd30f220d464346ceb00ae21",
+    "reviewer": "gpt-6-luna:low:readability:01a0ff20-93d2-7d40-bcef-f718374ecfe7"
+  }
+]

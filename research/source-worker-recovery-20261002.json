@@ -1,0 +1,33 @@
+{
+  "pid": 3979491,
+  "command": [
+    "/tmp/hanzi-etymology-venv/bin/python",
+    "-u",
+    "-m",
+    "pipeline.source_enrichment",
+    "run",
+    "--registry",
+    "research/digitised-sources.json",
+    "--source",
+    "ziyuan-2012",
+    "--cohort",
+    "/tmp/hsk1-source-repaired.json",
+    "--output",
+    "runs/source-enrichment-after-ocr",
+    "--limit",
+    "2",
+    "--workers",
+    "2",
+    "--max-revisions",
+    "3",
+    "--timeout",
+    "900"
+  ],
+  "started_at": "2026-10-02T18:27:33.129661+00:00",
+  "log": "runs/source-enrichment-after-ocr/worker.log",
+  "status": "launched",
+  "recovery_note": "The earlier orchestration process exited143 but left research child3957430 orphaned under systemd. Detected and explicitly terminated that orphan to prevent concurrent writes; detached coordinator3979491 owns current source jobs. Existing saved stage results remain resumable.",
+  "observed_at": "2026-10-02T18:34:52.923044+00:00",
+  "process_observation": "    PID    PPID STAT COMMAND\n3979491  833313 Ssl  /tmp/hanzi-etymology-venv/bin/python -u -m pipeline.source_enrichment run --registry research/digitised-sources.json --source ziyuan-2012 --cohort /tmp/hsk1-source-repaired.json --output runs/source-enrichment-after-ocr --limit 2 --workers 2 --max-revisions 3 --timeout 900\n",
+  "observation_scope": "This timestamped process observation is not an entry approval or a lasting liveness claim."
+}

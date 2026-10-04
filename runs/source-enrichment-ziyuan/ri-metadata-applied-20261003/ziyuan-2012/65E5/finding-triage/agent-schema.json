@@ -1,0 +1,82 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "findings"
+  ],
+  "properties": {
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "topic",
+          "existing_key",
+          "kind",
+          "title",
+          "details",
+          "verification",
+          "evidence"
+        ],
+        "properties": {
+          "topic": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$"
+          },
+          "existing_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              null,
+              "pipeline:source-refresh:approved-entry-selection",
+              "ziyuan-2012:ocr:consumer-corrections-276-277-718",
+              "ziyuan-2012:ocr:pdf-613-di-headword",
+              "pipeline:source-scan:hash-kinds",
+              "pipeline:ocr-review:occurrence-context-overread",
+              "pipeline:article-patch:relationship-contract",
+              "ziyuan-2012:ocr:pdf-614-horse-identity",
+              "pipeline:source-worker:process-locks",
+              "ziyuan-2012:ocr-p1191-g001",
+              "ziyuan-2012:ocr-p0355-yuan-headword",
+              "ziyuan-2012:日:ziyuan-2012-ocr-pdf612-quoted-shuowen-enclosure",
+              "ziyuan-2012:日:current-sense-support",
+              "ziyuan-2012:日:historical-glyph-caption",
+              "ziyuan-2012:日:ziyuan-2012-ri-headword-glyph",
+              "ziyuan-2012:日:source-enrichment-timeout"
+            ]
+          },
+          "kind": {
+            "enum": [
+              "ocr",
+              "factual",
+              "readability",
+              "pipeline",
+              "clarification"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "details": {
+            "type": "string",
+            "minLength": 1
+          },
+          "verification": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "findings",
+    "identity_observations"
+  ],
+  "properties": {
+    "findings": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "disposition",
+          "reason",
+          "affected_paths"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:4E00:77180eab60d0"
+            ]
+          },
+          "disposition": {
+            "enum": [
+              "pending",
+              "unresolved_identity_not_used"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affected_paths": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^article(?:\\.[A-Za-z_][A-Za-z0-9_]*|\\[\\d+\\])+$"
+            }
+          }
+        }
+      }
+    },
+    "identity_observations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "independent_support",
+          "claim_paths",
+          "support_reason",
+          "whole_candidate_reviewed",
+          "reviewed_article_hash",
+          "reviewed_dossier_hash"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:4E00:77180eab60d0"
+            ]
+          },
+          "independent_support": {
+            "type": "boolean"
+          },
+          "whole_candidate_reviewed": {
+            "type": "boolean"
+          },
+          "reviewed_article_hash": {
+            "type": "string",
+            "enum": [
+              "645e0cee3dfec7b29eaa1b899d9ca36591a3b3df9cd0f0b51970d8bf3e6c8f1a"
+            ]
+          },
+          "reviewed_dossier_hash": {
+            "type": "string",
+            "enum": [
+              "4534fc46e551343485a6fdc958aff95867064ff0a78023fd6e4ecc5521bb3b5a"
+            ]
+          },
+          "claim_paths": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "article_path",
+                "claim_text",
+                "independent_evidence_ids"
+              ],
+              "properties": {
+                "article_path": {
+                  "type": "string",
+                  "pattern": "^article(?:\\.[A-Za-z_][A-Za-z0-9_]*|\\[\\d+\\])+$"
+                },
+                "claim_text": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "independent_evidence_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "support_reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

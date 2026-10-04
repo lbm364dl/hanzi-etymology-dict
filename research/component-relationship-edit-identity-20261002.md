@@ -1,0 +1,5 @@
+# Relationship edits must identify the current edge
+
+The 爱 smoke exposed repeated edits to a stale numeric relationship path: one edit targeted a derived meaning edge instead of the historical component edge; a later edit changed a misleading role suffix to another misleading role suffix despite retaining a semantic predicate. These are editing failures, not new character evidence. Fresh independent reviews caught the latter mismatch; the candidate remains unpublished.
+
+The generic article-patch instruction now requires identifying an edge by current subject/object/context/predicate before selecting its array path and rechecking any descriptive role suffix against its supported role. Derived meaning edges and prior array replacements can change indices. This instruction applies to all characters and does not decide the historical role from an ID. Roles still require cited evidence. The next actual Luna low smoke continuation must obtain fresh reviews; this prompt change does not certify earlier entries.

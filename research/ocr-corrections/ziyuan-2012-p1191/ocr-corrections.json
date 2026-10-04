@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "parent_evidence_sha256": "0b520661f625f7d08b410a89d4f9bea644df397db86447aae401ef22c41b8131",
+  "source_sha256": "8044120a4e8d1b1354406fc3a1d0b12435d3e9418598361f97821ea3cd0f600f",
+  "patches": [
+    {
+      "start": 49,
+      "end": 61,
+      "before": "[glyph:g001]",
+      "after": "弋",
+      "source_checked": true,
+      "reason": "Independent direct inspection of the original PDF p.1191 continuation identifies this quoted printed component as 弋. The neighboring first quoted component is 戈; the source form has a single angled stroke and a dot, without the additional diagonal that distinguishes 戈. Replace only this unresolved printed token.",
+      "source_crop_bounds": [
+        200,
+        240,
+        1430,
+        760
+      ],
+      "source_crop_pixel_sha256": "2a1cd50a259aa879d3c8dc9f9a919e6902cd2312ac2af82aac07d942e46b5abc",
+      "reviewers": [
+        "de_ocr_verification; original scan inspected 2026-10-02",
+        "root; original scan inspected 2026-10-02"
+      ]
+    }
+  ],
+  "remove_glyph_ids": [
+    "g001"
+  ],
+  "add_glyphs": [],
+  "added_uncertainties": [],
+  "verification": "source_checked_correction_not_edition_approval"
+}

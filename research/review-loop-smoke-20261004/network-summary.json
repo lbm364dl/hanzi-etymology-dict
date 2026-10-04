@@ -1,0 +1,24 @@
+{
+  "sample_interval_seconds": 119.97471071593463,
+  "observed_persistent_tcp_bytes": {
+    "graded_readers": {
+      "received": 10842803,
+      "sent": 566498
+    },
+    "this_repo": {
+      "received": 47083683,
+      "sent": 877732
+    },
+    "other_or_unknown": {
+      "received": 18905,
+      "sent": 35277
+    }
+  },
+  "limitations": [
+    "Interface counters cover the sampler's network namespace, not a single PID.",
+    "TCP totals include only currently visible sockets with ss byte fields and owner PID.",
+    "Per-PID deltas cover sockets observed in consecutive samples; short-lived or closed sockets can be missed.",
+    "TCP byte counters are socket-level and are not equivalent to interface bytes or total internet use."
+  ],
+  "note": "Includes local TCP, not measured per-project internet bytes; short-lived transfers may be missed. Raw time series stays in runs/review-loop-smoke-20261004/network-identity.jsonl."
+}

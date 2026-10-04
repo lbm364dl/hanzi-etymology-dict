@@ -1,0 +1,16 @@
+{
+  "findings": [
+    {
+      "key": "pipeline:dashboard-timings-20261003",
+      "kind": "pipeline",
+      "title": "Explain character runtime with stage, retry and slot-wait breakdowns",
+      "details": "Active stage ages hid completed work, archived failures and capacity waits. Add per-character queue clock time, full retained stage history, role totals, slot waits, failures and exact metadata/result links. Bound current attempts by queue timestamps and label historical/unknown durations.",
+      "verification": "19 observer/server/timing tests passed; fresh desktop/mobile Playwright verified actual timing table, current/history filters, role bars, metadata HTTP 200 and clean console. Sample 车 showed about 40 min clock, 18 min model stages, 21 min slot waiting.",
+      "evidence": [
+        "research/dashboard-timings-20261003.md",
+        "pipeline/dashboard/timings.js",
+        "pipeline/dashboard_data.py"
+      ]
+    }
+  ]
+}

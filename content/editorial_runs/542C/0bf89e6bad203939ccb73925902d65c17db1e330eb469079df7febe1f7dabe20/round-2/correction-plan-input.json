@@ -1,0 +1,145 @@
+{
+  "article_hash": "0bf89e6bad203939ccb73925902d65c17db1e330eb469079df7febe1f7dabe20",
+  "dossier_hash": "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc",
+  "reviews": [
+    {
+      "role": "factual",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "0bf89e6bad203939ccb73925902d65c17db1e330eb469079df7febe1f7dabe20",
+      "dossier_hash": "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc",
+      "reviewer": "gpt-6-luna:low:factual:01a10686-5518-75b1-992e-21b26daa9b93"
+    },
+    {
+      "role": "readability",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "0bf89e6bad203939ccb73925902d65c17db1e330eb469079df7febe1f7dabe20",
+      "dossier_hash": "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc",
+      "reviewer": "gpt-6-luna:low:readability:01a10686-92f4-7611-8cb7-6a0ca65688bf"
+    }
+  ],
+  "corrections": [],
+  "earlier_correction_history": [
+    {
+      "receipt": "reviews.json",
+      "review": {
+        "role": "factual",
+        "verdict": "pass",
+        "findings": [],
+        "article_hash": "02ac21a56ef46066b9235b3302884bc0cb122bb15480bec0ed01445a37ee35e6",
+        "dossier_hash": "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc",
+        "reviewer": "gpt-6-luna:low:factual:01a1066a-5596-7631-ae7b-d99077925db7"
+      }
+    },
+    {
+      "receipt": "reviews.json",
+      "review": {
+        "role": "readability",
+        "verdict": "pass",
+        "findings": [],
+        "article_hash": "02ac21a56ef46066b9235b3302884bc0cb122bb15480bec0ed01445a37ee35e6",
+        "dossier_hash": "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc",
+        "reviewer": "gpt-6-luna:low:readability:01a1066a-baa3-7f90-935d-28e61874b9a6"
+      }
+    },
+    {
+      "receipt": "round-0/factual/result.json",
+      "review": {
+        "verdict": "revise",
+        "findings": [
+          "`relationships[2]` (`斤-phonetic_component_of-听`) cites Han-period use evidence (`X-99f534c8d3cb62721820`, `X-92915ab19141aa64e13e`, `X-a678e6b244573cc49a65`, `X-05190d0005a8a61bf1f5`) rather than the received phonetic analysis. Cite evidence that supports the 斤 sound role, such as `X-8a66b8e09b7f93c72ba5` and `X-696fcf11a36db8eb74e7`, and keep the edge text tied to the older smiling-word analysis."
+        ]
+      },
+      "result_hash": "254a3de447dfbbe500f448e7a34cc26b4da537ae8c562836c1a3c6ae675e0e08"
+    },
+    {
+      "receipt": "round-1/factual/result.json",
+      "review": {
+        "verdict": "revise",
+        "findings": [
+          "`meaning_history.senses[0].status` is `historical`, but its cited evidence includes the Han-period Shanglin fu example (X-99f534c8d3cb62721820, X-92915ab19141aa64e13e, X-a678e6b244573cc49a65, X-05190d0005a8a61bf1f5). The article’s uncertainty is only about when the sense first arose, not whether it is attested in the earliest documented period here. Set the status to `earliest_attested` and update the sense text and generated `has_sense` relationship to describe the Han-period attestation without claiming it was the original meaning."
+        ]
+      },
+      "result_hash": "38db228ed3bb9f920fbc1d03461d24594858ad18db67f30c5e121b16c498af47"
+    },
+    {
+      "receipt": "round-2/factual/result.json",
+      "review": {
+        "verdict": "revise",
+        "findings": [
+          "`meaning_history.senses[0].status` is `earliest_attested`, but its evidence only reports Han- and Tang-period examples; it does not identify the Han example as the earliest documented attestation. Change the status to `historical` and describe the cited Han-period use without claiming earliest status. Update the generated `has_sense` edge to match. Evidence: `X-aeb1f93eca6866147137`, `X-a27fe6130cc453cf90cc`, `X-05190d0005a8a61bf1f5`."
+        ]
+      },
+      "result_hash": "bef7d67fc5c21d1a5994937ae930ddf74e3c2f8166ede19e990a828a1a5000b4"
+    },
+    {
+      "receipt": "round-0/readability/result.json",
+      "review": {
+        "verdict": "revise",
+        "findings": [
+          "`learner.overview` says the current parts of 听 are 口 and 斤 and calls this “the same split” as the older smiling-word analysis. `summary` and both learner component cards likewise identify 口 and 斤 as the current split. The image attachment is a historical small-seal redraw and cannot establish modern structure. The current-form source X-a22c9263b43c090a184a does establish the left–right 口/斤 split, so retain that account but cite this evidence on each affected claim: add X-a22c9263b43c090a184a to the overview and summary arrays and to the relevant component and learner-card arrays."
+        ]
+      },
+      "result_hash": "a7742b658794dde839c4b13e08ce82e7677479baa95e1b5567bca5725cbb7726"
+    },
+    {
+      "receipt": "round-1/readability/result.json",
+      "review": {
+        "verdict": "revise",
+        "findings": [
+          "`historical_glyphs.items[0].caption` says the depicted small-seal form is analyzed as 口 plus phonetic 斤. Its citations identify the redraw and its Shuowen tradition, but do not verify that this image’s strokes match that analysis. Remove the component-analysis clause from the caption or add evidence that specifically supports the depicted form’s identification. The received analysis is adequately supported elsewhere in the entry."
+        ]
+      },
+      "result_hash": "c122a563d002040431e9459a6d4f16a1ce28effc803efe6ad74ace153f95f6bf"
+    },
+    {
+      "receipt": "round-2/readability/result.json",
+      "review": {
+        "verdict": "revise",
+        "findings": [
+          "`meaning_history.senses[0].status` is `earliest_attested`, but its citations report a Han-period example without identifying it as the earliest documented occurrence. The dossier explicitly says the first occurrence remains unresolved. Change the status to `historical` and describe it as attested in a Han-period literary example, without claiming earliest status; update its generated `has_sense` edge to match. Evidence: `X-99f534c8d3cb62721820`, `X-a678e6b244573cc49a65`, `X-aeb1f93eca6866147137`."
+        ]
+      },
+      "result_hash": "1b519af5d5102974c415fcde7be29d3dec6e98448b696fdc5936fbdedbead606"
+    },
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`meaning_history.senses[1].text` currently says the present-day Chinese sense is “hear” and “listen,” but its citations do not include the active contemporary dictionary evidence `X-a22c9263b43c090a184a`, which supports those current senses. Add that ID to this sense’s `evidence_ids`; the current status and generated `has_sense` edge otherwise match the supported use."
+      ],
+      "article_hash": "4acc203e74e225dba679d3b10063126dde346bdc4d8bb2ad6a7faaf46e4c2cbc",
+      "dossier_hash": "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc",
+      "reviewer": "gpt-6-luna:low:factual:01a10684-e5bc-7033-ab63-947ca6c8674e"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`meaning_history.senses[1].evidence_ids` does not cite `X-a22c9263b43c090a184a`, the active contemporary dictionary evidence that explicitly lists present-day hearing/listening senses for 听. Add it to that array. Its `current` status is already correct, and the generated `has_sense` edge already matches the sense text and citations; the remaining Song–Yuan and borrowing qualifications are appropriately cautious."
+      ],
+      "article_hash": "4acc203e74e225dba679d3b10063126dde346bdc4d8bb2ad6a7faaf46e4c2cbc",
+      "dossier_hash": "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc",
+      "reviewer": "gpt-6-luna:low:readability:01a10685-2265-7283-9852-20f5ec606c15"
+    },
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`components[1].sound` gives the Old Chinese reading pair for the older smiling-word use, but the cited record X-421b25c4a8e8e1ec087e says those reconstructions are compatible with a phonetic-series claim, not primary paleographic evidence. More directly, `relationships[2]` cites X-8a66b8e09b7f93c72ba5 and X-696fcf11a36db8eb74e7, which document the received Shuowen assignment of 斤 as phonetic. Revise the component’s `sound_limitation` and affected prose to distinguish that received analysis from the reported reconstruction pair and state that the pair does not independently establish the role’s original formation; retain the valid readings and scoped qualification."
+      ],
+      "article_hash": "4acc203e74e225dba679d3b10063126dde346bdc4d8bb2ad6a7faaf46e4c2cbc",
+      "dossier_hash": "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc",
+      "reviewer": "gpt-6-luna:low:factual:01a10685-a39f-7d42-8249-0513d25c9bab"
+    },
+    {
+      "role": "readability",
+      "verdict": "pass",
+      "findings": [],
+      "article_hash": "4acc203e74e225dba679d3b10063126dde346bdc4d8bb2ad6a7faaf46e4c2cbc",
+      "dossier_hash": "02d19f4d5f049527b981146c938b5b91551bbf693fc98fd31da1b1d7e68c38bc",
+      "reviewer": "gpt-6-luna:low:readability:01a10685-f158-7c53-ad68-365a2d2782e8"
+    }
+  ]
+}

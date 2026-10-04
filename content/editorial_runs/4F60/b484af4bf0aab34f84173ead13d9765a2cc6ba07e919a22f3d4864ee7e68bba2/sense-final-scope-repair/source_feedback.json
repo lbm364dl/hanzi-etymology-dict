@@ -1,0 +1,13 @@
+{
+  "instruction": "Resolve only the verified current-vs-historical scope finding. Preserve all other article, dossier, evidence, IDs, and examples. In meaning_history.senses[0], keep the current singular second-person meaning only: gloss exactly or equivalently 'second-person pronoun, “you”'; period 'Current'; text should describe current 你 as singular 'you' and preserve the existing exact-date caveat, while leaving historical bare-你 group examples and 你们 discussion in sense[1]. Remove X-b12f9c040d986933641e and X-8163a642d74341bf5876 only from sense[0]. Keep both IDs on sense[1]. Preserve immutable sense IDs and do not recast the historical sense as a separate current plural lexical meaning. The has_sense graph edge is generated from these records.",
+  "allowed_edit_paths": [
+    "meaning_history/senses/0/gloss",
+    "meaning_history/senses/0/period",
+    "meaning_history/senses/0/text",
+    "meaning_history/senses/0/evidence_ids"
+  ],
+  "verified_review_findings": [
+    "Final exact-pair readability finding: meaning_history.senses[0] currently includes plural reference in gloss and current period although bare-你 plural examples are historical and frequency unresolved. Keep sense[0] current singular only, period Current, historical plural material in sense[1], and update generated has_sense edge text. Evidence X-b12f9c040d986933641e and X-8163a642d74341bf5876."
+  ],
+  "reuse_existing_glyph_candidates": true
+}

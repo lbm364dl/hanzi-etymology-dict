@@ -1,0 +1,29 @@
+{
+  "source_id": "ziyuan-2012",
+  "tracking_issue_url": "https://github.com/lbm364dl/hanzi-etymology-dict/issues/1",
+  "requires_coordinator_verification": true,
+  "findings": [
+    {
+      "key": "ziyuan-2012:5907:7ac52b7a6108",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 5907",
+      "details": "[SCAN VERIFICATION REQUIRED] 《字源》 PDF p.718 / printed p.705, 備 sequence glyph labels 1–4 and the rare printed graph in the quoted Shuowen phrase “从人，[glyph]声”: inspected pixels do not safely identify these forms as Unicode characters. Preserve them occurrence-specifically; do not normalize them to 夂, 田, 𤰈 or another familiar shape.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: runs/source-enrichment-ziyuan/bei-5907-repair-5/ziyuan-2012/5907",
+        "Research output: initial-followup/research/result.json"
+      ]
+    },
+    {
+      "key": "ziyuan-2012:5907:d966abf252e4",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 5907",
+      "details": "[OCR CORRECTION REQUIRED] 《字源》 PDF p.718 / printed p.705, provisional OCR span “从人,[glyph:p001]声” and historical sequence references [glyph:p001]–[glyph:p004]: OCR is a locator with unresolved printed identities. No literal character correction is safe from this scan; consumer text should keep explicit unresolved glyph references until a source-bound correction is established.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: runs/source-enrichment-ziyuan/bei-5907-repair-5/ziyuan-2012/5907",
+        "Research output: initial-followup/research/result.json"
+      ]
+    }
+  ]
+}

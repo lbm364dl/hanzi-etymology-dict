@@ -1,0 +1,68 @@
+{
+  "allowed_edit_paths": [
+    "meaning_history/senses/1/text",
+    "meaning_history/senses/1/evidence_ids",
+    "meaning_history/senses/2/text",
+    "meaning_history/senses/2/evidence_ids",
+    "meaning_history/limitations/0/text",
+    "meaning_history/limitations/0/evidence_ids"
+  ],
+  "preserve_array_items": {
+    "meaning_history/senses": [
+      {
+        "id": "半:half",
+        "gloss": "half; one of two equal parts",
+        "period": "dating unresolved",
+        "certainty": "established",
+        "status": "current",
+        "text": "“Half” is the established current meaning and appears in historical examples, including the cited bronze numeral use 大半升. One proposal treats “half” as an extension of “split/open”; another treats “half” as the original meaning. The evidence does not settle the disagreement.",
+        "evidence_ids": [
+          "E6",
+          "X-252d3de0d6d825704f7e",
+          "X-6b75144e0546a46a7a3f",
+          "X-3c857c01c9cdbebf3420",
+          "X-fca230e5cdbd777e03e0",
+          "X-497de3ceec6afa377248",
+          "X-0249afe5bbbc64c8da78",
+          "X-ed86bfbfa0b7a14f827a"
+        ]
+      },
+      {
+        "id": "半:little",
+        "gloss": "very little",
+        "period": "dating unresolved",
+        "certainty": "established",
+        "status": "historical",
+        "text": "This use is documented with later examples; its emergence and relation to other meanings are unresolved.",
+        "evidence_ids": [
+          "X-252d3de0d6d825704f7e",
+          "X-3c857c01c9cdbebf3420",
+          "X-fca230e5cdbd777e03e0"
+        ]
+      },
+      {
+        "id": "半:磐-loan",
+        "gloss": "磐, in a reported manuscript spelling",
+        "period": "Han manuscript; exact date unresolved",
+        "certainty": "probable",
+        "status": "historical",
+        "text": "半 is reported in a Mawangdui Zhouyi manuscript where the received text has 磐桓. The proposed borrowing mechanism is that 半 stood for 磐 because their spoken forms sounded alike or similarly. Reconstructions suggest similar labial onsets and -an material, but come from different systems and do not establish the manuscript token’s sound or the reason for the spelling. This is graph reuse, not a meaning of 半.",
+        "evidence_ids": [
+          "X-b35ff3c34e50c153ee9e",
+          "X-b0e23c86cce301d43eaf",
+          "X-af1a95c8b628fd198247",
+          "X-1d2a2b122567ad846a81"
+        ]
+      }
+    ]
+  },
+  "instruction": "Important: JSON array indexes in allowed paths are zero-based. In this article’s exact existing order: index 0 = 半:half, index 1 = 半:midpoint, index 2 = 半:partial, index 3 = 半:little, index 4 = 半:磐-loan. The previous writer mistakenly put 半:half prose/citations into index 1 and midpoint prose into index 2. Correct by checking the id at each index, not assuming one-based numbering. For index 1 / sense ID 半:midpoint, set text to: Historical examples document use for a middle part or point in time or space. A separate proposal derives the “in the middle” sense from dividing an object; this does not establish a dated extension or show that the lexical sense “half” intervened. Set evidence_ids exactly to X-252d3de0d6d825704f7e, X-3c857c01c9cdbebf3420, X-fca230e5cdbd777e03e0, X-0249afe5bbbc64c8da78. For index 2 / sense ID 半:partial, set text to: Historical examples document the “partial; incomplete” use. A separate proposal derives “incomplete” from dividing an object; its date and relation to the lexical sense “half” are unresolved. Set evidence_ids exactly to X-252d3de0d6d825704f7e, X-3c857c01c9cdbebf3420, X-fca230e5cdbd777e03e0, X-0249afe5bbbc64c8da78. Update only meaning_history/limitations/0 to retain the two distinct “half” origin accounts and add the separate division-of-an-object proposal for the “middle” and “incomplete” extensions, stating no dated sequence establishes transitions and no lexical “half” stage between division and those senses is established. Cite X-252d3de0d6d825704f7e, X-6b75144e0546a46a7a3f, X-3c857c01c9cdbebf3420, X-fca230e5cdbd777e03e0, X-0249afe5bbbc64c8da78, X-ed86bfbfa0b7a14f827a. Do not edit sense indices 0, 3, or 4; these exact records are protected. Do not change components, sound, other meanings, history, glyphs, developments, or relationships. No semantic edge is warranted.",
+  "editorial_adjudication": "Both reviewers: inspect each sense by its id, not its array position alone. The previous genuine Luna-low attempt (preserved at `runs/source-enrichment-ziyuan/ban-162-qualified-extension-repair-20261003/ziyuan-2012/534A`) confirms an index/content mismatch: index1 midpoint received index0 half text, and index2 partial received midpoint text. Now check index1 `半:midpoint` has the historical examples and separate X-0249 proposal; index2 `半:partial` has the incomplete sense and separate X-0249 proposal; citations must match both claims. The source proposal is “from dividing an object,” not necessarily from a lexical sense “half.” Preserve unresolved chronology, other half-origin proposals, and no generated development edge. Do not inherit prior false pass/revise content as fact without inspecting the exact new candidate.",
+  "verified_review_findings": [
+    "Fresh source-coverage result X-0249 finding: the source proposes midpoint and incomplete meanings from dividing an object; represent that proposal without turning it into chronology or a half→midpoint/partial edge.",
+    "Actual first author/review output exposed a zero-based array-index content mismatch; verify corrected sense IDs, text and evidence arrays individually."
+  ],
+  "prior_review_proposals": [
+    "Fresh factual and readability reviews on article ab703663… independently found midpoint sense index1 carried half text/citations. The factual review and actual candidate identified the exact mismatch. Resolve it only after inspecting this candidate."
+  ]
+}

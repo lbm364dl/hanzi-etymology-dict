@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "parent_evidence_sha256": "a8fe9ccff4fb0209b4dd2325531a90367f185c57e2f88c9de88b81186e0c3299",
+  "source_sha256": "2a1c71643780eac70dea94cf857ef09c9369f5ac1880ea084ea580af98c69e98",
+  "patches": [
+    {
+      "start": 1625,
+      "end": 1629,
+      "before": "昀(的)",
+      "after": "旳(的)",
+      "reason": "Original source scan PDF p.613 / printed p.600 inspected 2026-10-02: headword is 旳, right side 勺, not 匀. Unicode identity additionally checked against Taiwan MOE A02724-001 and CNS ⿰日勺 entry. Only this occurrence is corrected.",
+      "source_checked": true,
+      "reviewers": [
+        "root; original source scan inspected 2026-10-02"
+      ]
+    }
+  ],
+  "glyph_description_patches": [
+    {
+      "id": "g021",
+      "before": "《说文》小篆昀/的字",
+      "after": "《说文》小篆旳/的字",
+      "source_checked": true,
+      "reason": "Original source scan PDF p.613 / printed p.600 inspected 2026-10-02: headword is 旳, right side 勺, not 匀. Unicode identity additionally checked against Taiwan MOE A02724-001 and CNS ⿰日勺 entry. Only this occurrence is corrected."
+    }
+  ],
+  "remove_glyph_ids": [],
+  "verification": "source_checked_correction_not_edition_approval"
+}

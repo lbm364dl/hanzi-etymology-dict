@@ -1,0 +1,329 @@
+{
+  "captured_at": "2026-10-04T09:52:07.378621+00:00",
+  "queue_status": "idle",
+  "characters": [
+    {
+      "character": "工",
+      "queue_state": {
+        "attempts": 1,
+        "history": [
+          {
+            "run_id": "75cc18cdecf04bedbb61d1755b2d014d",
+            "attempt": 1,
+            "finished_at": "2026-10-04T09:45:14.474666+00:00",
+            "result": {
+              "character": "工",
+              "status": "needs_source_verification",
+              "job": "runs/full-source-smoke-20261004/ziyuan-2012/5DE5",
+              "attention_required": true
+            }
+          }
+        ],
+        "status": "needs_source_verification",
+        "run_id": "75cc18cdecf04bedbb61d1755b2d014d",
+        "started_at": "2026-10-04T09:40:26.837848+00:00",
+        "job": "runs/full-source-smoke-20261004/ziyuan-2012/5DE5",
+        "result": {
+          "character": "工",
+          "status": "needs_source_verification",
+          "job": "runs/full-source-smoke-20261004/ziyuan-2012/5DE5",
+          "attention_required": true
+        },
+        "finished_at": "2026-10-04T09:45:14.474666+00:00"
+      },
+      "elapsed_seconds": 287.64,
+      "stage_count": 6,
+      "roles": {
+        "finding_triage": {
+          "calls": 1,
+          "seconds": 12.3,
+          "failed": 0
+        },
+        "research": {
+          "calls": 1,
+          "seconds": 182.84,
+          "failed": 0
+        },
+        "article_patch": {
+          "calls": 1,
+          "seconds": 25.68,
+          "failed": 0
+        },
+        "factual": {
+          "calls": 1,
+          "seconds": 12.86,
+          "failed": 0
+        },
+        "readability": {
+          "calls": 1,
+          "seconds": 8.43,
+          "failed": 0
+        },
+        "source_resolution": {
+          "calls": 1,
+          "seconds": 30.7,
+          "failed": 0
+        }
+      },
+      "stages": [
+        {
+          "path": "ziyuan-2012/5DE5/finding-triage/meta.json",
+          "role": "finding_triage",
+          "status": "complete",
+          "seconds": 12.3,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": "233ccb335da429a65cc07bbeb11aad89f2264b46ad4b3a94097c44e54a06ecf9"
+        },
+        {
+          "path": "ziyuan-2012/5DE5/initial-followup/research/meta.json",
+          "role": "research",
+          "status": "complete",
+          "seconds": 182.84,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": "ed1cea920d48f8c96ccfb8922c92c57fc837f56a181565a69e3bd1a3471bdb7a"
+        },
+        {
+          "path": "ziyuan-2012/5DE5/round-0/editor/meta.json",
+          "role": "article_patch",
+          "status": "complete",
+          "seconds": 25.68,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": "1d0d61672d6c6726a55874ed3e4fc0d04740378ad562db3664af089798c81862"
+        },
+        {
+          "path": "ziyuan-2012/5DE5/round-0/factual/meta.json",
+          "role": "factual",
+          "status": "complete",
+          "seconds": 12.86,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": "1687ba385160b0a52b3874d95dcb347ceee9c8d7bf87739d2c7043eb03b330bc"
+        },
+        {
+          "path": "ziyuan-2012/5DE5/round-0/readability/meta.json",
+          "role": "readability",
+          "status": "complete",
+          "seconds": 8.43,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": "1687ba385160b0a52b3874d95dcb347ceee9c8d7bf87739d2c7043eb03b330bc"
+        },
+        {
+          "path": "ziyuan-2012/5DE5/source-resolution/meta.json",
+          "role": "source_resolution",
+          "status": "complete",
+          "seconds": 30.7,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": "db65a07aaad2c61c542df902213c5366faf91a9d6caa4674714a711d1f7880fe"
+        }
+      ]
+    },
+    {
+      "character": "妈",
+      "queue_state": {
+        "attempts": 1,
+        "history": [
+          {
+            "run_id": "75cc18cdecf04bedbb61d1755b2d014d",
+            "attempt": 1,
+            "finished_at": "2026-10-04T09:50:46.350658+00:00",
+            "result": {
+              "character": "妈",
+              "status": "failed",
+              "job": "runs/full-source-smoke-20261004/ziyuan-2012/5988",
+              "error": "Command '['codex', '--search', 'exec', '--json', '--ephemeral', '-s', 'danger-full-access', '-c', 'approval_policy=\"never\"', '-m', 'gpt-6-luna', '-c', 'model_reasoning_effort=\"low\"', '--output-schema', '/home/catalin/hanzi-etymology-dict/runs/full-source-smoke-20261004/ziyuan-2012/5988/initial-followup/research/agent-schema.json', '-o', '/home/catalin/hanzi-etymology-dict/runs/full-source-smoke-20261004/ziyuan-2012/5988/initial-followup/research/result.json', '-']' timed out after 599.9448426319286 seconds",
+              "attention_required": true
+            }
+          }
+        ],
+        "status": "failed",
+        "run_id": "75cc18cdecf04bedbb61d1755b2d014d",
+        "started_at": "2026-10-04T09:40:26.839836+00:00",
+        "job": "runs/full-source-smoke-20261004/ziyuan-2012/5988",
+        "result": {
+          "character": "妈",
+          "status": "failed",
+          "job": "runs/full-source-smoke-20261004/ziyuan-2012/5988",
+          "error": "Command '['codex', '--search', 'exec', '--json', '--ephemeral', '-s', 'danger-full-access', '-c', 'approval_policy=\"never\"', '-m', 'gpt-6-luna', '-c', 'model_reasoning_effort=\"low\"', '--output-schema', '/home/catalin/hanzi-etymology-dict/runs/full-source-smoke-20261004/ziyuan-2012/5988/initial-followup/research/agent-schema.json', '-o', '/home/catalin/hanzi-etymology-dict/runs/full-source-smoke-20261004/ziyuan-2012/5988/initial-followup/research/result.json', '-']' timed out after 599.9448426319286 seconds",
+          "attention_required": true
+        },
+        "finished_at": "2026-10-04T09:50:46.350658+00:00"
+      },
+      "elapsed_seconds": 619.51,
+      "stage_count": 2,
+      "roles": {
+        "finding_triage": {
+          "calls": 1,
+          "seconds": 10.34,
+          "failed": 0
+        },
+        "research": {
+          "calls": 1,
+          "seconds": 600.05,
+          "failed": 1
+        }
+      },
+      "stages": [
+        {
+          "path": "ziyuan-2012/5988/finding-triage/meta.json",
+          "role": "finding_triage",
+          "status": "complete",
+          "seconds": 10.34,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": "e5b156f24c8a7d40a55fb058eb99c45bdcca5019d4e3cdf60f809fbb65f10112"
+        },
+        {
+          "path": "ziyuan-2012/5988/initial-followup/research/meta.json",
+          "role": "research",
+          "status": "failed",
+          "seconds": 600.05,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": null
+        }
+      ]
+    },
+    {
+      "character": "听",
+      "queue_state": {
+        "attempts": 1,
+        "history": [
+          {
+            "run_id": "75cc18cdecf04bedbb61d1755b2d014d",
+            "attempt": 1,
+            "finished_at": "2026-10-04T09:49:16.134896+00:00",
+            "result": {
+              "character": "听",
+              "status": "failed",
+              "job": "runs/full-source-smoke-20261004/ziyuan-2012/542C",
+              "error": "Agent exited with status 1; see runs/full-source-smoke-20261004/ziyuan-2012/542C/round-0/revision_plan/stderr.log",
+              "attention_required": true
+            }
+          }
+        ],
+        "status": "failed",
+        "run_id": "75cc18cdecf04bedbb61d1755b2d014d",
+        "started_at": "2026-10-04T09:45:14.476404+00:00",
+        "job": "runs/full-source-smoke-20261004/ziyuan-2012/542C",
+        "result": {
+          "character": "听",
+          "status": "failed",
+          "job": "runs/full-source-smoke-20261004/ziyuan-2012/542C",
+          "error": "Agent exited with status 1; see runs/full-source-smoke-20261004/ziyuan-2012/542C/round-0/revision_plan/stderr.log",
+          "attention_required": true
+        },
+        "finished_at": "2026-10-04T09:49:16.134896+00:00"
+      },
+      "elapsed_seconds": 241.66,
+      "stage_count": 6,
+      "roles": {
+        "finding_triage": {
+          "calls": 1,
+          "seconds": 6.43,
+          "failed": 0
+        },
+        "research": {
+          "calls": 1,
+          "seconds": 182.66,
+          "failed": 0
+        },
+        "article_patch": {
+          "calls": 1,
+          "seconds": 15.27,
+          "failed": 0
+        },
+        "factual": {
+          "calls": 1,
+          "seconds": 18.13,
+          "failed": 0
+        },
+        "readability": {
+          "calls": 1,
+          "seconds": 12.76,
+          "failed": 0
+        },
+        "revision_plan": {
+          "calls": 1,
+          "seconds": 3.29,
+          "failed": 1
+        }
+      },
+      "stages": [
+        {
+          "path": "ziyuan-2012/542C/finding-triage/meta.json",
+          "role": "finding_triage",
+          "status": "complete",
+          "seconds": 6.43,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": "9d0f2143c61cfbb6c0cf0425ce8b447811a32d48ec37333ba8b3700218631b36"
+        },
+        {
+          "path": "ziyuan-2012/542C/initial-followup/research/meta.json",
+          "role": "research",
+          "status": "complete",
+          "seconds": 182.66,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": "da4dd9d9f5eaef457216fea3f86b861fbebe48eba37496e912914659e402ba5a"
+        },
+        {
+          "path": "ziyuan-2012/542C/round-0/editor/meta.json",
+          "role": "article_patch",
+          "status": "complete",
+          "seconds": 15.27,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": "f37427877f5728834f9c01b74441b77e4b85a7311f4e0d6e026f1b177a980a51"
+        },
+        {
+          "path": "ziyuan-2012/542C/round-0/factual/meta.json",
+          "role": "factual",
+          "status": "complete",
+          "seconds": 18.13,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": "09586bba50d7c4130c45834431d9fca4ca97f5cc8f009538bbe9641381581e9b"
+        },
+        {
+          "path": "ziyuan-2012/542C/round-0/readability/meta.json",
+          "role": "readability",
+          "status": "complete",
+          "seconds": 12.76,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": "560b551110010ffc73de748345570f7862784eed9f8daba62c992c7155831b01"
+        },
+        {
+          "path": "ziyuan-2012/542C/round-0/revision_plan/meta.json",
+          "role": "revision_plan",
+          "status": "failed",
+          "seconds": 3.29,
+          "slot_wait_seconds": 0.0,
+          "model": "gpt-6-luna",
+          "reasoning": "low",
+          "result_hash": null
+        }
+      ]
+    }
+  ],
+  "limitations": "Fresh enrichment from existing approved entries, not initial article generation. Stage durations include tools and network and may overlap; elapsed includes issue sync and publication. Network socket counts include local TCP and miss closed connections."
+}

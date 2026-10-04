@@ -1,0 +1,113 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "findings",
+    "source_claim_observations"
+  ],
+  "properties": {
+    "findings": {
+      "type": "array",
+      "minItems": 18,
+      "maxItems": 18,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "disposition",
+          "reason",
+          "affected_paths"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:8FB9:8da1102f9589",
+              "ziyuan-2012:8FB9:2d5f50417d65",
+              "ziyuan-2012:8FB9:745bc4180f7d",
+              "ziyuan-2012:8FB9:df5e60844a40",
+              "ziyuan-2012:8FB9:e4292555bbce",
+              "ziyuan-2012:8FB9:2e03ffab6733",
+              "ziyuan-2012:8FB9:64be81173b5f",
+              "ziyuan-2012:8FB9:32952b94ba1d",
+              "ziyuan-2012:8FB9:80c0ade2b3bc",
+              "ziyuan-2012:8FB9:02097201ba0e",
+              "ziyuan-2012:8FB9:fa76cd9bf6c5",
+              "ziyuan-2012:8FB9:1889ad75316f",
+              "ziyuan-2012:8FB9:89c9a1e6ae12",
+              "ziyuan-2012:8FB9:f123ec8f0c27",
+              "ziyuan-2012:8FB9:ee40858a2ac0",
+              "ziyuan-2012:8FB9:32550b0e52db",
+              "ziyuan-2012:8FB9:736c7465a25c",
+              "ziyuan-2012:8FB9:c34338604aa7"
+            ]
+          },
+          "disposition": {
+            "enum": [
+              "pending",
+              "unresolved_identity_not_used",
+              "verified_source_claim"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affected_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "source_claim_observations": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "supported",
+          "evidence_indices",
+          "observed_pixel_hashes",
+          "support_reason"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "ziyuan-2012:8FB9:745bc4180f7d",
+              "ziyuan-2012:8FB9:f123ec8f0c27"
+            ]
+          },
+          "supported": {
+            "type": "boolean"
+          },
+          "evidence_indices": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "observed_pixel_hashes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "support_reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

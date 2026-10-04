@@ -1,0 +1,40 @@
+{
+  "source_id": "ziyuan-2012",
+  "tracking_issue_url": "https://github.com/lbm364dl/hanzi-etymology-dict/issues/1",
+  "requires_coordinator_verification": true,
+  "findings": [
+    {
+      "key": "ziyuan-2012:5DE5:469df27c998d",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 5DE5",
+      "details": "[OCR CORRECTION REQUIRED] 字源 2012, PDF p. 423 / printed p. 411, 工 headword paragraph: the raw OCR glyph placeholders [glyph:g041] and [glyph:g042] occur in the sequence “经过了[glyph:g041]——[glyph:g042]的变化过程”. Direct inspection of the attached original page and a targeted crop confirms the two printed forms are present after the lower-stroke description, but their precise Unicode identities were not established. Do not replace them by a guessed character; have the source-corpus producer inspect and record the source-bound glyphs.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: runs/full-source-smoke-20261004/ziyuan-2012/5DE5",
+        "Research output: initial-followup/research/result.json"
+      ]
+    },
+    {
+      "key": "ziyuan-2012:5DE5:adffd8ca85a1",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 5DE5",
+      "details": "[OCR CORRECTION REQUIRED] 字源 2012, PDF p. 423 / printed p. 411, 工 headword paragraph: raw OCR “毚官” in the quotation “王呼令尹册命毚官司(司)康宫王臣妾、百工” is visibly printed in the original scan; the author’s parenthetical identifies 封 and 伊 as names, so “毚官” appears suspect, but the intended printed reading requires a bounded source-pixel/corpus verification before correction.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: runs/full-source-smoke-20261004/ziyuan-2012/5DE5",
+        "Research output: initial-followup/research/result.json"
+      ]
+    },
+    {
+      "key": "ziyuan-2012:5DE5:5bf1448efaf5",
+      "kind": "ocr",
+      "title": "Verify 字源 scan finding for 5DE5",
+      "details": "[OCR CORRECTION REQUIRED] 字源 2012, PDF p. 423 / printed p. 411, 工 headword paragraph: raw OCR glyph reference [glyph:g043] in “西周金文有‘[glyph:g043](司)工’这一职官” denotes a non-Unicode or unresolved printed graph preceding 工; the paragraph interprets the title as 司空. Preserve the printed occurrence as source-bound until the glyph identity is checked; do not normalize it to 司 by inference.",
+      "verification": "Check the identified printed page and exact scan span; correct source-bound OCR or record an unresolved glyph identity.",
+      "evidence": [
+        "Source job: runs/full-source-smoke-20261004/ziyuan-2012/5DE5",
+        "Research output: initial-followup/research/result.json"
+      ]
+    }
+  ]
+}

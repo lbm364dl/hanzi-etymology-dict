@@ -1,0 +1,139 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "口"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000087",
+          "pdf_page_1based": 87,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0087/source.png",
+          "source_sha256": "8e03aa9818392e353942debcd274a96e32e4c10f785e0abde042d038191113e9",
+          "evidence_sha256": "66cde12a03030807be6f8b3416de7aa1fcb0faaf69721b52d3f6abdd9308e643",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "口 kǒu 溪组、侯部；溪组、厚韵、苦后切。"
+          ],
+          "excerpt": "氂 告 譽 口 囑 喙 吻 喉 噲\n\n口 部\n\n口 kǒu 溪组、侯部；溪组、厚韵、苦后切。\n\n[glyph:g001] 商 1\n[glyph:g002] 商 2\n[glyph:g003] 西周 3\n[glyph:g004] 战国 4\n[glyph:g005] 《说文》小篆 5\n[glyph:g006] 秦 6\n[glyph:g007] 汉 7\n[glyph:g008] 战国 8\n[glyph:g009] 战国 9\n口 楷书\n\n1、2《甲文编》39页。3《金文编》57页。4《古玺》22页。5《说文》30页。6《睡乙》26页。7《马王堆》45页。8《说文》古文偏旁，见32页君字。9《甲金篆》73页。\n象形字。字像人口之形。本义即指口。《乙》1463：“贞：疾口？”《诗·豳风·鸱鸮》“予手拮据……予口卒瘏”（瘏，病也），也用其本义。金文中“口”字用作族氏文字。古文字中“口”一般写作两笔，至汉时可能出现了作三笔写的，但笔顺与现在不同，其顺序可能是[glyph:g010]或[glyph:g011]。（陈英杰）\n\n囑 zhòu 端组、侯部；端组、侯韵、都豆切。\nzhuó 端组、屋部；知组、觉韵、竹角切。\n\n[glyph:g012] 《说文》小篆 1\n[glyph:g013] 汉 2\n囑 楷书\n\n1《说文》30页。2《甲金篆》73页。\n形声字。从口，蜀声。本义指鸟嘴。字亦作咪。《玉篇·口部》：“咪，同囑。”《诗·曹风·候人》：“维鹈在梁，不濡其咪。”毛传：“咪，喙也。”《玉篇·口部》引作“不濡其囑”。此义读作zhòu。字或用同“啄”。《战国策·楚策四》：“黄雀因是以俯囑白粒，仰栖茂树，鼓翅奋翼。”音读zhuó。（陈英杰）\n\n喙 huì 晓组、月部；晓组、废韵、许秽切。\n\n[glyph:g014] 《说文》小篆 1\n[glyph:g015] 汉 2\n[glyph:g016] 汉 3\n[glyph:g017] 汉 4\n[glyph:g018] 汉 5\n[glyph:g019] 汉 6\n喙 楷书\n\n1《说文》30页。2、6《甲金篆》73页。3《汉印徵》卷2，4页。4、5《银雀山》38页。\n形声字。从口，彖声。《说文》：“喙，口也。”朱骏声通训定声：“兽虫之口曰喙。”《左传·昭公四年》：“顾而见人，黑而上偻(驼背)，深目而猥喙(猪嘴)。”亦引申指人的口。《庄子·秋水》：“今吾无所开吾喙，敢问其方。”成玄英疏：“喙，口也。”《集韵·候韵》：“囑，或作喙。”丁候切，当是因喙与囑义同而换读囑音。甲骨文有一从口从豕之字作[glyph:g020]，乃豕名，非喙字。（陈英杰）\n\n吻 wěn 明组、物部；微组、物韵、武粉切。\n\n[glyph:g021] 《说文》小篆 1\n[glyph:g022] 《说文》或体 2\n[glyph:g023] 秦 3\n吻 楷书\n\n1、2《说文》30页。3《睡乙》28页。\n形声字。从口，勿声。本义指嘴唇。《说文》：“吻，口边也。”《周礼·考工记·梓人》：“锐喙决吻。”郑玄注：“吻，口腃也。”（《集韵·仙韵》：“腃，吻也。”）现在所说的“接吻”仍用本义。由嘴唇义的名词用法引申出动词用法，指用嘴唇去接触人或物以表示爱的感情，是现代汉语中产生的。（陈英杰）\n\n喉 hóu 匣组、侯部；匣组、侯韵、户钩切。\n\n[glyph:g024] 《说文》小篆 1\n[glyph:g025] 汉 2\n[glyph:g026] 楷书\n喉 楷书\n\n1《说文》30页。2《甲金篆》74页。\n形声字。从口，侯声。其本义即现在口语所说的“喉咙”，是人和陆栖脊椎动物呼吸道的前(上)端部分，上通咽，下接气管，兼有通气和发音的功能。或包括咽，统称“咽喉”，亦即“喉咙”。《庄子·大宗师》：“真人之息以踵，众人之息以喉。”（陈英杰）\n\n噲（浍） kuài 溪组、月部；溪组、夬韵、苦夬切。\n\n75"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000090",
+          "pdf_page_1based": 90,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0090/source.png",
+          "source_sha256": "6d3987d7474278a75dfd3d1cfcf5692291e5b90ef7a3ca22c79c4a5ed14eff7c",
+          "evidence_sha256": "8ce9cf0683b187f950056d4fdf3e4ac220dd31cd534f14c1c3efcd62a7e1ff91",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "口部\n\n“咀,含味也。”段玉裁注:“含而味之。”《南史·梁本纪下》:“伏惟陛下咀痛茹哀,婴愤忍酷。”引申为咬嚼义。《苍颉篇·口部》:“咀,瞧也。”(陈英杰)\n\n嚐(𪠽) jì 从纽、脂部;从纽、霁韵、在诣切。\n\n[glyph:g001]¹—[glyph:g002]²—嚐—𪠽\n《说文》小篆 汉 楷书 楷书\n1《说文》31页。2《简帛典》167页。\n形声字。从口,齊声。《说文》:“嚐,尝也。”指微微尝一点。古代行礼时的仪节之一。当“嚐”与“啐”(cuì)对举时,则“嚐”特指吸入酒时只到牙齿为止,不吸入口,吸入口则叫“啐”。《书·顾命》“太保受同,祭嚐”(太保接过酒杯,先祭祀,尔后尝酒),即指吸酒至齿,示饮而实不饮。引申为品尝义,由品尝义引申出吃、吸等义。𪠽是由“齊”之简化字“齐”类推简化而成的。(陈英杰)\n\n瞧 jiào 从纽、宵部;从纽、笑韵、才笑切。\n\n[glyph:g003]¹—[glyph:g004]²—[glyph:g005]³(《说文》或体)—瞧\n战国 《说文》小篆 楷书\n1《汗简》4页。2、3《说文》31页。\n形声字。从口,焦声。本义即咀嚼。汉王充《论衡·道虚》:“口齿以瞧食,孔窍以注泻。”嚼与瞧乃异体字,只是声符不同而已。《说文》:“瞧……嚼,瞧或从爵。”今则通用“嚼”,读为jué或jiáo,乃文白异读。(陈英杰)\n\n吮 shǔn 船纽、文部;船纽、准韵、食尹切。\n\n[glyph:g006]¹—吮\n《说文》小篆 楷书\n1《说文》31页。\n形声字。从口,允声。本义指用口含吸。《说文》:“吮,敕(suǒ)也。”《韩非子·备内》:“医善吮人之伤,含人之血。”今天“吮吸”仍在书面语中使用,口语中则曰“嘬(zuō)”或“欶”。(陈英杰)\n\n噬 shì 禅纽、月部;禅纽、祭韵、时制切。\n\n[glyph:g007]¹ [glyph:g008]²(汉)—噬\n《说文》小篆 楷书\n1《说文》31页。2《甲金篆》75页。\n形声字。从口,筮声。本义为咬、吃。《说文》:“噬,啗也。”《方言》卷十二:“噬,食也。”《易·噬嗑》:“噬腊肉,遇毒。”引申为吞噬、侵吞义。(陈英杰)\n\n咱 dàn 定纽、谈部;定纽、敢韵、徒敢切。\n\n[glyph:g009]¹—[glyph:g010]²—咱\n《说文》小篆 汉 楷书\n1《说文》31页。2《马王堆》50页。\n形声字。从口,啗声。本义是吃、咬。《说文》:“咱,食也。”字亦作“啖”,《集韵·敢韵》:“啖,或作咱。”《韩非子·外储说左下》:“仲尼先饭黍而后陷桃,左右皆掩口而笑。”引申指给某人东西吃,进一步引申出利诱义。《史记·高祖本纪》:“使郦生、陆贾往说秦将,咱以利,因袭攻武关,破之。”(陈英杰)\n\n含 hán 匣纽、侵部;匣纽、覃韵、胡男切。\nhàn 匣纽、侵部;匣纽、勘韵、胡绀切。\n\n[glyph:g011]¹(战国) [glyph:g012]²(战国) [glyph:g013]⁴(战国) [glyph:g014]³(《说文》小篆) [glyph:g015]⁵(汉) [glyph:g016]⁶(汉) [glyph:g017]⁷(汉) [glyph:g018]⁸(汉) [glyph:g019]⁹(汉)—含\n楷书\n1、4《战文编》64页。2、9《甲金篆》75页。3《说文》31页。5、8《马王堆》46页。6、7《汉印徵》卷2, 5页。\n形声字。从口,今声。本义指东西放在嘴里,不咽下也不吐出。《史记·三代世表》:“有燕衔卵堕之,契母得,故含之,误吞之,即生契。”由本义引申出包含义,由包含义引申出包容、含纳义,由包容、含纳义引申出忍受义,如含垢忍辱。以上诸义读为hán。古代放在死者口里的珠、玉等物品亦称含,读hàn,字后加义符玉作琀。《广韵·勘韵》:“琀,送死口中玉。亦作含。”战国文字中作[glyph:g020],或写脱一笔作[glyph:g021],或笔画分离作[glyph:g022],含后写作[glyph:g023],一作[glyph:g024]\n\n78"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000088",
+          "pdf_page_1based": 88,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0088/source.png",
+          "source_sha256": "aab8d939eab8f1139acd0d22ae2ecc7cd5c9e7d8f32a78b16fd0cf28d62d5455",
+          "evidence_sha256": "f5d9fdb44875220be4b5c9e73790f12bad6245de051a7bc13c2b29f48fec2782",
+          "ocr_review_status": "unreviewed",
+          "match_type": "possible_continuation",
+          "headword_lines": [],
+          "excerpt": "口部\n\n[glyph:g001]¹ 嚼² 噲 — 哙\n《说文》小篆 汉 楷书 楷书\n1《说文》30页。2《汉印徵》卷2, 4页。\n形声字。从口, 會声。其本义为吞咽。《说文》: “噲, 咽也。”王筠句读: “此下咽之咽。”一说指动物的嘴。《说文》: “噲, 一曰嚏噲也。”又: “嚏, 一曰喙也。”文献中字或通“快”, 快意、称心义。《淮南子·精神》: “当此之时, 噲然而卧, 则亲戚兄弟欢然而喜。”“会”是會草书楷化字, 哙是由会类推简化而成的。(陈英杰)\n\n呑 tūn 透组、真部; 透组、痕韵、吐根切。\n[glyph:g002]¹ [glyph:g003]² [glyph:g004]³ 呑\n《说文》小篆 汉 汉 楷书\n1《说文》30页。2《马王堆》46页。3《甲金篆》74页。\n形声字。从口, 天声。本义为咽下。《庄子·庚桑楚》: “吞舟之鱼, 砀而失水, 则蚁能苦之。”马王堆帛书《五十二病方》259: “而吞之。”引申为吞并、消灭义。《管子·霸形》: “楚欲吞宋、郑。”(陈英杰)\n\n咽 yān 影组、真部; 影组、先韵、乌前切。\nyàn 影组、真部; 影组、霰韵、於甸切。\nyè 影组、屑韵、乌结切。\n[glyph:g005]¹ [glyph:g006]² 咽\n《说文》小篆 汉 楷书\n1《说文》30页。2《马王堆》49页。\n形声字。从口, 因声。本义指咽喉。咽是消化和呼吸的通道, 位于鼻腔、口腔的后方, 喉的上方, 分为鼻咽、口咽和喉咽三部分, 通称咽喉。《汉书·息夫躬传》: “吏就问, 云咽已绝, 血从鼻耳出。”颜师古注: “咽, 喉咙。”咽乃气所流通, 扼要之处也, 因以引申指形势险要之地。用为以上诸义时读 yān。由本义引申出吞食、吞咽义, 读 yàn。由吞食义引申出食塞义, 同“噎”。由食塞义引申出声塞义, 指声音呜咽、悲咽、幽咽, 形容其悲哀之声, 用为此类意义读 yè。(陈英杰)\n\n嗌 yì 影组、锡部; 影组、昔韵、伊昔切。\n[glyph:g007]¹ [glyph:g008]² [glyph:g009]³ [glyph:g010]⁴ [glyph:g011]⁵ [glyph:g012]⁶ 嗌\n西周 战国 战国 《说文》籀文 《说文》小篆 汉 楷书\n1《金文编》1281页。2、3《战文编》64页。4、5《说文》30页。6《马王堆》51页。\n形声字。从口, 益声。本义指咽喉。《谷梁传·昭公十九年》: “哭泣歠(啜)钎粥, 嗌不容粒。”马王堆帛书《阴阳十一脉灸经》甲本: “嗌肿。”引申指交通要道, 隘与嗌是同源词。嗌字在西周、战国文字中均作象形写法, 西周金文作[glyph:g013], 战国文字中作[glyph:g014](郭店楚简《语丛三》16号简), 《说文》籀文作[glyph:g015]。许慎云: “上象口, 下象颈脉理也。”此象形写法《金文编》列入附录下(662号), 作为不识字处理。此字西周金文中作人名, 如《集成》1961 嗌鼎、《集成》2838 曶鼎等; 或表赏赐义, 如《集成》4130 敖叔微簋盖“嗌贝十朋”, 或读“益”, 或读“赐”。形声写法小篆始见, 当晚出。(陈英杰)\n\n哆 chǐ 昌组、歌部; 昌组、纸韵、尺氏切。\nduō\n[glyph:g016]¹ [glyph:g017]² 哆\n战国 《说文》小篆 楷书\n1《甲金篆》74页。2《说文》30页。\n形声字。从口, 多声。本义指张大嘴。《说文》: “哆, 张口也。”《诗·小雅·巷伯》: “哆兮侈兮, 成是南箕(张大嘴就像是挂在南天的箕星)。”用其本义, 读 chǐ。今用为“哆嗦”, 字读 duō。张口之“哆”与哆嗦之“哆”是同形字。(陈英杰)\n\n呱 gū 见组、鱼部; 见组、模韵、古胡切。\nguā\nguǎ\n[glyph:g018]¹ 呱\n《说文》小篆 楷书\n1《说文》30页。\n形声字。从口, 瓜声。本义指小儿的哭声。《书·皋陶谟》: “启呱呱而泣。”用为此义读 gū。现在表达此义的字是“哇”, 指小儿哇哇的哭, 是一象声词。今此字仍用为象声词, 如狗赶鸭子呱呱叫、咭哩呱啦等, 读为 guā。今天在某些方言中有“拉呱”语, 义指讲故事、聊天、谈闲话等, 读 guǎ。(陈英杰)\n\n76"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0087/source.png",
+      "pdf_page": 87,
+      "source_pixel_sha256": "8e03aa9818392e353942debcd274a96e32e4c10f785e0abde042d038191113e9"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0088/source.png",
+      "pdf_page": 88,
+      "source_pixel_sha256": "aab8d939eab8f1139acd0d22ae2ecc7cd5c9e7d8f32a78b16fd0cf28d62d5455"
+    }
+  ],
+  "additional_research_context": {
+    "purpose": "Refresh source locator after a verified unrelated enclosing-headword correction while preserving reviewed mouth-entry work.",
+    "verified_source_repair": "PDF571/printed558 exactrawspan741:742 口→囗 appliedproducerandconsumer; no internalhorizontalstroke exists; Unicodeidentityisverifiedbywholeentrywéi/enclosure context plusofficialMOE/Unicode.",
+    "receipts": [
+      "research/ocr-corrections/ziyuan-2012-p0571-kou-verification/identity-adjudication/verification-note.md",
+      "runs/source-enrichment-ziyuan/third-expansion/ziyuan-2012/53E3/source-resolution-1/result.json"
+    ],
+    "instruction": "Inspect actual mouth entry PDF87/printed75 for used book claims. The unrelated PDF571 enclosing headword is corrected, not an outstanding OCR proposal. Preserve raw history and uncertainty of any other unverified graph. Do not invent a new pending OCRerror for the repaired occurrence. Recheck current-source record and cite it through actual focused citation authorship, then fresh factual/readability reviews. Existing exactpairpassedreviewandappliedrepair gates, but changed locator requires fresh source verification. Source workers must not run any orchestration or alter repo/book state."
+  },
+  "additional_context_policy": "These source leads and prior findings are research tasks, not preverified dossier evidence. Consult the referenced sources directly, check exact graph identity and scope, and add cited evidence for useful claims before authorship. Recheck reviewer hypotheses; modern structure does not establish historical roles. Record inaccessible sources as gaps.",
+  "unfinished_draft_provenance": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/third-expansion/ziyuan-2012/53E3",
+    "article_hash": "964dbc2c24e12f35a091dd73f87c74e3ff3a87250c929b1517bfba71d093ce32",
+    "dossier_hash": "04aa826d0670d537903b922454b3abdac29c803815742fa067c2b05b2d1d2a9b",
+    "previous_state_hash": "dcc1aafede0db3d87b7b11cebaec0acc2acc515a8ed4090174adb0f73d73e71b",
+    "canonical_article_hash": "fefe5717ed1aab915b2d4e9af46b355e84fc2556b8072c2adbeceda1da55b62f",
+    "canonical_dossier_hash": "d48d072b8c9264922664adcf9b20245c5679eda21498107823a6d696ad1e23b1",
+    "requires_fresh_research_and_reviews": true,
+    "prior_review_proposals_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "prior_review_proposals": [],
+  "prior_consulted_book_records": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/third-expansion/ziyuan-2012/53E3",
+    "previous_audit_hash": "c33d52d9a967e8d1cfd53c5636ab85bfcffb9c54da67f2a054cf1451a1ccb159",
+    "records": [
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "7785c6f19cb30dec4dc268516be31724e8ca863a6d36ffe76d496c7f9e6e7cd7",
+        "research_result_hash": "d6eebfc78b2e9a553d442d77bd8aee59920815d48635d6c61882c3e4f036a74b",
+        "source": "字源 (李學勤主編; 天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692)",
+        "field": "PDF p. 87; printed p. 75; headword entry and scan-verified passage",
+        "text": "The scan shows the headword 口 and its reading note. The entry calls it a pictograph shaped like a human mouth, says its basic meaning is ‘mouth’, cites an oracle-bone occurrence and the poem 詩·豳風·鴟鴞 using 口 in its basic sense, and notes that bronze inscriptions also use it as a clan sign. It describes ancient forms as generally two strokes and says three-stroke writing may appear by Han times, with stroke order differing from modern practice. I inspected the original scan pixels for the headword, forms, cited lines, and the entry’s ending before 囑. The account supports the mouth pictograph; the stroke-history statement is the book’s proposal, not independently confirmed here.",
+        "evidence_ids": [
+          "X-fa2fb609c4b221251e2e"
+        ]
+      }
+    ],
+    "requires_current_source_research": true
+  },
+  "continuation_policy": "This is an unapproved draft, not reusable approval. Recheck source-dependent claims against current source scans/corpus. Prior revise findings are hypotheses to recheck, including possible source identity errors; do not obey them merely because a previous verifier repeated them. Prior consulted book records identify exact retained evidence IDs and claims to recheck. After current-source verification, cite relevant supported claims through evidence_ids metadata; dossier-only records do not count as article source use. Preserve prior supported work and obtain fresh factual/readability reviews.",
+  "require_source_specific_page_evidence": true,
+  "current_uncited_book_records": [
+    {
+      "research_output": "initial-followup/research/result.json",
+      "research_receipt_hash": "7f5daee8663c9204da26f5604f8893e2a4098cf9b79eaf410ac5badcff477a42",
+      "research_result_hash": "a67bd81f81f8c1e72b6af85b5a9c243744aae4cf3c802405ef1f6bf8cb2bd6f6",
+      "source": "李學勤主編《字源》 (天津古籍出版社／遼寧人民出版社, 2012, ISBN 9787552800692)",
+      "field": "PDF p. 87; printed p. 75; headword 口 and entry prose, verified against attached scan pixels",
+      "text": "The scanned entry identifies 口 as a pictograph shaped like a human mouth and gives ‘mouth’ as its basic meaning. It cites an oracle-bone use, 詩·豳風·鴟鴞 using 口 in the mouth sense, and bronze use as a clan sign. It also proposes that ancient forms were generally written in two strokes, with three-stroke forms possibly appearing by Han times; this stroke-history claim is the book's account, not independently confirmed here. I visually checked the headword, forms, prose and entry ending on the attached PDF p. 87 scan. PDF p. 88 begins with a continuation for 噲, not 口.",
+      "evidence_ids": [
+        "X-6928430db76bf55301a3"
+      ]
+    }
+  ],
+  "citation_integration_policy": "Research has already returned the supplied exact page-specific book records. Use the current retained evidence IDs on article claims that these records support. Unchanged supported prose plus a citation is sufficient. Do not invent support, put IDs in prose, or cite unrelated claims. If no record supports an article claim, retain a precise research gap. Obtain fresh independent factual and readability reviews."
+}

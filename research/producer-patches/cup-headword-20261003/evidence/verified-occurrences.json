@@ -1,0 +1,32 @@
+{
+  "provenance": {
+    "book": "字源, 2012",
+    "pdf_page": 534,
+    "printed_page": 521,
+    "raw_ocr_path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0534/ocr.json",
+    "raw_ocr_sha256": "f0ba693fec187514258f87dc3ad54952eb7b7072a234ac7f88067e427dee54dc",
+    "raw_text_sha256": "b6293ad9d3e6c5a24ff5c6d3ed6fe648f7542d8f0ffae013c5b36501f6027729",
+    "ocr_evidence_sha256": "c4647acef5f06cc6b39bcc005b89d8f14a5ef26fedef3bd6ec5ebf03dac51803",
+    "source_pixel_sha256": "b1b8aa1a0816b15211ac2e5bf3c31ec681d8c077d8755d777df847c7d5902dfd",
+    "source_png_sha256": "a43a8e851a295df143076fd84ce166cfc5ae73deae0a60c1e297b177b8718488",
+    "scope": "One literal headword immediately before bēi pronunciation; no neighboring-entry or whole-page approval.",
+    "discriminating_checks": "Inspect right upper strokes and lower outline individually. Candidate 桮 has 不 above 口 (否); 楛 has 艹 above 古; 梪 has 豆 with lower opposing dots and bottom horizontal; 栢 has 白 with an inner bar in the box. Determine observed geometry rather than inferring from a familiar word. The coordinator observes a top horizontal with slanted/vertical 不 strokes over an empty 口, but this is a hypothesis to independently verify against crop pixels. Reference for Unicode mapping, not scan proof: Taiwan MOE A01882-004 https://dict.variants.moe.edu.tw/dictView.jsp?ID=20793 identifies 桮 as 木+否. If actual pixels differ, reject proposed replacement."
+  },
+  "occurrences_hash": "50a33dbbc2f7525031cab03d08845aaf7a6761639c75ce7adc08f800e0a1377b",
+  "result": {
+    "occurrences": [
+      {
+        "id": "p534-cup-headword",
+        "raw_text": "楛",
+        "printed_text": "桮",
+        "verdict": "confirmed_correction",
+        "reason": "In attachment 2, the complete target directly before the printed “(杯) bēi” anchor has 木 on the left; on the right, strokes form an upper 不-like shape over a closed, empty 口 outline. This differs from raw 楛, whose right side would show 艹 over 古. The full-page attachment 1 shows the same headword at the lower left next to “(杯) bēi,” confirming the target’s location. The observed right-hand geometry supports 桮."
+      }
+    ]
+  },
+  "result_hash": "9ccd6f9870e7142a491c0941e877bd63af1a1c58bfd38d551d88bcdaad8d09a8",
+  "review_directory": "runs/source-enrichment-after-ocr/ocr-verification/ziyuan-2012-p0534-cup-headword-component-check-20261003/review",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "whole_page_reviewed": false
+}

@@ -1,0 +1,57 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "occurrences"
+  ],
+  "properties": {
+    "occurrences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "raw_text",
+          "printed_text",
+          "verdict",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "ziyuan-p0516-ben-native-scalar-comparison-20261003"
+            ]
+          },
+          "raw_text": {
+            "type": "string",
+            "enum": [
+              "日"
+            ]
+          },
+          "printed_text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "verdict": {
+            "enum": [
+              "correct_raw",
+              "confirmed_correction",
+              "unresolved_identity",
+              "unsupported_raw_identity"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "minItems": 1,
+      "maxItems": 1
+    }
+  }
+}

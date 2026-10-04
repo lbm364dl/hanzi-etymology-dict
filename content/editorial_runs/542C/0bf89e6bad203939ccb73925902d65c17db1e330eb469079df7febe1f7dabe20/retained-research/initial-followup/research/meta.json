@@ -1,0 +1,48 @@
+{
+  "status": "complete",
+  "fingerprint": "a392793a52d3b7d7524b029f6339993f69876fbb1bf5cc929c6b4881ee3ed146",
+  "role": "research",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "started_at": 1791108731.9183016,
+  "driver_runtime": {
+    "executable": "/tmp/hanzi-etymology-venv/bin/python",
+    "version": "3.12.3",
+    "prefix": "/tmp/hanzi-etymology-venv",
+    "base_prefix": "/usr"
+  },
+  "queued_at": 1791108731.9152553,
+  "agent_capacity": 3,
+  "slot_wait_seconds": 0.0030481815338134766,
+  "image_argument_manifest": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1062/source.png",
+      "sha256": "59bc4ebeeede2b564e442f460c080f8a06787c05034880bce314015da14a4ccb"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0096/source.png",
+      "sha256": "9382ef1f64da3bcb4cd034e8467095f425c69e5c0b2a219662c985e8286b59a7"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1063/source.png",
+      "sha256": "5121ea3258e125533f7d27eea5dd3748a97455056e0f651c6b0929a404c21679"
+    }
+  ],
+  "agent_pid": 909663,
+  "agent_thread_ids": [
+    "01a10666-5460-77b2-8088-425e4d31cb7c"
+  ],
+  "web_tool_events": 4,
+  "web_action_counts": {
+    "search": 1,
+    "other": 3
+  },
+  "web_search_calls": 1,
+  "web_search_queries": [
+    "site:zdic.net/hans/听 听 字形结构 字形分析",
+    "字源 听 简化字 聽 斤 口 现代 字形结构",
+    "site:dict.variants.moe.edu.tw 听 聽 字形 口 斤"
+  ],
+  "result_hash": "e3824e6d74b0a83dd92b5d2f4678e00707bd6eae9036eb1beefb8227cf2c7fe3",
+  "finished_at": 1791108831.274362
+}

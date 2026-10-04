@@ -1,0 +1,49 @@
+{
+  "allowed_edit_paths": [
+    "summary/text",
+    "summary/evidence_ids",
+    "formation/text",
+    "formation/evidence_ids",
+    "components/0/text",
+    "components/1/text",
+    "components/1/evidence_ids",
+    "components/1/sound_limitation/text",
+    "components/1/sound/0/text",
+    "components/1/sound/0/evidence_ids",
+    "meaning_history/senses/0/gloss",
+    "meaning_history/senses/0/period",
+    "meaning_history/senses/0/text",
+    "meaning_history/senses/0/evidence_ids",
+    "uncertainties/1/text",
+    "uncertainties/1/evidence_ids",
+    "learner/overview/text",
+    "learner/overview/evidence_ids",
+    "learner/components/0/text",
+    "learner/components/0/evidence_ids",
+    "learner/components/1/text",
+    "learner/components/1/evidence_ids",
+    "relationships/0/text"
+  ],
+  "findings": [
+    {
+      "kind": "factual",
+      "topic": "you-current-sense-and-language-scope",
+      "instruction": "Keep the ordinary second-person ‘you’ sense current and cite the recently consulted 2024 MOE character-dictionary evidence X-b12f9c040d986933641e (as well as any relevant current dictionary records already cited). It is an authoritative current dictionary entry with no obsolete/regional label. Do not overstate ‘usually singular’ or ‘Mandarin’ unless a cited source explicitly supports those qualifiers: the dictionary also records bare-你 plural examples from historical works and distinguishes them from 你們. Use the plain gloss ‘second-person pronoun, you’ if needed. The text/period should distinguish the present-day listed sense from historical citations and leave exact priority/date unresolved. The generated has_sense edge must follow the sense automatically; do not patch generated edges directly. Preserve the plural dictionary examples and their unresolved present-day productivity as a separate scoped note."
+    },
+    {
+      "kind": "factual",
+      "topic": "you-components-and-competing-analysis-scope",
+      "instruction": "Resolve the retained fresh factual review findings. E2 explicitly reports a person/semantic account for 亻, while E3 reports a competing ideographic account; do not state either as historically established. Describe each as a source-specific proposal and keep 你’s formation disputed. Qualify the 人+尔 account as a reported unverified proposal in formation, or omit it. Narrow uncertainties[1] to what the evidence reviewed does not establish: an original depicted object or independently recoverable object-name pronunciation for 尔. Avoid universal absence claims. Keep the current visible forms and established 亻 side-component identity intact."
+    },
+    {
+      "kind": "readability",
+      "topic": "you-modern-readings-versus-ancient-sound-role",
+      "instruction": "Resolve the exact readability finding on components[1].sound[0].text and the matching component explanations. Explicitly name the present-day system as Modern Mandarin for 尔 ěr / 你 nǐ, then say this comparison alone does not establish an ancient sound relationship or role. Add that limitation in plain language to components[1].text and learner.components[1].text. Keep any separately reported Old Chinese reconstructions distinct and unverified as a matched pair; cite only evidence that supports each statement."
+    },
+    {
+      "kind": "readability",
+      "topic": "you-side-graph-and-word-history",
+      "instruction": "Keep learner/summary meaning-first. The displayed 尔 is the standardized simplified shape of 爾; 字源 describes 尔 as using 爾’s upper part, and the character 爾/尔 is separately attested as a pronoun for ‘you/your’. State this as qualified graphic and lexical history, not proof of how 你 was formed or of a sound relation. Cite X-194276d190401451197c for simplification and X-56e1c243d283857d2b2b or X-7790e253fa548cf65755 for the pronoun use. Preserve the accepted distinction between the sense ‘you’ and the earliest-attestation limitation; the factual verification explicitly says that chronology caveat is supported and requires no correction."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "target_match",
+    "pixel_reason"
+  ],
+  "properties": {
+    "target_match": {
+      "enum": [
+        "middle_control",
+        "right_control",
+        "neither_or_unresolved"
+      ]
+    },
+    "pixel_reason": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

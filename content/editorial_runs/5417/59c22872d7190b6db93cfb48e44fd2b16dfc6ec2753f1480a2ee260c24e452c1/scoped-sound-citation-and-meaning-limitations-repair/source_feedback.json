@@ -1,0 +1,20 @@
+{
+  "allowed_edit_paths": [
+    "components/1/sound",
+    "components/1/sound_limitation",
+    "components/2/evidence_ids",
+    "components/3/sound_limitation",
+    "meaning_history/developments",
+    "meaning_history/limitations"
+  ],
+  "instruction": "Make only the required evidence-scope repairs. In traditional component components[1] (馬 scoped to 嗎), retain exactly one Modern Mandarin sound comparison 馬 mǎ / 嗎 ma (neutral tone), citing X-40764bb2fc2ce4b09f49, X-f34adfc6793991860e0a, X-b328768aff2cac6eae29. Remove the simplified 马/吗 chart row from this traditional scope. Keep its sound_limitation precise and supported by those modern reading records plus X-4928c0d5969ecaa72ba0 for the separate scold analysis. For current simplified component components[3] (马 in 吗), keep exactly its one current Mandarin pair as supported by 字源 appendix X-b57fc8149fd9ad000253; do not cite this simplified pair in the traditional component. Repair components[3].sound_limitation so the modern pair cites X-b57fc8149fd9ad000253, and the limited question-particle role and separate traditional scold analysis cite X-890f788f7161c0cac221 and X-4928c0d5969ecaa72ba0. Do not claim 字源 establishes an ancient relation. Remove E2 from components[2].evidence_ids: E2 is a generic imported role claim, not a current-layout citation; retain the exact current arrangement support X-890f788f7161c0cac221 and the separate historical scold analysis support X-4928c0d5969ecaa72ba0. Move the non-directional statement that no semantic development between the separate scold use and question particle is established out of meaning_history.developments and into meaning_history.limitations, preserving its cited support and combining concisely with existing limitation if appropriate. Set meaning_history.developments to an empty array so no generated sense_developed_into edge asserts a direction. Preserve all other article content, roles, senses, source scope, and evidence.",
+  "editorial_adjudication": "For both reviewers, independently verify sound arrays and each sound_limitation citation against the exact evidence records. X-b57fc8149fd9ad000253 is the directly inspected 字源 pronunciation chart for simplified 马/吗 only; CNS records support traditional 馬/嗎 readings; neither current pair alone proves an ancient relation for the particle. The separate 口＋馬 phonetic analysis belongs to 嗎 as “scold”. Also independently assess the current 吗 component citations: X-890f788f7161c0cac221 explicitly supports visible 口＋马 in simplified 吗, while E2 is a generic imported role claim and should not support current graph layout/unknown role. Finally, generated sense edges must reflect an actual evidenced development direction; a statement that no direction is established belongs in limitations, with no generated edge. Earlier factual/readability findings on the previous draft are hypotheses to recheck, not approvals or instructions to preserve the duplicated array. Report any genuine remaining mismatch with field path and exact evidence.",
+  "verified_review_findings": [
+    "Root adjudication: one traditional 馬/嗎 current comparison with CNS citations; one simplified 马/吗 pair with direct 字源 appendix citation. Traditional component sound_limitation must not borrow simplified book evidence. Simplified component sound_limitation must cite its exact pair and proper scoped-role evidence.",
+    "Root adjudication: remove denial-only scold→question development from meaning_history.developments and place its limitation in meaning_history.limitations; do not generate a semantic edge."
+  ],
+  "prior_review_proposals": [
+    "Previous factual reviewer proposed removing the second sound record under components[1] and retaining the correctly scoped simplified pair under components[3].",
+    "Previous readability reviewer proposed changing the duplicate traditional sound record to 馬/嗎. Recheck instead whether the sound array should contain exactly one traditional pair and a separate simplified pair under components[3]."
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "米"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000657",
+          "pdf_page_1based": 657,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0657/source.png",
+          "source_sha256": "716bb183032464da6c4c78cf37ac3dc091192ffdf7f885d22b5fdd5126cc03dc",
+          "evidence_sha256": "baf8e4572a6eb190626936f1fa6fe5ad82482202b826e89cc7aafda13c8971cd",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "米 mǐ 明组、脂部；明组、荠韵、莫礼切。"
+          ],
+          "excerpt": "。此字《说文》所无，为徐铉所增的新附字。《说文》：“馥，香气芬馥也。从香，复声。”此训实际上是“苾”的假借字，《说文·草部》：“苾，馨香也。从草，必声。”字亦作“秘”或“佖”。《玉篇·香部》：“馥，皮逼、扶福二切。香也。”也指香气浓郁。《易林·复之艮》：“秋兰芬馥，盈满箧筐。”(王志平)\n\n米部\n\n米 mǐ 明组、脂部；明组、荠韵、莫礼切。\n\n644"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000658",
+          "pdf_page_1based": 658,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0658/source.png",
+          "source_sha256": "746cd29eaf741bd29afcb08a38d8b5220df1883d35e9903269e3d3d61e376ada",
+          "evidence_sha256": "f70b8686e46cd92580685e2aac0f6e4c825fa2f2895c7cbeeeb68c6b7e82c0bf",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "粨 粱 香 馨 馥 米 粱 粲 粝 精\n\n[glyph:g001]¹ [glyph:g002]² [glyph:g003]³ [glyph:g004]⁴ [glyph:g005]⁵ 米\n商 西周 战国 《说文》小篆 汉 楷书\n1《甲文编》313页。2《金文编》508页。3《汉语字形表》282页。4《说文》147页。5《隶辨》382页。\n象形字。像一堆米粒之形。原像在一横的上下各有三点，各个点都像米粒之形。后来上下中间的两点都变成长竖，又后来两个长竖连在一起，与原有一横交叉成十字形。楷书化后，下面左右的两点分别变成了一撇一捺，本义是去掉皮的粮食作物的子实。《说文》：“米，粟食也。”《周礼·地官·舍人》：“掌米粟之出入，辨其物。”《史记·货殖列传》：“楚汉相距荥阳也，民不得耕种，米石至万。”后词义泛化，指所有脱去皮的籽粒，如花生米。又引申指像细米一样的绣纹，还引申作量词，表示少量。(张玉金)\n\n粱 liáng 来组、阳部；来组、阳韵、吕张切。\n[glyph:g006]¹ ─── [glyph:g007]² ─ [glyph:g008]⁵ ─ [glyph:g009]⁶ ─ [glyph:g010]⁷ ─ 粱\n西周 春秋 战国 《说文》小篆 汉 楷书\n  └─ [glyph:g011]³ ─── [glyph:g012]⁴\n      西周    西周\n1-4《金文编》508页。5《战文编》488页。6《说文》147页。7《隶辨》224页。\n形声字。从米，[glyph:g013](古“创”字)声。“粱”字的声音初为“㔚”，后来有的改为“[glyph:g014]”(古“创”字)，有的改为“[glyph:g015]”(古“粱”字)。西周文字中的“粱”或作“[glyph:g016]”，此当是由“[glyph:g017]”和“[glyph:g018]”构成的双声字，共用一个偏旁“刀”，“刀”为“[glyph:g019]”之省。从“[glyph:g020]”声的“粱”后来通行开来，一直传到今天。声符“[glyph:g021]”中的“[glyph:g022]”有被省去两点而成“刀”形的，声符“[glyph:g023]”中的“[glyph:g024]”也有被省去两点而与“亡”字类似的。本义是指高粱。《说文》：“粱，米名也。”《篇海类编·食货类·米部》：“粱，似粟而大，有黄青白三种，又有赤黑色者。”《本草纲目·谷部·粱》：“自汉以后，始以大而毛长者为粱，细而毛短者为粟。”这里的“粟”即指谷子。《诗·小雅·甫田》：“黍稷稻粱，农夫之庆。”(张玉金)\n\n粲 càn 清组、元部；清组、翰韵、苍案切。\n[glyph:g025]¹ ─ [glyph:g026]² ─ [glyph:g027]³ ─ 粲\n战国 《说文》小篆 汉 楷书\n1《古字典》1044页。2《说文》147页。3《隶辨》573页。\n形声字。从米，[glyph:g028](càn)声。隶书将“尗”讹变为“夕”。楷书是由篆文的写法变来的。本义是精米，即舂得精细的白米。《诗·郑风·缁衣》：“适子之馆兮，还，予授子之粲兮。”由本义引申有晶莹明亮的意思。三国魏曹植《赠徐幹》：“众星粲以繁。”表达这个意义的“粲”后来又被加上“火”字旁写成“燦”(今简化为“灿”)，所以“粲”和“燦”是古今字的关系。(张玉金)\n\n粝(粝) lì 来组、月部；来组、祭韵、力制切。\n粝 ─ 粝\n楷书 楷书\n[glyph:g029]¹ ─ [glyph:g030]² ─ 粝\n秦 《说文》小篆 楷书\n1《睡甲》112页。2《说文》147页。\n形声字。本作“粝”，从米，萬声。后来由于语音的演变，“萬(万)”已不能准确地表达“粝”字的声音了，到了楷书里声符被改成了“厲(厉)”。但楷书里也有从“萬(万)”的写法。简化汉字时，“粝”被用偏旁简化法简化为“粝”。本义是粗米。《说文》：“粝，粟重一秭为十六斗太半斗，舂为米一斛曰粝。”(秭，shí，一百二十斤。太半斗，即大半斗。斛，hú，十斗)《汉书·司马迁传》：“粝粱之食，藜藿之羹。”(张玉金)\n\n精 jīng 精组、耕部；精组、清韵、子盈切。\n[glyph:g031]¹ ──────── [glyph:g033]³ ─ [glyph:g034]⁴ ─ 精\n战国 《说文》小篆 汉 楷书\n  └─ [glyph:g032]²"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0657/source.png",
+      "pdf_page": 657,
+      "source_pixel_sha256": "716bb183032464da6c4c78cf37ac3dc091192ffdf7f885d22b5fdd5126cc03dc"
+    }
+  ],
+  "target_language": "zh",
+  "require_source_specific_page_evidence": true
+}

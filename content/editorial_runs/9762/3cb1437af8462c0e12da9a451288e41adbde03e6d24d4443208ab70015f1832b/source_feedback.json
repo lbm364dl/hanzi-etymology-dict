@@ -1,0 +1,94 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "面",
+        "麵"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000797",
+          "pdf_page_1based": 797,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0797/source.png",
+          "source_sha256": "1299fccc946695f8dcacc0833fbb0e5ef70fbce15f52307d86bba9a5a5e14582",
+          "evidence_sha256": "8440900b5c30ea10824e2c3f8e2c20e45727a50a51731847973f79caa072a000",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "面 miàn 明组、元部;明组、线韵、弥箭切。"
+          ],
+          "excerpt": "首也。”徐灝段注笺:“首乃最初之古文,𦣻其省体耳。”出土文献中有𦣻字,见于战国随县曾侯乙墓竹简,用法与首字完全相同。𦣻与首在甲骨文、西周金文中同字同形,至战国文字在字形上开始分化,有头发者为首字,无头发者为𦣻字,但音义完全相同,仍为一字之异体。传世文献中不见𦣻字用例,皆用首字。(周宝宏)\n\n面部\n\n面 miàn 明组、元部;明组、线韵、弥箭切。\n[glyph:g007]¹ [glyph:g008]² [glyph:g009]⁵ [glyph:g010]⁶ [glyph:g011]⁷ [glyph:g012]⁸ [glyph:g013]⁹ [glyph:g014]¹⁰\n商 西周 秦 《说文》小篆 汉 汉 汉 汉\n[glyph:g015]³ [glyph:g016]⁴ [glyph:g017]¹¹ 面\n战国 战国 汉 楷书\n1《甲文编》371页。2《金文编》26页“𦣝”字所从。3、4《战文编》610页。5、7《睡甲》142页。6《说文》184页。8-11《篆隶表》635页。\n会意字。《说文》:“面,顔前也。从首,象人面形。”李孝定《甲骨文集释》:“契文从目,外象面部匡郭之形,盖面部五官中最是引人注意者莫过于目,故面字从之也。篆文从𦣻,则从口无义可说,乃从目之讹。”甲骨文面字本为会意字,至西周金文作[glyph:g008]形,已变为从首(与首为一字),当为指事字,指示颜面所在之义。战国楚简面字作[glyph:g015]形,似从𦣻,当是由西周金文字形体指事符号演变而来。秦简、《说文》小篆、汉代初年简帛中的面字,应该是甲骨文面字和西周金文面字两种形体演变的结果。甲骨文辞残,面字用法不详。西周金文面字只作偏旁使用。(周宝宏)\n\n靦 tiǎn 透组、元部;透组、铣韵、他典切。"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000495",
+          "pdf_page_1based": 495,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0495/source.png",
+          "source_sha256": "bcc9c97bda89c58af6a2fc20dc8e8216d7e8a577f2cb530e19f75f5da2dc837f",
+          "evidence_sha256": "080a34963fe5d56e59c7c6470fc7402982dc3d56fbbd632f07e7d9a6631b5be2",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "麪（面） miàn 明纽、元部；明纽、霰韵、莫甸切。"
+          ],
+          "excerpt": "2]¹ [glyph:g013]² 麩\n《说文》小篆 《说文》或体 楷书\n1《说文》112页。\n形声字。从麥，夫声。麩或从甫作𪎋，夫、甫古音相近可通。《说文》：“麩，小麦屑皮也。”“𪎋，麩或从甫。”今人称为麸子或麸皮。典籍中麩亦作䴭，《晋书·五行志中》：“麦稃粗秽，其精已去，明将败也。”（刘桓）\n\n麪（面） miàn 明纽、元部；明纽、霰韵、莫甸切。\n[glyph:g014]¹ 麪\n《说文》小篆 楷书\n1《说文》112页。\n形声字。从麥，丏声。指用麦子粉碎成的细末，也就是面粉。《说文》：“麪，麦屑末也。”《玉篇》：“麪，麦麸也。”晋束皙《饼赋》：“重罗之麪，尘飞雪白。”俗作麵，见《集韵》。今简化为面。（刘桓）\n\n夊部\n\n夊 suī 心纽、脂部；心纽、脂韵、息遗切。\n[glyph:g015]¹ [glyph:g016]² 夊\n商 《说文》小篆 楷书\n1《甲文编》253页。2《说文》112页。\n象形字。像倒“止”形，本义为行走迟缓。《说文》：“夊，行遲曳夊夊，象人两胫有所躧也。”夊，后亦作缓，《玉篇·夊部》：“夊，行迟貌。《诗》云‘雄狐夊夊’。今作缓。”据陈奂《毛诗传疏》，此所引《诗》即《有狐》篇：“有狐绥绥”。在商代文字犹能看出字像倒“止”而非“两胫”之形。西周敳尊：“不（丕）显朕文考鲁公攵文遭公。”“攵文”已有学者读“垂文”，《楚辞·九叹·逢纷》：“垂文扬采遗将来兮。”战国文字此字字形已发生讹变。信阳简1.06：“攵则𫭟”，读为缓。（刘桓）\n\n482"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000798",
+          "pdf_page_1based": 798,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0798/source.png",
+          "source_sha256": "d33e0d39e5dfc96f5aa269f0e4eb8b4ddd535f49b08ce98cb43bc3d96391800d",
+          "evidence_sha256": "8b4bedd64646d6721ad35bc7e045e57d57af3df7e3c8ca78234aada4b9cc1d5a",
+          "ocr_review_status": "unreviewed",
+          "match_type": "possible_continuation",
+          "headword_lines": [],
+          "excerpt": "靦 頔 面 靤 靨 丏 首 馘\n\n[glyph:g001]¹一靦\n小篆 楷书\n\n1《说文》184页。\n形声字。《说文》：“靦,面見(兒)也。从面、見,見亦声。”“面見”为面兒(貌)之讹,这是清代《说文》学家共同的看法。《诗·小雅·何人斯》：“有靦面目,视人何极？”毛传：“靦,姡也。”陆德明释文：“姡,户刮反,面丑也。”《何人斯》为西周晚期作品,此时应有靦字。战国天星观楚简已有靦字,何琳仪《战国古文字典》：“靦,从見,从面,会面躯之意。面亦声。”又：“天星观简‘靦鉴’,读‘面鉴’,面镜。”此说解释“靦”字结构,与许说不同,何琳仪之说可从。靦字之本义为人面目之貌,引申而有羞愧之义。(周宝宏)\n\n靤 fǔ 並纽、鱼部;奉纽、虞韵、扶雨切。\n\n[glyph:g002]¹一靤\n《说文》小篆 楷书\n\n1《说文》184页。\n形声字。《说文》：“靤,颊也。从面,甫声。”段玉裁注：“颊者,面旁也。”桂馥义证：“颊者也,《易》:‘咸其辅颊舌’,虞、荀作輔,云:耳目之间称靤。马融云:頔,上颌也。”文献中多以辅为靤字。在先秦时代也许先借辅为之,后造靤字,因而靤字不常用。(周宝宏)\n\n靨(靥) yè 影纽、枼部;影纽、葉韵、於叶切。\n\n[glyph:g003]¹一靨一靥\n《说文》新附 楷书 楷书\n\n1《说文》184页。\n形声字。《说文》：“靨,姿也。从面,厭声。”纽树玉《说文新附考》：“《玉篇》:靨,於协切,引《淮南》‘靨辅在颊前则好’,又引《楚辞》曰‘靨辅奇牙’。”靨字本义指脸上两边的酒窝,是一种美好的容姿,因此《说文》以“姿”训“靨”。靨字应当产生于战国秦汉时代。(周宝宏)\n\n丏部\n\n丏 miǎn 明纽、元部;明纽、铣韵、弥殄切。\n\n[glyph:g004]¹一[glyph:g005]²一[glyph:g006]³一丏\n春秋 战国 《说文》小篆 楷书\n\n1 石鼓文《汧殹》“沔”字所从。2《古文典》1078页“沔”字所从。3《说文》184页。\n形声字。《说文》：“丏,不见也。象壅蔽之形。”清代《说文》学家们皆不知丏字的结构而曲加解释。何琳仪《战国古文字典》“沔”字条下(1077-1078页)：“丏,从乚,万声。《说文》:‘乚,匿也,象迟曲隐蔽形,读若隐(於谨切)。’(十二下十九)‘丏,不见也,象壅蔽之形(弥兖切)。’(九上六)”此说非常正确。丏字没有见于传世文献,也不单独见于先秦古文字资料,因此皆不知其用法如何。丏字作为沔字偏旁最早见于春秋时代石鼓文。(周宝宏)\n\n首部\n\n首 shǒu 书纽、幽部;书纽、有韵、书九切。\n\n[glyph:g007]¹ [glyph:g008]² [glyph:g009]³ [glyph:g010]⁴ [glyph:g011]⁵ [glyph:g012]⁶ [glyph:g013]⁷ [glyph:g014]⁸\n商 商 西周 西周 西周 西周 秦 秦\n\n[glyph:g015]⁹一[glyph:g016]¹⁰一[glyph:g017]¹¹一[glyph:g018]¹²一首\n《说文》小篆 汉 汉 汉 楷书\n\n1、2《甲文编》371页。3-6《金文编》630~631页。7《战文编》611页。8、10、11、12《篆隶表》635页。9《说文》184页。\n象形字。《说文》：“首,𦣻(shǒu,首的异体字)同,古文䭫也。巛象发,谓之髹,髹即巛也。”甲骨文首(无头发之首)和首(有头发之首)二形同为首字,像人头形。甲骨文经常见有“疾首”之卜,即头(头)有病之义,首在甲骨文中多用其本义。西周金文、西周文献首字更是常见,用于䭫(稽)首之首,也是用首字本义。西周早期金文首字形体与甲骨文首字形体相近,象形意味很浓,至西周晚期金文首字形体已与秦代小篆和《说文》小篆形体相近。楷书首字则是在汉代古隶和今隶首字形体基础产生的。(周宝宏)\n\n馘 qí 溪纽、脂部;溪纽、荠韵、康礼切。"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0797/source.png",
+      "pdf_page": 797,
+      "source_pixel_sha256": "1299fccc946695f8dcacc0833fbb0e5ef70fbce15f52307d86bba9a5a5e14582"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0495/source.png",
+      "pdf_page": 495,
+      "source_pixel_sha256": "bcc9c97bda89c58af6a2fc20dc8e8216d7e8a577f2cb530e19f75f5da2dc837f"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0798/source.png",
+      "pdf_page": 798,
+      "source_pixel_sha256": "d33e0d39e5dfc96f5aa269f0e4eb8b4ddd535f49b08ce98cb43bc3d96391800d"
+    }
+  ],
+  "target_language": "zh",
+  "require_source_specific_page_evidence": true
+}

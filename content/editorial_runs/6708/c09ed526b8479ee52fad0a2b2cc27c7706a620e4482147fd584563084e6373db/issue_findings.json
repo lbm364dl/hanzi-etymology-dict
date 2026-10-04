@@ -1,0 +1,32 @@
+{
+  "findings": [
+    {
+      "kind": "factual",
+      "title": "Reconcile 月 sense records with dictionary evidence and review findings",
+      "details": "The final article still has unresolved sense-status and wording conflicts after four revision rounds. It marks moonlight, monthly, round-form, time-counting-unit, and surname senses historical while reviewers repeatedly said the cited dictionary lists them without establishing that they are obsolete. It also calls 月:calendar_month current while its gloss includes “(historical use),” and its cited current dictionary wording is “each month,” not a calendar-month noun. Current Chinese use of 月 for “moon” is asserted without current-use evidence in the citations. These are actual artifact conflicts; rejected suggestions to change statuses alone do not establish the correct resolution.",
+      "verification": "Inspect the cited dictionary entry in its target-language context and add evidence for present-day meanings where supported. Otherwise omit or rescope unsupported senses. Align each retained sense’s gloss, status, text, citations and generated has_sense edge; ensure the learner’s current meaning has a supported current sense record. Obtain fresh independent factual and readability reviews of the revised article.",
+      "evidence": [
+        "current_article.meaning_history.senses[0..6]",
+        "current_article.relationships meaning:月:moon and meaning:月:calendar_month",
+        "round-0 through round-3 factual-verification/verified-review.json",
+        "round-0 through round-3 readability-verification/verified-review.json",
+        "actual_findings initial-followup/research/result.json: MOE dictionary inspection",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:爱:ziyuan-2012-ai-earliest-attestation"
+    },
+    {
+      "kind": "clarification",
+      "title": "Record unresolved 月 research gaps in the dossier",
+      "details": "The research result documents unresolved issues in word-family proposals, the exact date and mechanism of 月/夕 graphic differentiation, seal-form change, and external Unihan access. The supplied dossier does not show these as research-gap records; the article only includes a general word-family limitation and brief graphic-history qualifications. Preserve these as scoped gaps without implying the questions are settled or that failed access is evidence.",
+      "verification": "Confirm the final dossier retains the research result’s unresolved items and records applicable gaps with their exact scope and evidence. Keep claims limited to what was inspected; do not upgrade the local Unihan reading or reported source interpretations into independently verified findings.",
+      "evidence": [
+        "actual_findings initial-followup/research/result.json: gaps",
+        "current_article.uncertainties",
+        "current_article.meaning_history.limitations",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "hsk1:source-enrichment:ziyuan-2012"
+    }
+  ]
+}

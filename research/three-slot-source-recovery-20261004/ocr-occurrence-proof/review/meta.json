@@ -1,0 +1,41 @@
+{
+  "status": "complete",
+  "fingerprint": "29ae5b2caff5e664fde964f98f6677d3aaa5cea20f7030a5b8cd85677ee8f00d",
+  "role": "ocr_verification",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "started_at": 1791109524.7181208,
+  "driver_runtime": {
+    "executable": "/tmp/hanzi-etymology-venv/bin/python",
+    "version": "3.12.3",
+    "prefix": "/tmp/hanzi-etymology-venv",
+    "base_prefix": "/usr"
+  },
+  "queued_at": 1791109524.7160513,
+  "agent_capacity": 3,
+  "slot_wait_seconds": 0.0020711421966552734,
+  "image_argument_manifest": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/source.png",
+      "sha256": "321255e55637cba58f3d3f37b0d170aca62f88bebb260f4a8268003d0198fa06"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-dict/runs/three-slot-source-recovery-20261004/gong-quote/target-native-4x.png",
+      "sha256": "0f5c7616521a9171f2ef38d4372ab8c998be472ae626a9480f30794766e9689d"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-dict/runs/three-slot-source-recovery-20261004/gong-quote/unicode-6BDA-control.png",
+      "sha256": "b5a2705798c441e57b4bb164f46acd9b79a6fa1c0d78d5020704113c2da74a75"
+    }
+  ],
+  "agent_pid": 952777,
+  "agent_thread_ids": [
+    "01a10672-6d64-7002-ac60-4eef20acad38"
+  ],
+  "web_tool_events": 0,
+  "web_action_counts": {},
+  "web_search_calls": 0,
+  "web_search_queries": [],
+  "result_hash": "5db8293825c2d9477b6ef2778f3723468be207f7e82fc61945ee0e280e57f120",
+  "finished_at": 1791109536.5375767
+}

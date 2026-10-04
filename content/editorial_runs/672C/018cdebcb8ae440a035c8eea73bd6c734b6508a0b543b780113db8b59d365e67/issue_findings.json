@@ -1,0 +1,17 @@
+{
+  "findings": [
+    {
+      "kind": "pipeline",
+      "title": "Record the printed page number for 字源 PDF page 516",
+      "details": "The current source-page metadata leaves `printed_page` null for PDF page 516, although the inspected 本 passage is identified as printed page 503 in the scan-backed evidence. This leaves the consumer page record without the verified printed locator.",
+      "verification": "Update page 516 metadata with printed page 503 and provenance tied to the inspected scan; verify the consumer metadata exposes both PDF page 516 and printed page 503 without altering the source text.",
+      "evidence": [
+        "current_source_page_metadata: page_id sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000516 has printed_page null",
+        "X-59edb9aa17e28846202c: 字源 本 entry, PDF p. 516 / printed p. 503; scan inspected",
+        "X-dcf0caf7fcc52eb7dac6: scan-inspected 字源 本 passage, PDF p. 516 / printed p. 503",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:本:ziyuan-2012-p516-printed-page-metadata"
+    }
+  ]
+}

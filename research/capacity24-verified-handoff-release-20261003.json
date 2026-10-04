@@ -1,0 +1,28 @@
+{
+  "release_after_verified_smoke": true,
+  "verified_at": "2026-10-03T14:35:54.119981+00:00",
+  "pipeline_commit": "1311ba1e",
+  "source_smokes": [
+    {
+      "job": "runs/source-enrichment-ziyuan/bian-final-source-gates-20261003/ziyuan-2012/8FB9",
+      "article_hash": "dc1ed5a30b474a232cc3dd4e11b7570d3f9556638b4fd5948f0484ad7d2bcd37",
+      "dossier_hash": "d030072d7c38efb8b5b6382c6b1785522f1c9cd5c7a85f13ad7b6ee6cacb8af7",
+      "source_resolution_hash": "d05076afa73fe75d72e1f1eeef556faf68093cf16e8dd15e5a2137bbc5a9fbbb",
+      "source_findings_pending": false
+    },
+    {
+      "job": "runs/source-enrichment-ziyuan/bai-final-handoff-20261003/ziyuan-2012/767E",
+      "article_hash": "31c38cce5e67d56eb0628d6f308558d07b337a4b45cfe34c8a1ab9a1b08d3aa0",
+      "dossier_hash": "9906574fdb8589d761d37c20a817f931cc316921259ae910e8142e453cbce545",
+      "source_resolution_hash": "83099eed7707d00223601c6dd03d6b8b90d32461b6c6c0ebf6ee86d17a3c66eb",
+      "source_findings_pending": false
+    }
+  ],
+  "focused_source_tests": {
+    "count": 45,
+    "passed": true
+  },
+  "typed_component_smoke": "Actual 本 v4 author reached independent factual/readability reviews; remaining character findings held and 本 excluded from queue. No approval inferred.",
+  "downstream": "312 overlays rebuilt;303 v2 graph entries;300/300 HSK1 integrity; legacy compatibility regression fixed in c351919d.",
+  "scope": "Resume only after original supervisor exact PID/start identity drains; tail96 excluded; shared24 Luna-low model slots; no running model interrupted."
+}

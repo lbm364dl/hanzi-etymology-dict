@@ -1,0 +1,26 @@
+{
+  "allowed_edit_paths": [
+    "meaning_history/senses/0/period",
+    "meaning_history/senses/0/text",
+    "components/0/text",
+    "learner/components/0/text",
+    "history/1/text"
+  ],
+  "task": "Resolve the exact verified readability findings with minimal changes; preserve historical priority and the selected glyph’s script-style redraw scope.",
+  "current_verified_findings": [
+    "Use a reader-facing period label “Bronze inscription”; qualify in the sense text that this is a reported use and does not establish earliest attestation. Do not imply exact vessel/date verification.",
+    "Qualify “adult” as a scholarly interpretation in both expert and learner component cards; state the supported frontal human figure as the general reading and retain pose uncertainty.",
+    "Describe the historical dictionary account without asserting a direction of graphic descent: it gives 大 as an ancient form of 亣; a later commentary treats them as one character with slightly different shapes and later sections. Retain that this lexicographic account is not proof of prehistoric origin."
+  ],
+  "historical_priority_adjudication": "Do not change `meaning_history.senses/0/status` from `historical` to `earliest_attested`. No source establishes exact date or priority, and issue #48 requires historical unless positive priority evidence exists. `certainty: established` means the reported character-to-sense association is attested in the cited reference; generated has_sense relationships contain certainty, not a period/status field. Keep sense status historical and preserve its generated edge.",
+  "citation_scope": "Keep exact 字源 record X-b8 only on claims about the p.922 graph analysis, figure pose/form chart and its proposed adult-to-big interpretation. It does not support the separate bronze attestation. The sense and generated edge now cite only X-6159f6ab0334b15a4d20, X-76529a19faea307ed935 and X-30f633eacef2d6b6d523.",
+  "preserve": "Do not alter unaffected prose or evidence IDs. Preserve the oracle redraw’s corrected visible strokes and period as a modern script-style redraw, not a securely dated specimen; do not re-add the removed seal redraw unless the visual curator selects it as useful.",
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0922/source.png",
+      "pdf_page": 922,
+      "printed_page": 907,
+      "source_pixel_sha256": "39d27aadd13bac4e3be35c52d356fd4eb8c105aa6c9ca7511f8aae4f17d53188"
+    }
+  ]
+}

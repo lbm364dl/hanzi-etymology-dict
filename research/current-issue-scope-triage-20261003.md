@@ -1,0 +1,5 @@
+# Current records and language scope in issue triage
+
+Issue #133 described Japanese 日 sense records from an earlier candidate. The published Chinese revision fe206e4e… / 606f73da… removed those records, and its remaining Japan-abbreviation sense explicitly describes current Chinese usage, supported by MOE Mandarin dictionaries. Exact factual/readability approvals validate that published pair. Source-adoption triage nevertheless carried the old issue forward and treated the word Japan as a Japanese-language claim.
+
+The issue is closed against the actual current records and genuine publication proof. The old triage result remains unchanged as a rejected hypothesis. The general triage prompt now requires checking the current record's language and remaining defect, rather than inheriting removed sense IDs or inferring language from a country name. No article text or review receipt changed. This applies equally to cross-language examples and translated glosses; it is not an exception for 日.

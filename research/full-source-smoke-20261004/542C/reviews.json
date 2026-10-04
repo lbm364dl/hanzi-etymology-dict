@@ -1,0 +1,24 @@
+[
+  {
+    "role": "factual",
+    "verdict": "revise",
+    "findings": [
+      "In `components[1].sound[2]`, the Modern Mandarin comparison cites `X-eb991309aa13804f6b95` and `X-8060a03a597ef07e2655`, which support 听 tīng but provide no 斤 reading. The dossier’s local Unihan row gives 斤 jīn, but that evidence is not cited in this sound item. Add active evidence supporting 斤 jīn or remove this comparison; the limitation alone does not supply the missing citation."
+    ],
+    "article_hash": "082ee735f431a1ef415161bbcbbf1cf5e416fc75e6255c5359dff74cf30eee52",
+    "dossier_hash": "25072db0909c883ca45e5d1280c6cfc3161dd6b0e9eb1a1cd0987b83241beb56",
+    "reviewer": "gpt-6-luna:low:factual:01a10650-b413-7f70-a939-eee0a728c552"
+  },
+  {
+    "role": "readability",
+    "verdict": "revise",
+    "findings": [
+      "`learner.overview` and `summary` call 听 the simplified form of 聽 without giving the reader the supported current split. Add that the printed form has 口 on the left and 斤 on the right, and explain that this visible split belongs to the older “smiling appearance” analysis; the dossier does not establish it as the path by which 听 came to write 聽. Cite active evidence for the current graph and keep the historical role qualified.",
+      "`learner.components[1]` and the 斤 component omit the available Modern Mandarin pair: 斤 jīn and 听 tīng (local Unihan rows are supplied and X-eb991309aa13804f6b95 supports 听’s reading). Include that comparison while retaining the cited limitation that current readings do not establish the ancient phonetic relationship. The card should explain the proposed older sound role in plain language, with its uncertainty clear.",
+      "`historical_glyphs.items[0].caption` says the depicted form is analyzed as 口 plus 斤, but its citations identify the redraw and script tradition rather than support that analysis. Cite the received Shuowen analysis (for example, X-e0009aaf171b42478af5) for that clause, or remove the analysis from the caption; preserve the glyph’s qualified Shuowen small-seal provenance."
+    ],
+    "article_hash": "082ee735f431a1ef415161bbcbbf1cf5e416fc75e6255c5359dff74cf30eee52",
+    "dossier_hash": "25072db0909c883ca45e5d1280c6cfc3161dd6b0e9eb1a1cd0987b83241beb56",
+    "reviewer": "gpt-6-luna:low:readability:01a10650-faf1-7eb1-bbeb-a5b5f3600d55"
+  }
+]

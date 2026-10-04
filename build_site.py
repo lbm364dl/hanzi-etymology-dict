@@ -3,6 +3,7 @@
 
 import json
 import gzip
+import argparse
 from pathlib import Path
 
 
@@ -29,6 +30,53 @@ def load_articles(directory=Path("content/entries"), dossier_directory=None, exp
                 asset["glyph_id"]: "glyphs/editorial/" + Path(asset["path"]).name for asset in assets
             }
     return articles
+
+
+def refresh_existing_site_articles(site_path, articles):
+    """Refresh approved articles while preserving the existing compiled legacy records."""
+    site_path = Path(site_path)
+    if not site_path.exists():
+        raise FileNotFoundError(f"Existing site archive required: {site_path}")
+    with gzip.open(site_path, "rt", encoding="utf-8") as stream:
+        records = json.load(stream)
+    if not isinstance(records, list):
+        raise ValueError("Existing site archive must contain a list of character records")
+    characters = [row.get("c") for row in records]
+    if len(characters) != len(set(characters)):
+        raise ValueError("Existing site archive contains duplicate characters")
+    available = set(characters)
+    missing = set(articles) - available
+    if missing:
+        raise ValueError(f"Approved articles lack a legacy site record: {sorted(missing)!r}")
+    stale = {row["c"] for row in records if "article" in row} - set(articles)
+    if stale:
+        raise ValueError(f"Existing site articles lack an approved source: {sorted(stale)!r}")
+    for row in records:
+        if row["c"] in articles:
+            row["article"] = articles[row["c"]]
+    temporary = site_path.with_name(site_path.name + ".tmp")
+    try:
+        with gzip.open(temporary, "wt", encoding="utf-8") as stream:
+            json.dump(records, stream, ensure_ascii=False, separators=(",", ":"))
+        temporary.replace(site_path)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return len(records)
+
+
+def refresh_articles_only():
+    """Use existing site data when upstream legacy source files are unavailable."""
+    import shutil
+    articles = load_articles()
+    site_path = Path("docs/data.json.gz")
+    count = refresh_existing_site_articles(site_path, articles)
+    for article in articles.values():
+        for display_path in article.get("display_glyphs", {}).values():
+            destination = Path("docs") / display_path
+            source = Path("content/glyph-assets") / destination.name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
+    print(f"Refreshed {len(articles)} approved articles in {count} existing site records")
 
 
 def compute_kokuji_set():
@@ -284,4 +332,11 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--refresh-articles", action="store_true",
+                        help="Refresh approved article overlays in existing docs data without legacy source files")
+    args = parser.parse_args()
+    if args.refresh_articles:
+        refresh_articles_only()
+    else:
+        main()

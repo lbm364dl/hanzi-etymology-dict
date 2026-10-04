@@ -1,0 +1,6 @@
+{
+  "verdict": "revise",
+  "findings": [
+    "`components[1].sound[1]` cites X-b57fc8149fd9ad000253, whose inspected appendix directly lists simplified 马 and 吗, but records the comparison forms as 马/吗 while the component and host are scoped to traditional 嗎 and 馬. Remove this duplicate simplified-form comparison from the traditional component’s sound array; retain its separately sourced 馬/嗎 comparison. The current simplified component comparison in `components[3].sound[0]` already has the correct 马/吗 forms and citation, so leave it unchanged."
+  ]
+}

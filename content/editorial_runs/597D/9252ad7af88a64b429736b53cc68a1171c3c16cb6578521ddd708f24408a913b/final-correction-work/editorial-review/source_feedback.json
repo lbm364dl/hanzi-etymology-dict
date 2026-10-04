@@ -1,0 +1,25 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1109/source.png",
+      "pdf_page": 1109,
+      "printed_page": 1094,
+      "source_pixel_sha256": "f57b420e60d20032f8df525c5dcae08228f9a01195720435613d53d0c14df040"
+    },
+    {
+      "path": "/tmp/hao-p1094-occurrence.png",
+      "pdf_page": 1109,
+      "printed_page": 1094,
+      "source_pixel_sha256": "4ec6ecda7a3d293c3d318267f073af5d8fc049e67b042a34b7ff13247c187b58",
+      "parent_source_pixel_sha256": "f57b420e60d20032f8df525c5dcae08228f9a01195720435613d53d0c14df040",
+      "crop_box_source_pixels": [
+        1820,
+        3260,
+        2310,
+        3500
+      ]
+    }
+  ],
+  "instruction": "Make only these supported corrections to the supplied exact candidate. (1) article.history[1] currently reverses the selected oracle-style image's vertical layout. The fresh curated glyph captions describe two forms vertically for the oracle-style redraw and side-by-side for the bronze-style redraw; align history[1] with both and describe only useful form/layout contrast. Do not identify strokes as 女 or 子 from image appearance, claim historical meaning from a redraw, or imply chronology. (2) The new page-specific evidence X-0473491e7b72cbaad6be directly verifies that the source prints exactly 虘钟 in “虘钟：‘用乐好宾。’”; only first OCR character 虐→虘 was repaired and following 钟 remains. If you incorporate this source example in history, reproduce exact source spelling, distinguish report/attestation from proposal, and cite the new evidence ID; never write 虘鐘. Avoid source names and workflow commentary in prose. (3) Remove the two meaning_history.developments edges from 好:good_beautiful_historical to 好:friendly_historical and 好:good because both merely state that a transition is unproved rather than presenting a positive sourced proposal. Keep any necessary chronology limits in non-directional limitations/uncertainties. Do not replace them with another inferred link. Preserve all unaffected wording/claims/citations and structural decomposition. The old evidence ID X-4bbb750063ebdb6f6ce4 is preserved in the dossier but superseded for its false scan/correction assertion; do not cite it in active article claims."
+}

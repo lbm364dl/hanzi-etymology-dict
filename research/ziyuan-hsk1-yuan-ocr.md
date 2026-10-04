@@ -1,0 +1,7 @@
+# 字源 PDF p.355 headword OCR verification: 爰
+
+I checked the original PDF p.355 scan for the page-left headword transcribed as `爱 yuán`. The printed headword is 爰, read yuán in the surrounding line, so the exact OCR repair is source-bound to raw code-point span `[796,797)`: `爱` → `爰`. The neighboring text is `爱 yuán 匣纽、元部;云纽、元韵、雨元切。` in raw OCR; the source headword and reading make the literal mismatch visible.
+
+The exact enlarged crop `(215,990,410,1175)` has RGB-pixel SHA-256 `0ade55d4e55eeaeed0a751f5c9f27154f3d4cd846c6af87d9754f5826021b297`. On the scan, the character has an upper 爫-like form, two transverse strokes and a lower 又-like form, matching 爰 rather than 爱. Page source RGB-pixel hash `dae2a85e30b830e9f1a86f5e1c7a082463646451e5fdf3924a5e0b388d1a2e92`; raw OCR evidence hash `17a3646d53c84618144b67e66862ad4cfb32a630b855febd70baefb43b964059`; raw UTF-8 text hash `80f03c5215bf09ecc68e8bd9c823399119ea62875f33e5a62dabe0181b201329`.
+
+The source-bound producer correction retains raw OCR and applies only the exact one-character span. Effective and consumer page evidence hash: `0266ae4facfa959220f89a0f0c20f42d50605b0d9048a835f648c4e716e13fdc`. The final consumer corpus contains 1,435 pages and has SHA-256 `83984a2447df89604338c85e851e37b1adfdd9bb5fe56346f726d516e7eabd7a`. Reviewable artifacts: `research/ocr-corrections/ziyuan-2012-p0355/`. This check does not approve the entire page or its other entries.

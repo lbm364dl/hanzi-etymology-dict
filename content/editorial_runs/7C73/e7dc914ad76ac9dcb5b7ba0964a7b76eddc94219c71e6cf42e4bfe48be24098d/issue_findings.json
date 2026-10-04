@@ -1,0 +1,16 @@
+{
+  "findings": [
+    {
+      "kind": "pipeline",
+      "title": "Add verified printed-page metadata for 米 continuation pages",
+      "details": "The inspected 字源 evidence X-0fbd7e8227523711099d correctly records PDF page 658 as printed page 645, but current_source_page_metadata has printed_page=null for PDF pages 657 and 658. The continuation’s verified printed-page provenance is missing from the source corpus metadata.",
+      "verification": "Update source-page metadata with scan-verified printed pages 644 and 645 for PDF pages 657 and 658, preserving the existing source and evidence hashes. Confirm the rebuilt corpus exposes those values and does not infer the headword page number from the continuation.",
+      "evidence": [
+        "X-0fbd7e8227523711099d",
+        "current_source_page_metadata: PDF pages 657–658",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:米:ziyuan-2012-mi-printed-page-metadata"
+    }
+  ]
+}

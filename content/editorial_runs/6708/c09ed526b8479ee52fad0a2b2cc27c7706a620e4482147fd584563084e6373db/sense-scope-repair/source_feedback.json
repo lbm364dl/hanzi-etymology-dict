@@ -1,0 +1,158 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "月"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000631",
+          "pdf_page_1based": 631,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0631/source.png",
+          "source_sha256": "19ae7d294360c7ffdc9f571d8558aaacdd5ba63cf16621f03352bae431b75d08",
+          "evidence_sha256": "057d0d71b5f9142e35e8fe49539012b91176863b9bfb6b218c83b22c5d13b19a",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "月 yuè 疑组、月部;疑组、月韵、鱼厥切。"
+          ],
+          "excerpt": "中看,“多”字本从重“肉”,而“宜”字本从“多”,“多”肉则得“宜”,故“疊”字从“宜”。王莽新朝作“疊”,改从“三日”为“三田”。“叠”的造字本义是重叠。也假借为“睿”、“熠”等。《诗·周颂·时迈》:“莫不震叠。”毛传:“叠,惧。”也假借为“垫”、“氎”等。今简化为“叠”。(王志平)\n\n月 部\n\n月 yuè 疑组、月部;疑组、月韵、鱼厥切。\n\n[glyph:g006]1 商 [glyph:g007]2 西周\n[glyph:g008]3 商 [glyph:g009]4 西周 [glyph:g010]5 春秋 [glyph:g011]6 战国\n[glyph:g012]7 战国 [glyph:g013]8 《说文》小篆 [glyph:g014]9 秦 [glyph:g015]10 汉 [glyph:g016]11 汉 — 月 楷书\n\n1、3《甲文编》293页。2《金文编》475页。4《金文编》474页。5《类编》496页。6《汉语字形表》266页。7《楚系简帛》576页。8《说文》141页。9《睡甲》106页。10《银雀山》242页。11《篆隶表》459页。\n象形字。初文像半月之形,表示“月亮”之意,有时与“夕”混同。金文等一脉相承,但是至小篆字形有讹变。甲骨文:“三日乙酉夕,月有食。”(《合集》11485)是其本义。《说文》:“月,阙也。太阴之精。象形。凡月之属皆从月。”以“阙”训“月”,犹存半月之意。《释名·释天》:“月,阙也。满则阙也。”古人认为月是“太阴之精”,所以它也是妇人、女子的象征。由于月亮盈亏的周期为一月(朔望月),所以人们把这种时间长度也称为“月”。《书·洪范》:“二日月。”孔颖达疏:“从朔至晦,大月三十日,小月二十九日。”后引申为“光阴”之义。(王志平)\n\n朔 shuò 心组、铎部;生组、觉韵、所角切。\n\n[glyph:g017]1 春秋 [glyph:g018]2 春秋 [glyph:g019]3 战国 [glyph:g020]4 《说文》小篆 [glyph:g021]5 秦 [glyph:g022]6 汉 [glyph:g023]7 汉 — 朔 楷书\n\n1《金文编》476页。2《类编》497页。3《楚系简帛》580页。4《说文》141页。5《睡甲》106页。6《金文续编》154页。7《篆隶表》460页。\n形声字。金文从月,屰声。侯马、温县盟书同之。公朱左官鼎:“十一年十一月乙已朔。”(《集成》5.2701)《温县盟书》9:“乙未朔。”《说文》:“朔,月一日,始苏也。从月,屰声。”《释名·释天》:“朔,苏也。月死复苏生也。朔,月初之名也。”阴历每月的初一称为“朔”,这时月亮是看不见的。最初古人是以新月初现为一月之始,这还不是“朔”。天文观测进步后,人们通过观测日的视运动来计算“朔”,这才是科学意义上的一月之始。周代天子要向各个诸侯颁布来年十二个月的“朔日”,诸侯藏到祖庙里,每月朔日要用特羊告于祖庙,请求受而行之。因此“告朔”是一项很重要的礼仪。由于“朔”为一月之始,所以“朔”也引申出“初始”、“月旦”等义。又由于“朔日”是看不见的,因此“朔”也引申出“幽暗”之义。《书·尧典》:“宅朔方,曰幽都。”孔传:“北称朔。”后来把“北方”、“北风”等也称为“朔方”、“朔风”等等。(王志平)\n\n朏 fěi 滂组、微部;滂组、尾韵、敷尾切。\npèi 滂组、微部;滂组、队韵、滂佩切。\n\n[glyph:g024]1 西周 — [glyph:g025]2 《说文》小篆 — 朏 楷书\n\n1《金文编》477页。2《说文》141页。\n会意字。金文从“日”、“出”会意,吴方彝盖:“宰朏佑作册吴。”(《集成》16.9898)用为人名。《说文》:“朏,月未盛之明。从月、出。《周书》曰:丙午朏。”所以“朏”字\n\n618"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000632",
+          "pdf_page_1based": 632,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0632/source.png",
+          "source_sha256": "9d2b56818a9c2b57a8e8c83bc099fb94ffa9a7cb9dfd1a1ff48e10b10457d611",
+          "evidence_sha256": "5130549f6348aae0ae1a802ca35a1e96ebd4c029a22f1e4190a54943a3dcc25e",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "叠 月 朔 朏 霸 朗 眺² 期\n\n\n本义就是新月初现，上古大约是用“朏”作为每月之始的。《书·召诰》：“三月惟丙午朏。”孔传：“朏，明也。月三日明生之名。”历法进步以后，确定了“朔”为一月之始，这时就把每月的阴历初三称为“朏”了。(王志平)\n\n霸 pò 滂组、铎部；滂组、陌韵、普伯切。\nbà 帮组、铎部；帮组、祃韵、必驾切。\n\n[glyph:g001]¹ 西周 [glyph:g002]² 西周 [glyph:g003]³ 西周 [glyph:g004]⁴ 西周\n[glyph:g005]⁵ 西周\n[glyph:g006]⁶ 《说文》古文\n[glyph:g007]⁷ 《说文》小篆\n[glyph:g008]⁸ 汉\n霸 楷书\n\n1、2、3《金文编》477页。4、5《金文编》478页。6、7《说文》141页。8《金文续编》154页。9《篆隶表》461页。\n形声字。金文作“[glyph:g001]”，从月，䨣声。或作“[glyph:g005]”，添加“帛”字声符。作册矢令簋：“唯九月既死霸。”(《集成》8.4300)《说文》：“霸，月始生霸然也。承大月二日，承小月三日。从月，䨣声。《周书》曰：哉生霸。[glyph:g006]，古文霸。”“䨣”字《说文》分析为“雨濡革也。从雨，从革。读若膊。”“霸”是一种月相，金文中常有“既生霸”、“既死霸”的记载，此字经典中也通作“魄”。“既生霸”是说“月魄已生”，“既死霸”是说“月魄已死”。至于此月相准确的日期，学者之间有不同意见。凡此诸义皆读为pò。也假借为“伯”。《白虎通·号》：“霸者，伯也。行方伯之职，会诸侯，朝天子，不失人臣之义。故圣人与之，非明王之张法。霸犹迫也，把也。迫胁诸侯，把持其政。”徐铉注：“今俗作必驾切，以为霸王字。”段玉裁注：“俗用为王霸字，实伯之假借字也。”今读为bà。(王志平)\n\n朗 lǎng 来组、阳部；来组、荡韵、卢党切。\n\n[glyph:g009]¹ 《说文》小篆\n[glyph:g010]² 三国吴\n[glyph:g011]³ 汉\n[glyph:g012]⁴ 汉\n[glyph:g013]⁵ 汉\n朗 楷书\n\n1《说文》141页。2、4、5《篆隶表》462页。3《汉印徵》卷7，6页。\n形声字。《说文》：“朗，明也。从月，良声。”“清风朗月”用的就是本义。《诗·大雅·既醉》：“高朗令终。”毛传：“朗，明也。”又引申出“高”、“长”之义。(王志平)\n\n眺² tiāo 透组、宵部；透组、萧韵、土彫切。\ntiào 透组、宵部；透组、啸韵、土了切。\n\n[glyph:g014]¹ 《说文》小篆\n眺 楷书\n\n1《说文》141页。\n形声字。《说文》：“眺，晦而月见西方，谓之眺。从月，兆声。”《汉书·五行志下》：“晦而月见西方谓之眺，朔而月见东方谓之仄慝。”颜师古注：“孟康曰：眺者，月行疾，在日前，故早见。仄慝者，行迟，在日后，当没而更见。”“晦”是每月的最后一天，本来月亮也是不应当出现的。但是这时“月见西方”，人们就称之为“眺”，“眺”是指异变之兆。“仄慝”《尚书大传·洪范传》作“侧匿”，《说文》“肰”字下作“缩肰”。东汉服虔以为“日晦食为眺”，实非。日食应当发生在“朔”，却发生在“晦”，这实际上是历朔有误的结果，致使所看的天象失常。(王志平)\n\n期 qī 群组、之部；群组、之韵、渠之切。\njī 见组、之部；见组、之韵、巨之切。\n\n[glyph:g015]¹ 春秋\n[glyph:g016]² 战国\n[glyph:g017]³ 西周\n[glyph:g018]⁴ 《说文》古文\n[glyph:g019]⁵ 春秋\n[glyph:g020]⁶ 战国\n[glyph:g021]⁷ 《说文》小篆\n[glyph:g022]⁸ 秦\n[glyph:g023]⁹ 汉\n[glyph:g024]¹⁰ 汉\n[glyph:g025]¹² 汉\n[glyph:g026]¹¹ 汉\n[glyph:g027]¹³ 汉\n[glyph:g028]¹⁴ 汉\n期¹⁴ 楷书\n\n1、5《金文编》479页。2《楚系简帛》581页。3《楚系简帛》583页。4、7《说文》141页。6《古玺》172页。8《睡甲》106页。9、10《银雀山》243页。11-14《篆隶表》462页。\n形声字。金文从日，其声。战国文字演变为从日，丌(几)声或丌声。金文又或从月，其声。"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0631/source.png",
+      "pdf_page": 631,
+      "source_pixel_sha256": "19ae7d294360c7ffdc9f571d8558aaacdd5ba63cf16621f03352bae431b75d08"
+    }
+  ],
+  "target_language": "zh",
+  "additional_research_context": {
+    "target_language": "zh",
+    "questions": [
+      "Read the actual Ministry dictionary record X-0f45c27538fdbbd70f22 and verify present-day Chinese moon/calendar-month uses. A consulted current authoritative dictionary can support its listed current language-specific meanings without needing a newly dated example. Cite that evidence at current sense claims rather than citing only ancient examples.",
+      "The previous factual proposal requests earliest_attested based on Shang examples. Independently establish earliest documented corpus priority if claimed; a dated example alone does not prove priority. Keep supported current moon and month uses distinguished from reported older examples.",
+      "Historical does not mean obsolete. For additional dictionary-listed moonlight/monthly/classifier/surname/round-form uses, inspect actual sense scope and examples; do not assert known historical period solely from an undated definition. Retain material supported senses with scoped current/historical claims, or omit peripheral unverified ones while preserving the research lead.",
+      "Verify the source headword/passage against the original scans. Distinguish rare book glyph identity gaps from actual literal OCR errors, preserve occurrence provenance, and do not guess Unicode replacements."
+    ],
+    "worker_scope": "Read sources and return evidence only; no nested jobs, pipeline invocation, subagents or repository mutations."
+  },
+  "additional_context_policy": "These source leads and prior findings are research tasks, not preverified dossier evidence. Consult the referenced sources directly, check exact graph identity and scope, and add cited evidence for useful claims before authorship. Recheck reviewer hypotheses; modern structure does not establish historical roles. Record inaccessible sources as gaps.",
+  "unfinished_draft_provenance": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/sun-moon-tree-smoke/ziyuan-2012/6708",
+    "article_hash": "193f5a5599bac9297db6deff563d705184b8a7b72d44f0586c1ba760ea1ef0e7",
+    "dossier_hash": "791cca4bd8d1d325c59a30df2402d3c900bbc540f9aa4faed588e9c5fb032504",
+    "previous_state_hash": "79017e5546f2c2d14df0690a2b2d82f5e8a3fbb1bb2cca9496a082aca4c4dfa9",
+    "canonical_article_hash": "efaef0a78752089eb581918077cbf1efaea9d541fd3b299a9814826dcaed46e5",
+    "canonical_dossier_hash": "f7f8886c1c33eee5fd8ab39c04a8c3e8680d6c5995ac831d12ddfe6683290618",
+    "requires_fresh_research_and_reviews": true,
+    "prior_review_proposals_hash": "4f9581e9490c603a01f0938bff82ba9ffc520d5bf61a107fed8aa63e4a533ab9"
+  },
+  "prior_review_proposals": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses[0]` and generated edge `meaning:月:moon`, change `status: \"current\"` to `status: \"earliest_attested\"` and keep the edge synchronized. The cited Shang oracle-bone examples support early use for “moon,” while the record gives no evidence of present-day use for this sense; `X-0f45c27538fdbbd70f22` lists moon as a dictionary sense, and `X-85dfeb9453447c1103f0` supports the current reading, but neither is cited by this sense."
+      ],
+      "article_hash": "193f5a5599bac9297db6deff563d705184b8a7b72d44f0586c1ba760ea1ef0e7",
+      "dossier_hash": "791cca4bd8d1d325c59a30df2402d3c900bbc540f9aa4faed588e9c5fb032504",
+      "reviewer": "gpt-6-luna:low:factual:01a0fec0-6dc6-7ca0-ae53-703ce7d170a8"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses`, the entries for `月:moonlight`, `月:monthly`, `月:round_form`, `月:classifier`, and `月:surname` are marked `historical`, but their cited dictionary evidence only lists these as senses and does not establish that they are no longer current (`X-0f45c27538fdbbd70f22`). Set a sense to `current` only with evidence of present-day use; otherwise omit it or provide evidence for its historical status. Update each corresponding generated `has_sense` relationship to match any status changes."
+      ],
+      "article_hash": "193f5a5599bac9297db6deff563d705184b8a7b72d44f0586c1ba760ea1ef0e7",
+      "dossier_hash": "791cca4bd8d1d325c59a30df2402d3c900bbc540f9aa4faed588e9c5fb032504",
+      "reviewer": "gpt-6-luna:low:readability:01a0fec1-a4ee-7762-b2f0-078fdda85dd6"
+    }
+  ],
+  "prior_consulted_book_records": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/sun-moon-tree-smoke/ziyuan-2012/6708",
+    "previous_audit_hash": "ac31cf1432ae7860260ca70135d7b49199b9d230b63846e99c0027b4a70f7417",
+    "records": [
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "46a73a9b9acaa9d584b67aa33a1d69fc3cec9d3e71f436845b51c0f0fc7ec369",
+        "research_result_hash": "6d2e8c983ae97920e4fcdeeb586a24b342f4416ac7b6502ed650136959665668",
+        "source": "李學勤主編《字源》, 2012, 天津古籍出版社／遼寧人民出版社",
+        "field": "月部 entry; printed p. 618; PDF p. 631; original scan visually inspected",
+        "text": "The entry describes 月 as a pictograph whose early form resembles a half moon, with ‘moon’ as its meaning. It says 月 and 夕 were sometimes confused, bronze forms continued the earlier line, and the small-seal form underwent graphic change. It cites an oracle-bone eclipse passage as 《合集》11485, then explains the calendar-month use through the moon’s waxing and waning and mentions a later ‘time’ sense. The entry and its discussion are visible on this page; the next page begins with the following headword 朔, so no continuation of 月 is indicated.",
+        "evidence_ids": [
+          "X-fba7ca46c97d0f88516f"
+        ]
+      }
+    ],
+    "requires_current_source_research": true
+  },
+  "continuation_policy": "This is an unapproved draft, not reusable approval. Recheck source-dependent claims against current source scans/corpus. Prior revise findings are hypotheses to recheck, including possible source identity errors; do not obey them merely because a previous verifier repeated them. Prior consulted book records identify exact retained evidence IDs and claims to recheck. After current-source verification, cite relevant supported claims through evidence_ids metadata; dossier-only records do not count as article source use. Preserve prior supported work and obtain fresh factual/readability reviews.",
+  "require_source_specific_page_evidence": true,
+  "verified_review_findings": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses[2–6].status` and the matching generated `has_sense` edges, change `historical` to `current` for the dictionary-listed moonlight, monthly, round-form, time-counting unit, and surname senses, or omit any sense you do not retain. The cited dictionary lists these as Chinese senses and provides examples but does not establish that they are obsolete; keep the limits on first occurrence and semantic development (`X-0f45c27538fdbbd70f22`, `X-39f47323dc44230a4695`)."
+      ],
+      "article_hash": "528d43686dbaf9f62ca911d643f25df874d5429ccf0ca69c2f4a169fbb13999a",
+      "dossier_hash": "eb1fc3a19efcc33c9240de2e9f2a4b7441cede2df62f42686bfb450c2eeac163",
+      "reviewer": "gpt-6-luna:low:factual:01a0fef7-7511-7cf2-95ee-7bdce0d164c5"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "In `meaning_history.senses[2–6]` and the matching `has_sense` relationships, change `status` from `historical` to `current`, or omit those senses and their relationships. The cited dictionary evidence lists moonlight, monthly/each month, moon-like round forms, a time-counting unit, and surname senses but does not establish that they are no longer current (X-0f45c27538fdbbd70f22, X-39f47323dc44230a4695). Keep the stated limits on first occurrence and usage scope."
+      ],
+      "article_hash": "528d43686dbaf9f62ca911d643f25df874d5429ccf0ca69c2f4a169fbb13999a",
+      "dossier_hash": "eb1fc3a19efcc33c9240de2e9f2a4b7441cede2df62f42686bfb450c2eeac163",
+      "reviewer": "gpt-6-luna:low:readability:01a0fef8-a5cf-79e1-bdba-f619802227cc"
+    }
+  ],
+  "allowed_edit_paths": [
+    "meaning_history",
+    "relationships"
+  ],
+  "instruction": "Resolve the meaning-status contradictions in the exact current moon draft. Verify cited dictionary records X-0f45c27538fdbbd70f22 and X-39f47323dc44230a4695 against their actual contents. Current authoritatively consulted Chinese dictionary meanings can support current listed uses without a newly dated inscription. Historical does not mean obsolete: a historically attested use requires real historical context, while lack of obsolete marking alone is not proof of current usage. Keep the sourced common moon and calendar-month senses useful and clearly current with ancient examples qualified separately. For peripheral moonlight/monthly/round-form/classifier/surname records, either retain genuinely supported language-specific dictionary usage with appropriate scope and citations, or omit peripheral unverified sense assertions while preserving the underlying research evidence; do not alternate unsupported current/historical labels or invent usage evidence. No need to enumerate every gloss. Remove contradictory present-use-is-unestablished caveats if actual current dictionary support resolves that question; keep first occurrence and development uncertainty. Preserve supported expert history and citations. Generated meaning edges are read-only: edit sense/development records, do not patch generated edges; assembly derives them. Review all evidence independently; prior reviewer requests are hypotheses, not forced verdicts."
+}

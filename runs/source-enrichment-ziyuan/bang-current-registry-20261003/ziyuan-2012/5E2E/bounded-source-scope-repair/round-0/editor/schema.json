@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "edits"
+  ],
+  "properties": {
+    "edits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "value_json"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "summary",
+              "formation",
+              "history/0"
+            ]
+          },
+          "value_json": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "parent_evidence_sha256": "effa2fbe364c8cf4abb42b8da025f0f28be0ed11f6b0660430fbe1d8a515c127",
+  "source_sha256": "96dcee517496798f7e960efeea99bda45f262e0be11f955cf734221c0ed1a957",
+  "patches": [
+    {
+      "start": 1294,
+      "end": 1301,
+      "before": "发生hack在",
+      "after": "发生在",
+      "source_checked": true,
+      "reason": "Verified against the original PDF p.1259 scan (printed p.1244) at the cited 粎-entry paragraph. The printed anchor reads “其事必当发生在以斗为最常用的容量单位的背景下”; the target crop shows “发生在” with no Latin letters between 生 and 在. Actual independent gpt-6-luna low occurrence review: runs/ocr-corrections/ziyuan-p1259-hack-verification/verified-occurrences.json (result hash 525fb49b8d24ba712d95574c67ff5f3a60d8acca1a333c4d473f1c548a1bacb0; reviewer thread 01a0ff87-516c-7a60-9630-f1c90a8045eb). Crop /home/catalin/hanzi-etymology-dict/research/ocr-corrections/ziyuan-p1259-hack-verification/target-crop.png SHA-256 dc5a1f81a97b1b5901ca56fdae23a814254a6a6f115ebd667d88781e1f254688; raw source scan pixels SHA-256 96dcee517496798f7e960efeea99bda45f262e0be11f955cf734221c0ed1a957; raw OCR remains preserved unchanged.",
+      "source_crop_bounds": [
+        1470,
+        2300,
+        2860,
+        2600
+      ],
+      "source_crop_pixel_sha256": "dc5a1f81a97b1b5901ca56fdae23a814254a6a6f115ebd667d88781e1f254688",
+      "reviewers": [
+        "gpt-6-luna:low:ocr_verification:01a0ff87-516c-7a60-9630-f1c90a8045eb"
+      ]
+    }
+  ],
+  "remove_glyph_ids": [],
+  "add_glyphs": [],
+  "added_uncertainties": [],
+  "verification": "source_checked_correction_not_edition_approval"
+}

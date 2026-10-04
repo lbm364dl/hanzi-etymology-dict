@@ -1,0 +1,22 @@
+[
+  {
+    "role": "factual",
+    "verdict": "revise",
+    "findings": [
+      "Remove `components[1].sound[1]`: evidence X-b57fc8149fd9ad000253 supports the simplified forms 马/吗, while this component is scoped to traditional 嗎 and its array already has the separately sourced 馬/嗎 comparison. Retain `components[1].sound[0]` and the current simplified comparison in `components[3].sound[0]`."
+    ],
+    "article_hash": "856bf33c5a7577c309f7594743d87d644b740038deaeb0774071717e46067113",
+    "dossier_hash": "c850dea3fa837d1200a6ad48744ee652eb856eb86cfcd221575cde760fee9538",
+    "reviewer": "gpt-6-luna:low:factual:01a0ff2c-b0f7-7692-8cfa-8617564f8fe8"
+  },
+  {
+    "role": "readability",
+    "verdict": "revise",
+    "findings": [
+      "In `components[1].sound[1]`, change the comparison’s `component_form` from 马 to 馬 and cite the verified 馬/嗎 reading records (`X-40764bb2fc2ce4b09f49`, `X-f34adfc6793991860e0a`, `X-b328768aff2cac6eae29`). The cited appendix `X-b57fc8149fd9ad000253` directly lists simplified 马/吗, not traditional 馬/嗎; its simplified comparison is already correctly recorded under `components[3].sound`."
+    ],
+    "article_hash": "856bf33c5a7577c309f7594743d87d644b740038deaeb0774071717e46067113",
+    "dossier_hash": "c850dea3fa837d1200a6ad48744ee652eb856eb86cfcd221575cde760fee9538",
+    "reviewer": "gpt-6-luna:low:readability:01a0ff2d-1890-7702-a68c-ade4810b0bcf"
+  }
+]

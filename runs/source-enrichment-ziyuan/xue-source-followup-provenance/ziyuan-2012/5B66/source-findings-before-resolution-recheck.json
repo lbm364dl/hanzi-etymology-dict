@@ -1,0 +1,45 @@
+{
+  "source_id": "ziyuan-2012",
+  "tracking_issue_url": "https://github.com/lbm364dl/hanzi-etymology-dict/issues/1",
+  "requires_coordinator_verification": true,
+  "findings": [
+    {
+      "key": "ziyuan-2012:p277:rare-graph-identities",
+      "kind": "ocr",
+      "title": "Resolve exact identity of rare graphs in 學 construction",
+      "details": "[SCAN VERIFICATION REQUIRED] 字源 PDF p.277 / printed p.265: the printed graph after 冖 before 亦声 and the abbreviated-looking graph after 两臼或省作 remain unresolved as exact Unicode identities. The source-bound clarification labels both identity questions explicitly; the article describes their roles without assigning a scalar.",
+      "verification": "Check the exact source pixels and determine whether either unresolved identity is used by the exact reviewed article; retain as unresolved if unused.",
+      "evidence": [
+        "Research output: runs/source-enrichment-ziyuan/xue-p277-parenthetical-source-clarification-20261003/research/result.json",
+        "Research result SHA-256: 614f4d8a3221d4a78e12185608b17dada188f324ae516cd9dc22030ac4583704",
+        "Source pixels: PDF p.277 decoded RGB SHA-256 d71826450bb411b40d34cabacceaf5870e0eac285824128d9ab27b5d5dcd777f",
+        "Target crop provenance: research/source-crops/ziyuan-p0277-xue-crop-provenance.json"
+      ]
+    },
+    {
+      "key": "ziyuan-2012:p277:raw-1131-1133-parenthetical",
+      "kind": "ocr",
+      "title": "Verify the raw two-character parenthetical in 學 entry",
+      "details": "[OCR CORRECTION REQUIRED] 字源 PDF p.277 / printed p.265, body occurrence reference [1131,1133): raw OCR is “毚片”. Multiple scan-bound readings and same-book control checks conflict; no replacement is established, no producer/consumer patch was applied, and article claims do not use this literal.",
+      "verification": "Inspect the exact original occurrence and controls. Do not mark a proposed replacement accepted unless both printed characters are independently established; if identity remains unresolved, determine whether the exact reviewed article relies on it.",
+      "evidence": [
+        "Occurrence-level note: research/ocr-corrections/ziyuan-2012-p0277-xue-source-check-20261003/findings.md",
+        "Original crop box [1265,3260,1410,3340], decoded RGB SHA-256 6ce006cbc87efd271170e50b78754740e6d3f3512916471afb1dab5d5de87329",
+        "Conflicting whole-span result b5036a79f5bb62e2778907b096a3f5d1194a6ce75e74d9a269432e1ae07c1256; blind controls 9a53fd972c9f16f44aab7d53a3c47d9077edaed402a1c4a89d19f4ba7756ef92 and 5a3f7803897208c02ecfb0b5fa2ff27b72702e32ab835e64481304573b026256",
+        "Raw OCR source hash 093d5eb7d675c2258bf40a15db7e121b78df58c672974819bbeaa5264b49696d; raw OCR text hash 2f2bd69e9ca8ac3064350d8f140289731d0df49f694f4943e53925dfc9bd62ee"
+      ]
+    },
+    {
+      "key": "ziyuan-2012:p277:raw-944-945-升",
+      "kind": "ocr",
+      "title": "Verify the raw 升 token in 學 construction account",
+      "details": "[SCAN VERIFICATION REQUIRED] 字源 PDF p.277 / printed p.265, body occurrence reference [944,945): raw OCR reads “升” in the source construction account, but the same-book control comparisons are conflicting. Do not use this scalar as confirmed source text; the exact reviewed article does not name it.",
+      "verification": "Compare the exact occurrence to verified same-book controls and decide whether this raw token is reliable; if it remains unresolved, determine whether the reviewed article relies on it.",
+      "evidence": [
+        "Occurrence-level note: research/ocr-corrections/ziyuan-2012-p0277-xue-source-check-20261003/findings.md",
+        "The note retains blind control mappings, anchors, crop bounds and source pixel hashes for p.1259 升, p.213 廾 and p.462 井; the checks disagree.",
+        "No p.277 source correction or consumer rebuild was applied."
+      ]
+    }
+  ]
+}

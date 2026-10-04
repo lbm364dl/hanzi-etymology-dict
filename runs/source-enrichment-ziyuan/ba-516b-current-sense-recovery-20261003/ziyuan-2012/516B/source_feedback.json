@@ -1,0 +1,68 @@
+{
+  "allowed_edit_paths": [
+    "meaning_history/senses"
+  ],
+  "preserve_array_items": {
+    "meaning_history/senses": [
+      {
+        "id": "八:eight",
+        "gloss": "eight",
+        "period": "Oracle-bone inscriptions; absolute dates unresolved",
+        "certainty": "established",
+        "status": "earliest_attested",
+        "text": "Oracle-bone examples use 八 as a cardinal numeral, including in expressions for eight animals and in a month expression. These attest early numeral use, not a hypothetical original meaning.",
+        "evidence_ids": [
+          "X-2b02eff9efe1bc14df02",
+          "X-9d2769c0ce734db68776"
+        ]
+      },
+      {
+        "id": "八:eighth",
+        "gloss": "eighth; ordinal use",
+        "period": "Oracle-bone inscriptions and later",
+        "certainty": "established",
+        "status": "historical",
+        "text": "Oracle-bone month usage and later examples show 八 in month and year expressions with ordinal value. The evidence does not date a distinct development from the cardinal sense.",
+        "evidence_ids": [
+          "X-2b02eff9efe1bc14df02",
+          "X-1ab5f1721168f02a0326"
+        ]
+      },
+      {
+        "id": "八:separation",
+        "gloss": "separate; divide",
+        "period": "Traditional explanation; earliest attestation unresolved",
+        "certainty": "disputed",
+        "status": "historical",
+        "text": "A traditional interpretation reads the diverging strokes as separation. No early written example of 八 with this meaning is provided, so it remains a proposed original sense rather than an established earliest attestation.",
+        "evidence_ids": [
+          "E2",
+          "E3",
+          "X-b5a33e88393251826815",
+          "X-3898684ce58df9500ed6",
+          "X-9f27a7179f7b7fabcf79"
+        ]
+      }
+    ]
+  },
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0076/source.png",
+      "pdf_page": 76,
+      "source_pixel_sha256": "8a9838943fcc6ffe088f5ff2a1a665ad89ac199b635a6cbf78f0213e691dccd8"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0077/source.png",
+      "pdf_page": 77,
+      "source_pixel_sha256": "6ca19028ac75861df9098ae5f4781977aca78bc0c9ab1625cc7187363d8bfba2"
+    }
+  ],
+  "instruction": "Remove only the unsupported current sense `八:all-sides` from meaning_history.senses. Return exactly one value_json containing a valid JSON array of the three remaining existing sense records, in their original relative order. Do not include developments, limitations, relationships, or any sibling fields in this array. Preserve `八:eight`, `八:eighth`, and `八:separation` records exactly as they stand; they are protected in the pipeline contract. Do not add new evidence or senses. The pipeline will regenerate derived meaning edges from the revised senses, so do not edit relationships or developments. This change must remove the generated `meaning:八:all-sides` has_sense edge automatically. The existing limitation about an undated metadata gloss can remain unchanged. Make no other article, dossier, source, OCR, corpus, repo, or documentation edits.",
+  "editorial_adjudication": "The exact fresh previous factual and readability reviews at `runs/source-enrichment-ziyuan/hsk1-next-three-20261003/ziyuan-2012/516B/reviews.json` independently identify only the unsupported current status of sense `八:all-sides` and its generated has_sense relationship. E7 is imported merged metadata, not active current usage evidence. X-1ab5f1721168f02a0326 reports modern uses “eight,” “eighth,” “many,” “in many directions,” not this exact all-around/all-sides gloss as a current sense. Remove that optional sense only. Keep all other sense records exactly, and preserve other article facts/citations.",
+  "verified_review_findings": [
+    "Current sense 八:all-sides is unsupported as a present-day Chinese sense by its cited E7 imported metadata and X-1ab5f1721168f02a0326; remove it, which removes its generated has_sense relationship."
+  ],
+  "prior_review_proposals": [
+    "The previous exact pair of independent gpt-6-luna low reviews requested removal or substantiation of the current “all around; all sides” sense; direct verification confirms its citations do not support that exact current gloss."
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "findings": [
+    {
+      "key": "pipeline:parallel-source-queue-20261003",
+      "kind": "pipeline",
+      "title": "Scale source enrichment with durable queues and coordinated shared writes",
+      "details": "The source runner capped work at 3 concurrent characters/10 selected, repeatedly selected early failed entries, and delayed checkpoints behind slow jobs. Shared publication, cache and GitHub writes could race. Implemented a rolling durable queue, attention holds, inherited character/model-process locks, exact publication baseline checks, atomic caches and serialized producer repair transactions. A 100-job/24-worker fixture passed, and the actual cohort is now scheduled with 24 character workers sharing 12 model slots after a three-character live smoke. Actual review failures remain unfinished, rather than being treated as approvals.",
+      "verification": "Run concurrency, crash/resume, stale publication, cache, GitHub and producer transaction tests; inspect genuine Luna-low live stages and queue receipts. Current focused gate: 208 tests passed; three smoke entries await fresh authored revision/reviews.",
+      "evidence": [
+        "research/parallel-source-queue-20261003.md",
+        "pipeline/work_queue.py",
+        "pipeline/agent_slots.py",
+        "pipeline/source_enrichment.py",
+        "pipeline/source_repairs.py"
+      ]
+    },
+    {
+      "key": "pipeline:live-dashboard-20261003",
+      "kind": "pipeline",
+      "title": "Show live research, review, source repair and issue activity in an operations dashboard",
+      "details": "Implement a local live dashboard over genuine queue, stage, review, source-resolution and producer-repair receipts, actual Linux process observations and machine load. Include GitHub issues, labels, milestones and links, with remote refresh independent of filesystem collection. Distinguish recorded/stale stages from live PIDs, waiting model slots, last verified coverage audits and preserved history. Server is running locally at http://127.0.0.1:8765; fresh browser verification is underway.",
+      "verification": "Verify API freshness and stale/error handling, process/slot counts, search and status/source/history filters, exact receipt links, responsive layout and a fresh Playwright session. Do not create or infer editorial approval from dashboard rows.",
+      "evidence": [
+        "pipeline/dashboard.py",
+        "pipeline/dashboard_data.py",
+        "pipeline/dashboard/app.js",
+        "research/parallel-source-queue-20261003.md"
+      ]
+    }
+  ]
+}

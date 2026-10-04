@@ -1,0 +1,42 @@
+{
+  "transaction_id": "ocr-repair-20261004T102612Z-acf3c94e0229",
+  "archive_path": "/home/catalin/hanzi-etymology-dict/runs/three-slot-source-recovery-20261004/gong-source-repair/ocr-repair-20261004T102612Z-acf3c94e0229",
+  "repair": {
+    "key": "gong-quote-raw-1855",
+    "pdf_page": 423,
+    "producer_page_dir": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423",
+    "raw_start": 1855,
+    "raw_end": 1856,
+    "before": "毚",
+    "after": "[glyph:p001]",
+    "current_offset": 1855,
+    "source_pixel_sha256": "5612d68e138d947d28c0a103b43738ef8d1f3e96f8af91b39dabadbbe2ba0b48",
+    "raw_evidence_sha256": "40fe43b04430dddc96313fd7f3ebc63ca611ea2db4e65f14d78f99a815261fe3",
+    "overlay_hash": "dc69701df530dcb58aa362fba12b1dfaad04edbb6158a8dd9b2e2625bba9c9d4",
+    "effective_evidence_sha256": "26c0a03024458c2fbf7b746fdde79642760e4b4606e5cbcf5f4890d3237f32e9",
+    "glyph_reference": {
+      "id": "p001",
+      "kind": "unidentified_printed_character",
+      "consumer_asset": {
+        "id": "p001",
+        "description": "Unidentified printed graph after 册命 and before 官 in the 伊簋 quotation, 字源 printed p.411 (PDF423). Independent source-raster/control adjudication rejects OCR scalar 毚.",
+        "kind": "unidentified_printed_character",
+        "path": null,
+        "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0423/source.png",
+        "source_bbox_xyxy": null
+      }
+    }
+  },
+  "after": {
+    "source_sha256": "5612d68e138d947d28c0a103b43738ef8d1f3e96f8af91b39dabadbbe2ba0b48",
+    "evidence_sha256": "26c0a03024458c2fbf7b746fdde79642760e4b4606e5cbcf5f4890d3237f32e9",
+    "text_sha256": "f9fbfced530e9ed08e24487e5796bdac77fab2f32f814a772e5a08c562f1dff1"
+  },
+  "consumer_build": {
+    "stdout": "warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.\n{\"pages\": 1435, \"output\": \"/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl\"}\n",
+    "stderr": "",
+    "pages_root": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full",
+    "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl"
+  },
+  "unchanged_other_page_count": 1434
+}

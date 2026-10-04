@@ -1,0 +1,9 @@
+# 帮 final source scope repair
+
+Published exact article 9150307f7172e6bead00a977d3548feb3ed427f0db34e31caffd91ac72159307 and dossier 5e47c64d1fce4362182de06ad315938ea9d5728acd6b7d5ce90ef263081a355c. Genuine fresh factual/readability approvals are threads 01a10064-e194-79d3-a4c6-d03982eb0f2c and 01a10065-79e6-7062-91c1-0a6b03db02a9. Final job: runs/source-enrichment-ziyuan/bang-final-current-gates-recheck-20261003/ziyuan-2012/5E2E.
+
+Summary, formation and history distinguish the modern-period nonstandard-form 帛-to-巾 proposal from independently supported current 邦/巾 analysis, without inventing a dated sequence. The exact final scan coverage passes on cited book evidence X-bb98d9ba88c32bd4568f. The prior coverage reviewer conflated the current independently sourced decomposition with the traditional-form book account; its failed result remains retained in bang-final-current-gates-20261003. A separate actual source check assessed the exact citation boundaries and passed; root did not alter that review result or authored text. New source resolution binds unused glyph-identity limitations to this final pair and preserves their unresolved identities.
+
+The help sense text and generated edge now explain that sense only; the independently supported shoe-side use remains in the summary. Current Mandarin sound readings cite their exact inspected local Unihan records. Every authored change received fresh independent reviews.
+
+This resolves #170. Current registered book provenance, frozen canonical baseline, issue sync and final publication gates pass. Site and graph were rebuilt, retaining the legacy fallback and complete record set; the 300-entry integrity audit is run against these rebuilt products. Full book-coverage audit verifies 25/300, zero scan errors. Remaining 小, 百, 包 and subsequent cohort research is not certified by this publication.

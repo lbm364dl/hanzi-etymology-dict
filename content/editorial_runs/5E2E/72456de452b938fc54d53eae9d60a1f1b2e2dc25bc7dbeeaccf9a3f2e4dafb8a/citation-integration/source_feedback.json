@@ -1,0 +1,101 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "帮",
+        "幫"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000708",
+          "pdf_page_1based": 708,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0708/source.png",
+          "source_sha256": "fa20e8d355ce515c6d2fb88812a752f994b32b90562aefefeb6efa8fb3098c25",
+          "evidence_sha256": "81d61bae3cc72d27b97a3bd005fcc1e7336075bd42afb761bed502ba948349e2",
+          "ocr_review_status": "unreviewed",
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "幫(帮) bāng 帮组、阳部;帮组、唐韵、博旁切。"
+          ],
+          "excerpt": "旁类推,“錦”简化作“锦”。(胡伟)\n\n豹》:“烦三老为入白之。”白又引申为徒然,平白地。如:白费力气。由空白,引申为没有功名的平民。如:白丁、白衣、白身。由于丧服用白色,白色又指丧事。白与红构成反义词,现代的红可指革命,而白则象征反动。以“白”为构件的字,大都和白色、明亮有关。(胡伟 郭敏珊)\n\n幫(帮) bāng 帮组、阳部;帮组、唐韵、博旁切。\n\n[glyph:g001]\n楷书\n\n[glyph:g002]\n楷书\n\n[glyph:g003]\n楷书\n\n形声字。从帛,封声。本义指鞋的边缘部分。《集韵·唐韵》:“帮,治履边也。”引申指物体两旁或周围立起的部分。如:桶帮,腮帮。由此引申出辅助、帮助的含义。《正字通·巾部》:“凡事物旁助者皆曰帮。”辅助义在现代是帮的常用义。同伙的可以相帮,所以帮又指群、伙。由此引申出帮会义,指由于一定目的而结合的集团。如:马帮,茶帮。还可以作量词。如:一帮人。“帮”在近代已出现,是“幫”的俗字,据异体“帮”简省而成,原字下边的形符“帛”省为“巾”。(胡伟)\n\n皎 jiǎo 见组、宵部;见组、筱韵、古了切。\n\n[glyph:g004]¹——皎\n《说文》小篆 楷书\n\n1《说文》160页。\n\n形声字。《说文》:“皎,月之白也。从白,交声。”本义指月光洁白而明亮。《诗·陈风·月出》:“月出皎兮,佼(姣)人僚(美貌)兮。”引申为光明,明亮。三国魏曹植《洛神赋》:“远而望之,皎若太阳升朝霞。”由本义引申为洁白。《诗·小雅·白驹》:“皎皎白驹,食我场苗。”陆德明释文:“皎皎,洁白也。”引申为明白,清楚。汉王逸《离骚经序》:“其词温而雅,其义皎而朗。”五代时有以皎为姓的。(胡伟)\n\n曉 xiǎo 晓组、宵部;晓组、篠韵、馨袅切。\n\n[glyph:g005]¹——晓\n《说文》小篆 楷书\n\n1《说文》160页。\n\n形声字。同晓。《说文》:“曉,日之白也。从白,堯声。”本义指天亮。(胡伟 郭敏珊)\n\n白部\n\n白 bái 並组、铎部;並组、陌韵、傍陌切。\n\n[glyph:g006]¹ [glyph:g007]² [glyph:g008]³ [glyph:g009]⁴ [glyph:g010]⁵ [glyph:g011]⁶ 白\n商 商 西周 《说文》小篆 秦 汉 楷书\n\n1、2《甲文编》336页。3《金文编》552页。4《说文》160页。5、6《篆隶表》542页。\n\n构形有争议,一说为象形字,像拇指。郭沫若:“拇为将指,在手足俱居首位,故白引申为伯仲之伯,又引申为王伯之伯,其用为白色字者,乃假借也。”甲骨文写作“[glyph:g012]”。金文形体由甲骨文演变而来,写作“[glyph:g013]”,小篆形体由金文演变来,写作“白”,楷书字形体由小篆演变来。假借为白,指白色。《诗·小雅·白驹》:“皎皎白驹,食我场苗。”由白色引申为纯洁。日出天明,白又表示明亮。如:“雄鸡一唱天下白”。由明亮引申为清楚,明白。如:真相大白,不白之冤。由清楚、明白,引申为表明、辩白。《楚辞·九章·惜诵》:“情沈抑而不达兮,又蔽而莫之白也。”进而引申为告诉,禀告。《史记·滑稽列传·西门\n\n晢 xī 心组、锡部;心组、锡韵、先击切。\n\n[glyph:g014]¹——晢\n《说文》小篆 楷书\n\n1《说文》160页。\n\n形声字。《说文》:“晢,人色白也。从白,析声。”本义指肤色洁白。《诗·鄘风·君子偕老》:“扬且之晢也。”毛传:“晢,白晢。”引申为白色。《左传·定公九年》:“晳帻而衣狸制。”杜预注:“晢,白也。”用于抽象意义,引申指清楚、明白。此义只用晰。晢原为皙之异体,现晰为正字。(胡伟)\n\n695"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000238",
+          "pdf_page_1based": 238,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0238/source.png",
+          "source_sha256": "1dfdd46fded50a9e76ce17e92f842efa5b2300ab06be852296c2781c16512fb9",
+          "evidence_sha256": "bd2b182d432c59f9367b03f1301eeadfa89fda5bb6ef7a2406186eceddcf622c",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "旁侧。牧狄钟:“其严在帝ナ右。”又引申指辅助、辅翼,后来此义写作“佐”。善鼎:“昔先王既令女ナ足(右)鲁侯。”用作人名。《殷虚书契菁华》3:“甲寅允有来艰,ナ告曰:有往𠞰自益十人又二。”通“跛”(zuǒ),跛脚。挞駮觥盖:“吴(族名)挞駮(人名)弟史遄(逭,赠送)马,弗ナ。”(张标)\n\n卑 bēi 帮组、支部;帮组、支韵、府移切。\nbǐ 帮组、支部;帮组、纸韵、并弭切。\npí 帮组、支部;並组、支韵、符支切。\nbān 帮组、元部;帮组、删韵、布还切。\n\n[glyph:g021]¹ 商\n[glyph:g022]² 西周—[glyph:g023]³ 西周—[glyph:g024]⁴ 春秋—[glyph:g025]⁵ 春秋—[glyph:g026]⁶ 战国\n[glyph:g027]⁷ 战国—[glyph:g028]⁸ 战国—[glyph:g029]⁹ 战国\n[glyph:g030]¹⁰ 战国—[glyph:g031]¹¹ 战国—[glyph:g032]¹² 战国\n[glyph:g033]¹³ 战国—[glyph:g034]¹⁴ 战国—[glyph:g035]¹⁵ 战国—[glyph:g036]¹⁶ 战国—[glyph:g037]¹⁷ 战国—[glyph:g038]¹⁸ 战国\n[glyph:g039]¹⁹ 战国—[glyph:g040]²⁰ 战国—[glyph:g041]²¹ 战国—[glyph:g042]²² 战国\n[glyph:g043]²³ 《说文》小篆—[glyph:g044]²⁴ 汉—卑 楷书\n1《甲文编》958页。2-5《金文编》195页。6、7、8、10、11、12、15、17、19-22《古文典》771页。9、14、16、18《类编》63页。13《汉语字形表》114页。23《说文》65页。24《汉印徵》卷3,17页。\n会意字。商代甲骨文从又持甲,又为手之象,甲为带柄器械状,合此二构件盖会持械做事意。此正卑之初文与本字,持械做事为下等人所为,卑贱。西周春秋时,器柄衍出一横,与又结合成戈,带有声化趋向,卑与戈并唇音。战国时除极个别字保留声化趋向外,主流结构则是承用商代结构,或则全同,或则省略器柄作从田从又;不甚规范的,或又旁作寸、父、尹,或田下衍出一横,或又作[glyph:g045]、[glyph:g046]、[glyph:g047]、[glyph:g048]、[glyph:g049]、[glyph:g050],严重的作[glyph:g051],或田上出头为由。《说文》整理作从ナ甲是理据重构。楷书作卑。\n\n226"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:000709",
+          "pdf_page_1based": 709,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0709/source.png",
+          "source_sha256": "aef0586e6e34ed09f02596945ba6f83a97acd49396a91bd9d56d5d80b4c7b271",
+          "evidence_sha256": "fc2d07db2cef2cc115b3b51f412de616b7c756ccfb733eace96a3d80260375ce",
+          "ocr_review_status": "unreviewed",
+          "match_type": "possible_continuation",
+          "headword_lines": [],
+          "excerpt": "白部 㡀部 黹部\n\n皤 pó 並纽、歌部；並纽、戈韵、薄波切。\n\n[glyph:g001]1——[glyph:g002]2——皤\n《说文》小篆 汉 楷书\n1《说文》160页。2《篆隶表》542页。\n\n形声字。《说文》：“皤，老人白也。从白，番声。”本义形容老年人头白。《后汉书·樊宏传附樊准》：“故朝多皤皤之良，华首之老。”多指须发花白，引申指白色。《易·贲》：“贲如皤如。”引申指老人。宋宋祁《宋景文公笔记上》：“蜀人谓老为皤，取皤皤黄发义。”还可指肚子大。《左传·宣公二年》：“皤其腹。”（胡伟）\n\n確 hé 匣纽、药部；匣纽、沃韵、胡觉切。\n\n[glyph:g003]1——確\n《说文》小篆 楷书\n1《说文》161页。\n\n形声字。《说文》：“確，鸟之白也。从白，雀声。”本义指羽毛光泽洁白。三国魏何晏《景福殿赋》：“悠悠玄鱼，確確白鸟。”（胡伟）\n\n皚（皑） ái 疑纽、微部；疑纽、哈韵、五来切。\n\n[glyph:g004]1——皚——皑\n《说文》小篆 楷书 楷书\n1《说文》161页。\n\n形声字。《说文》：“皚，霜雪之白也。从白，豈声。”本义是霜雪洁白的样子。汉乐府诗《白头吟》：“皑如山上雪，皎若云间月。”皑皑，形容霜雪洁白。新中国成立后，偏旁“豈”简化为偏旁“岂”，依简化偏旁类推，“皚”简化为“皑”。（胡伟）\n\n𤽑 pā 滂纽、鱼部；滂纽、麻韵、普巴切。\nbà 並纽、鱼部；並纽、祃韵、白驾切。\n\n[glyph:g005]1——𤽑\n《说文》小篆 楷书\n1《说文》161页。\n\n形声字。《说文》：“𤽑，草华之白也。从白，巴声。”本义指草花之白，也泛指花，后作“葩”。《集韵·麻韵》：“葩，花也。又草花白。亦作𤽑。”读为bà时，指色不真。《集韵·祃韵》：“𤽑，色不真也。”（胡伟）\n\n皦 jiǎo 见纽、宵部；见纽、篠韵、古了切。\n\n[glyph:g006]1——[glyph:g007]2——皦\n《说文》小篆 汉 楷书\n1《说文》161页。2《篆隶表》543页。\n\n形声字。《说文》：“皦，玉石之白也。从白，敫声。”本义形容玉石洁白的样子。《北史·高闾传》：“佞者饰知以行事，忠者发心以附道，譬如玉石，皦然可知。”引申指白，明亮。《诗·王风·大车》：“谓予不信，有如皦日。”皦皦，洁白明亮的样子。又引申指清晰，分明。《论语·八佾》：“乐其可知也，始作翕如也，从之纯如也，皦如也。”再引申为清白。《后汉书·乐恢传》：“诸弟子皆以通关被系，恢独皦然不污于法。”（胡伟）\n\n𡩠 xi 溪纽、铎部；溪纽、陌韵、绮戟切。\n\n[glyph:g008]1——[glyph:g009]2——𡩠\n商 《说文》小篆 楷书\n1《合集》33871。2《说文》161页。\n\n会意字。像有光亮穿过的缝隙。同“隙”。甲骨文的“[glyph:g010]”，会日光穿过缝隙之意。下面两点演变成三点，“口”演变成“日”，楷书写作“𡩠”。《说文》：“𡩠，际见之白也。从白，上下小见。”段玉裁注：“际者，壁会也。壁会者，隙也。见读如现。壁隙之光，一线而已，故从二小。”《正字通·小部》：“𡩠，别作隙。”（胡伟）\n\n㡀 部\n\n㡀 bì 並纽、月部；並纽、祭韵、毗祭切。\n\n[glyph:g011]1——㡀\n《说文》小篆 楷书\n1《说文》161页。\n\n象形字。像破旧的巾形。《说文》：“㡀，败衣也。从巾，象衣败之形。”本义为破旧的衣服。又指衣服破旧的样子。《集韵·祭韵》：“㡀，衣坏貌。”引申指破旧，坏，困顿的样子。（胡伟）\n\n696"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0708/source.png",
+      "pdf_page": 708,
+      "source_pixel_sha256": "fa20e8d355ce515c6d2fb88812a752f994b32b90562aefefeb6efa8fb3098c25"
+    },
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0709/source.png",
+      "pdf_page": 709,
+      "source_pixel_sha256": "aef0586e6e34ed09f02596945ba6f83a97acd49396a91bd9d56d5d80b4c7b271"
+    }
+  ],
+  "target_language": "zh",
+  "require_source_specific_page_evidence": true,
+  "current_uncited_book_records": [
+    {
+      "research_output": "initial-followup/research/result.json",
+      "research_receipt_hash": "16d57b926fd66d00263a2e4b60d68acf1cd606a84e499958a5ad7cdd5801e89e",
+      "research_result_hash": "4021c739d8270d27ccecb547fad3dcf58d06edcf4554e1d6606c9534a72a200b",
+      "source": "李學勤主編《字源》；2012 edition, directly inspected supplied scan",
+      "field": "PDF p.708, printed p.695; headword 幫(帮), component account and sense history; original scan /home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-0708/source.png; source pixel SHA-256 fa20e8d355ce515c6d2fb88812a752f994b32b90562aefefeb6efa8fb3098c25; inspected crop bounds x=190–1530, y=700–2220",
+      "text": "The printed headword is 幫(帮), read bāng. The entry calls 幫 a phonosemantic character formed from 帛 with 封 as phonetic and gives the proposed original meaning as the edge of a shoe, citing 集韻·唐韻 “帮，治履边也.” It then describes extensions involving raised sides of objects, assistance, groups, and a classifier. It says 帮 appeared in the modern period as a俗字 of 幫 and proposes that the lower 帛 was reduced to 巾. This is the book author’s analysis; the passage does not date 帮’s first appearance or establish a step-by-step graphic route. The visible printed page is 695. PDF p.709 / printed p.696 begins 白部 entries; 幫 does not continue there. I inspected the headword, prose and adjacent entry boundary in the supplied pixels; I did not interpret the entry’s glyph specimens as historical forms.",
+      "evidence_ids": [
+        "X-362f34166e8950473daa"
+      ]
+    }
+  ],
+  "citation_integration_policy": "Research has already returned the supplied exact page-specific book records. Use the current retained evidence IDs on article claims that these records support. Unchanged supported prose plus a citation is sufficient. Do not invent support, put IDs in prose, or cite unrelated claims. If no record supports an article claim, retain a precise research gap. Obtain fresh independent factual and readability reviews."
+}

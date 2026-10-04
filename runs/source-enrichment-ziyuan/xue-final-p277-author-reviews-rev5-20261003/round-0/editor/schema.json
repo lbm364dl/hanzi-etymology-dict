@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "edits"
+  ],
+  "properties": {
+    "edits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "value_json"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "components/2/text",
+              "components/2/evidence_ids",
+              "history"
+            ]
+          },
+          "value_json": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "findings": [
+    {
+      "kind": "clarification",
+      "title": "Keep 山 seal-redraw descriptions tied to the image and evidence",
+      "details": "Review rounds 0–2 flagged inaccurate geometry and an unsupported claim that the seal-style redraw is a later stylized form of the mountain pictograph. Round 3 then passed after revisions. The current caption and alt describe three strokes rising from a curved base, while the caption limits the image to a modern redraw and says the listed forms do not establish continuity. These were rejected draft claims, not errors in the approved article.",
+      "verification": "On future edits to this glyph caption or alt text, compare the wording with the exact attached redraw and cited evidence; retain its modern-redraw qualification and do not imply a graphic transition without supporting evidence.",
+      "evidence": [
+        "round-0/factual-verification/verified-review.json",
+        "round-0/readability-verification/verified-review.json",
+        "round-1/readability-verification/verified-review.json",
+        "round-2/readability-verification/verified-review.json",
+        "round-3/factual-verification/verified-review.json",
+        "round-3/readability-verification/verified-review.json",
+        "historical_glyphs.items[0]",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:山:seal-redraw-description-and-transition-claims"
+    },
+    {
+      "kind": "clarification",
+      "title": "Retain the provenance limit on 山 scan checks",
+      "details": "The supplied research records say PDF p. 823 / printed p. 810 and continuation p. 824 were checked against scans by an earlier researcher, but later follow-up researchers did not personally inspect those scan pixels. No OCR correction is proposed, and the approved article does not rely on a reported correction. Preserve this distinction between dossier-reported inspection and the follow-up researchers’ direct inspection.",
+      "verification": "If a future OCR correction or claim of direct scan verification is proposed for these pages, inspect the exact source scan and occurrence with adjacent anchors, then record source-bound evidence; otherwise keep the prior scan check attributed to the earlier dossier research.",
+      "evidence": [
+        "initial-followup/research/result.json: gaps[6]",
+        "round-1/followup/glyph_research/result.json: gaps[0]",
+        "round-1/followup/research/result.json: gaps[1]",
+        "round-1/followup/research/result.json: gaps[2]",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:山:shan-source-scan-verification"
+    }
+  ]
+}

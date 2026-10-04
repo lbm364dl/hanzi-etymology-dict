@@ -1,0 +1,159 @@
+{
+  "reuse_existing_glyph_candidates": true,
+  "source_enrichment": {
+    "source": {
+      "id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "producer_root": "/home/catalin/hanzi-etymology-books",
+      "availability": "provisional_ocr",
+      "instructions": "Search simplified and traditional forms; verify every used passage against source scans. Report exact scan-verified OCR errors for source-bound correction. Preserve competing scholarly analyses and unresolved printed glyph identities. Other acquired books are not digitised consumer sources yet."
+    },
+    "corpus_instructions": "Search this supplied corpus directly; verify candidate passages against source scans where possible.",
+    "preserve_existing_evidence": true,
+    "record_ocr_uncertainty": "Do not guess OCR corrections. Report the exact suspect page/span and why it needs scan verification in the research gaps; do not silently normalize it."
+  },
+  "task": "Research this already published character with the supplied local scholarly source. Search and inspect the supplied corpus, verify the actual headword and relevant passage against scan images when available, and compare the book with other authoritative references. Preserve existing supported evidence and article content unless a precise source-backed improvement is warranted. Keep uncertainty scoped and glyph assets intact. Cite at least one relevant finding from the named book with its exact page; In the authored article, cite the retained book evidence ID on the specific supported claim; placing a new book record only in the dossier is not article enrichment. Use evidence_ids arrays, never inline labels. If the book corroborates existing prose, preserve that prose and add only the supported citation before fresh reviews. if no relevant claim can be established, record a source-specific access or relevance gap. For each unresolved OCR or scan identity issue, add a gap beginning exactly [SCAN VERIFICATION REQUIRED] or [OCR CORRECTION REQUIRED] and state page, span, and reason.",
+  "source_leads": [
+    {
+      "source_id": "ziyuan-2012",
+      "title": "字源",
+      "bibliography": "李學勤主編《字源》, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692",
+      "book_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721",
+      "search_forms": [
+        "好"
+      ],
+      "corpus_path": "/home/catalin/hanzi-etymology-books/source-corpus/ziyuan-pages.jsonl",
+      "candidates": [
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:001109",
+          "pdf_page_1based": 1109,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1109/source.png",
+          "source_sha256": "f57b420e60d20032f8df525c5dcae08228f9a01195720435613d53d0c14df040",
+          "evidence_sha256": "83da0aaef5c5f850afd23793440be39bf5847b19a5f1d4cdec8fb68e8d6a6022",
+          "ocr_review_status": "unreviewed",
+          "applied_ocr_corrections": {
+            "original_evidence_sha256": "4ad1c5141bed8484c5d9088ce5888c2293aa5357267fc4ba04554e6f41620b56",
+            "corrections_sha256": "4c6a6dbb2030c990d47cf71cda33d39ac446a915a14b85558d3e31257e9f1429",
+            "text_patches": [
+              {
+                "start": 1438,
+                "end": 1439,
+                "before": "虐",
+                "after": "虘"
+              }
+            ],
+            "scope": "Applied producer overlay, not whole-page approval. Compare current corrected corpus text with original pixels before proposing another correction."
+          },
+          "match_type": "unverified_headword_line",
+          "headword_lines": [
+            "好 hǎo 晓纽、幽部；晓纽、皓韵、呼皓切。"
+          ],
+          "excerpt": "h:g012]1 《说文》小篆——姝 楷书\n1 《说文》261页。\n形声字。从女，朱声。“朱”之形体变化，参“朱”字条。《说文》：“姝，好也。”本义是容貌美好。《诗·邶风·静女》：“静女其姝，俟我于城隅。”毛传：“姝，美色也。”引申指美女。宋玉《登徒子好色赋》：“此郊之姝，华色含光。”（徐在国）\n\n好 hǎo 晓纽、幽部；晓纽、皓韵、呼皓切。\nhào 晓纽、幽部；晓纽、号韵、呼到切。\n[glyph:g013]4 商\n[glyph:g014]1 商 [glyph:g015]2 商 [glyph:g016]3 商 [glyph:g017]5 西周 [glyph:g018]6 西周 [glyph:g019]7 春秋 [glyph:g020]8 战国 [glyph:g021]9 战国 [glyph:g022]10 《说文》小篆 [glyph:g023]11 汉——好 楷书\n1-4《甲文编》475页。5、6、7《金文编》804页。8《战文编》803页。9《战文编》804页。10《说文》261页。11《篆隶表》887页。\n会意字。“好”字甲骨文、金文、战国文字、《说文》篆文并从女、从子，会意。本义是女子。甲骨文“妇好”，人名，是商代“诸妇”中最重要的一位，她可以征集军队、征伐方国。《合集》6412：“妇好伐土方。”引申为美、善。《说文》：“好，美也。”虘钟：“用乐好宾。”《诗·周南·关雎》：“窈窕淑女，君子好逑。”（容貌美好、品德善良的女子是君子的佳偶）这些意义的“好”读为 hǎo。“好”作动词，意思是喜爱。《论语·子罕》：“吾未见好德如好色者也。”（我还没见过喜爱美德就像爱好美色那样的人）这种意义的\n\n嫵(妩) wǔ 明纽、鱼部；微纽、麌韵、文甫切。\n[glyph:g024]1 《说文》小篆——嫵 楷书——妩 楷书\n1 《说文》260页。\n形声字。从女，無声。“無”之形体演变，参“無”字条。“无”是“無”的简化字。“嫵”类推简化作“妩”。本义是妩媚，美好。《说文》：“妩，媚也。”《汉书·司马相如传上》：“柔桡嬛嬛，妩媚孅弱。”（嬛，《史记》作“嬛”；妩，《史记》作“斌”）（徐在国）\n\n媄 měi 明纽、脂部；明纽、旨韵、无鄙切。\n\n1094"
+        },
+        {
+          "page_id": "sha256:610f098b7383499e15005c51bf5908d327b3188e274cc7a1784089e9af80a721:001110",
+          "pdf_page_1based": 1110,
+          "printed_page": null,
+          "source_scan": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1110/source.png",
+          "source_sha256": "c2ae9a72c1005fa601ae0517669674bfae203d976b146b19470c2dd1b42b14d0",
+          "evidence_sha256": "1ba2256f2300a211e4ab2ef478f2351b5c76a31d2f258db85592f9b79356d367",
+          "ocr_review_status": "unreviewed",
+          "match_type": "text_mention",
+          "headword_lines": [],
+          "excerpt": "媚 嫵 媄 姝 好 姣 婉 嫣 姌 委 婺\n\n“好”读为hào。(徐在国)\n\n姝 shū 昌组、侯部;昌组、虞韵、昌朱切。\n\n[glyph:g001]¹——姝\n《说文》小篆 楷书\n\n1《说文》261页。\n\n形声字。从女,敜声。“姝”字异体。《说文》:“姝,好也。《诗》曰:‘静女其姝。’”段玉裁注:“此与姝音义皆同。《邶风·静女》文。今《毛诗》作姝。”清王闿运《张安化妻钱氏墓志铭》:“簮笄端淑,姝静有仪。”(徐在国)\n\n姣 jiāo 见组、宵部;见组、效韵、古孝切。\nxiào 匣组、宵部;匣组、宵韵、胡茅切。\n\n[glyph:g002]¹——[glyph:g003]²——姣\n《说文》小篆 三国魏 楷书\n\n1《说文》261页。2《篆隶表》887页。\n\n形声字。从女,交声。“交”之形体变化,参“交”字条。本义是容貌美好。《说文》:“姣,好也。”《方言》卷一:“娥、瀛,好也。自关而东,河济之间,或谓之姣。”《孟子·告子上》:“至于子都,天下莫不知其姣也。”引申义有妖媚、侮辱等义。这些意义的“姣”读为jiāo。“姣”又有淫乱义。《左传·襄公九年》:“弃位而姣,不可谓贞。”杜预注:“姣,淫之别名。”服虔“读姣为放效”之效。这种意义的“姣”读为xiào。(徐在国)\n\n婉 wǎn 影组、元部;影组、阮韵、於阮切。\n\n[glyph:g004]¹——[glyph:g005]²——婉\n《说文》小篆 晋 楷书\n\n1《说文》261页。2《篆隶表》887页。\n\n形声字。从女,宛声。“宛”之形体演变,参“宛”字条。本义是温顺。《说文》:“婉,顺也。”《左传·昭公二十六年》:“姑慈而从,妇听而婉。”引申有委婉、宛延等义。又指容貌美好。《诗·郑风·野有蔓草》:“有美一人,清扬婉兮。”(徐在国)\n\n嫣 yān 影组、元部;影组、愿韵、於建切。\n\n[glyph:g006]¹——嫣\n《说文》小篆 楷书\n\n1《说文》261页。\n\n形声字。从女,焉声。“焉”之形体演变,参“焉”字条。本义是身材高大而美丽。《说文》:“嫣,长貌。”《玉篇·女部》:“嫣,长美貌。”引申指笑容美好。《文选·宋玉〈登徒子好色赋〉》:“嫣然一笑,惑阳城,迷下蔡。”(徐在国)\n\n姌 rǎn 日组、谈部;日组、琰韵、而琰切。\n\n[glyph:g007]¹——姌\n《说文》小篆 楷书\n\n1《说文》261页。\n\n形声字。字本作“妍”,从女,丹声。《集韵·琰韵》:“妍,或作姌。”“冉”乃“丹”字隶变之体,参“冉”字条。《说文》:“姌,弱长貌。”本义是细长柔弱的样子。《史记·司马相如列传》:“柔桡嫚嫚,嫵媚姌嫋。”司马贞索隐:“嫵媚孅弱。”《汉书》嫚作嬛,斌作妩。(徐在国)\n\n委 wěi 影组、微部;影组、纸韵、於诡切。\nwēi 影组、微部;影组、支韵、於为切。\nwèi 影组、微部;影组、寘韵、於伪切。\n\n[glyph:g008]¹——[glyph:g009]²——[glyph:g010]³——[glyph:g011]⁴——[glyph:g012]⁵——[glyph:g013]⁶——委\n商 商 战国 秦 《说文》小篆 汉 楷书\n\n1、2《甲文编》476页。3、4《战文编》804页。5《说文》261页。6《篆隶表》887页。\n\n会意字。从女、从禾,会女子如禾委曲之意。甲骨文“委”字“女”旁或在“禾”左、或在“禾”右,战国文字则在“禾”下,为《说文》篆文所本。本义是顺从。《说文》:“委,委随也。”《淮南子·本经》:“优柔委从,以养群类。”引申义有托付、舍弃、推卸、堆积等。这些意义的“委”读为wěi。“委蛇”,联绵词,庄重而又从容自得的样子。《诗·召南·羔羊》:“退食自公,委蛇委蛇。”又有绵延、曲折义。这些意义的“委”读为wēi。《集韵·寘韵》:“委,委积,卒米薪刍之总名。”《周礼·天官·宰夫》:“掌其牢礼,委积,膳献、饮食、宾赐之飧牵,与其陈数。”这种意义的“委”读为wèi。(徐在国)\n\n婺 wù 明组、侯部;微组、遇韵、亡遇切。\n\n[glyph:g014]¹——[glyph:g015]²——婺\n秦 《说文》小篆 楷书\n\n1《战文编》804页。2《说文》261页。\n\n形声字。从女,敄声。“敄”之形体演变,参“敄”字条。本义是不顺从。《说文》:“婺,不繇也。”“婺女”,星\n\n1095"
+        }
+      ],
+      "use": "Locator leads only; inspect scan pixels and exact headword before citing."
+    }
+  ],
+  "source_scan_images": [
+    {
+      "path": "/home/catalin/hanzi-etymology-books/research-ocr/ziyuan-full/page-1109/source.png",
+      "pdf_page": 1109,
+      "source_pixel_sha256": "f57b420e60d20032f8df525c5dcae08228f9a01195720435613d53d0c14df040"
+    }
+  ],
+  "target_language": "zh",
+  "unfinished_draft_provenance": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/hao-evidence-caption-continuation/ziyuan-2012/597D",
+    "article_hash": "fcccaf06cd2dcec10dc1a50802fc8b4a830e16a4db4866fa4121ce686baaceb1",
+    "dossier_hash": "e44f791022769a83e06e520ece90da33db124aa19e9cac9062a849ae5bbbdff9",
+    "previous_state_hash": "8a9a54cbf65c6d0c76bf079d722a477064cd1c7da5b088dfb1dd78a14f885067",
+    "canonical_article_hash": "e417e9e11e5c9002867f7351541a0635b6054ddb819bda32fd78b3fa1496c71a",
+    "canonical_dossier_hash": "6283de220b467d6ea554da671079e62fddc60c28f366367863e177600f12d2e4",
+    "requires_fresh_research_and_reviews": true,
+    "prior_review_proposals_hash": "53ce90e6973234249bbb9dbce1348714df56348bf87f8387221395484b67929e"
+  },
+  "prior_review_proposals": [
+    {
+      "role": "factual",
+      "verdict": "revise",
+      "findings": [
+        "`historical_glyphs.items[0].caption` and `alt` reverse the redraw’s relative sizes: the attached image shows a larger looped figure above and a smaller branching figure below. Correct the visual descriptions while keeping the figures’ identities qualified as a proposed 女-plus-子 analysis."
+      ],
+      "article_hash": "fcccaf06cd2dcec10dc1a50802fc8b4a830e16a4db4866fa4121ce686baaceb1",
+      "dossier_hash": "e44f791022769a83e06e520ece90da33db124aa19e9cac9062a849ae5bbbdff9",
+      "reviewer": "gpt-6-luna:low:factual:01a0ff03-bb05-72d0-99fe-74f5049ba60c"
+    },
+    {
+      "role": "readability",
+      "verdict": "revise",
+      "findings": [
+        "`learner.overview.text` should include the common current meaning “good,” supported by `meaning_history.senses[3]` and evidence `X-7d4b6af9acbc8a9f48b1`; the current overview explains only the proposed construction and original motivation.",
+        "`historical_glyphs.items[0].caption` and `alt` reverse the attached oracle redraw’s relative sizes: the upper looped figure is compact and the lower branching figure is larger. Correct those visual descriptions while retaining the qualification that appearance alone does not establish component identity or original motivation."
+      ],
+      "article_hash": "fcccaf06cd2dcec10dc1a50802fc8b4a830e16a4db4866fa4121ce686baaceb1",
+      "dossier_hash": "e44f791022769a83e06e520ece90da33db124aa19e9cac9062a849ae5bbbdff9",
+      "reviewer": "gpt-6-luna:low:readability:01a0ff04-e2a7-7a33-b488-fbc36192aaa6"
+    }
+  ],
+  "prior_consulted_book_records": {
+    "previous_job": "/home/catalin/hanzi-etymology-dict/runs/source-enrichment-ziyuan/hao-evidence-caption-continuation/ziyuan-2012/597D",
+    "previous_audit_hash": "5ad3cf3034426086b6d91db7896dbb509fd99293b1ecd625474f4987a0975e53",
+    "records": [
+      {
+        "research_output": "initial-followup/research/result.json",
+        "research_receipt_hash": "cd0e5c79261db13ec3f9003485704b39949638b1ee5a0b559027b08c797cf6c7",
+        "research_result_hash": "8ba8783165f7a039e7b207a6398ccffa9b577e5f878ac96b6efa89d75aca70f0",
+        "source": "《字源》, 李學勤主編, 天津古籍出版社 / 遼寧人民出版社, 2012, ISBN 9787552800692; scan directly inspected",
+        "field": "好 headword; graphic analysis and cited uses, printed p. 1094 / PDF p. 1109; continuation printed p. 1095 / PDF p. 1110",
+        "text": "The scan shows the actual 好 headword and states that oracle-bone, bronze, Warring States, and Shuowen seal forms are analyzed as 女 plus 子. The author calls the original meaning ‘woman’, then describes extensions to beauty/goodness and the verbal sense ‘like/love’; that discussion continues on printed p. 1095/PDF p. 1110. The passage cites the Shang personal name 婦好 and 《合集》6412. This is the book author's account, not independent proof of the proposed original meaning or of a complete semantic sequence. Printed page numbers are visible in the scans.",
+        "evidence_ids": [
+          "X-c4efde7fafd2060af814"
+        ]
+      }
+    ],
+    "requires_current_source_research": true
+  },
+  "continuation_policy": "This is an unapproved draft, not reusable approval. Recheck source-dependent claims against current source scans/corpus. Prior revise findings are hypotheses to recheck, including possible source identity errors; do not obey them merely because a previous verifier repeated them. Prior consulted book records identify exact retained evidence IDs and claims to recheck. After current-source verification, cite relevant supported claims through evidence_ids metadata; dossier-only records do not count as article source use. Preserve prior supported work and obtain fresh factual/readability reviews.",
+  "require_source_specific_page_evidence": true,
+  "current_uncited_book_records": [
+    {
+      "research_output": "initial-followup/research/result.json",
+      "research_receipt_hash": "ce971d1037f19af3a24787ecf935a4cb6974161d639da3690362bbe5e8c11d6a",
+      "research_result_hash": "79e9386904910e97ea201efff40362b0a05c1465aee5155886f37002bcdfcce0",
+      "source": "《字源》, 李學勤主編, 天津古籍出版社、遼寧人民出版社, 2012, ISBN 9787552800692; attached source scan directly inspected",
+      "field": "好 headword, formation and meaning discussion; printed p. 1094 / PDF p. 1109",
+      "text": "The scan shows the actual 好 entry. It identifies oracle-bone, bronze, Warring States and Shuowen seal forms as 女 plus 子, and the author calls its original meaning ‘woman’, then describes extension to beauty/goodness and a verbal ‘like/love’ sense. The page cites Shang personal name 婦好 and 《合集》6412. This is the book author’s account, not independent proof of the proposed original sense or a complete semantic chronology. I visually checked the word introducing the bronze example: the scan reads 虘鐘, not the provisional OCR 虐钟. Proposed source-bound OCR correction only; no corpus correction made.",
+      "evidence_ids": [
+        "X-4bbb750063ebdb6f6ce4"
+      ]
+    },
+    {
+      "research_output": "initial-followup/research/result.json",
+      "research_receipt_hash": "ce971d1037f19af3a24787ecf935a4cb6974161d639da3690362bbe5e8c11d6a",
+      "research_result_hash": "79e9386904910e97ea201efff40362b0a05c1465aee5155886f37002bcdfcce0",
+      "source": "《字源》, 李學勤主編, 天津古籍出版社、遼寧人民出版社, 2012, ISBN 9787552800692; attached source scan directly inspected",
+      "field": "好 verbal-sense continuation; printed p. 1095 / PDF p. 1110 (continuation passage supplied as OCR locator; page scan not attached in this invocation)",
+      "text": "The supplied continuation OCR states that 好 read hào means ‘like/love’ and cites the Analects. I did not inspect PDF page 1110 pixels in this invocation, so treat this as a locator lead, not scan-verified evidence. The attached p. 1094 image itself ends with the sentence continuing onto the next page.",
+      "evidence_ids": [
+        "X-16e99c246ced6cc50731"
+      ]
+    }
+  ],
+  "citation_integration_policy": "Research has already returned the supplied exact page-specific book records. Use the current retained evidence IDs on article claims that these records support. Unchanged supported prose plus a citation is sufficient. Do not invent support, put IDs in prose, or cite unrelated claims. If no record supports an article claim, retain a precise research gap. Obtain fresh independent factual and readability reviews."
+}

@@ -1,0 +1,5 @@
+# Review the provenance of cited book records
+
+The 学 publication hold demonstrates that an otherwise correct book quotation can be carried by a cited evidence item with a false continuation-page boundary. Existing research prompts already ask for actual headword/end/continuation verification; the missed gate was independent factual review of the evidence item's source details, not solely the article sentence supported by it.
+
+The generic factual-review instruction now explicitly checks claimed page and entry boundaries for article-used book evidence and rejects materially wrong provenance even when the associated quotation is accurate. A neighboring headword and contributor credit delimit the host account. This does not turn an unused historical research mistake into an article claim, erase append-only evidence, or require discarding valid quotes. The fresh 学 correction must cite its new properly scoped p277 record and receive new independent reviews; the prompt change alone approves nothing.

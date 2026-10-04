@@ -1,0 +1,30 @@
+{
+  "findings": [
+    {
+      "kind": "ocr",
+      "title": "Resolve the historical 工 forms shown in the source timeline",
+      "details": "The current source-verified evidence identifies [glyph:g041] and [glyph:g042] as two historical drawings in the 工 timeline and describes their differing lower strokes. Their Unicode identities remain unresolved, but the source confirms these are glyph specimens, not erroneous scalar OCR. The older finding’s claim that these spans materially affect formation and history is no longer established: the current article describes the form changes without using either glyph identity. No replacement should be guessed.",
+      "verification": "Check the current article and dossier citations against X-d336463a262002afd3cd and X-b872ab6bef5adef14cca. If the article continues to describe only the supported visible stroke changes, close the identity question without Unicode substitution; if it names either graph, verify that identity from the scan before publication.",
+      "evidence": [
+        "X-d336463a262002afd3cd",
+        "X-b872ab6bef5adef14cca",
+        "Current formation and history cite X-cd4b65f584bfff92cb2b and X-d336463a262002afd3cd.",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:工:ziyuan-2012-gong-unresolved-glyphs"
+    },
+    {
+      "kind": "pipeline",
+      "title": "Add verified printed-page metadata for the 工 source page",
+      "details": "The current source metadata still records PDF page 423 with printed_page and metadata_provenance both null. Current inspected evidence identifies the visible printed page as 411, so the corpus metadata repair remains unapplied. This is separate from the unresolved reading of the graph before 官.",
+      "verification": "Add printed page 411 to page-423 metadata with provenance tied to the inspected scan, then confirm the current metadata record contains that value without treating the inscription reading as resolved.",
+      "evidence": [
+        "current_source_page_metadata: page 000423 has pdf_page_1based 423, printed_page null, metadata_provenance null.",
+        "X-c3bbdea1c16eeb16571d",
+        "X-cd4b65f584bfff92cb2b",
+        "Parent work: https://github.com/lbm364dl/hanzi-etymology-dict/issues/1"
+      ],
+      "key": "ziyuan-2012:工:ziyuan-2012-gong-printed-page-metadata"
+    }
+  ]
+}

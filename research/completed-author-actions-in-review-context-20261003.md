@@ -1,0 +1,7 @@
+# Author actions are not commands for a later review
+
+The protected 学 author correctly removed an unused catalogue sentence, preserving both supported history records. Inspection of the saved review packets showed that the original author instruction, “remove input history[0],” remained in source-followup context after indices shifted. Factual review repeated that command against the new history[0]; readability acknowledged that the requested defect was already absent but still returned revise.
+
+The shared source-followup review policy now explicitly distinguishes prior author actions from current review findings. Reviewers must identify the current record by its actual text and citations, treat shifted indices accordingly, and request a correction only for a remaining defect. Completion of the requested repair alone is not grounds for another revise verdict. Coordinator review framing should likewise describe the actual current candidate when obtaining fresh independent adjudication.
+
+No saved verdict is rewritten and no approval is inferred from a contradictory review. Fresh exact-candidate factual and readability receipts remain required. The supported-record preservation contract prevents false requests from silently deleting unrelated claims while this genuine review resolves the disagreement. This finding stays within the existing 学 issue; no extra issue or character conditional is introduced.

@@ -1,0 +1,23 @@
+[
+  {
+    "role": "factual",
+    "verdict": "revise",
+    "findings": [
+      "`learner.overview` (current citations: `X-1952abb8d579f157f237`, `X-2d5f6903e06644864d01`) calls 夕 and 口 semantic elements but does not identify which is where; the attached modern glyphs show 夕 on the left and 口 on the right. Correct the positions in the overview and learner component cards. `summary.text` and `formation.text` also reverse the modern layout by saying 口 is left and 夕 right; correct them to match the current form. The historical accounts in `X-2d5f6903e06644864d01` and `X-1952abb8d579f157f237` describe an upper/lower arrangement in older forms, so keep that historical description distinct from the attached modern glyphs."
+    ],
+    "article_hash": "e60bff71455cb6d2244611667b8ea7d7b8cc11bde37705289f655a61a03f7780",
+    "dossier_hash": "a75dc4e1033544b8da03bf22d6536800b12c46df981f26d506be6dc02c8704cb",
+    "reviewer": "gpt-6-luna:low:factual:01a1062c-0b32-7c42-bb05-c827fca09db9"
+  },
+  {
+    "role": "readability",
+    "verdict": "revise",
+    "findings": [
+      "`components[0].text` says “夕 and 月 once shared a moon-like form; later, a dot distinguished 月,” but its cited evidence `X-095ab716133d1e5c2eac` describes their separate graphic history, not a change within 名. Remove this aside or make its separate scope explicit and cite the 夕-specific evidence; the component explanation should focus on 夕’s role in the received account of 名.",
+      "`learner.overview` calls 夕 and 口 “semantic elements” but leaves the account’s uncertain original motivation until the end. Identify it up front as the traditional explanation and qualify its motivation there, so the main construction is not initially presented as established."
+    ],
+    "article_hash": "e60bff71455cb6d2244611667b8ea7d7b8cc11bde37705289f655a61a03f7780",
+    "dossier_hash": "a75dc4e1033544b8da03bf22d6536800b12c46df981f26d506be6dc02c8704cb",
+    "reviewer": "gpt-6-luna:low:readability:01a1062c-30f9-7a33-939d-441f1ac90db6"
+  }
+]

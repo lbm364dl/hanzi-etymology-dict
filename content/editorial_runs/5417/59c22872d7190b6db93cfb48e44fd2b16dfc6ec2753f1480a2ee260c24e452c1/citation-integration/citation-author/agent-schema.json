@@ -1,0 +1,177 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "edits",
+    "unsupported_records"
+  ],
+  "properties": {
+    "edits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "evidence_ids"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "summary/evidence_ids",
+              "formation/evidence_ids",
+              "components/0/evidence_ids",
+              "components/1/evidence_ids",
+              "components/1/sound_limitation/evidence_ids",
+              "components/1/sound/0/evidence_ids",
+              "history/0/evidence_ids",
+              "history/1/evidence_ids",
+              "history/2/evidence_ids",
+              "uncertainties/0/evidence_ids",
+              "uncertainties/1/evidence_ids",
+              "uncertainties/2/evidence_ids",
+              "meaning_history/senses/0/evidence_ids",
+              "meaning_history/senses/1/evidence_ids",
+              "meaning_history/senses/2/evidence_ids",
+              "meaning_history/developments/0/evidence_ids",
+              "meaning_history/limitations/0/evidence_ids",
+              "relationships/0/evidence_ids",
+              "relationships/1/evidence_ids",
+              "relationships/2/evidence_ids",
+              "relationships/3/evidence_ids",
+              "relationships/4/evidence_ids",
+              "relationships/5/evidence_ids",
+              "relationships/6/evidence_ids",
+              "learner/overview/evidence_ids",
+              "learner/components/0/evidence_ids",
+              "learner/components/1/evidence_ids",
+              "learner/takeaway/evidence_ids"
+            ]
+          },
+          "evidence_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": [
+                "E1",
+                "E2",
+                "E3",
+                "E4",
+                "E5",
+                "E6",
+                "E7",
+                "E8",
+                "E9",
+                "E10",
+                "E11",
+                "E12",
+                "X-602921d14155115b8f30",
+                "X-4928c0d5969ecaa72ba0",
+                "X-669798c5754514bf0e8e",
+                "X-f0f66a26986ea1383a31",
+                "X-a5b09f2a2c55440c7eaa",
+                "X-610f7a1f57daa1e7d858",
+                "X-1754a4ad53f5a06fd61b",
+                "X-ded0e154f449d2808c97",
+                "X-aaaf370165954aa5ed16",
+                "X-e6884144dd32d55056fd",
+                "X-838a98d00c4722898325",
+                "X-6f1b6f460ff9261957d9",
+                "X-9405d3e483f3bc9088e7",
+                "X-6a17b410c8cc8ed772ce",
+                "X-902376aab1acb46d80d8",
+                "X-23d10356cb0cca1578eb",
+                "X-9c58ddd0c4791e93af37",
+                "X-3502be87c881823fb071",
+                "X-7138129fd8a9b81ce266",
+                "X-27a25c9625a1e184c7df",
+                "X-3540d84a96db6a644a88",
+                "X-40764bb2fc2ce4b09f49",
+                "X-30b0498934390335de9a",
+                "X-ece2853e2b25230a0fe0",
+                "X-8390dffbdef669112951",
+                "X-d523e2bda0b84c3474f5",
+                "X-27d63ef7595788254e99",
+                "X-f34adfc6793991860e0a",
+                "X-b328768aff2cac6eae29",
+                "X-b57fc8149fd9ad000253",
+                "X-9833f05d3544ef01f8b4",
+                "X-b614fd835dddf3a86824",
+                "X-fa084cd1ea0c3d09f6d8"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "unsupported_records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "reason"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "enum": [
+              "E1",
+              "E2",
+              "E3",
+              "E4",
+              "E5",
+              "E6",
+              "E7",
+              "E8",
+              "E9",
+              "E10",
+              "E11",
+              "E12",
+              "X-602921d14155115b8f30",
+              "X-4928c0d5969ecaa72ba0",
+              "X-669798c5754514bf0e8e",
+              "X-f0f66a26986ea1383a31",
+              "X-a5b09f2a2c55440c7eaa",
+              "X-610f7a1f57daa1e7d858",
+              "X-1754a4ad53f5a06fd61b",
+              "X-ded0e154f449d2808c97",
+              "X-aaaf370165954aa5ed16",
+              "X-e6884144dd32d55056fd",
+              "X-838a98d00c4722898325",
+              "X-6f1b6f460ff9261957d9",
+              "X-9405d3e483f3bc9088e7",
+              "X-6a17b410c8cc8ed772ce",
+              "X-902376aab1acb46d80d8",
+              "X-23d10356cb0cca1578eb",
+              "X-9c58ddd0c4791e93af37",
+              "X-3502be87c881823fb071",
+              "X-7138129fd8a9b81ce266",
+              "X-27a25c9625a1e184c7df",
+              "X-3540d84a96db6a644a88",
+              "X-40764bb2fc2ce4b09f49",
+              "X-30b0498934390335de9a",
+              "X-ece2853e2b25230a0fe0",
+              "X-8390dffbdef669112951",
+              "X-d523e2bda0b84c3474f5",
+              "X-27d63ef7595788254e99",
+              "X-f34adfc6793991860e0a",
+              "X-b328768aff2cac6eae29",
+              "X-b57fc8149fd9ad000253",
+              "X-9833f05d3544ef01f8b4",
+              "X-b614fd835dddf3a86824",
+              "X-fa084cd1ea0c3d09f6d8"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

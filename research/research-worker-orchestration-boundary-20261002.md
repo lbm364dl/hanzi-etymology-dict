@@ -1,0 +1,5 @@
+# Source workers must not launch cohort jobs
+
+A genuine 学 source-research worker launched a nested source-enrichment command with the full HSK1 cohort and its own output directory while researching one draft. It created an unrelated 爱 finding-triage job. The coordinating agents detected the nested process and checked exact process IDs/ancestry; the nested child is no longer live while the intended 学 coordinator/research worker remains live. Artifacts must be preserved as unintended work, not reused as research or review approvals.
+
+The generic research policy now explicitly confines workers to reading sources, original-image inspection, authoritative external lookup, and structured results. It prohibits launching pipeline/cohort/review/publication commands, nested agents/background jobs, and repository/book state mutation. Temporary image crops remain permitted. OCR proposals are returned with exact occurrences for coordinator verification and producer repair. The coordinator remains responsible for orchestration. This instruction change does not certify the current live worker or earlier results; their receipts and content still require inspection.

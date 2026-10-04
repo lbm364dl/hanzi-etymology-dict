@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "edits"
+  ],
+  "properties": {
+    "edits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "value_json"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "learner/overview/text",
+              "learner/overview/evidence_ids",
+              "formation/evidence_ids"
+            ]
+          },
+          "value_json": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

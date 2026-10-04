@@ -1,13 +1,351 @@
 import copy
+import gzip
 import json
 from pathlib import Path
 import sys
 import tempfile
 import unittest
+from pipeline.editorial import dossier_update_is_safe
 from unittest.mock import patch
 
 from pipeline.editorial import (Runner, ARTICLE_SCHEMA, REVIEW_SCHEMA, digest, make_review, publish,
-                                run, validate_article, validate_published, write, enrich_dossier, validate_research, research_dossier, refine, add_learner, independent_review, annotate_forms, curate_glyphs, local_primary_readings, local_baxter_sagart_rows, local_glyph_hints)
+                                run, validate_article, validate_published, write, enrich_dossier, validate_research, research_dossier, refine, add_learner, independent_review, annotate_forms, curate_glyphs, local_primary_readings, local_baxter_sagart_rows, local_glyph_hints, repair_reader_prose)
+from pipeline.editorial import summarize_web_activity, parse_codex_events, validate_new_reader_style, reuse_glyphs_for_text_followup
+
+
+class RevisionPlanTransportTests(unittest.TestCase):
+    def test_strict_planner_transport_requires_glyph_route_without_invalidating_legacy(self):
+        from pipeline.editorial import agent_schema, REVISION_PLAN_SCHEMA
+        from jsonschema import Draft202012Validator, ValidationError
+        wire = agent_schema(REVISION_PLAN_SCHEMA)
+        self.assertEqual(set(wire['required']), set(wire['properties']))
+        old = {'action': 'edit', 'reason': 'Existing evidence supports the correction.'}
+        Draft202012Validator(REVISION_PLAN_SCHEMA).validate(old)
+        with self.assertRaises(ValidationError):
+            Draft202012Validator(wire).validate(old)
+        Draft202012Validator(wire).validate({**old, 'glyph_action': 'retain'})
+        self.assertNotIn('glyph_action', REVISION_PLAN_SCHEMA['required'])
+
+
+class ReviewComponentIndexPacketTests(unittest.TestCase):
+    def test_current_records_keep_complete_array_indices_in_review_packet(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            script = root/'fixture_runner.py'
+            script.write_text("import sys\nfrom pathlib import Path\n"
+                              "sys.stdin.read()\nPath(sys.argv[1]).write_text('{\"verdict\":\"pass\",\"findings\":[]}')\n")
+            article = {'character': '的', 'components': [
+                {'form': '日', 'scope_character': '旳', 'current_form_component': False},
+                {'form': '勺', 'scope_character': '旳', 'current_form_component': False},
+                {'form': '白', 'scope_character': '的', 'current_form_component': True},
+                {'form': '勺', 'scope_character': '的', 'current_form_component': True}]}
+            article['learner'] = {'components': [
+                {'component_index': 2, 'text': 'Deliberately mismatched 勺 card.'},
+                {'component_index': 3, 'text': 'Deliberately mismatched 白 card.'}]}
+            runner = Runner([sys.executable, str(script), '{output}'], 'gpt-6-luna', 10, 'low')
+            for role in ('factual', 'readability'):
+                directory = root/role
+                runner.run(role, {'article': article, 'dossier': {'glyph_assets': []}},
+                           REVIEW_SCHEMA, directory)
+                packet, _ = json.JSONDecoder().raw_decode(
+                    (directory/'prompt.txt').read_text().split('\nINPUTS:\n', 1)[1])
+                self.assertEqual(packet['schema_contract']['current_form_component_indices'], [2, 3])
+                self.assertEqual(packet['article']['components'], article['components'])
+                self.assertIn('never renumber', packet['schema_contract']['component_index_instruction'])
+                targets = packet['schema_contract']['component_index_targets']
+                self.assertEqual(targets[2], {'component_index': 2, 'form': '白',
+                    'scope_character': '的', 'learner_card_texts': ['Deliberately mismatched 勺 card.']})
+                self.assertEqual(targets[3]['form'], '勺')
+                self.assertEqual(targets[0]['learner_card_texts'], [])
+
+
+
+class ResearchAuditURLSchemaTests(unittest.TestCase):
+    def test_audit_requires_web_urls_but_allows_failed_lookup(self):
+        from jsonschema import Draft202012Validator, ValidationError
+        from pipeline.editorial import RESEARCH_SCHEMA
+        validator = Draft202012Validator(RESEARCH_SCHEMA)
+        result = {'evidence': [], 'gaps': [], 'search_audit': [
+            {'query': 'actual lookup fixture', 'urls': [], 'outcome': 'Access failed'}]}
+        validator.validate(result)
+        for url in ('https://example.org/entry', 'http://example.org/entry'):
+            result['search_audit'][0]['urls'] = [url]
+            validator.validate(result)
+        for url in ('file:///tmp/source.png', '/tmp/source.png', 'source.png'):
+            result['search_audit'][0]['urls'] = [url]
+            with self.assertRaises(ValidationError):
+                validator.validate(result)
+
+
+class NewReaderStyleTests(unittest.TestCase):
+    def test_source_labels_and_workflow_remarks_are_rejected(self):
+        dossier = {"evidence": [{"source": "漢語多功能字庫, CUHK"},
+                                {"source": "李學勤主編《字源》"}]}
+        article = {"summary": {"text": "Half is one of two equal parts."},
+                   "meaning_history": {"senses": [{"text": "CUHK proposes a split meaning."}]}}
+        with self.assertRaisesRegex(ValueError, "Source name 'CUHK'"):
+            validate_new_reader_style(article, dossier)
+        article["meaning_history"]["senses"][0]["text"] = "字源 calls it original."
+        with self.assertRaisesRegex(ValueError, "Source name '字源'"):
+            validate_new_reader_style(article, dossier)
+        article["meaning_history"]["senses"][0]["text"] = "This dossier does not settle the date."
+        with self.assertRaisesRegex(ValueError, "Workflow term"):
+            validate_new_reader_style(article, dossier)
+        article["meaning_history"]["senses"][0]["text"] = "The source check notes that the two graphs resemble each other."
+        with self.assertRaisesRegex(ValueError, "Workflow term"):
+            validate_new_reader_style(article, dossier)
+        article["meaning_history"]["senses"][0]["text"] = "The source check does not establish a human-like shape."
+        with self.assertRaisesRegex(ValueError, "Workflow term"):
+            validate_new_reader_style(article, dossier)
+        article["meaning_history"]["senses"][0]["text"] = "Early inscriptions show similar paired forms; the date is unresolved."
+        validate_new_reader_style(article, dossier)
+
+    def test_source_name_failure_gets_only_the_flagged_text_leaf_repaired(self):
+        dossier = {"evidence": [{"source": "李學勤主編《字源》"}]}
+        article = {
+            "formation": {"text": "《字源》 reports two competing analyses.",
+                          "evidence_ids": ["X-early-forms"]},
+            "summary": {"text": "Learning is the current meaning.",
+                        "evidence_ids": ["E-current"]},
+        }
+
+        class RepairRunner:
+            def __init__(self):
+                self.inputs = None
+
+            def run(self, role, inputs, schema, directory):
+                self.asserted_role = role
+                self.inputs = inputs
+                return {"edits": [{"field": "formation/text",
+                                   "text": "Early forms have competing component analyses."}]}
+
+        runner = RepairRunner()
+        repaired = repair_reader_prose(article, dossier, Path("unused"), runner)
+        self.assertEqual(runner.asserted_role, "prose_repair")
+        self.assertEqual([item["field"] for item in runner.inputs["paragraphs"]], ["formation/text"])
+        self.assertEqual(runner.inputs["paragraphs"][0]["evidence_ids"], ["X-early-forms"])
+        self.assertEqual(repaired["formation"]["evidence_ids"], ["X-early-forms"])
+        self.assertEqual(repaired["summary"], article["summary"])
+        validate_new_reader_style(repaired, dossier)
+
+    def test_actual_evidence_id_in_prose_is_rejected(self):
+        article = {"formation": {"text": "An early proposal [X-source123].",
+                                  "evidence_ids": ["X-source123"]}}
+        dossier = {"evidence": [{"id": "X-source123", "source": "A source"}]}
+        with self.assertRaisesRegex(ValueError, "Evidence IDs"):
+            validate_new_reader_style(article, dossier)
+        article["formation"]["text"] = "An early proposal."
+        validate_new_reader_style(article, dossier)
+
+    def test_clean_reader_text_does_not_invoke_prose_repair(self):
+        article = {"summary": {"text": "Learning is the current meaning.",
+                               "evidence_ids": ["E-current"]}}
+
+        class NeverRunner:
+            def run(self, *args, **kwargs):
+                raise AssertionError("Clean reader text must not trigger repair")
+
+        repaired = repair_reader_prose(article, {"evidence": []}, Path("unused"), NeverRunner())
+        self.assertEqual(repaired, article)
+
+    def test_failed_citation_repair_retries_without_mutating_evidence(self):
+        article = {"formation": {"text": "A proposal [X-source123].",
+                                  "evidence_ids": ["X-source123"], "certainty": "disputed"}}
+        original = copy.deepcopy(article)
+        dossier = {"evidence": [{"id": "X-source123", "source": "A source"}]}
+
+        class FixtureRunner:
+            def __init__(self):
+                self.calls = []
+
+            def run(self, role, inputs, schema, directory):
+                self_schema = schema['properties']['edits']['items']['properties']['text']
+                if 'pattern' in self_schema:
+                    raise AssertionError('Do not send unsupported exclusion lookaround to the agent API')
+                self.calls.append((copy.deepcopy(inputs), directory))
+                text = "A proposal [X-source123]." if len(self.calls) == 1 else "A proposal."
+                return {"edits": [{"field": "formation/text", "text": text}]}
+
+        runner = FixtureRunner()
+        repaired = repair_reader_prose(article, dossier, Path("unused"), runner)
+        self.assertEqual(len(runner.calls), 2)
+        self.assertIn("validation_error", runner.calls[1][0])
+        self.assertEqual(runner.calls[1][1].name, "prose-repair-retry-1")
+        self.assertEqual(article, original)
+        self.assertEqual(repaired["formation"]["evidence_ids"], ["X-source123"])
+        self.assertEqual(repaired["formation"]["certainty"], "disputed")
+        validate_new_reader_style(repaired, dossier)
+
+    def test_source_name_in_summary_text_is_repaired_without_touching_metadata(self):
+        dossier = {"evidence": [{"source": "李學勤主編《字源》"}]}
+        article = {
+            "summary": {"text": "字源 calls the early form a learning graph.",
+                        "evidence_ids": ["X-learning"]},
+            "source_metadata": {"source_title": "字源", "evidence_ids": ["X-metadata"]},
+        }
+
+        class RepairRunner:
+            def __init__(self):
+                self.inputs = None
+
+            def run(self, role, inputs, schema, directory):
+                self.inputs = inputs
+                return {"edits": [{"field": "summary/text",
+                                   "text": "An early account treats learning as a proposed meaning."}]}
+
+        runner = RepairRunner()
+        repaired = repair_reader_prose(article, dossier, Path("unused"), runner)
+        self.assertEqual([item["field"] for item in runner.inputs["paragraphs"]], ["summary/text"])
+        self.assertEqual(repaired["summary"]["evidence_ids"], ["X-learning"])
+        self.assertEqual(repaired["source_metadata"], article["source_metadata"])
+        validate_new_reader_style(repaired, dossier)
+
+    def test_text_followup_reuses_glyphs_only_without_visual_findings(self):
+        feedback = {"reuse_existing_glyph_candidates": True}
+        self.assertTrue(reuse_glyphs_for_text_followup(feedback, [
+            {"findings": ["Correct a sound comparison citation."]}]))
+        self.assertFalse(reuse_glyphs_for_text_followup(feedback, [
+            {"findings": ["The glyph caption overstates its provenance."]}]))
+
+
+class SiteArticleRefreshTests(unittest.TestCase):
+    def test_refresh_preserves_legacy_fields_and_other_characters(self):
+        from build_site import refresh_existing_site_articles
+        with tempfile.TemporaryDirectory() as temp:
+            archive = Path(temp) / "data.json.gz"
+            original = [{"c": "半", "d": ["half"], "py": "bàn", "article": {"old": True}},
+                        {"c": "教", "d": ["teach"], "py": "jiào"}]
+            with gzip.open(archive, "wt", encoding="utf-8") as stream:
+                json.dump(original, stream, ensure_ascii=False)
+            self.assertEqual(refresh_existing_site_articles(archive, {"半": {"new": True}}), 2)
+            with gzip.open(archive, "rt", encoding="utf-8") as stream:
+                refreshed = json.load(stream)
+            self.assertEqual(refreshed, [{"c": "半", "d": ["half"], "py": "bàn",
+                                         "article": {"new": True}}, original[1]])
+            with self.assertRaisesRegex(ValueError, "lack an approved source"):
+                refresh_existing_site_articles(archive, {})
+
+
+class ScopedRefinementTests(unittest.TestCase):
+    def test_agent_edit_from_exact_approved_base_gets_scoped_fresh_reviews(self):
+        from pipeline.editorial import assemble_article
+        dossier = {**copy.deepcopy(DOSSIER), 'glyph_research': {'historical_glyphs': GLYPHS},
+                   'glyph_assets': []}
+        base = assemble_article(copy.deepcopy(ARTICLE_V2), dossier)
+        reviews = [make_review(role, 'pass', [], base, dossier, f'fixture-base-{role}')
+                   for role in ('factual', 'readability')]
+        class EditorReviewer:
+            model = 'fixture'
+            def __init__(self): self.inputs = []
+            def run(self, role, inputs, schema, directory):
+                self.inputs.append((role, inputs))
+                if role == 'editor':
+                    changed = copy.deepcopy(inputs['article'])
+                    changed['summary']['text'] = 'A tree with branches.'
+                    return changed
+                return {'verdict': 'pass', 'findings': []}
+        proof = {'article': base, 'dossier': dossier, 'reviews': reviews}
+        with tempfile.TemporaryDirectory() as temporary:
+            runner = EditorReviewer()
+            state = refine(base, dossier, temporary, runner, 0, approved_base=proof)
+            self.assertEqual(state['status'], 'approved')
+            self.assertEqual([role for role, _ in runner.inputs], ['editor', 'factual', 'readability'])
+            for _, packet in runner.inputs[1:]:
+                self.assertEqual(packet['changed_paths'], ['article.summary.text'])
+                self.assertEqual(packet['validated_base_article'], base)
+                self.assertEqual(packet['base_approval'], reviews)
+            self.assertEqual(json.loads((Path(temporary)/'approved_base.json').read_text()), proof)
+        altered = copy.deepcopy(base)
+        altered['summary']['text'] = 'An unapproved input change.'
+        with tempfile.TemporaryDirectory() as temporary:
+            with self.assertRaisesRegex(ValueError, 'exact approved base article'):
+                refine(altered, dossier, temporary, EditorReviewer(), 0, approved_base=proof)
+
+    def test_author_feedback_does_not_become_independent_review_instructions(self):
+        dossier = {**copy.deepcopy(DOSSIER), 'glyph_research': {'historical_glyphs': GLYPHS},
+                   'glyph_assets': []}
+        feedback = {
+            'instruction': 'Repair the old component at index 4.',
+            'verified_review_findings': ['Old candidate had missing support.'],
+            'prior_review_proposals': ['Delete an earlier claim.'],
+            'citation_findings': ['Old citation was unsupported.'],
+            'citation_correction_instructions': 'Replace old citation.',
+            'editorial_adjudication': 'Previous verdict for a different candidate.',
+            'additional_research_context': {'source_url': 'https://example.org/source'},
+            'superseded_book_evidence_ids': ['retired-record'],
+            'source_scan_images': ['/tmp/fixture-source-scan.png'],
+        }
+        class Reviewer:
+            model = 'fixture'
+            def __init__(self): self.inputs = []
+            def run(self, role, inputs, schema, directory):
+                self.inputs.append((role, inputs))
+                if role == 'editor':
+                    return copy.deepcopy(inputs['article'])
+                return {'verdict': 'pass', 'findings': []}
+        with tempfile.TemporaryDirectory() as temporary:
+            runner = Reviewer()
+            result = refine(copy.deepcopy(ARTICLE_V2), dossier, temporary, runner, 0,
+                            feedback=feedback)
+            self.assertEqual(result['status'], 'approved')
+            self.assertEqual(runner.inputs[0][1]['feedback'], feedback)
+            for role, packet in runner.inputs[1:]:
+                self.assertEqual(packet['source_followup_questions'], {
+                    'additional_research_context': feedback['additional_research_context'],
+                    'superseded_book_evidence_ids': ['retired-record'],
+                })
+                if role == 'factual':
+                    self.assertEqual(packet['source_scan_images'], feedback['source_scan_images'])
+
+    def test_generated_edges_are_not_authored_array_protection_targets(self):
+        from pipeline.editorial import apply_article_patch
+        edge = {'id': 'sense', 'predicate': 'has_sense'}
+        inputs = {'article': {'relationships': [edge]},
+                  'feedback': {'preserve_array_items': {'relationships': [edge]}}}
+        def never_invoke(*args):
+            raise AssertionError('Reject incompatible generated-edge protection before agent work')
+        with self.assertRaisesRegex(ValueError, 'Protect source sense/development records'):
+            apply_article_patch('editor', inputs, {}, Path('unused'), never_invoke)
+
+    def test_preserved_record_cannot_also_be_an_allowed_leaf_edit(self):
+        from pipeline.editorial import apply_article_patch
+        item = {'text': 'Preserved claim.', 'evidence_ids': ['E1']}
+        inputs = {'article': {'history': [item]},
+                  'feedback': {'allowed_edit_paths': ['history/0/text'],
+                               'preserve_array_items': {'history': [item]}}}
+        def never_invoke(*args):
+            raise AssertionError('Contradictory coordinator packet must fail before agent work')
+        with self.assertRaisesRegex(ValueError, 'targets a preserved array record'):
+            apply_article_patch('editor', inputs, {}, Path('unused'), never_invoke)
+
+    def test_exact_approved_base_scopes_fresh_reviews(self):
+        dossier = {**copy.deepcopy(DOSSIER), "glyph_research": {"historical_glyphs": GLYPHS},
+                   "glyph_assets": []}
+        base = copy.deepcopy(ARTICLE_V2)
+        reviews = [make_review(role, "pass", [], base, dossier, f"base-{role}")
+                   for role in ("factual", "readability")]
+        candidate = copy.deepcopy(base)
+        candidate["summary"]["text"] = "A tree with branches."
+        class Reviewer:
+            model = "fake"
+            def __init__(self): self.inputs = []
+            def run(self, role, inputs, schema, directory):
+                self.inputs.append((role, inputs))
+                return {"verdict": "pass", "findings": []}
+        with tempfile.TemporaryDirectory() as temp:
+            reviewer = Reviewer()
+            state = refine(candidate, dossier, temp, reviewer, 0, edit_first=False,
+                           approved_base={"article": base, "dossier": dossier, "reviews": reviews})
+            self.assertEqual(state["status"], "approved")
+            self.assertEqual([role for role, _ in reviewer.inputs], ["factual", "readability"])
+            self.assertEqual(reviewer.inputs[0][1]["review_scope"], "targeted_refinement")
+            self.assertEqual(reviewer.inputs[0][1]["changed_paths"], ["article.summary.text"])
+        altered = copy.deepcopy(dossier)
+        altered["context"]["note"] = "changed"
+        with tempfile.TemporaryDirectory() as temp:
+            with self.assertRaisesRegex(ValueError, "Approved base dossier differs"):
+                refine(candidate, altered, temp, Reviewer(), 0, edit_first=False,
+                       approved_base={"article": base, "dossier": dossier, "reviews": reviews})
 
 DOSSIER = {"character": "木", "context": {}, "evidence": [{"id": "source:1", "source": "test",
            "field": "etymology", "text": "A tree.", "kind": "source", "record_character": "木",
@@ -36,6 +374,7 @@ ARTICLE_V2["components"][0]["sound"] = []
 ARTICLE_V2["components"][0]["origin_relation"] = "none"
 ARTICLE_V2["components"][0]["scope_character"] = "木"
 ARTICLE_V2["components"][0]["sound_limitation"] = None
+ARTICLE_V2["components"][0]["current_form_component"] = None
 
 ARTICLE_V2["relationships"].append({"id": "tree-picture", "subject": {"kind": "component", "id": "木"},
     "predicate": "pictorial_component_of", "object": {"kind": "character", "id": "木"},
@@ -48,6 +387,150 @@ ARTICLE_V2["learner"] = {
 
 
 class EditorialTests(unittest.TestCase):
+    def test_chinese_text_refinement_reuses_verified_glyph_selection(self):
+        class ResearchOnlyRunner:
+            def run(self, role, inputs, schema, directory):
+                if role != "research":
+                    raise AssertionError(f"Unexpected glyph stage: {role}")
+                return copy.deepcopy(RESEARCH)
+
+        dossier = copy.deepcopy(DOSSIER)
+        dossier["context"]["target_language"] = "zh"
+        dossier["glyph_research"] = {"historical_glyphs": copy.deepcopy(GLYPHS)}
+        dossier["glyph_assets"] = []
+        with tempfile.TemporaryDirectory() as temp:
+            result = research_dossier(dossier, temp, ResearchOnlyRunner(),
+                {"reuse_existing_glyph_candidates": True})
+            self.assertEqual(result["glyph_research"], dossier["glyph_research"])
+            self.assertEqual(result["glyph_assets"], [])
+            self.assertTrue((Path(temp) / "dossier.json").exists())
+
+    def test_codex_jsonl_keeps_unicode_line_separator_inside_result(self):
+        event = {"type": "item.completed", "item": {"id": "web-1", "type": "web_search",
+                 "action": {"type": "search", "queries": ["學 字源"]},
+                 "results": [{"snippet": "before\u2028after"}]}}
+        events = parse_codex_events(json.dumps(event, ensure_ascii=False) + "\n")
+        self.assertEqual(len(events), 1)
+        self.assertEqual(summarize_web_activity(events)["web_search_calls"], 1)
+
+    def test_completed_web_search_keeps_started_action_when_completion_says_other(self):
+        events = [
+            {"type": "item.started", "item": {"id": "web-1", "type": "web_search",
+                "action": {"type": "search", "queries": ["學 字源"]}}},
+            {"type": "item.completed", "item": {"id": "web-1", "type": "web_search",
+                "action": {"type": "other"}, "results": [{"url": "https://example.org"}]}}
+        ]
+        self.assertEqual(summarize_web_activity(events), {
+            "web_tool_events": 1, "web_action_counts": {"search": 1},
+            "web_search_calls": 1, "web_search_queries": ["學 字源"]})
+
+    def test_started_web_search_without_completion_does_not_count(self):
+        events = [{"type": "item.started", "item": {"id": "web-1", "type": "web_search",
+                   "action": {"type": "search", "queries": ["學 字源"]}}}]
+        self.assertEqual(summarize_web_activity(events)["web_search_calls"], 0)
+
+    def test_research_scan_attachment_hash_changes_cache(self):
+        from pipeline.editorial import RESEARCH_SCHEMA
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            scan = root / "scan.png"
+            scan.write_bytes(b"original scan")
+            script = root / "agent.py"
+            script.write_text('import sys,json,pathlib\n'
+                              f'pathlib.Path(sys.argv[1]).write_text({json.dumps(json.dumps(RESEARCH))})\n')
+            runner = Runner([sys.executable, str(script), "{output}"], "fake")
+            inputs = {"dossier": DOSSIER, "feedback": {"source_scan_images": [
+                {"path": str(scan), "pdf_page": 277, "printed_page": 265}]}}
+            job = root / "research"
+            runner.run("research", inputs, RESEARCH_SCHEMA, job)
+            first = json.loads((job / "meta.json").read_text())["fingerprint"]
+            prompt = (job / "prompt.txt").read_text()
+            self.assertIn('"attached_source_scans"', prompt)
+            self.assertIn('"pdf_page": 277', prompt)
+            scan.write_bytes(b"changed scan")
+            runner.run("research", inputs, RESEARCH_SCHEMA, job)
+            second = json.loads((job / "meta.json").read_text())["fingerprint"]
+            self.assertNotEqual(first, second)
+
+    def test_factual_review_receives_source_scan_metadata(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            scan = root / "scan.png"
+            scan.write_bytes(b"source pixels")
+            script = root / "agent.py"
+            script.write_text('import sys,json,pathlib\n'
+                              'pathlib.Path(sys.argv[1]).write_text(json.dumps({"verdict":"pass","findings":[]}))\n')
+            runner = Runner([sys.executable, str(script), "{output}"], "fake")
+            runner.run("factual", {"article": ARTICLE, "dossier": DOSSIER,
+                "source_scan_images": [{"path": str(scan), "pdf_page": 277}]},
+                REVIEW_SCHEMA, root / "factual")
+            prompt = (root / "factual/prompt.txt").read_text()
+            inputs = json.JSONDecoder().raw_decode(prompt.split("\nINPUTS:\n", 1)[1])[0]
+            self.assertEqual(inputs["attached_source_scans"][0]["attachment_index"], 1)
+            self.assertEqual(inputs["attached_source_scans"][0]["pdf_page"], 277)
+            self.assertEqual(inputs["attached_images"], [])
+
+    def test_top_level_research_scans_reach_codex_image_arguments(self):
+        from pipeline.editorial import RESEARCH_SCHEMA
+        import hashlib
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            scans = [root / f'page-{page}.png' for page in range(277, 281)]
+            for index, scan in enumerate(scans): scan.write_bytes(f'scan {index}'.encode())
+            argv_path = root / 'argv.json'
+            # Test-only executable: records transport arguments, without invoking a model.
+            script = root / 'codex'
+            script.write_text(f'#!{sys.executable}\nimport sys,json,pathlib\n'
+                f'pathlib.Path({str(argv_path)!r}).write_text(json.dumps(sys.argv[1:]))\n'
+                f'pathlib.Path(sys.argv[sys.argv.index("-o")+1]).write_text({json.dumps(json.dumps(RESEARCH))})\n'
+                'print(json.dumps({"type":"item.completed","item":{"type":"web_search",'
+                '"action":{"type":"search","queries":["test-only transport fixture"]}}}))\n')
+            script.chmod(0o755)
+            runner = Runner([str(script), 'exec', '-o', '{output}', '-'], 'fake')
+            job = root / 'research'
+            runner.run('research', {'dossier': DOSSIER, 'source_scan_images': [
+                {'path': str(scan), 'pdf_page': 277 + index}
+                for index, scan in enumerate(scans)]}, RESEARCH_SCHEMA, job)
+            argv = json.loads(argv_path.read_text())
+            at = argv.index('--image')
+            self.assertEqual(argv[at+1:at+1+len(scans)], list(map(str, scans)))
+            packet = json.JSONDecoder().raw_decode(
+                (job / 'prompt.txt').read_text().split('\nINPUTS:\n', 1)[1])[0]
+            records = packet['attached_source_scans']
+            self.assertEqual([r['attachment_index'] for r in records], [1, 2, 3, 4])
+            self.assertEqual([r['pdf_page'] for r in records], [277, 278, 279, 280])
+            self.assertEqual([r['sha256'] for r in records], [
+                hashlib.sha256(scan.read_bytes()).hexdigest() for scan in scans])
+            receipt = json.loads((job / 'meta.json').read_text())
+            self.assertEqual(receipt['image_argument_manifest'], [
+                {'path': str(scan), 'sha256': hashlib.sha256(scan.read_bytes()).hexdigest()}
+                for scan in scans])
+
+    def test_source_pixel_hash_is_distinct_from_attachment_file_hash(self):
+        import hashlib
+        from PIL import Image
+        from pipeline.editorial import source_scan_attachments
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'scan.png'
+            pixels = Image.new('RGB', (8, 8), 'white')
+            expected = hashlib.sha256(pixels.tobytes()).hexdigest()
+            scan = {'path': str(path), 'pdf_page': 1, 'source_pixel_sha256': expected}
+            pixels.save(path, compress_level=0)
+            first = source_scan_attachments([scan])[1][0]
+            pixels.save(path, compress_level=9)
+            second = source_scan_attachments([scan])[1][0]
+            self.assertNotEqual(first['sha256'], second['sha256'])
+            self.assertEqual(first['pixel_sha256'], second['pixel_sha256'])
+            self.assertNotEqual(first['sha256'], first['pixel_sha256'])
+            pixels.putpixel((0, 0), (0, 0, 0))
+            pixels.save(path)
+            with self.assertRaisesRegex(ValueError, 'decoded pixel hash') as failure:
+                source_scan_attachments([scan])
+            self.assertIn(str(path), str(failure.exception))
+            self.assertIn('PDF page 1', str(failure.exception))
+            self.assertIn(f'expected {expected}', str(failure.exception))
+            self.assertIn(hashlib.sha256(pixels.tobytes()).hexdigest(), str(failure.exception))
+
     def test_local_glyph_leads_are_scoped_existing_files_and_unverified(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -152,6 +635,13 @@ class EditorialTests(unittest.TestCase):
         before = copy.deepcopy(article)
         def invoke(role, inputs, schema, directory):
             self.assertEqual(role, 'article_patch')
+            branches = inputs['article_contract']['relationship_branches']
+            predicates = {p for branch in branches for p in branch['predicates']}
+            self.assertIn('semantic_component_of', predicates)
+            self.assertNotIn('_component_of', predicates)
+            self.assertNotIn('unknown_component_of', predicates)
+            self.assertTrue(any(branch['subject_kind'] == 'component' and
+                                branch['object_kind'] == 'character' for branch in branches))
             return {'edits': [{'path': 'summary/text', 'value_json': 'Trees and wood.'},
                               {'path': 'summary/evidence_ids', 'value_json': '["ref001"]'}]}
         result = apply_article_patch('revision', {'article': article, 'dossier': {**DOSSIER,
@@ -162,6 +652,130 @@ class EditorialTests(unittest.TestCase):
         self.assertEqual(result['components'], before['components'])
         self.assertEqual(result['relationships'], before['relationships'])
         self.assertEqual(article, before)
+
+    def test_array_patch_trailing_sibling_fields_are_rejected_with_exact_target_feedback(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
+        article = copy.deepcopy(ARTICLE_V2)
+        before = copy.deepcopy(article)
+        calls = []
+        def invoke(role, inputs, schema, directory):
+            calls.append(inputs)
+            if len(calls) == 1:
+                return {'edits': [{'path': 'meaning_history/senses',
+                                  'value_json': '[],"developments":[]'}]}
+            self.assertIn('Invalid JSON replacement at meaning_history/senses',
+                          inputs['validation_findings'][0])
+            self.assertIn('one complete array value', inputs['validation_findings'][0])
+            self.assertEqual(inputs['article']['meaning_history'], before['meaning_history'])
+            return {'edits': [{'path': 'meaning_history/senses',
+                              'value_json': json.dumps(before['meaning_history']['senses'])}]}
+        dossier = {**DOSSIER, 'glyph_research': {'historical_glyphs': article['historical_glyphs']}}
+        result = apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                     WRITER_SCHEMA, Path('/unused'), invoke)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(result['meaning_history'], before['meaning_history'])
+        self.assertEqual(article, before)
+
+    def test_null_array_deletions_get_repair_feedback_without_corrupting_candidate(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA, assemble_article
+        for path, value in [('components/0', None), ('components', [None]),
+                            ('relationships', [None])]:
+            with self.subTest(path=path):
+                article = copy.deepcopy(ARTICLE_V2)
+                dossier = {**DOSSIER, 'glyph_research': {'historical_glyphs': article['historical_glyphs']}}
+                calls = []
+                def invoke(role, inputs, schema, directory):
+                    calls.append(inputs)
+                    if len(calls) == 1:
+                        return {'edits': [{'path': path, 'value_json': json.dumps(value)}]}
+                    self.assertIn('Null', inputs['validation_findings'][0])
+                    self.assertEqual(inputs['article'], article)
+                    return {'edits': []}
+                result = apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                             WRITER_SCHEMA, Path('/unused'), invoke)
+                self.assertEqual(len(calls), 2)
+                self.assertEqual(assemble_article(result, dossier), assemble_article(article, dossier))
+
+    def test_indexed_citation_patch_expands_transport_alias(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
+        article = copy.deepcopy(ARTICLE_V2)
+        dossier = {**DOSSIER, 'glyph_research': {'historical_glyphs': article['historical_glyphs']}}
+        dossier['evidence'] = [*DOSSIER['evidence'], {**DOSSIER['evidence'][0], 'id': 'source:2'}]
+        calls = []
+        def invoke(role, inputs, schema, directory):
+            calls.append(role)
+            return {'edits': [{'path': 'summary/evidence_ids/0', 'value_json': '"ref002"'}]}
+        result = apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                     WRITER_SCHEMA, Path('/unused'), invoke)
+        self.assertEqual(calls, ['article_patch'])
+        self.assertEqual(result['summary']['evidence_ids'][0], 'source:2')
+        self.assertEqual(article, ARTICLE_V2)
+
+    def test_array_removal_preserves_other_supported_records(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
+        article = copy.deepcopy(ARTICLE_V2)
+        kept = [{'text': 'A tree form.', 'evidence_ids': [DOSSIER['evidence'][0]['id']]}]
+        removed = {'text': 'An unused image file.', 'evidence_ids': ['E1']}
+        article['history'] = [removed, *kept]
+        dossier = {**DOSSIER, 'glyph_research': {'historical_glyphs': article['historical_glyphs']}}
+        calls = []
+        def invoke(role, inputs, schema, directory):
+            calls.append(inputs)
+            self.assertEqual(inputs['article_contract']['preserve_array_items']['history'], kept)
+            if len(calls) == 1:
+                return {'edits': [{'path': 'history', 'value_json': '[]'}]}
+            self.assertIn('protected array records', inputs['validation_findings'][0])
+            self.assertEqual(inputs['article']['history'], article['history'])
+            return {'edits': [{'path': 'history', 'value_json': json.dumps(kept)}]}
+        result = apply_article_patch('revision', {'article': article, 'dossier': dossier,
+            'allowed_edit_paths': ['history'], 'preserve_array_items': {'history': kept}},
+            WRITER_SCHEMA, Path('/unused'), invoke)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(result['history'], kept)
+        self.assertEqual(article['history'][0], removed)
+
+    def test_patch_repair_feedback_identifies_inline_alias_after_long_prose(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
+        article=copy.deepcopy(ARTICLE_V2)
+        dossier={**DOSSIER,'glyph_research':{'historical_glyphs':article['historical_glyphs']}}
+        calls=[]
+        def invoke(role,inputs,schema,directory):
+            calls.append(inputs)
+            if len(calls)==1:
+                return {'edits':[{'path':'summary/text', 'value_json':'Supported character explanation. '*15+'(Evidence: ref001)'}]}
+            self.assertIn("offending token 'ref001'",inputs['validation_findings'][0])
+            self.assertIn('Evidence:',inputs['validation_findings'][0])
+            return {'edits':[{'path':'summary/text','value_json':article['summary']['text']}]}
+        result=apply_article_patch('revision',{'article':article,'dossier':dossier},
+                                  WRITER_SCHEMA,Path('/unused'),invoke)
+        self.assertEqual(len(calls),2)
+        self.assertEqual(result['summary']['text'],article['summary']['text'])
+        self.assertEqual(result['summary']['evidence_ids'],article['summary']['evidence_ids'])
+
+    def test_overlapping_patch_paths_get_specific_repair_feedback(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
+        article = copy.deepcopy(ARTICLE_V2)
+        dossier = {**DOSSIER, 'glyph_research': {'historical_glyphs': article['historical_glyphs']}}
+        calls = []
+        def invoke(role, inputs, schema, directory):
+            calls.append(inputs)
+            if len(calls) == 1:
+                return {'edits': [
+                    {'path': 'components/0', 'value_json': json.dumps(article['components'][0])},
+                    {'path': 'components/0/form', 'value_json': '木'},
+                ]}
+            finding = inputs['validation_findings'][0]
+            self.assertIn('distinct nonoverlapping paths', finding)
+            self.assertIn('parent path and its descendant', inputs['task'])
+            self.assertIn('either replace the complete array or edit individual items', inputs['task'])
+            self.assertEqual(inputs['article'], article)
+            return {'edits': [{'path': 'summary/text', 'value_json': 'A tree.'}]}
+        result = apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                     WRITER_SCHEMA, Path('/unused'), invoke)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(result['summary']['text'], 'A tree.')
+        self.assertEqual(result['components'], article['components'])
+        self.assertEqual(article, ARTICLE_V2)
 
     def test_targeted_patch_repairs_semantic_validation_before_review(self):
         from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
@@ -181,6 +795,20 @@ class EditorialTests(unittest.TestCase):
         self.assertEqual(len(calls), 2)
         self.assertEqual(result['components'], article['components'])
 
+    def test_targeted_patch_defers_learner_length_to_narrow_repair(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
+        article = copy.deepcopy(ARTICLE_V2)
+        dossier = {**DOSSIER, 'glyph_research': {'historical_glyphs': article['historical_glyphs']}}
+        long_text = ' '.join(['tree'] * 31)
+        calls = []
+        def invoke(role, inputs, schema, directory):
+            calls.append(role)
+            return {'edits': [{'path': 'learner/components/0/text', 'value_json': long_text}]}
+        result = apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                     WRITER_SCHEMA, Path('/unused'), invoke)
+        self.assertEqual(calls, ['article_patch'])
+        self.assertEqual(result['learner']['components'][0]['text'], long_text)
+
     def test_editor_inputs_exclude_harness_derived_edges(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -197,6 +825,85 @@ class EditorialTests(unittest.TestCase):
             self.assertFalse(any(r["predicate"] == "has_sense" for r in inputs["article"]["relationships"]))
             self.assertTrue(any(r["predicate"] == "pictorial_component_of" for r in inputs["article"]["relationships"]))
             self.assertEqual(inputs["article"]["meaning_history"]["senses"][0]["id"], article["meaning_history"]["senses"][0]["id"])
+
+    def test_targeted_patch_maps_current_sense_identity_to_zero_based_paths(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA
+        article = copy.deepcopy(ARTICLE_V2)
+        first = article['meaning_history']['senses'][0]
+        second = {**copy.deepcopy(first), 'id': '木:secondary', 'gloss': 'secondary use'}
+        article['meaning_history']['senses'].append(second)
+        dossier = {**copy.deepcopy(DOSSIER), 'glyph_research': {'historical_glyphs': GLYPHS}}
+        for reverse in (False, True):
+            current = copy.deepcopy(article)
+            if reverse:
+                current['meaning_history']['senses'].reverse()
+            before = copy.deepcopy(current)
+            expected = current['meaning_history']['senses'][1]
+            def invoke(role, inputs, schema, directory):
+                targets = inputs['article_contract']['array_item_targets']
+                self.assertEqual(targets, {'meaning_history/senses/1': {
+                    'zero_based_index': 1, 'id': expected['id'], 'gloss': expected['gloss']}})
+                return {'edits': [{'path': 'meaning_history/senses/1/text',
+                                   'value_json': '"Scoped replacement."'}]}
+            with tempfile.TemporaryDirectory() as temp:
+                result = apply_article_patch('revision', {
+                    'article': current, 'dossier': dossier,
+                    'allowed_edit_paths': ['meaning_history/senses/1/text']},
+                    WRITER_SCHEMA, temp, invoke)
+            self.assertEqual(result['meaning_history']['senses'][1]['id'], expected['id'])
+            self.assertEqual(result['meaning_history']['senses'][0],
+                             before['meaning_history']['senses'][0])
+            self.assertEqual(current, before)
+
+    def test_targeted_patch_rejects_generated_edge_edits_and_repairs_source_sense(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA, assemble_article
+        article = copy.deepcopy(ARTICLE_V2)
+        dossier = {**copy.deepcopy(DOSSIER), 'glyph_research': {'historical_glyphs': GLYPHS}}
+        original = copy.deepcopy(article)
+        calls = []
+        def invoke(role, inputs, schema, directory):
+            calls.append(inputs)
+            paths = schema['properties']['edits']['items']['properties']['path']['enum']
+            for i, edge in enumerate(article['relationships']):
+                if edge['predicate'] == 'has_sense':
+                    self.assertNotIn(f'relationships/{i}/certainty', paths)
+            if len(calls) == 1:
+                edges = copy.deepcopy(article['relationships'])
+                next(e for e in edges if e['predicate'] == 'has_sense')['certainty'] = 'disputed'
+                return {'edits': [{'path': 'relationships', 'value_json': json.dumps(edges)}]}
+            self.assertIn('meaning_history', inputs['validation_findings'][0])
+            self.assertEqual(inputs['article']['relationships'], article['relationships'])
+            return {'edits': [
+                {'path': 'meaning_history/senses/0/certainty', 'value_json': '"disputed"'}]}
+        with tempfile.TemporaryDirectory() as temp:
+            result = apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                         WRITER_SCHEMA, temp, invoke)
+        assembled = assemble_article(result, dossier)
+        self.assertEqual(assembled['meaning_history']['senses'][0]['certainty'], 'disputed')
+        edge = next(e for e in assembled['relationships'] if e['predicate'] == 'has_sense')
+        self.assertEqual(edge['certainty'], 'disputed')
+        self.assertEqual(article, original)
+        self.assertEqual(len(calls), 2)
+
+    def test_targeted_patch_accepts_empty_authored_edges_and_regenerates_senses(self):
+        from pipeline.editorial import apply_article_patch, WRITER_SCHEMA, assemble_article
+        article = copy.deepcopy(ARTICLE_V2)
+        dossier = {**copy.deepcopy(DOSSIER), 'glyph_research': {'historical_glyphs': GLYPHS}}
+        calls = []
+        def invoke(role, inputs, schema, directory):
+            calls.append(inputs)
+            self.assertEqual(inputs['article_contract']['patch_value_kinds']['summary'], 'object')
+            self.assertEqual(inputs['article_contract']['patch_value_kinds']['summary/text'], 'string')
+            return {'edits': [{'path': 'relationships', 'value_json': '[]'}]}
+        result = apply_article_patch('revision', {'article': article, 'dossier': dossier},
+                                     WRITER_SCHEMA, Path('/unused'), invoke)
+        assembled = assemble_article(result, dossier)
+        validate_article(assembled, dossier)
+        self.assertTrue(assembled['relationships'])
+        self.assertTrue(all(edge['predicate'] in ('has_sense', 'sense_developed_into',
+            'phonetic_loan_for') for edge in assembled['relationships']))
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(article, ARTICLE_V2)
 
     def test_disputed_role_hypothesis_does_not_assert_a_known_role(self):
         dossier = {**copy.deepcopy(DOSSIER), "glyph_research": {"historical_glyphs": GLYPHS}}
@@ -362,7 +1069,7 @@ class EditorialTests(unittest.TestCase):
                     assert result["limitations"][0]["evidence_ids"][0].startswith("X-")
                     if self.tamper:
                         result["items"] = [{**{k: "fixture" for k in
-                            ("id", "caption", "alt", "selection_reason")}, "evidence_ids": ["source:1"]}]
+                            ("id", "caption", "alt", "selection_reason", "period")}, "evidence_ids": ["source:1"]}]
                     return result
                 raise AssertionError(role)
         with tempfile.TemporaryDirectory() as root:
@@ -529,7 +1236,7 @@ class EditorialTests(unittest.TestCase):
                 if role == "glyph_visual":
                     items = inputs["dossier"]["glyph_research"]["historical_glyphs"]["items"]
                     return {"items": [{key: item[key] for key in
-                        ("id", "caption", "alt", "selection_reason", "evidence_ids")} for item in items],
+                        ("id", "caption", "alt", "selection_reason", "evidence_ids", "period")} for item in items],
                         "limitations": []}
                 raise AssertionError(role)
 
@@ -591,6 +1298,13 @@ class EditorialTests(unittest.TestCase):
             self.assertEqual(state["status"], "needs_revision")
             with self.assertRaises(ValueError):
                 publish(ARTICLE_V2, dossier, json.loads((Path(root) / "reviews.json").read_text()), Path(root) / "entries")
+        with tempfile.TemporaryDirectory() as root:
+            runner = RefiningRunner()
+            runner.calls = []
+            state = refine(copy.deepcopy(ARTICLE_V2), dossier, root, runner, 0,
+                           edit_first=False)
+            self.assertEqual(state["status"], "approved")
+            self.assertEqual(runner.calls, ["factual", "readability"])
         for change in [lambda a: a.update(character="水"),
                        lambda a: a["summary"].update(evidence_ids=["invented"])]:
             invalid = copy.deepcopy(old)
@@ -669,6 +1383,153 @@ class EditorialTests(unittest.TestCase):
                     with self.assertRaises(ValueError):
                         validate_published(entry)
 
+    def test_chinese_glyph_feedback_recurates_existing_candidates_without_reacquiring(self):
+        dossier = copy.deepcopy(DOSSIER)
+        dossier["context"]["target_language"] = "zh"
+        dossier["glyph_research"] = {"historical_glyphs": copy.deepcopy(GLYPHS)}
+        dossier["glyph_assets"] = []
+
+        class Runner:
+            def __init__(self):
+                self.roles = []
+            def run(self, role, inputs, schema, directory):
+                self.roles.append(role)
+                if role == "research":
+                    return copy.deepcopy(RESEARCH)
+                if role == "glyph_visual":
+                    self.visual_inputs = inputs
+                    return {"items": [], "limitations": copy.deepcopy(GLYPHS["limitations"])}
+                raise AssertionError(f"Glyph refresh unexpectedly invoked {role}")
+
+        runner = Runner()
+        with tempfile.TemporaryDirectory() as temp:
+            result = research_dossier(dossier, Path(temp), runner,
+                {"reuse_existing_glyph_candidates": True, "review_existing_glyphs": True,
+                 "reviews": [{"findings": ["Correct glyph caption provenance."]}]})
+        self.assertEqual(runner.roles, ["research", "glyph_visual"])
+        self.assertEqual(runner.visual_inputs["reviews"][0]["findings"],
+                         ["Correct glyph caption provenance."])
+        self.assertEqual(result["glyph_assets"], [])
+        self.assertEqual(result["glyph_research"]["historical_glyphs"]["items"], [])
+
+    def test_refine_routes_explicit_glyph_feedback_to_existing_visual_candidates(self):
+        dossier = copy.deepcopy(DOSSIER)
+        dossier["context"]["target_language"] = "zh"
+        dossier["glyph_research"] = {"historical_glyphs": copy.deepcopy(GLYPHS)}
+        dossier["glyph_assets"] = []
+
+        class Runner:
+            model = "fake"
+            def __init__(self):
+                self.visual_context = None
+            def run(self, role, inputs, schema, directory):
+                if role == "research":
+                    return copy.deepcopy(RESEARCH)
+                if role == "glyph_visual":
+                    self.visual_context = inputs
+                    return {"items": [], "limitations": copy.deepcopy(GLYPHS["limitations"])}
+                if role == "editor":
+                    return copy.deepcopy(inputs["article"])
+                if role in ("factual", "readability"):
+                    return {"verdict": "pass", "findings": []}
+                raise AssertionError(role)
+
+        runner = Runner()
+        feedback = {"reuse_existing_glyph_candidates": True,
+                    "review_existing_glyphs": True,
+                    "findings": ["Correct the displayed glyph caption's specimen attribution."]}
+        with tempfile.TemporaryDirectory() as temp:
+            state = refine(ARTICLE_V2, dossier, Path(temp), runner, max_revisions=0,
+                           feedback=feedback, research_first=True)
+        self.assertEqual(state["status"], "approved")
+        self.assertEqual(runner.visual_context["feedback"], feedback)
+        self.assertEqual(runner.visual_context["review_existing_glyphs"], True)
+
+    def test_learner_requires_current_components_with_historical_cards_optional(self):
+        from pipeline.structured import validate_learner
+        from pipeline.editorial import validate_sections
+        article = copy.deepcopy(ARTICLE_V2)
+        historical = copy.deepcopy(article['components'][0])
+        historical['scope_character'] = '林'
+        article['components'].append(historical)
+        validate_learner(article, DOSSIER, validate_sections)
+        card = {**copy.deepcopy(article['learner']['components'][0]), 'component_index': 1}
+        article['learner']['components'].append(card)
+        validate_learner(article, DOSSIER, validate_sections)
+        article['learner']['components'] = [card]
+        with self.assertRaisesRegex(ValueError, 'current-form component'):
+            validate_learner(article, DOSSIER, validate_sections)
+        article['learner']['components'] = [card, card]
+        with self.assertRaisesRegex(ValueError, 'current-form component'):
+            validate_learner(article, DOSSIER, validate_sections)
+
+    def test_explicit_membership_distinguishes_historical_record_at_same_host(self):
+        from pipeline.structured import validate_learner
+        from pipeline.editorial import validate_sections
+        article = copy.deepcopy(ARTICLE_V2)
+        article['components'][0]['current_form_component'] = True
+        historical = copy.deepcopy(article['components'][0])
+        historical['current_form_component'] = False
+        article['components'].append(historical)
+        # The card is for the current record; the old account stays fully represented.
+        article['learner']['components'] = [
+            {**copy.deepcopy(ARTICLE_V2['learner']['components'][0]), 'component_index': 0}]
+        validate_learner(article, DOSSIER, validate_sections)
+
+        # An explicitly historical-only entry may have no component cards at all.
+        article['components'] = [historical]
+        article['learner']['components'] = []
+        validate_learner(article, DOSSIER, validate_sections)
+
+        # Legacy omission keeps the previous entry-scope means current behavior.
+        historical.pop('current_form_component')
+        article['components'] = [historical]
+        with self.assertRaisesRegex(ValueError, 'current-form component'):
+            validate_learner(article, DOSSIER, validate_sections)
+
+    def test_historical_membership_does_not_bypass_component_edge_validation(self):
+        article = copy.deepcopy(ARTICLE_V2)
+        dossier = {**DOSSIER, 'glyph_research': {
+            'historical_glyphs': copy.deepcopy(article['historical_glyphs'])}}
+        article['components'][0]['current_form_component'] = False
+        article['components'][0]['roles'] = ['semantic']
+        article['relationships'][-1]['predicate'] = 'semantic_component_of'
+        article['learner']['components'] = []
+        validate_article(article, dossier)
+        article['relationships'] = [edge for edge in article['relationships']
+                                    if edge['id'] != 'tree-picture']
+        with self.assertRaisesRegex(ValueError, 'Every supported component role'):
+            validate_article(article, dossier)
+
+    def test_learner_repair_packet_requires_only_current_host_components(self):
+        from pipeline import editorial
+        article = copy.deepcopy(ARTICLE_V2)
+        historical = copy.deepcopy(article['components'][0])
+        historical['scope_character'] = '林'
+        article['components'].append(historical)
+        article['learner']['components'] = [{**copy.deepcopy(article['learner']['components'][0]),
+                                             'component_index': 1}]
+        metadata_before = copy.deepcopy(article['components'])
+
+        class LearnerRunner:
+            def run(self, role, inputs, schema, directory):
+                self.inputs = inputs
+                return {"overview": copy.deepcopy(ARTICLE_V2["learner"]["overview"]),
+                        "components": [copy.deepcopy(ARTICLE_V2["learner"]["components"][0])],
+                        "takeaway": None}
+
+        runner = LearnerRunner()
+        context = {'verified_reviews': [{'role': 'readability', 'verdict': 'revise',
+                    'findings': ['Preserve the distinction between the current and historical host.']}]}
+        repaired = editorial.repair_learner_length(article, DOSSIER, Path("unused"), runner, context)
+        self.assertEqual(runner.inputs['required_correction_context'], context)
+        self.assertIn('instead of reverting a correction', runner.inputs['task'])
+        self.assertEqual(runner.inputs["required_component_indices"], [0])
+        self.assertEqual(repaired["components"], metadata_before)
+        self.assertEqual([c["component_index"] for c in repaired["learner"]["components"]], [0])
+        from pipeline.structured import validate_learner
+        validate_learner(repaired, DOSSIER, editorial.validate_sections)
+
     def test_add_learner_freezes_detail_and_needs_both_new_passes(self):
         class LearnerRunner:
             model = "fake"
@@ -702,7 +1563,7 @@ class EditorialTests(unittest.TestCase):
             article = json.loads((job / "article.json").read_text())
             self.assertEqual({k: v for k, v in article.items() if k != "learner"}, base)
             self.assertEqual(json.loads((job / "dossier.json").read_text()), dossier)
-            self.assertEqual(runner.calls, ["learner", "factual", "readability", "readability", "learner", "factual", "readability"])
+            self.assertEqual(runner.calls, ["learner", "factual", "readability", "learner", "factual", "readability"])
             reviews = json.loads((job / "reviews.json").read_text())
             self.assertTrue(all(r["article_hash"] == digest(article) for r in reviews))
             self.assertNotEqual(reviews, entry["review"]["reviews"])
@@ -731,7 +1592,7 @@ class EditorialTests(unittest.TestCase):
                 return {"verdict": "pass", "findings": []}
         with tempfile.TemporaryDirectory() as root:
             runner = ContractRunner()
-            result = independent_review("factual", ARTICLE_V2, DOSSIER, Path(root), runner)
+            result = independent_review("factual", ARTICLE_V2, DOSSIER, Path(root), runner, verify_findings=True)
             self.assertEqual(result["verdict"], "pass")
             self.assertEqual(runner.calls, ["factual", "factual-verification", "factual-contract-repair"])
             self.assertIn("factual-contract-repair", result["reviewer"])
@@ -740,7 +1601,7 @@ class EditorialTests(unittest.TestCase):
             runner.calls = []
             runner.keep_invalid = True
             with self.assertRaisesRegex(ValueError, "must contain required changes"):
-                independent_review("factual", ARTICLE_V2, DOSSIER, Path(root), runner)
+                independent_review("factual", ARTICLE_V2, DOSSIER, Path(root), runner, verify_findings=True)
             self.assertEqual(len(runner.calls), 3)
 
     def test_no_reading_correction_required_receives_fresh_contract_review(self):
@@ -755,10 +1616,11 @@ class EditorialTests(unittest.TestCase):
                 return {"verdict": "pass", "findings": []}
         for finding in ("No reading correction is required.", "No clarification is required.",
                         "Retain these scoped cards; no removal is required.",
-                        "The current omission is not a required correction."):
+                        "The current omission is not a required correction.",
+                        "No change to this sense or its generated has_sense edge is required."):
             with self.subTest(finding=finding), tempfile.TemporaryDirectory() as root:
                 runner = ContractRunner(finding)
-                result = independent_review("readability", ARTICLE_V2, DOSSIER, Path(root), runner)
+                result = independent_review("readability", ARTICLE_V2, DOSSIER, Path(root), runner, verify_findings=True)
                 self.assertEqual(result["verdict"], "pass")
                 self.assertEqual(runner.calls, ["readability", "readability-verification", "readability-contract-repair"])
                 self.assertIn("contract-repair", result["reviewer"])
@@ -782,7 +1644,7 @@ class EditorialTests(unittest.TestCase):
                 runner.calls = []
                 runner.verified = {"verdict": verdict, "findings": [] if verdict == "pass" else ["Supported concrete correction"]}
                 receipt = independent_review("factual", ARTICLE, DOSSIER, root, runner,
-                    {"review_scope": "added_learner", "base_approval": {"status": "approved"}})
+                    {"review_scope": "added_learner", "base_approval": {"status": "approved"}}, verify_findings=True)
                 self.assertEqual(len(runner.calls), 2)
                 self.assertEqual(receipt["verdict"], verdict)
                 self.assertIn("actual-verifier-thread", receipt["reviewer"])
@@ -790,6 +1652,24 @@ class EditorialTests(unittest.TestCase):
                 self.assertTrue((Path(root) / "factual/proposed-review.json").exists())
                 self.assertTrue((Path(root) / "factual-verification/verified-review.json").exists())
                 self.assertEqual(runner.calls[0]["article"], runner.calls[1]["article"])
+
+    def test_verifier_instructions_distinguish_priority_from_date_and_specimen_identity(self):
+        class Verifier:
+            model = "fake"
+            def __init__(self):
+                self.calls = []
+            def run(self, role, inputs, schema, directory):
+                self.calls.append(inputs)
+                return ({"verdict": "revise", "findings": ["Check priority and glyph provenance."]}
+                        if len(self.calls) == 1 else {"verdict": "pass", "findings": []})
+
+        with tempfile.TemporaryDirectory() as root:
+            verifier = Verifier()
+            independent_review("factual", ARTICLE_V2, DOSSIER, Path(root), verifier, verify_findings=True)
+            instruction = verifier.calls[1]["verification_task"]
+            self.assertIn("positive claim of priority", instruction)
+            self.assertIn("unknown precise date alone does not disqualify", instruction)
+            self.assertIn("image-to-specimen link is verified", instruction)
 
     def test_form_annotation_preserves_legacy_prose_and_requires_reviews(self):
         class Annotator:
@@ -856,7 +1736,7 @@ class EditorialTests(unittest.TestCase):
                     state = refine(ARTICLE_V2, dossier, root, runner, 1)
                     self.assertEqual(research.call_count, 1 if action == "research" else 0)
                 self.assertEqual(state["status"], "approved")
-                self.assertEqual(runner.calls, ["editor", "factual", "factual", "readability", "revision_plan", "revision", "factual", "readability"])
+                self.assertEqual(runner.calls, ["editor", "factual", "readability", "revision_plan", "revision", "factual", "readability"])
                 self.assertEqual(json.loads((Path(root) / "round-0/revision_plan/decision.json").read_text())["action"], action)
                 article = json.loads((Path(root) / "article.json").read_text())
                 receipts = json.loads((Path(root) / "reviews.json").read_text())
@@ -1031,13 +1911,14 @@ class EditorialTests(unittest.TestCase):
             def run(self, role, inputs, schema, directory):
                 assert inputs["dossier"] == dossier
                 self.seen.append((copy.deepcopy(inputs), Path(directory)))
-                item = {k: candidate[k] for k in ("id", "caption", "alt", "selection_reason", "evidence_ids")}
+                item = {k: candidate[k] for k in ("id", "caption", "alt", "selection_reason", "evidence_ids", "period")}
                 if len(self.seen) == 1 or self.persistent:
                     item["id"] = "obsolete_candidate"
                 else:
                     assert inputs["allowed_ids"] == ["actual_oracle"]
                     assert inputs["previous_invalid_selection"]["items"][0]["id"] == "obsolete_candidate"
                     item["caption"] = "Corrected supported caption."
+                    item["period"] = "Modern redraw in oracle-script style."
                 return {"items": [item], "limitations": []}
         with tempfile.TemporaryDirectory() as root:
             runner = VisualRepairRunner()
@@ -1048,7 +1929,8 @@ class EditorialTests(unittest.TestCase):
             self.assertEqual([path.name for _, path in runner.seen], ["glyph_visual", "glyph_visual-repair-1"])
             self.assertEqual(result["glyph_assets"], dossier["glyph_assets"])
             result_item = result["glyph_research"]["historical_glyphs"]["items"][0]
-            self.assertEqual({k: v for k, v in result_item.items() if k != "caption"}, {k: v for k, v in candidate.items() if k != "caption"})
+            self.assertEqual({k: v for k, v in result_item.items() if k not in {"caption", "period"}}, {k: v for k, v in candidate.items() if k not in {"caption", "period"}})
+            self.assertEqual(result_item["period"], "Modern redraw in oracle-script style.")
             self.assertTrue((Path(root) / "glyph_visual/invalid-selection.json").exists())
             self.assertEqual(dossier["glyph_research"]["historical_glyphs"]["items"][0]["caption"], "fixture")
         with tempfile.TemporaryDirectory() as root:
@@ -1226,6 +2108,26 @@ class EditorialTests(unittest.TestCase):
                 publish(ARTICLE, DOSSIER, self.reviews(), root / "entries")
             self.assertEqual(json.loads(path.read_text()), current)
 
+    def test_reviewed_exact_baseline_allows_inspection_notes_but_protects_language_metadata(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = root / 'dossiers/6728.json'
+            current = copy.deepcopy(DOSSIER)
+            write(path, current)
+            incoming = copy.deepcopy(current)
+            incoming['context']['editorial_rules'] = ['Original source images were inspected.']
+            with self.assertRaisesRegex(ValueError, 'Current source dossier changed'):
+                publish(ARTICLE, incoming, self.reviews(dossier=incoming), root / 'entries')
+            publish(ARTICLE, incoming, self.reviews(dossier=incoming), root / 'entries',
+                    reviewed_baseline_hash=digest(current))
+            self.assertEqual(json.loads(path.read_text()), incoming)
+            changed_language = copy.deepcopy(incoming)
+            changed_language['context']['target_language'] = 'ja'
+            self.assertFalse(dossier_update_is_safe(
+                incoming, changed_language, ARTICLE, digest(incoming)))
+            self.assertFalse(dossier_update_is_safe(
+                current, incoming, ARTICLE, 'stale-baseline'))
+
     def test_publication_preserves_current_external_evidence(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -1331,6 +2233,26 @@ class EditorialTests(unittest.TestCase):
             self.assertEqual(result, ARTICLE)
             self.assertEqual(counter.read_text(), "5")
 
+    def test_virtualenv_driver_is_first_on_nested_agent_path_and_recorded(self):
+        import os
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            script = root / "agent.py"
+            script.write_text(
+                "import json,pathlib,subprocess,sys\n"
+                "nested=subprocess.check_output(['python3','-c','import sys;print(sys.executable)'],text=True).strip()\n"
+                "pathlib.Path(sys.argv[1]).write_text(json.dumps({'nested':nested}))\n")
+            runner = Runner([sys.executable, str(script), "{output}"], "fake")
+            with patch.object(sys, 'prefix', str(root / 'venv')), \
+                 patch.object(sys, 'base_prefix', str(root / 'base')):
+                result = runner.run("analysis", {}, {"type":"object", "properties":{
+                    "nested":{"type":"string"}}, "required":["nested"], "additionalProperties":False}, root / "job")
+            self.assertEqual(Path(result['nested']).resolve(), Path(sys.executable).resolve())
+            meta = json.loads((root / 'job' / 'meta.json').read_text())
+            self.assertEqual(meta['driver_runtime']['executable'], sys.executable)
+            self.assertEqual(meta['driver_runtime']['version'], sys.version.split()[0])
+            self.assertEqual(meta['driver_runtime']['prefix'], str(root / 'venv'))
+
     def test_failed_output_not_reused_and_timeout_recorded(self):
         with tempfile.TemporaryDirectory() as temp:
             job = Path(temp)
@@ -1377,6 +2299,11 @@ class EditorialTests(unittest.TestCase):
                 "    result={'verdict': 'revise', 'findings': ['Explain the graphic relationship.']}\n"
                 "else:\n"
                 "    result={'verdict': 'pass', 'findings': []}\n"
+                "if isinstance(result, dict) and 'components' in result:\n"
+                "    for component in result['components']:\n"
+                "        component.setdefault('element_kind', 'glyph')\n"
+                "        component.setdefault('element_id', '')\n"
+                "        component.setdefault('element_label', '')\n"
                 "pathlib.Path(output).write_text(json.dumps(result))\n"
             )
             runner = Runner([sys.executable, str(script), "{role}", "{output}"], "fake")
